@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name 34.38.178.63 team3.ua-ppdb.me;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/app/FarmClash/src/ProgDBTutor/webapp.sock;
+    }
+}
