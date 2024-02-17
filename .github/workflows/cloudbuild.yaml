@@ -1,0 +1,3 @@
+steps:
+   - name: golang
+     script: go run app.py
