@@ -10,4 +10,4 @@ steps:
   # Step 3: Deploy the image to Cloud Run (or GKE, if preferred)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'my-app-service', '--image', 'gcr.io/$PROJECT_ID/my-app:$SHORT_SHA', '--region', 'europe-west1', '--platform', 'managed']
+    args: ['run', 'deploy', 'farmclash', '--image', 'gcr.io/$PROJECT_ID//home/app/FarmClash:$SHORT_SHA', '--region', 'europe-west1', '--platform', 'managed']
