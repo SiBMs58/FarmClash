@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Clone the application repository
 RUN apt-get update && apt-get install -y git
-RUN git clone https://github.com/JoeyDP/PPDB-Template-App.git .
+RUN git clone https://github.com/SiBMs58/FarmClash.git .
 
 # Copy nginx and service configuration files into the container
 COPY nginx/webapp /etc/nginx/sites-available/webapp
