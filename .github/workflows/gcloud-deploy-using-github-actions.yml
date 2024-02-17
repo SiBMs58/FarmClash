@@ -15,6 +15,6 @@ jobs:
 
     - name: Build the Docker image
       run: |
-        docker build --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} -t my-image .
+        docker build --build-arg PAT=${{ secrets.PAT }} -t my-image .
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PAT }}
