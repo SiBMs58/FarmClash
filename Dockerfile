@@ -7,4 +7,4 @@ ARG GITHUB_TOKEN
 # Other Dockerfile instructions...
 
 # Use the build-time variable in the git clone command
-RUN git clone https://$GITHUB_TOKEN:x-oauth-basic@github.com/SiBMs58/FarmClash.git .
+RUN git clone https://$PAT:x-oauth-basic@github.com/SiBMs58/FarmClash.git .
