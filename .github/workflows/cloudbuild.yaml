@@ -4,7 +4,13 @@ steps:
   
 # Step to access the private SSH key from Secret Manager
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['secrets', 'versions', 'access', 'latest', '--secret', 'siebemees@34.38.178.63']
+  args:
+        - 'secrets'
+        - 'versions'
+        - 'access'
+        - 'latest'
+        - '--secret=SSH-Passkey'
+        - '--project=330455370908'  
   id: 'fetch-ssh-key'
   # Write the SSH key to a file
   env:
