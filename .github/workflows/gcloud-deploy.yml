@@ -1,0 +1,32 @@
+name: Deploy to Google Cloud
+
+# This workflow is triggered on pushes to the main branch.
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        version: 'latest'
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    # Add your deployment commands here. The following is an example
+    # for deploying to Google App Engine.
+    - name: Deploy to Google Cloud
+      run: |
+        gcloud components update
+        # Replace the following line with your Google Cloud deployment command
+        gcloud app deploy app.yaml --quiet
+
