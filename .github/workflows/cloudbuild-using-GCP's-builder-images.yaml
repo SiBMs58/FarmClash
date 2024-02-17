@@ -1,13 +1,16 @@
 steps:
-  # Step 1: Build the Docker image
+  # Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/home/app/FarmClash:$SHORT_SHA', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/home/app:$SHORT_SHA', '.']
 
-  # Step 2: Push the image to Google Container Registry
+  # Push the image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/home/app/FarmClash:$SHORT_SHA']
+    args: ['push', 'gcr.io/$PROJECT_ID/home/app:$SHORT_SHA']
 
-  # Step 3: Deploy the image to Cloud Run (or GKE, if preferred)
+  # Deploy the image to Cloud Run (or GKE, if preferred)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'farmclash', '--image', 'gcr.io/$PROJECT_ID//home/app/FarmClash:$SHORT_SHA', '--region', 'europe-west1', '--platform', 'managed']
+    args: ['run', 'deploy', 'farmclash', '--image', 'gcr.io/$PROJECT_ID/home/app:$SHORT_SHA', '--region', 'europe-west1', '--platform', 'managed']
+    
+images:
+  - 'gcr.io/$PROJECT_ID/home/app:$SHORT_SHA'
