@@ -16,7 +16,7 @@ connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbus
 quote_data_access = QuoteDataAccess(connection)
 
 DEBUG = False
-HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
+HOST = "34.38.178.63" if DEBUG else "0.0.0.0"
 
 
 # REST API
