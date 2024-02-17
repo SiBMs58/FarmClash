@@ -1,38 +1,37 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/ua-ppdb-team3-414215/ua-ppdb-team3', '-f', '.github/workflows/Dockerfile', '.']
+  
+# Step to access the private SSH key from Secret Manager
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['secrets', 'versions', 'access', 'latest', '--secret', 'siebemees@34.38.178.63']
+  id: 'fetch-ssh-key'
+  # Write the SSH key to a file
+  env:
+    - 'SSH_KEY_FILE=/workspace/ssh-key'
 
-  # Step to access the private SSH key from Secret Manager
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['secrets', 'versions', 'access', 'latest', '--secret', 'siebemees@34.38.178.63']
-    id: 'fetch-ssh-key'
-    # Write the SSH key to a file
-    env:
-      - 'SSH_KEY_FILE=/workspace/ssh-key'
+# Step to set correct permissions for the SSH key
+- name: 'ubuntu'
+  entrypoint: 'sh'
+  args:
+    - '-c'
+    - |
+      chmod 600 $$SSH_KEY_FILE
+  env:
+    - 'SSH_KEY_FILE=/workspace/ssh-key'
 
-  # Step to set correct permissions for the SSH key
-  - name: 'ubuntu'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        chmod 600 $$SSH_KEY_FILE
-    env:
-      - 'SSH_KEY_FILE=/workspace/ssh-key'
-
-  # Step to SSH into the Compute Engine instance and deploy the Docker container
-  - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        ssh -i $$SSH_KEY_FILE -o StrictHostKeyChecking=no USERNAME@INSTANCE_EXTERNAL_IP \
-        "docker pull gcr.io/ua-ppdb-team3-414215/ua-ppdb-team3:latest && \
-         docker stop my-container && \
-         docker run --rm -d --name my-container gcr.io/ua-ppdb-team3-414215/ua-ppdb-team3:latest"
-    env:
-      - 'SSH_KEY_FILE=/workspace/ssh-key'
-
+# Step to SSH into the Compute Engine instance and deploy the Docker container
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'sh'
+  args:
+    - '-c'
+    - |
+      ssh -i $$SSH_KEY_FILE -o StrictHostKeyChecking=no USERNAME@INSTANCE_EXTERNAL_IP \
+      "docker pull gcr.io/ua-ppdb-team3-414215/ua-ppdb-team3:latest && \
+       docker stop my-container && \
+       docker run --rm -d --name my-container gcr.io/ua-ppdb-team3-414215/ua-ppdb-team3:latest"
+  env:
+    - 'SSH_KEY_FILE=/workspace/ssh-key'
 
 images:
 - 'gcr.io/ua-ppdb-team3-414215/ua-ppdb-team3'
