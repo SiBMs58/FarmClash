@@ -26,7 +26,7 @@ jobs:
     # for deploying to Google App Engine.
     - name: Deploy to Google Cloud
       run: |
-        gcloud components update
-        # Replace the following line with your Google Cloud deployment command
-        gcloud app deploy app.yaml --quiet
+         # Example: Deploying to Google App Engine
+        gcloud app deploy src/ProgDBTutor/app.py
+        # Replace the above line with your specific GCP deployment command
 
