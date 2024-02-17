@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/ua-ppdb-team3-414215/FarmClash', '.']
+  args: ['build', '-t', 'gcr.io/ua-ppdb-team3-414215/UA-PPDB-Team3 ', '.']
 images:
-- 'gcr.io/ua-ppdb-team3-414215/FarmClash'
+- 'gcr.io/ua-ppdb-team3-414215/UA-PPDB-Team3'
 
