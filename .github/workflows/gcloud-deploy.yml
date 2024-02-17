@@ -1,6 +1,5 @@
-name: Deploy to Google Cloud
+name: Deploy to GCP with Nginx and Gunicorn
 
-# This workflow is triggered on pushes to the main branch.
 on:
   push:
     branches:
@@ -9,24 +8,39 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repo
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Google Cloud
-      uses: google-github-actions/setup-gcloud@master
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
       with:
-        version: 'latest'
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    # Add your deployment commands here. The following is an example
-    # for deploying to Google App Engine.
-    - name: Deploy to Google Cloud
+    - name: Deploy to GCP
       run: |
-         # Example: Deploying to Google App Engine
-        gcloud app deploy src/ProgDBTutor/app.py
-        # Replace the above line with your specific GCP deployment command
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+        sudo apt update && sudo apt install nginx -y
+        sudo adduser --disabled-login app || true
 
+        if [ ! -d "/home/app/PPDB-Template-App" ]; then
+          sudo su - app -c "git clone https://github.com/JoeyDP/PPDB-Template-App.git"
+        else
+          sudo su - app -c "cd PPDB-Template-App && git pull"
+        fi
+
+        # Add commands from the Quick Start setup here
+
+        sudo su - app -c "cd PPDB-Template-App/src/ProgDBTutor && gunicorn --bind 0.0.0.0:5000 wsgi:app"
+
+        sudo ln -s /home/app/PPDB-Template-App/service/webapp.service /etc/systemd/system/ || true
+
+        sudo systemctl enable webapp
+        sudo systemctl start webapp
+
+        sudo ln -s /home/app/PPDB-Template-App/nginx/webapp /etc/nginx/sites-available/ || true
+        sudo ln -s /home/app/PPDB-Template-App/nginx/webapp /etc/nginx/sites-enabled/ || true
+
+        sudo nginx -t
+        sudo systemctl restart nginx
+        EOF
