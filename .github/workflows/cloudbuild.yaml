@@ -26,18 +26,18 @@ steps:
   env:
     - 'SSH_KEY_FILE=/workspace/ssh-key'
 
-# Step to SSH into the Compute Engine instance and deploy the Docker container
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'sh'
+# Fetch the SSH key step here
+- name: 'ubuntu'
+  entrypoint: 'bash'
   args:
     - '-c'
     - |
-      ssh -i $$SSH_KEY_FILE -o StrictHostKeyChecking=no USERNAME@INSTANCE_EXTERNAL_IP \
-      "docker pull gcr.io/ua-ppdb-team3-414215/ua-ppdb-team3:latest && \
-       docker stop my-container && \
-       docker run --rm -d --name my-container gcr.io/ua-ppdb-team3-414215/ua-ppdb-team3:latest"
+      echo $$SSH_KEY > /tmp/ssh_key
+      chmod 600 /tmp/ssh_key
+      ssh -i /tmp/ssh_key -o StrictHostKeyChecking=no USERNAME@SERVER_IP "COMMANDS_TO_RUN_ON_SERVER"
   env:
-    - 'SSH_KEY_FILE=/workspace/ssh-key'
+    - 'SSH_KEY=$_SECRETS_ENV_SSH_KEY'
+
 
 images:
 - 'gcr.io/ua-ppdb-team3-414215/ua-ppdb-team3'
