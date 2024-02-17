@@ -1,3 +1,6 @@
 steps:
-   - name: golang
-     script: go run ProgDBTutor
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/your-app-name', '.']
+images:
+- 'gcr.io/$PROJECT_ID/your-app-name'
+
