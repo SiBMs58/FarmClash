@@ -1,4 +1,4 @@
-name: Deploy to GCP with Nginx and Gunicorn
+name: Build and Deploy
 
 on:
   push:
@@ -6,41 +6,15 @@ on:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-    - name: Deploy to GCP
+    - name: Build the Docker image
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-        sudo apt update && sudo apt install nginx -y
-        sudo adduser --disabled-login app || true
-
-        if [ ! -d "/home/app/PPDB-Template-App" ]; then
-          sudo su - app -c "git clone https://github.com/JoeyDP/PPDB-Template-App.git"
-        else
-          sudo su - app -c "cd PPDB-Template-App && git pull"
-        fi
-
-        # Add commands from the Quick Start setup here
-
-        sudo su - app -c "cd PPDB-Template-App/src/ProgDBTutor && gunicorn --bind 0.0.0.0:5000 wsgi:app"
-
-        sudo ln -s /home/app/PPDB-Template-App/service/webapp.service /etc/systemd/system/ || true
-
-        sudo systemctl enable webapp
-        sudo systemctl start webapp
-
-        sudo ln -s /home/app/PPDB-Template-App/nginx/webapp /etc/nginx/sites-available/ || true
-        sudo ln -s /home/app/PPDB-Template-App/nginx/webapp /etc/nginx/sites-enabled/ || true
-
-        sudo nginx -t
-        sudo systemctl restart nginx
-        EOF
+        docker build --build-arg GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} -t my-image .
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
