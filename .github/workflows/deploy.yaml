@@ -26,4 +26,4 @@ jobs:
 
     - name: Deploy to Compute Engine
       run: |
-        gcloud compute instances update-container instance-20240214-105617 --container-image gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-image:latest --zone europe-west1-b
+        gcloud compute ssh instance-20240214-105617 --zone europe-west1-b
