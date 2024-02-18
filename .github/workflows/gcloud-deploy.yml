@@ -30,4 +30,5 @@ jobs:
       with:
         service: farmclash
         image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-image:${GITHUB_SHA}
+        region: 'europe-west1'
         credentials_json: '${{ secrets.GCP_SA_KEY }}'
