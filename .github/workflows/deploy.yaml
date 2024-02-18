@@ -24,5 +24,6 @@ jobs:
           pwd
           cd ../app
           pwd
+          ls -a
           git pull
           # Any other commands you need to run for your deployment
