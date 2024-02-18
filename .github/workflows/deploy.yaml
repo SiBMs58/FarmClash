@@ -13,13 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Google Cloud CLI
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v0.4.0
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Setup Google Cloud CLI
       uses: google-github-actions/setup-gcloud@v2.1.0
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        install_components: beta
 
-    - name: Deploy to Google Cloud
+    - name: Deploy to Compute Engine
       run: |
-        # Example: Deploy to Compute Engine
         gcloud compute instances update-container instance-20240214-105617 --container-image gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-image:latest --zone europe-west1-b
