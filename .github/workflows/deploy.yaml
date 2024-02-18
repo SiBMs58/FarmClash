@@ -31,11 +31,13 @@ jobs:
       run: |
         gcloud compute scp --recurse \
           ${GITHUB_WORKSPACE}/* \
-          {{ env.OS_USERNAME }}@${{ env.INSTANCE_NAME }}:/home/app \
+          ${{ secrets.OS_USERNAME }}@instance-20240214-105617:/home/app \
           --zone europe-west1-b \
           --project ${{ secrets.GCP_PROJECT_ID }}
-      env:
-        INSTANCE_NAME: instance-20240214-105617
-        INSTANCE_ZONE: europe-west1-b
-        GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-        OS_USERNAME: ${{ secrets.OS_USERNAME }}
+
+    - name: Restart the Compute Engine instance
+      run: |
+        gcloud compute ssh ${{ secrets.OS_USERNAME }}@instance-20240214-105617 \
+          --zone europe-west1-b \
+          --project ${{ secrets.GCP_PROJECT_ID }} \
+          --command "sudo systemctl restart app"
