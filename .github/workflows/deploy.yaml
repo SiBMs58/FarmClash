@@ -24,20 +24,7 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         install_components: beta
 
-    #- name: Install gcloud beta components
-    #  run: gcloud components install beta
-
     - name: Copy files to the Compute Engine instance
       run: |
-        gcloud compute scp --recurse \
-          ${GITHUB_WORKSPACE}/* \
-          ${{ secrets.OS_USERNAME }}@instance-20240214-105617:/home/app \
-          --zone europe-west1-b \
-          --project ${{ secrets.GCP_PROJECT_ID }}
-
-    - name: Restart the Compute Engine instance
-      run: |
-        gcloud compute ssh ${{ secrets.OS_USERNAME }}@instance-20240214-105617 \
-          --zone europe-west1-b \
-          --project ${{ secrets.GCP_PROJECT_ID }} \
-          --command "sudo systemctl restart app"
+        gcloud compute ssh instance-20240214-105617 \
+    --impersonate-service-account=github-deploy@ua-ppdb-team3-414215.iam.gserviceaccount.com
