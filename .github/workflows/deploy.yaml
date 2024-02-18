@@ -21,7 +21,6 @@ jobs:
     - name: Deploy to VM
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
-          pwd
-          cd ../home/app
+          cd ../app
           git pull
           # Any other commands you need to run for your deployment
