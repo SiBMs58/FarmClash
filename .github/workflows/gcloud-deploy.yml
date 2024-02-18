@@ -26,7 +26,7 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/my-image:${GITHUB_SHA}
 
     - name: Google Cloud Auth
-      uses: google-github-actions/auth@v0.4.0
+      uses: google-github-actions/auth@v2
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
