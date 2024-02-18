@@ -27,4 +27,4 @@ jobs:
     - name: Copy files to the Compute Engine instance
       run: |
         gcloud compute ssh instance-20240214-105617 \
-    --impersonate-service-account=github-deploy@ua-ppdb-team3-414215.iam.gserviceaccount.com
+        --impersonate-service-account=github-deploy@ua-ppdb-team3-414215.iam.gserviceaccount.com
