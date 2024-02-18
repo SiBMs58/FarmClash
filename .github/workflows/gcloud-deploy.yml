@@ -26,11 +26,11 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/my-image:${GITHUB_SHA}
 
     - name: Set up Google Cloud CLI
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
 
     - name: Deploy to Cloud Run
       run: |
