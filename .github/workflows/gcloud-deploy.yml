@@ -25,10 +25,13 @@ jobs:
         docker tag my-image:${GITHUB_SHA} ${{ secrets.DOCKER_USERNAME }}/my-image:${GITHUB_SHA}
         docker push ${{ secrets.DOCKER_USERNAME }}/my-image:${GITHUB_SHA}
 
+    - name: Set up Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
     - name: Deploy to Cloud Run
-      uses: google-github-actions/deploy-cloudrun@v0.8.0
-      with:
-        service: farmclash
-        image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-image:${GITHUB_SHA}
-        region: 'europe-west1'
-        credentials_json: '${{ secrets.GCP_SA_KEY }}'
+      run: |
+        gcloud run deploy farmclash-service --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/farmclash:latest --region europe-west1
