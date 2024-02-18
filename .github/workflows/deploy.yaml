@@ -22,7 +22,7 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
           pwd
-          cd ../app
+          cd ../app/FarmClash
           pwd
           ls -a
           git pull
