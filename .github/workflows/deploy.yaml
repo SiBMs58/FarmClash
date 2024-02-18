@@ -35,7 +35,7 @@ jobs:
           --zone europe-west1-b \
           --project ${{ secrets.GCP_PROJECT_ID }}
       env:
-        INSTANCE_NAME: instance-20240214-105617 # Replace with your actual instance name
-        INSTANCE_ZONE: europe-west1-b # Replace with your actual instance zone
-        GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Ensure this secret exists in your repo
-        OS_USERNAME: ${{ secrets.OS_USERNAME }} # The OS-level username for the Compute Engine instance
+        INSTANCE_NAME: instance-20240214-105617
+        INSTANCE_ZONE: europe-west1-b
+        GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        OS_USERNAME: ${{ secrets.OS_USERNAME }}
