@@ -2,7 +2,7 @@
 FROM python:3.8-slim
 
 # Define the build-time variable
-ARG GITHUB_TOKEN
+ARG PAT
 
 # Other Dockerfile instructions...
 
