@@ -27,13 +27,14 @@ jobs:
     - name: Install gcloud beta components
       run: gcloud components install beta
 
-    - name: Copy repository content to the Google Cloud instance
+    - name: Copy files to the Compute Engine instance
       run: |
-        gcloud beta compute scp --recurse \
-          ./* ${INSTANCE_NAME}:/home/app/ \
-          --zone=europe-west1-b \
-          --project=${GCP_PROJECT_ID}
+        gcloud compute scp --recurse \
+          ${GITHUB_WORKSPACE}/* \
+          @instance-20240214-105617:/home/app \
+          --zone europe-west1-b \
+          --project ${GCP_PROJECT_ID}
       env:
-        GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-        INSTANCE_NAME: ${{ secrets.INSTANCE_NAME }}
-        ZONE: europe-west1-b
+        GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+        INSTANCE_NAME: instance-20240214-105617
+        INSTANCE_ZONE: europe-west1-b
