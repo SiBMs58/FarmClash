@@ -33,7 +33,7 @@ jobs:
           ${GITHUB_WORKSPACE}/* \
           instance-20240214-105617:/home/app \
           --zone europe-west1-b \
-          --project ${GCP_PROJECT_ID}
+          --project ua-ppdb-team3-414215
       env:
         GCP_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
         INSTANCE_NAME: instance-20240214-105617
