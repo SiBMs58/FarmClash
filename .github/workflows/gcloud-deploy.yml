@@ -38,4 +38,4 @@ jobs:
 
     - name: Deploy to Cloud Run
       run: |
-        gcloud run deploy farmclash-service --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/farmclash:latest --region europe-west1 --no-allow-unauthenticated
+        gcloud run deploy farmclash-service --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/farmclash:latest --region europe-west1 --allow-unauthenticated
