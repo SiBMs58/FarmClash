@@ -31,7 +31,7 @@ jobs:
       run: |
         gcloud compute scp --recurse \
           ${GITHUB_WORKSPACE}/* \
-          @instance-20240214-105617:/home/app \
+          instance-20240214-105617:/home/app \
           --zone europe-west1-b \
           --project ${GCP_PROJECT_ID}
       env:
