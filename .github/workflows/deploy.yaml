@@ -13,12 +13,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v0.4.0
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
       with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        ssh-private-key: ${{ secrets.SSH_KEY }}
 
-    - name: Setup Google Cloud CLI
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+    - name: Deploy to VM
+      run: |
+        ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
+          cd /home/app
+          git pull
+          # Any other commands you need to run for your deployment
