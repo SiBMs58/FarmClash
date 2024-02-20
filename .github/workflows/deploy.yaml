@@ -28,43 +28,46 @@ jobs:
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
           sudo -u app bash -c '
-          # Navigate to the application directory
-          cd /home/app/FarmClash
-  
-          # Pull the latest changes from the repository
-          git pull https://github.com/SiBMs58/FarmClash.git
+            # Navigate to the application directory
+            cd /home/app/FarmClash
+    
+            # Pull the latest changes from the repository
+            git pull https://github.com/SiBMs58/FarmClash.git
+            
+            # Activate the Python virtual environment and update dependencies
+            source env/bin/activate && pip install -r requirements.txt
           
-          # Activate the Python virtual environment and update dependencies
-          source env/bin/activate && pip install -r requirements.txt
-        
-          # Deactivate the virtual environment
-          deactivate
-        
-          # Stop the existing Gunicorn service
-          sudo systemctl stop webapp
+            # Deactivate the virtual environment
+            deactivate
           
-          # Run the Gunicorn server
-          echo "Starting the Gunicorn server..."
-          source env/bin/activate
-          cd /home/app/FarmClash/src/ProgDBTutor
-          gunicorn --bind 0.0.0.0:5000 wsgi:app
-          deactivate
+            # Stop the existing Gunicorn service
+            sudo systemctl stop webapp
+            
+            # Run the Gunicorn server
+            echo "Starting the Gunicorn server..."
+            source env/bin/activate
+            cd /home/app/FarmClash/src/ProgDBTutor
+            gunicorn --bind 0.0.0.0:5000 wsgi:app
+            deactivate
+            
+            # Display the status of the Gunicorn service
+            sudo systemctl status webapp
+    
+            # Check if the Gunicorn service is running and the socket file exists
+            echo "Checking for the Gunicorn socket file..."
+            sudo ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock
+    
+            # Update and restart NGINX to apply any configuration changes
+            echo "Updating NGINX configuration..."
+            sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
+            sudo ln -sf /etc/nginx/sites-available/webapp /etc/nginx/sites-enabled/
+            sudo nginx -t && sudo systemctl reload nginx
           
-          # Display the status of the Gunicorn service
-          sudo systemctl status webapp
-  
-          # Check if the Gunicorn service is running and the socket file exists
-          echo "Checking for the Gunicorn socket file..."
-          sudo ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock
-  
-          # Update and restart NGINX to apply any configuration changes
-          echo "Updating NGINX configuration..."
-          sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
-          sudo ln -sf /etc/nginx/sites-available/webapp /etc/nginx/sites-enabled/
-          sudo nginx -t && sudo systemctl reload nginx
+            # Checking the webapp domain name
+            echo "Checking the webapp domain name..."
+            curl http://team3.ua-ppdb.me
         
-          # Checking the webapp domain name
-          echo "Checking the webapp domain name..."
-          curl http://team3.ua-ppdb.me
-        '
+            # Deactivate the virtual environment
+            deactivate
+          '
         EOF
