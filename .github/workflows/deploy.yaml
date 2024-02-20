@@ -40,7 +40,7 @@ jobs:
             # Update Python dependencies
             pip install -r requirements.txt
           '
-            
+             
           # Ensure the Gunicorn service is properly configured and enabled
           sudo systemctl daemon-reload
           sudo systemctl enable webapp
@@ -49,7 +49,8 @@ jobs:
           sudo systemctl status webapp
           curl http://team3.ua-ppdb.me
 
-
+          # Check the socket file permissions and ownership:
+          ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock
           
           # Update and restart NGINX to apply any configuration changes
           sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
