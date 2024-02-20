@@ -13,10 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_KEY }}
+    #- name: Set up SSH
+    #  uses: webfactory/ssh-agent@v0.5.3
+    #  with:
+    #    ssh-private-key: ${{ secrets.SSH_KEY }}
+
+    - name: Remove old SSH key
+      run: |
+        ssh-keygen -f "~/.ssh/known_hosts" -R "{{ secrets.HOST }}"
+    - name: Add new SSH key
+      run: |
+        ssh-keyscan -H "{{ secrets.HOST }}" >> ~/.ssh/known_hosts
 
     - name: Deploy to VM
       run: |
