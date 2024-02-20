@@ -26,4 +26,4 @@ jobs:
 
     - name: Deploy to VM
       run: |
-        ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} "pwd; cd /home; ls"
+        ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} "pwd; cd /home/app/FarmClash; pwd"
