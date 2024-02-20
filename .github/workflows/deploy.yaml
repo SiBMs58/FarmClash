@@ -42,14 +42,13 @@ jobs:
             
             # Stop the existing Gunicorn service
             sudo systemctl stop webapp
-            
-            # Find and stop the process using port 5000
-            sudo lsof -t -i:5000 | xargs sudo kill -9
-            
+              
             # Run the Gunicorn server
             echo "Starting the Gunicorn server..."
             source env/bin/activate
             cd /home/app/FarmClash/src/ProgDBTutor
+            # Find and stop the process using port 5000
+            sudo lsof -t -i:5000 | xargs sudo kill -9
             gunicorn --bind 0.0.0.0:5000 wsgi:app
             deactivate
             
