@@ -1,4 +1,4 @@
-name: Deploy to Google Cloud
+name: Deploy to Google Cloud VM Instance "FarmClash"
 
 on:
   push:
@@ -12,6 +12,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub Actions
 
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
@@ -24,4 +26,16 @@ jobs:
 
     - name: Deploy to VM
       run: |
-        ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'pwd'
+        ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }}
+
+    - name: Setup environment
+      run: |
+        cd ..
+        pwd
+
+    - name: Switch user and pull latest changes
+      env:
+        GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      run: |
+        sudo -u app bash -c 'cd /home/app && git pull
