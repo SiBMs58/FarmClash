@@ -31,7 +31,7 @@ jobs:
     - name: Check permissions
       run: |
         whoami
-        cd /
+        cd /home
         ls
 
     - name: Change directory to /home/app
