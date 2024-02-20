@@ -69,8 +69,6 @@ jobs:
               echo "Failed to free up port 5000. Check for lingering processes."
             fi
 
-
-            
             # Display the status of the Gunicorn service
             sudo systemctl status webapp
     
