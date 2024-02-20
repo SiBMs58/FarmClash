@@ -34,13 +34,19 @@ jobs:
             git config credential.helper store
             # Pull the latest changes from the repository
             git pull https://github.com/SiBMs58/FarmClash.git
+            
+            # Ensure any currently running Gunicorn processes are stopped
+            cd src/ProgDBTutor
+            pkill gunicorn
+            sleep 5
+        
             # Activate the Python virtual environment
+            cd ../../ 
             source env/bin/activate
             # Install or update Python dependencies
             pip install -r requirements.txt
-            # Optionally, run database migrations here
-            flask db upgrade
-            # Restart the Gunicorn service to apply changes
+            # Restart the Gunicorn service to apply the changes
+            # Make sure the app user has permissions to do this without entering a password
             sudo systemctl restart webapp
           '
         EOF
