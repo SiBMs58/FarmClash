@@ -44,11 +44,14 @@ jobs:
           # Restart the Gunicorn service using the wsgi.py file
           # Ensure your systemd service file for Gunicorn (webapp.service) is using the wsgi module correctly
           # This command assumes the service file is properly set up to start Gunicorn with the wsgi:app command
-          sudo systemctl daemon-reload
+          #sudo systemctl daemon-reload
           sudo systemctl restart webapp
+          cd /home/app/FarmClash/src/ProgDBTutor
+          gunicorn --bind 0.0.0.0:5000 wsgi:app
+
 
           # Display the status of the Gunicorn service
-          sudo systemctl status webapp --no-pager
+          sudo systemctl status webapp
 
           # Check if the Gunicorn service is running and the socket file exists
           echo "Checking for the Gunicorn socket file..."
