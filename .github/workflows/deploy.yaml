@@ -52,7 +52,7 @@ jobs:
 
           # Check if the Gunicorn service is running and the socket file exists
           echo "Checking for the Gunicorn socket file..."
-          ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock
+          sudo ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock
 
           # Update and restart NGINX to apply any configuration changes
           echo "Updating NGINX configuration..."
