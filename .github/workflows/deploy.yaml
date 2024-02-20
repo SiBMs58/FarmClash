@@ -46,7 +46,7 @@ jobs:
             # Run the Gunicorn server
             echo "Starting the Gunicorn server..."
             cd /home/app/FarmClash/ 
-            sudo netstat -tuln | grep ':5000' | awk '{print $7}' | cut -d'/' -f1
+            sudo kill $(sudo netstat -tuln | grep ':5000' | awk '{print $7}' | cut -d'/' -f1)
             source env/bin/activate
             cd /home/app/FarmClash/src/ProgDBTutor
             gunicorn --bind 0.0.0.0:5000 wsgi:app
