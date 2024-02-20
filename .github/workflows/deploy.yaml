@@ -41,25 +41,24 @@ jobs:
             pip install -r requirements.txt
           '
              
-          # Ensure the Gunicorn service is properly configured and enabled
+          # Restart the Gunicorn service using the wsgi.py file
+          # Ensure your systemd service file for Gunicorn (webapp.service) is using the wsgi module correctly
+          # This command assumes the service file is properly set up to start Gunicorn with the wsgi:app command
           sudo systemctl daemon-reload
-          sudo systemctl enable webapp
           sudo systemctl restart webapp
-          
-          echo "Checking the status of the webapp service..."
-          sudo systemctl status webapp --no-pager
-          
-          echo "Attempting to reach the application via HTTP..."
-          curl http://team3.ua-ppdb.me
 
-          echo "Checking the socket file permissions and ownership:"
-          ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock || echo "Socket file not found."
-          
+          # Display the status of the Gunicorn service
+          sudo systemctl status webapp --no-pager
+
+          # Check if the Gunicorn service is running and the socket file exists
+          echo "Checking for the Gunicorn socket file..."
+          ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock
+
           # Update and restart NGINX to apply any configuration changes
           echo "Updating NGINX configuration..."
-          sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/webapp
+          sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
           sudo ln -sf /etc/nginx/sites-available/webapp /etc/nginx/sites-enabled/
-          echo "Testing and reloading NGINX..."
           sudo nginx -t && sudo systemctl reload nginx
+        EOF
 
         EOF
