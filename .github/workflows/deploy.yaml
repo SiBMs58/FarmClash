@@ -13,25 +13,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    #- name: Set up SSH
-    #  uses: webfactory/ssh-agent@v0.5.3
-    #  with:
-    #    ssh-private-key: ${{ secrets.SSH_KEY }}
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_KEY }}
 
-    - name: Remove old SSH key
+    - name: Add host to known_hosts
       run: |
-        ssh-keygen -f "~/.ssh/known_hosts" -R "{{ secrets.HOST }}"
-    - name: Add new SSH key
-      run: |
-        ssh-keyscan -H "{{ secrets.HOST }}" >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
     - name: Deploy to VM
       run: |
-        ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
-          pwd
-          #cd ../app/FarmClash
-          #git config --global --add safe.directory /home/app/FarmClash
-          #ls -ld .git
-          #git pull
-          # Any other commands you need to run for your deployment
-        EOF
+        ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'pwd'
