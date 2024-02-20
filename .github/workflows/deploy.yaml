@@ -31,7 +31,7 @@ jobs:
     - name: Check permissions
       run: |
         whoami
-        cd /home
+        cd ${{ github.workspace }}
         ls
 
     - name: Change directory to /home/app
