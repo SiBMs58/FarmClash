@@ -26,3 +26,4 @@ jobs:
           ls -ld .git
           git pull
           # Any other commands you need to run for your deployment
+        EOF
