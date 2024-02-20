@@ -85,8 +85,5 @@ jobs:
             # Checking the webapp domain name
             echo "Checking the webapp domain name..."
             curl http://team3.ua-ppdb.me
-        
-            # Deactivate the virtual environment
-            deactivate
           '
         EOF
