@@ -28,17 +28,13 @@ jobs:
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }}
 
-    - name: Setup environment
-      run: |
-        cd ..
-        pwd
-
     - name: Switch user and pull latest changes
       env:
         GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
         PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       run: |
-        sudo su - app
         cd /home/app
         pwd
+        sudo su - app
+        cd FarmClash
         git pull
