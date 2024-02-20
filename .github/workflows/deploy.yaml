@@ -40,4 +40,5 @@ jobs:
       run: |
         sudo su - app
         cd /home/app
+        pwd
         git pull
