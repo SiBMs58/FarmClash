@@ -28,6 +28,13 @@ jobs:
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }}
 
+    - name: Ensure /home/app directory exists
+      run: mkdir -p /home/app
+
+    - name: Change directory to /home/app
+      run: cd /home/app
+      # Use this directory in subsequent steps as needed
+
     - name: Switch user and pull latest changes
       env:
         GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
