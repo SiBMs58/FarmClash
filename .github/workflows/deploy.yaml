@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-        token: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub Actions
+        token: ${{ secrets.PERSONALACCESSTOKEN }} # Automatically provided by GitHub Actions
 
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
