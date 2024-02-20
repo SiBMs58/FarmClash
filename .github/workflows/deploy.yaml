@@ -31,22 +31,25 @@ jobs:
             # Navigate to the application directory
             cd /home/app/FarmClash
             # Configure Git to use the stored credentials
-            git config credential.helper store
+            #git config credential.helper store
             # Pull the latest changes from the repository
             git pull https://github.com/SiBMs58/FarmClash.git
             
-            # Ensure any currently running Gunicorn processes are stopped
-            cd src/ProgDBTutor
-            pkill gunicorn
-            sleep 5
-        
             # Activate the Python virtual environment
-            cd ../../ 
             source env/bin/activate
-            # Install or update Python dependencies
+            
+            # Update Python dependencies
             pip install -r requirements.txt
+            
             # Restart the Gunicorn service to apply the changes
-            # Make sure the app user has permissions to do this without entering a password
+            # Ensure Gunicorn is configured to start via a service or a script that does not require interactive input
             sudo systemctl restart webapp
+          '
+          
+          # NGINX Configuration (assuming scripts or commands are prepared)
+          # Example of copying updated NGINX config and restarting NGINX
+          sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
+          sudo ln -sf /etc/nginx/sites-available/webapp /etc/nginx/sites-enabled/
+          sudo nginx -t && sudo systemctl reload nginx
           '
         EOF
