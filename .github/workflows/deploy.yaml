@@ -28,24 +28,11 @@ jobs:
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }}
 
-    - name: Check permissions
-      run: |
-        whoami
-        cd ${{ github.workspace }}
-        cd ..
-        ls -a
-
-    - name: Change directory to /home/app
-      run: cd /home/app
-      # Use this directory in subsequent steps as needed
-
-    - name: Switch user and pull latest changes
+    - name: Pull latest changes
       env:
         GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
         PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       run: |
-        cd /home/app
+        cd ${{ github.workspace }}
         pwd
-        sudo su - app
-        cd FarmClash
         git pull
