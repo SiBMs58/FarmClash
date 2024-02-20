@@ -27,8 +27,7 @@ jobs:
     - name: Deploy to VM
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }}  << EOF
-          ls
           sudo su - app
           cd /home/app/FarmClash
-          ls
+          git pull
         EOF
