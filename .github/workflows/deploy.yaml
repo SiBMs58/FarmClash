@@ -45,10 +45,9 @@ jobs:
               
             # Run the Gunicorn server
             echo "Starting the Gunicorn server..."
-            source env/bin/activate
             cd /home/app/FarmClash/src/ProgDBTutor
-            # Find and stop the process using port 5000
             sudo lsof -t -i:5000 | xargs sudo kill -9
+            source env/bin/activate
             gunicorn --bind 0.0.0.0:5000 wsgi:app
             deactivate
             
