@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
       with:
-        token: ${{ secrets.PERSONALACCESSTOKEN }} # Automatically provided by GitHub Actions
+        token: ${{ secrets.PERSONALACCESSTOKEN }}
 
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
@@ -28,9 +28,19 @@ jobs:
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
           sudo -u app bash -c '
-            cd /home/app/FarmClash &&
-            git config --global credential.helper store &&
-            git remote set-url origin https://SiBMs58:${{ secrets.PERSONALACCESSTOKEN }}@github.com/SiBMs58/FarmClash.git &&
-            git pull
+            # Navigate to the application directory
+            cd /home/app/FarmClash
+            # Configure Git to use the stored credentials
+            git config credential.helper store
+            # Pull the latest changes from the repository
+            git pull https://github.com/SiBMs58/FarmClash.git
+            # Activate the Python virtual environment
+            source env/bin/activate
+            # Install or update Python dependencies
+            pip install -r requirements.txt
+            # Optionally, run database migrations here
+            flask db upgrade
+            # Restart the Gunicorn service to apply changes
+            sudo systemctl restart webapp
           '
         EOF
