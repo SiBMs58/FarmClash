@@ -1,4 +1,4 @@
-name: Deploy to Google Cloud VM Instance "FarmClash"
+name: Deploy to Google Cloud
 
 on:
   push:
@@ -38,4 +38,6 @@ jobs:
         GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
         PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       run: |
-        sudo -u app bash -c 'cd /home/app && git pull
+        sudo -u app
+        cd /home/app
+        git pull
