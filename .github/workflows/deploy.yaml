@@ -28,8 +28,10 @@ jobs:
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }}
 
-    - name: Ensure /home/app directory exists
-      run: mkdir -p /home/app
+    - name: Check permissions
+      run: |
+        whoami
+        ls -l /home/app
 
     - name: Change directory to /home/app
       run: cd /home/app
