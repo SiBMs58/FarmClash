@@ -47,6 +47,8 @@ jobs:
           sudo systemctl restart webapp
         
           sudo systemctl status webapp
+          curl http://team3.ua-ppdb.me
+
 
           
           # Update and restart NGINX to apply any configuration changes
