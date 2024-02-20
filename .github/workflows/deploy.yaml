@@ -46,12 +46,11 @@ jobs:
             # Free up port 5000
             echo "Starting the Gunicorn server..."
             cd /home/app/FarmClash/
-            
             # Find the PID of the process using port 5000 and kill it safely
             PID=$(sudo netstat -tuln | grep ':5000' | awk '{print $7}' | cut -d'/' -f1)
             if [[ ! -z "$PID" ]]; then
               echo "Port 5000 is in use by PID: $PID. Attempting to terminate..."
-              sudo kill $PID
+              sudo kill -9 $PID
               sleep 1 # Give some time for the process to terminate
             fi
             
