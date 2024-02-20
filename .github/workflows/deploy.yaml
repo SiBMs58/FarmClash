@@ -30,8 +30,7 @@ jobs:
           sudo -u app bash -c '
             # Navigate to the application directory
             cd /home/app/FarmClash
-            # Configure Git to use the stored credentials
-            #git config credential.helper store
+
             # Pull the latest changes from the repository
             git pull https://github.com/SiBMs58/FarmClash.git
             
@@ -40,14 +39,17 @@ jobs:
             
             # Update Python dependencies
             pip install -r requirements.txt
-            
-            # Restart the Gunicorn service to apply the changes
-            # Ensure Gunicorn is configured to start via a service or a script that does not require interactive input
-            sudo systemctl restart webapp
           '
+            
+          # Ensure the Gunicorn service is properly configured and enabled
+          sudo systemctl daemon-reload
+          sudo systemctl enable webapp
+          sudo systemctl restart webapp
+        
+          sudo systemctl status webapp
+
           
-          # NGINX Configuration (assuming scripts or commands are prepared)
-          # Example of copying updated NGINX config and restarting NGINX
+          # Update and restart NGINX to apply any configuration changes
           sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
           sudo ln -sf /etc/nginx/sites-available/webapp /etc/nginx/sites-enabled/
           sudo nginx -t && sudo systemctl reload nginx
