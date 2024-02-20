@@ -33,7 +33,7 @@ jobs:
         whoami
         cd ${{ github.workspace }}
         cd ..
-        ls
+        ls -a
 
     - name: Change directory to /home/app
       run: cd /home/app
