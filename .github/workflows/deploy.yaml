@@ -43,14 +43,29 @@ jobs:
             # Stop the existing Gunicorn service
             sudo systemctl stop webapp
               
-            # Run the Gunicorn server
+            # Free up port 5000
             echo "Starting the Gunicorn server..."
-            cd /home/app/FarmClash/ 
-            sudo kill $(sudo netstat -tuln | grep ':5000' | awk '{print $7}' | cut -d'/' -f1)
-            source env/bin/activate
-            cd /home/app/FarmClash/src/ProgDBTutor
-            gunicorn --bind 0.0.0.0:5000 wsgi:app
-            deactivate
+            cd /home/app/FarmClash/
+            
+            # Find the PID of the process using port 5000 and kill it safely
+            PID=$(sudo netstat -tuln | grep ':5000' | awk '{print $7}' | cut -d'/' -f1)
+            if [[ ! -z "$PID" ]]; then
+              echo "Port 5000 is in use by PID: $PID. Attempting to terminate..."
+              sudo kill $PID
+              sleep 1 # Give some time for the process to terminate
+            fi
+            
+            # Check if the port is now free, and start the server if it is
+            if ! sudo netstat -tuln | grep -q ':5000'; then
+              echo "Port 5000 is free. Starting Gunicorn server..."
+              source env/bin/activate
+              cd src/ProgDBTutor
+              gunicorn --bind 0.0.0.0:5000 wsgi:app
+              deactivate
+            else
+              echo "Failed to free up port 5000. Check for lingering processes."
+            fi
+
             
             # Display the status of the Gunicorn service
             sudo systemctl status webapp
