@@ -34,8 +34,6 @@ jobs:
             # Pull the latest changes from the repository
             git pull https://github.com/SiBMs58/FarmClash.git
             
-            ls 
-            
             # Activate the Python virtual environment and update dependencies
             source env/bin/activate && pip install -r requirements.txt
           
@@ -47,9 +45,10 @@ jobs:
               
             # Run the Gunicorn server
             echo "Starting the Gunicorn server..."
-            cd /home/app/FarmClash/src/ProgDBTutor
+            cd /home/app/FarmClash/ 
             #sudo lsof -t -i:5000 | xargs sudo kill -9
             source env/bin/activate
+            cd /home/app/FarmClash/src/ProgDBTutor
             gunicorn --bind 0.0.0.0:5000 wsgi:app
             deactivate
             
