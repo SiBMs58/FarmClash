@@ -46,7 +46,7 @@ jobs:
             # Run the Gunicorn server
             echo "Starting the Gunicorn server..."
             cd /home/app/FarmClash/ 
-            #sudo lsof -t -i:5000 | xargs sudo kill -9
+            sudo lsof -t -i:5000 | xargs sudo kill -9
             source env/bin/activate
             cd /home/app/FarmClash/src/ProgDBTutor
             gunicorn --bind 0.0.0.0:5000 wsgi:app
