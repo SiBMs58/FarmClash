@@ -51,5 +51,4 @@ jobs:
           sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
           sudo ln -sf /etc/nginx/sites-available/webapp /etc/nginx/sites-enabled/
           sudo nginx -t && sudo systemctl reload nginx
-          '
         EOF
