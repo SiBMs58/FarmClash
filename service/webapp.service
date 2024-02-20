@@ -1,6 +1,5 @@
 [Unit]
 #  specifies metadata and dependencies
-
 Description=Gunicorn instance to serve myproject
 After=network.target
 # tells the init system to only start this after the networking target has been reached
