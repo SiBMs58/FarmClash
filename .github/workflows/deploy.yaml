@@ -27,12 +27,4 @@ jobs:
     - name: Deploy to VM
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }}
-
-    - name: Pull latest changes
-      env:
-        GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
-        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      run: |
-        cd ${{ github.workspace }}
         pwd
-        git pull
