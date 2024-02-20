@@ -28,4 +28,5 @@ jobs:
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }}
         pwd
+        cd /home
         ls
