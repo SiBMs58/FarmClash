@@ -30,7 +30,7 @@ jobs:
           sudo -u app bash -c '
             cd /home/app/FarmClash &&
             git config --global credential.helper store &&
-            git remote set-url origin https://SiBMs58:${{ secrets.PERSONALACCESSTOKEN }}@github.com/SiBMs58/FarmClash.git && &&
+            git remote set-url origin https://SiBMs58:${{ secrets.PERSONALACCESSTOKEN }}@github.com/SiBMs58/FarmClash.git &&
             git pull
           '
         EOF
