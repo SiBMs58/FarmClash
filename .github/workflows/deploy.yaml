@@ -47,6 +47,8 @@ jobs:
           cd /home/app/FarmClash/src/ProgDBTutor
           gunicorn --bind 0.0.0.0:5000 wsgi:app &
           # '&' runs the command in the background so that the script can proceed
+          deactivate
+
         
           # Display the status of the Gunicorn service
           sudo systemctl status webapp
