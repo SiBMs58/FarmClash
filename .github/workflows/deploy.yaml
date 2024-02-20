@@ -20,7 +20,7 @@ jobs:
 
     - name: Deploy to VM
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
+        ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
           pwd
           #cd ../app/FarmClash
           #git config --global --add safe.directory /home/app/FarmClash
