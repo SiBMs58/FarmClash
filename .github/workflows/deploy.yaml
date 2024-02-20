@@ -21,9 +21,10 @@ jobs:
     - name: Deploy to VM
       run: |
         ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
-          cd ../app/FarmClash
-          git config --global --add safe.directory /home/app/FarmClash
-          ls -ld .git
-          git pull
+          pwd
+          #cd ../app/FarmClash
+          #git config --global --add safe.directory /home/app/FarmClash
+          #ls -ld .git
+          #git pull
           # Any other commands you need to run for your deployment
         EOF
