@@ -43,26 +43,8 @@ jobs:
             # Stop the existing Gunicorn service
             sudo systemctl stop webapp
             
-            # Check if a process is listening on port 5000
-            port_in_use=$(sudo netstat -tuln | grep ':5000')
-            
-            if [ -n "$port_in_use" ]; then
-                echo "Port 5000 is already in use. Attempting to stop the process..."
-                
-                # Find the PID of the process using port 5000
-                pid=$(sudo netstat -tuln | grep ':5000' | awk '{print $7}' | cut -d'/' -f1)
-            
-                if [ -n "$pid" ]; then
-                    # Stop the process using the PID
-                    sudo kill "$pid"
-                    echo "Process with PID $pid stopped."
-                else
-                    echo "Failed to find the PID of the process using port 5000."
-                    exit 1
-                fi
-            else
-                echo "Port 5000 is not in use."
-            fi
+            # Find and stop the process using port 5000
+            sudo lsof -t -i:5000 | xargs sudo kill -9
             
             # Run the Gunicorn server
             echo "Starting the Gunicorn server..."
