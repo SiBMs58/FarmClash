@@ -39,20 +39,14 @@ jobs:
             
             # Update Python dependencies
             pip install -r requirements.txt
-        
-            # Run the Gunicorn server
-            cd /home/app/FarmClash/src/ProgDBTutor
-            gunicorn --bind 0.0.0.0:5000 wsgi:app
+          
           '
-             
-          # Restart the Gunicorn service using the wsgi.py file
-          # Ensure your systemd service file for Gunicorn (webapp.service) is using the wsgi module correctly
-          # This command assumes the service file is properly set up to start Gunicorn with the wsgi:app command
-          #sudo systemctl daemon-reload
-          sudo systemctl restart webapp
+          # Run the Gunicorn server
+          sudo systemctl stop webapp  # Stop the existing service if running
+          cd /home/app/FarmClash/src/ProgDBTutor
+          gunicorn --bind 0.0.0.0:5000 wsgi:app &
+          # '&' runs the command in the background so that the script can proceed
         
-
-
           # Display the status of the Gunicorn service
           sudo systemctl status webapp
 
