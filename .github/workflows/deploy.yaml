@@ -47,7 +47,7 @@ jobs:
           echo "Starting the Gunicorn server..."
           source env/bin/activate
           cd /home/app/FarmClash/src/ProgDBTutor
-          /home/app/FarmClash/env/bin/gunicorn --bind 0.0.0.0:5000 wsgi:app
+          gunicorn --bind 0.0.0.0:5000 wsgi:app
           deactivate
           
           # Display the status of the Gunicorn service
