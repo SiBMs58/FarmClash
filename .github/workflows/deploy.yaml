@@ -45,15 +45,21 @@ jobs:
           sudo systemctl daemon-reload
           sudo systemctl enable webapp
           sudo systemctl restart webapp
-        
-          sudo systemctl status webapp
+          
+          echo "Checking the status of the webapp service..."
+          sudo systemctl status webapp --no-pager
+          
+          echo "Attempting to reach the application via HTTP..."
           curl http://team3.ua-ppdb.me
 
-          # Check the socket file permissions and ownership:
-          ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock
+          echo "Checking the socket file permissions and ownership:"
+          ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock || echo "Socket file not found."
           
           # Update and restart NGINX to apply any configuration changes
-          sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
+          echo "Updating NGINX configuration..."
+          sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/webapp
           sudo ln -sf /etc/nginx/sites-available/webapp /etc/nginx/sites-enabled/
+          echo "Testing and reloading NGINX..."
           sudo nginx -t && sudo systemctl reload nginx
+
         EOF
