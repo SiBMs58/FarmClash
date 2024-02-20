@@ -42,7 +42,8 @@ jobs:
           
           # Run the Gunicorn server
           cd /home/app/FarmClash/src/ProgDBTutor
-          /home/app/FarmClash/env/bin/gunicorn --bind 0.0.0.0:5000 wsgi:app &
+          /home/app/FarmClash/env/bin/gunicorn --bind 0.0.0.0:5000 wsgi:app
+          \q
           # '&' runs the command in the background so that the script can proceed
           
           # Display the status of the Gunicorn service
