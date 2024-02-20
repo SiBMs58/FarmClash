@@ -43,15 +43,19 @@ jobs:
             # Stop the existing Gunicorn service
             sudo systemctl stop webapp
               
-            # Free up port 5000
             echo "Starting the Gunicorn server..."
             cd /home/app/FarmClash/
+            
             # Find the PID of the process using port 5000 and kill it safely
-            PID=$(sudo netstat -tuln | grep ':5000' | awk '{print $7}' | cut -d'/' -f1)
-            if [[ ! -z "$PID" ]]; then
-              echo "Port 5000 is in use by PID: $PID. Attempting to terminate..."
-              sudo kill -9 $PID
-              sleep 1 # Give some time for the process to terminate
+            PIDs=$(sudo lsof -ti:5000)
+            
+            if [[ ! -z "$PIDs" ]]; then
+              echo "Port 5000 is in use. Attempting to terminate..."
+              for PID in $PIDs; do
+                echo "Killing PID: $PID"
+                sudo kill -9 $PID
+              done
+              sleep 2 # Give some time for the processes to terminate
             fi
             
             # Check if the port is now free, and start the server if it is
@@ -64,6 +68,7 @@ jobs:
             else
               echo "Failed to free up port 5000. Check for lingering processes."
             fi
+
 
             
             # Display the status of the Gunicorn service
