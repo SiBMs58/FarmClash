@@ -59,4 +59,8 @@ jobs:
           sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
           sudo ln -sf /etc/nginx/sites-available/webapp /etc/nginx/sites-enabled/
           sudo nginx -t && sudo systemctl reload nginx
+        
+          # Checking the webapp domain name
+          echo "Checking the webapp domain name..."
+          curl http://team3.ua-ppdb.me
         EOF
