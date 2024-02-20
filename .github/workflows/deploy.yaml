@@ -40,8 +40,6 @@ jobs:
             # Deactivate the virtual environment
             deactivate
             
-            whoami
-        
             # Stop the existing Gunicorn service
             sudo systemctl stop webapp
             
