@@ -28,35 +28,30 @@ jobs:
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
           sudo -u app bash -c '
-            # Navigate to the application directory
-            cd /home/app/FarmClash
-
-            # Pull the latest changes from the repository
-            git pull https://github.com/SiBMs58/FarmClash.git
-            
-            # Activate the Python virtual environment
-            source env/bin/activate
-            
-            # Update Python dependencies
-            pip install -r requirements.txt
+          # Navigate to the application directory
+          cd /home/app/FarmClash
+  
+          # Pull the latest changes from the repository
+          git pull https://github.com/SiBMs58/FarmClash.git
           
-          '
-          # Run the Gunicorn server
-          sudo systemctl stop webapp  # Stop the existing service if running
-          source /home/app/FarmClash/env/bin/activate
-          cd /home/app/FarmClash/src/ProgDBTutor
-          gunicorn --bind 0.0.0.0:5000 wsgi:app &
-          # '&' runs the command in the background so that the script can proceed
-          deactivate
-
+          # Activate the Python virtual environment and update dependencies
+          source env/bin/activate && pip install -r requirements.txt
         
+          # Stop the existing Gunicorn service
+          sudo systemctl stop webapp
+          
+          # Run the Gunicorn server
+          cd /home/app/FarmClash/src/ProgDBTutor
+          /home/app/FarmClash/env/bin/gunicorn --bind 0.0.0.0:5000 wsgi:app &
+          # '&' runs the command in the background so that the script can proceed
+          
           # Display the status of the Gunicorn service
           sudo systemctl status webapp
-
+  
           # Check if the Gunicorn service is running and the socket file exists
           echo "Checking for the Gunicorn socket file..."
           sudo ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock
-
+  
           # Update and restart NGINX to apply any configuration changes
           echo "Updating NGINX configuration..."
           sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
@@ -66,4 +61,8 @@ jobs:
           # Checking the webapp domain name
           echo "Checking the webapp domain name..."
           curl http://team3.ua-ppdb.me
+  
+          # Deactivate the virtual environment
+          deactivate
+        '
         EOF
