@@ -28,12 +28,19 @@ jobs:
       run: |
         ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
           sudo -u app bash -c '
+            set -e  # Stop execution on any error
+            
             # Navigate to the application directory
+            echo "Navigating to the application directory..."
             cd /home/app/FarmClash
     
             # Pull the latest changes from the repository
             echo "Pulling the latest changes from the repository..."
             git pull https://github.com/SiBMs58/FarmClash.git
+        
+            # Check for database migration needs
+            echo "Checking for database migrations..."
+            # TODO
             
             # Activate the Python virtual environment and update dependencies
             echo "Activating the Python virtual environment and updating dependencies..."
@@ -51,12 +58,12 @@ jobs:
             echo "Checking the status of the Gunicorn service..."
             sudo systemctl status webapp
         
-            # Checking the webapp logs
-            #echo "Checking the webapp logs..."
-            #sudo journalctl -u webapp
-          
             # Checking the webapp domain name
             echo "Checking the webapp domain name..."
-            curl team3.ua-ppdb.me
+            curl -f team3.ua-ppdb.me || echo "Health check failed!"
+            
+            # Optional: Checking webapp logs (commented out by default)
+            # echo "Checking the webapp logs..."
+            # sudo journalctl -u webapp | tail
           '
         EOF
