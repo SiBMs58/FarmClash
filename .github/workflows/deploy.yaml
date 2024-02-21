@@ -52,11 +52,11 @@ jobs:
             sudo systemctl status webapp
         
             # Checking the webapp logs
-            echo "Checking the webapp logs..."
-            sudo journalctl -u webapp
+            #echo "Checking the webapp logs..."
+            #sudo journalctl -u webapp
           
             # Checking the webapp domain name
             echo "Checking the webapp domain name..."
-            curl http://team3.ua-ppdb.me
+            curl team3.ua-ppdb.me
           '
         EOF
