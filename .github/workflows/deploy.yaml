@@ -32,12 +32,15 @@ jobs:
             cd /home/app/FarmClash
     
             # Pull the latest changes from the repository
+            echo "Pulling the latest changes from the repository..."
             git pull https://github.com/SiBMs58/FarmClash.git
             
             # Activate the Python virtual environment and update dependencies
+            echo "Activating the Python virtual environment and updating dependencies..."
             source env/bin/activate && pip install -r requirements.txt
           
             # Deactivate the virtual environment
+            echo "Deactivating the virtual environment..."
             deactivate
             
             # Restart the Gunicorn service
