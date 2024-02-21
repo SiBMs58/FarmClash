@@ -40,46 +40,20 @@ jobs:
             # Deactivate the virtual environment
             deactivate
             
-            # Stop the existing Gunicorn service
-            #sudo systemctl stop webapp
-              
-            #echo "Starting the Gunicorn server..."
-            #cd /home/app/FarmClash/
-            
-            # Find and kill the process using port 5000, if necessary
-            # This step might be redundant if Gunicorn is configured to use a Unix socket
-            #PIDs=$(sudo lsof -ti:5000)
-            
-            
-            #if [[ ! -z "$PIDs" ]]; then
-            #  echo "Port 5000 is in use. Attempting to terminate..."
-            #  for PID in $PIDs; do
-            #    echo "Killing PID: $PID"
-            #    sudo kill -9 $PID
-            #  done
-            #  sleep 2 # Give some time for the processes to terminate
-            #fi
-            
-            # Assuming Gunicorn is configured to use a Unix socket
-            # Start or restart the Gunicorn service instead of manually starting Gunicorn
-            #echo "Starting or restarting Gunicorn service..."
+            # Restart the Gunicorn service
+            echo "Starting or restarting Gunicorn service..."
             sudo systemctl restart webapp
     
             # Checking the status of the Gunicorn service
-            #sudo systemctl status webapp
-    
-            # Ensure the Gunicorn socket file exists
-            #echo "Checking for the Gunicorn socket file..."
-            #sudo ls -l /home/app/FarmClash/src/ProgDBTutor/webapp.sock
-    
-            # Update and restart NGINX to apply any configuration changes
-            #echo "Updating NGINX configuration..."
-            #sudo cp /home/app/FarmClash/nginx/webapp /etc/nginx/sites-available/
-            #sudo ln -sf /etc/nginx/sites-available/webapp /etc/nginx/sites-enabled/
-            #sudo nginx -t && sudo systemctl reload nginx
+            echo "Checking the status of the Gunicorn service..."
+            sudo systemctl status webapp
+        
+            # Checking the webapp logs
+            echo "Checking the webapp logs..."
+            sudo journalctl -u webapp
           
             # Checking the webapp domain name
-            #echo "Checking the webapp domain name..."
-            #curl http://team3.ua-ppdb.me
+            echo "Checking the webapp domain name..."
+            curl http://team3.ua-ppdb.me
           '
         EOF
