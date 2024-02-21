@@ -35,10 +35,10 @@ jobs:
             git pull https://github.com/SiBMs58/FarmClash.git
             
             # Activate the Python virtual environment and update dependencies
-            #source env/bin/activate && pip install -r requirements.txt
+            source env/bin/activate && pip install -r requirements.txt
           
             # Deactivate the virtual environment
-            #deactivate
+            deactivate
             
             # Stop the existing Gunicorn service
             #sudo systemctl stop webapp
@@ -63,7 +63,7 @@ jobs:
             # Assuming Gunicorn is configured to use a Unix socket
             # Start or restart the Gunicorn service instead of manually starting Gunicorn
             #echo "Starting or restarting Gunicorn service..."
-            #sudo systemctl restart webapp
+            sudo systemctl restart webapp
     
             # Checking the status of the Gunicorn service
             #sudo systemctl status webapp
