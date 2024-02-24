@@ -2,10 +2,13 @@
 # see tutor https://code.tutsplus.com/tutorials/creating-a-web-app-from-scratch-using-python-flask-and-mysql--cms-22972
 from flask import Flask
 from flask.templating import render_template
-from flask import request, session, jsonify
+from flask import request, session, jsonify, redirect, url_for, flash
 
 from config import config_data
 from quote_data_access import Quote, DBConnection, QuoteDataAccess
+
+import psycopg2
+import psycopg2.extras
 
 # INITIALIZE SINGLETON SERVICES
 app = Flask('Tutorial ')
@@ -49,11 +52,42 @@ def add_quote():
     quote_obj = quote_data_access.add_quote(quote_obj)
     return jsonify(quote_obj.to_dct())
 
+def get_db_connection():
+    conn = psycopg2.connect(**connection)
+    return conn
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']  # In a real app, use hashed passwords
+        conn = get_db_connection()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password))
+        user = cur.fetchone()
+        cur.close()
+        conn.close()
+        if user:
+            session['logged_in'] = True
+            session['username'] = user['username']
+            return redirect(url_for('home'))
+        else:
+            flash('Invalid username or password')
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 # VIEW
-@app.route("/")
-def main():
-    return render_template('index.html', app_data=app_data)
+@app.route('/')
+def home():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    else:
+        return 'Logged in as ' + session['username']
 
 
 @app.route("/show_quotes")
