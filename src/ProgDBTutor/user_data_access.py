@@ -3,7 +3,6 @@
 
 # Depends on psycopg2 librarcy: see (tutor) https://wiki.postgresql.org/wiki/Using_psycopg2_with_PostgreSQL
 import psycopg2
-from psycopg2 import InterfaceError, OperationalError
 from psycopg2.extras import DictCursor
 from config import config_data
 
@@ -45,7 +44,7 @@ class DBConnection:
 
 
 class User:
-    def __init__(self, iden, username, password):
+    def __init__(self, username, password, iden=None):
         self.id = iden
         self.username = username
         self.password = password
@@ -57,7 +56,7 @@ class User:
         cur.execute('SELECT * FROM users WHERE id=%s', (user_id,))
         user_record = cur.fetchone()
         if user_record:
-            return User(user_record['id'], user_record['username'], user_record['password'])
+            return User(user_record['username'], user_record['password'], user_record['id'])
         return None
 
     @property
@@ -86,7 +85,7 @@ class UserDataAccess:
         cursor.execute('SELECT * FROM users')
         user_objects = list()
         for row in cursor:
-            user_obj = User(row['id'], row['username'], row['password'])
+            user_obj = User(row['username'], row['password'], row['id'])
             user_objects.append(user_obj)
         return user_objects
 
@@ -95,12 +94,16 @@ class UserDataAccess:
         # See also SO: https://stackoverflow.com/questions/45128902/psycopg2-and-sql-injection-security
         cursor.execute('SELECT * FROM users WHERE id=%s', (iden,))
         row = cursor.fetchone()
-        return User(row['id'], row['username'], row['password'])
+        print(row)
+        if not row:
+            return None
+        return User(row['username'], row['password'], row['id'])
 
     def add_user(self, user_obj):
         cursor = self.db_connection.get_cursor()
         try:
-            cursor.execute('INSERT INTO users(username, password) VALUES(%s)', (user_obj.username, user_obj.password))
+            cursor.execute('INSERT INTO users(username, password) VALUES(%s, %s)',
+                           (user_obj.username, user_obj.password))
             # get id and return updated object
             cursor.execute('SELECT LASTVAL()')
             iden = cursor.fetchone()[0]

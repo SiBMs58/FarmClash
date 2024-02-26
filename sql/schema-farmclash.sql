@@ -4,4 +4,4 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL
 );
 
-insert into users (username, password) values ('test', '123');
+insert into users (username, password) values ('admin', '123');

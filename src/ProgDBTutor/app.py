@@ -30,6 +30,7 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.get(user_id)
 
+
 @app.route('/users', methods=['GET'])
 def get_quotes():
     # Lookup row in table Quote, e.g. 'SELECT ID,TEXT FROM Quote'
@@ -85,19 +86,41 @@ def login():
         password = request.form['password']
 
         cur = connection.get_cursor()
-        cur.execute('SELECT * FROM users WHERE username = %s', (username,))
+        cur.execute('SELECT * FROM users WHERE username = %s', (username, ))
         user = cur.fetchone()
         cur.close()
         connection.close()
 
         if user and user['password'] == password:
-            user_obj = User(user['id'], user['username'], user['password'])
+            user_obj = User(user['username'], user['password'], user['id'])
             login_user(user_obj)
             return redirect(url_for('dashboard'))
         else:
             error_message = 'Invalid username or password'
 
     return render_template('login.html', error_message=error_message)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    error_message = None  # Initialize error message
+    if request.method == 'POST':
+        username = request.form['new_username']
+        password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+
+        if password != confirm_password:
+            error_message = "Passwords do not match."
+        else:
+            # Add new user to table
+            new_user = User(username, password)
+            success = user_data_access.add_user(new_user)
+            if success:
+                return redirect(url_for('login'))
+            else:
+                error_message = "Registration failed. Please try again."
+
+    return render_template('register.html', error_message=error_message, app_data=app_data)
 
 
 @app.route('/logout')
