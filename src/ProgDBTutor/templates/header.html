@@ -1,5 +1,13 @@
 <div class="header row">
     <div class="col">
-	   <h1>{{app_data['app_name']}}</h1>
+        <h1><a href="{{ url_for('main') }}">{{app_data['app_name'] if app_data and 'app_name' in app_data else 'FarmClash'}}</h1>
+    </div>
+    <div class="col text-right">
+        {% if current_user.is_authenticated %}
+            <!-- If logged in, clicking on this will take the user to the dashboard -->
+            <a href="{{ url_for('dashboard') }}">Welcome, {{ current_user.username }}!</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
     </div>
 </div>
