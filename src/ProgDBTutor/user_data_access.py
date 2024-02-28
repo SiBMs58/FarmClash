@@ -11,11 +11,12 @@ class DBConnection:
     def __init__(self, dbname, dbuser):
         self.dbname = dbname
         self.dbuser = dbuser
+        self.dbpass = 'postgres'
         self._connect()
 
     def _connect(self):
         try:
-            self.conn = psycopg2.connect("dbname='{}' user='{}'".format(self.dbname, self.dbuser))
+            self.conn = psycopg2.connect("dbname='{}' user='{}' password={}".format(self.dbname, self.dbuser, self.dbpass))
         except:
             print('ERROR: Unable to connect to database')
             raise
