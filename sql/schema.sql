@@ -85,3 +85,21 @@ CREATE TABLE chat_messages (
     message_text TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE game_maps (
+    map_id SERIAL PRIMARY KEY,
+    width INT NOT NULL,
+    height INT NOT NULL,
+    terrain_data TEXT, -- This could be JSON or another format to describe terrain types across the map
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE map_tiles (
+    tile_id SERIAL PRIMARY KEY,
+    map_id INT REFERENCES game_maps(map_id),
+    x INT NOT NULL,
+    y INT NOT NULL,
+    terrain_type VARCHAR(255) NOT NULL, -- e.g., Grassland, Forest, Water
+    occupant_id INT, -- Optional, to link to whatever occupies the tile (a building, resource, etc.)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
