@@ -7,7 +7,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-insert into users (username, password) values ('admin', '123');
+insert into users (username, password, email) values ('admin', '123', 'admin@admin');
 
 -- Farms Table
 CREATE TABLE farms (

@@ -54,10 +54,10 @@ class User:
     def get(user_id):
         conn = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
         cur = conn.get_cursor()
-        cur.execute('SELECT * FROM users WHERE id=%s', (user_id,))
+        cur.execute('SELECT * FROM users WHERE users.user_id=%s', (user_id,))
         user_record = cur.fetchone()
         if user_record:
-            return User(user_record['username'], user_record['password'], user_record['id'])
+            return User(user_record['username'], user_record['password'], user_record['user_id'])
         return None
 
     @property
@@ -103,8 +103,8 @@ class UserDataAccess:
     def add_user(self, user_obj):
         cursor = self.db_connection.get_cursor()
         try:
-            cursor.execute('INSERT INTO users(username, password) VALUES(%s, %s)',
-                           (user_obj.username, user_obj.password))
+            cursor.execute('INSERT INTO users (username, password, email) VALUES (%s, %s, %s);',
+                           (user_obj.username, user_obj.password, user_obj.email))
             # get id and return updated object
             cursor.execute('SELECT LASTVAL()')
             iden = cursor.fetchone()[0]

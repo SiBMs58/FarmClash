@@ -92,7 +92,7 @@ def login():
         connection.close()
 
         if user and user['password'] == password:
-            user_obj = User(user['username'], user['password'], user['id'])
+            user_obj = User(user['username'], user['password'], user['user_id'])
             login_user(user_obj)
             return redirect(url_for('dashboard'))
         else:
@@ -106,10 +106,13 @@ def register():
     error_message = None  # Initialize error message
     if request.method == 'POST':
         username = request.form['new_username']
+        email = request.form['new_email']
         password = request.form['new_password']
         confirm_password = request.form['confirm_password']
 
-        if password != confirm_password:
+        if not email:
+            error_message = "Email is required."
+        elif password != confirm_password:
             error_message = "Passwords do not match."
         else:
             # Add new user to table
