@@ -22,6 +22,11 @@ class DBConnection:
             print(f'ERROR: Unable to connect to the database: {e}')
             raise
 
+    def get_connection(self):
+        if self.conn is None or self.conn.closed:
+            self._connect()
+        return self.conn
+
     def get_cursor(self):
         if not self.conn or self.conn.closed:
             self._connect()
