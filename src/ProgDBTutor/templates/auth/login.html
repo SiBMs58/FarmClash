@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Login</title>
-    
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    
+	<title>Login - {{app_name['app_name']}}</title>
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
 	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='mystyle.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/mystyle.css') }}">
     
 	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
 	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
@@ -50,7 +50,7 @@
                     {% endif %}
 
                     <div class="text-center">
-                        <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
+                        <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>.</p>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Login</button>
