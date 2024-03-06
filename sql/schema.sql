@@ -88,9 +88,10 @@ CREATE TABLE chat_messages (
 
 CREATE TABLE game_maps (
     map_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id),
     width INT NOT NULL,
     height INT NOT NULL,
-    terrain_data TEXT, -- This could be JSON or another format to describe terrain types across the map
+    -- terrain_data TEXT, -- This could be JSON or another format to describe terrain types across the map
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
