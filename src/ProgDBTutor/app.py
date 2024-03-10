@@ -30,6 +30,11 @@ from flask import render_template
 def main():
     return render_template('index.html', app_data=app_data)
 
+# TEST FILES VAN JOREN
+@app.route("/test")
+def test():
+    return render_template('JorenTestFiles/game.html')
+
 # RUN DEV SERVER
 if __name__ == "__main__":
     app.run(HOST, debug=DEBUG)

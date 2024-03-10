@@ -1,6 +1,8 @@
 <div class="header row">
     <div class="col">
-        <h1><a href="{{ url_for('main') }}">{{app_data['app_name'] if app_data and 'app_name' in app_data else 'FarmClash'}}</h1>
+        <h1><a href="{{ url_for('main') }}">
+            {{app_data['app_name'] if app_data and 'app_name' in app_data else 'FarmClash'}}
+        </a></h1>
     </div>
     <div class="col text-right">
         {% if current_user.is_authenticated %}

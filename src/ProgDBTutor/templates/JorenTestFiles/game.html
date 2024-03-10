@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tile Rendering Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gameWorldStyles.css') }}">
+    <style>
+        canvas {
+            margin: 0;
+            image-rendering: pixelated;
+        }
+
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="worldCanvas"></canvas>
+    <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
+
+<!--
+    <div>
+        <ul class="tile-list">
+            <li><img src="{{ url_for('static', filename='JorenStaticTestFiles/Grass.6.6.png') }}" alt="Grass tile"></li>
+            <li><img src="../../static/JorenStaticTestFiles/Grass.6.5.png" alt="Grass tile"></li>
+            <li><img src="../../static/JorenStaticTestFiles/Grass.6.4.png" alt="Grass tile"></li>
+            <li><img src="../../static/JorenStaticTestFiles/Grass.6.5.png" alt="Grass tile"></li>
+            <li><img src="../../static/JorenStaticTestFiles/Grass.6.4.png" alt="Grass tile"></li>
+            <li><img src="../../static/JorenStaticTestFiles/Grass.6.6.png" alt="Grass tile"></li>
+            <li><img src="../../static/JorenStaticTestFiles/Grass.6.4.png" alt="Grass tile"></li>
+            <li><img src="../../static/JorenStaticTestFiles/Grass.6.6.png" alt="Grass tile"></li>
+        </ul>
+    </div>
+-->
+</body>
+</html>
