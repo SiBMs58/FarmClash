@@ -3,6 +3,7 @@ from flask_login import current_user
 from config import config_data
 from data_access.dbconnection import DBConnection
 from data_access.user_data_access import UserDataAccess
+from data_access.map_data_access import MapDataAccess
 from extensions import login_manager
 from views.auth import auth_blueprint
 from views.game import game_blueprint
@@ -17,6 +18,8 @@ app_data['app_name'] = config_data['app_name']
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAccess(connection)
 app.config['user_data_access'] = user_data_access
+map_data_access = MapDataAccess(connection)
+app.config['map_data_access'] = map_data_access
 
 # Initialize the login manager
 login_manager.init_app(app)
