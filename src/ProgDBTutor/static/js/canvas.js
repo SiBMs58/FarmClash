@@ -1,23 +1,22 @@
 import { gameTerrainMap } from './gameClasses.js'
+import { generateRandomMap } from './developerFunctions.js'
+import { handleKeyDown } from './userInputHandler.js'
 
-const canvas = document.getElementById('worldCanvas');
+const canvas = document.getElementById('terrainCanvas');
 const ctx = canvas.getContext('2d');
 const tileSize = 64;
 
-const mapData = {
-  map_width: 3,
-  map_height: 3,
-  terrain_tiles: [
-    ["Grass.6.6", "Grass.6.4", "Grass.6.6"],
-    ["Grass.6.4", "Water.1.2", "Grass.6.6"],
-    ["Grass.6.6", "Grass.6.4", "Grass.6.4"]
-  ]
-};
 
+const mapData = generateRandomMap(40, 40);
 
-
-const terrainMap = new gameTerrainMap(mapData);
+const terrainMap = new gameTerrainMap(mapData, tileSize, ctx);
 //terrainMap.fetchTiles();
+
+document.addEventListener('keydown', (event) => {
+    handleKeyDown(event, terrainMap);
+});
+
+
 
 /*
 function drawTiles() {
@@ -45,7 +44,7 @@ function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     ctx.imageSmoothingEnabled = false;
-    terrainMap.drawTiles(ctx, tileSize); // Redraw tiles after resizing
+    terrainMap.drawTiles(); // Redraw tiles after resizing
 }
 
 // Initial resize and draw
