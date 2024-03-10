@@ -65,7 +65,8 @@ export class gameTerrainMap {
 
     // Haalt de terrain_tiles uit de database en update deze klasse
     fetchTiles() {
-        fetch('/api/get-game-state')
+        console.log("fetchTiles wordt opgeroepen...")
+        fetch('/api/get-game-terrain-map')
             .then(response => response.json()) // Parse JSON response
             .then(data => {
 
@@ -74,6 +75,9 @@ export class gameTerrainMap {
                 this.tiles = data.terrain_tiles;
 
             }).catch(error => console.error('gameTerrainMap.fetchTiles: ', error));
+        this.viewX = 0;
+        this.viewY = 0;
+        this.drawTiles();
     }
 
     toJSON() {
