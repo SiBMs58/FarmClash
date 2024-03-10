@@ -5,6 +5,14 @@ class UserDataAccess:
     def __init__(self, db_connection):
         self.db_connection = db_connection
 
+    def get_user_by_username(self, user_name):
+        cursor = self.db_connection.get_cursor()
+        cursor.execute('SELECT * FROM users WHERE username = %s', (user_name,))
+        row = cursor.fetchone()
+        if row:
+            return User(row['username'], row['password'], row['email'], row['user_id'], row['created_at'])
+        return None
+
     def get_user(self, user_id):
         cursor = self.db_connection.get_cursor()
         cursor.execute('SELECT * FROM users WHERE user_id = %s', (user_id,))
