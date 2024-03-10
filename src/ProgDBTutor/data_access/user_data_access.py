@@ -1,4 +1,5 @@
 from models.user import User
+from werkzeug.security import generate_password_hash
 
 
 class UserDataAccess:
@@ -24,8 +25,9 @@ class UserDataAccess:
     def add_user(self, user):
         cursor = self.db_connection.get_cursor()
         try:
+            hashed_password = generate_password_hash(user.password)
             cursor.execute('INSERT INTO users (username, password, email) VALUES (%s, %s, %s) RETURNING user_id',
-                           (user.username, user.password, user.email))
+                           (user.username, hashed_password, user.email))
             user_id = cursor.fetchone()[0]
             self.db_connection.commit()
             return user_id

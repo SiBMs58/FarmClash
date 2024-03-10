@@ -8,10 +8,12 @@ from config import config_data
 
 auth_blueprint = Blueprint('auth', __name__, template_folder='templates')
 
+
 @login_manager.user_loader
 def load_user(user_id):
     user_data_access = current_app.config.get('user_data_access')
     return user_data_access.get_user(user_id)
+
 
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
@@ -23,13 +25,8 @@ def login():
         user_data_access = current_app.config.get('user_data_access')
         user_record = user_data_access.get_user_by_username(username)
 
-        if (username=='admin' and password=='123'):
-            login_user(user_record)
-            # Make sure to redirect to a valid endpoint in your game blueprint
-            return redirect(url_for('game.game'))
-
-
-        if (user_record and check_password_hash(user_record['password'], password)) or (username == 'admin' and password == '123'):
+        if ((username == 'admin' and password == '123') or
+                (user_record and check_password_hash(user_record.password, password))):
             login_user(user_record)
             # Make sure to redirect to a valid endpoint in your game blueprint
             return redirect(url_for('game.game'))
@@ -37,10 +34,24 @@ def login():
             error_message = 'Invalid username or password.'
     return render_template('auth/login.html', error_message=error_message, app_name=config_data['app_name'])
 
+
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
-    # Implement registration logic here
-    pass
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')  # Assuming you're collecting email too
+
+        user_data_access = current_app.config.get('user_data_access')
+        success = user_data_access.add_user(User(username, password, email))
+        if success:
+            # You might want to automatically log in the user or redirect to the login page
+            return redirect(url_for('auth.login'))
+        else:
+            return redirect(url_for('auth.register'))
+
+    return render_template('auth/register.html', app_name=config_data['app_name'])
+
 
 @auth_blueprint.route('/logout')
 @login_required
