@@ -6,11 +6,13 @@ const canvas = document.getElementById('terrainCanvas');
 const ctx = canvas.getContext('2d');
 const tileSize = 64;
 
-//const mapData = generateRandomMap(50, 50);
 
 const response = await fetch('/static/map.json');
 const mapData = await response.json();
 
+if (!mapData) {
+    const mapData = generateRandomMap(50, 50);
+}
 
 
 const terrainMap = new gameTerrainMap(mapData, tileSize, ctx);
