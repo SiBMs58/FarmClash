@@ -8,10 +8,10 @@ const tileSize = 64;
 
 
 const response = await fetch('/static/map.json');
-const mapData = await response.json();
+let mapData = await response.json();
 
 if (!mapData) {
-    const mapData = generateRandomMap(50, 50);
+    mapData = generateRandomMap(50, 50);
 }
 
 
