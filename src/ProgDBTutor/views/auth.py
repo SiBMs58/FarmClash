@@ -45,7 +45,13 @@ def register():
         user_data_access = current_app.config.get('user_data_access')
         success = user_data_access.add_user(User(username, password, email))
         if success:
-            # You might want to automatically log in the user or redirect to the login page
+            # TODO: Send confiration e-mail
+            # TODO: Create start map in db
+
+            new_user = user_data_access.get_user_by_username(username)
+            map_data_access = current_app.config.get('map_data_access')
+            map_data_access.add_default_map(new_user.user_id)
+
             return redirect(url_for('auth.login'))
         else:
             return redirect(url_for('auth.register'))

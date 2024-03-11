@@ -15,7 +15,7 @@ def load_user(user_id):
 @login_required
 def game():
     map_data_access = current_app.config.get('map_data_access')
-    map_json = map_data_access.map_data_to_json(current_user.user_id, 1)
+    map_json = map_data_access.map_data_to_json(current_user.user_id, 3) # TODO: Determine the first  map_id for the user
     return render_template('game/game.html', app_data=config_data)
 
 @game_blueprint.route('/dashboard')
