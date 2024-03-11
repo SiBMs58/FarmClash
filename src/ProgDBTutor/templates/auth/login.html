@@ -1,39 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Login - {{app_name['app_name']}}</title>
-
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-
-	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='css/mystyle.css') }}">
-    
-	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
-	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+    <title>Login - {{ app_name }}</title>
+    {% include 'head.html' %} <!-- Ensure this file includes Bootstrap CSS -->
 </head>
-<body>	
-	{% include 'header.html' %}
-    
-    <!-- 
-        Bootstrap has a grid system for aligning elements in a responsive layout.
+<body class="d-flex align-items-center vh-100"> <!-- This class combination will center the content vertically -->
+    {% include 'header.html' %}
 
-        The outer element is a container, which contains rows and columns.
-        Each row can should contain up to 12 columns. However, excess columns
-        will simply be stacked.
-
-        When adding multiple columns to a row, the framework automatically assigns
-        equal width to all columns. For variable with columns, one can use for
-        instance col-1, col-sm-2, col-md-4 or col-xl-8.
-
-        More information can be found using the following URL:
-            https://getbootstrap.com/docs/4.0/layout/grid/
-    -->
-    
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <h2 class="text-center">Login</h2>
-                <form action="/login" method="post">
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center"> <!-- This will center the column horizontally -->
+            <div class="col-md-4"> <!-- Adjust the column size as needed -->
+                <h2 class="text-center mb-4">Login</h2> <!-- Add bottom margin to the title -->
+                <form action="/auth/login" method="post">
                     <div class="form-group">
                         <label for="username">Username:</label>
                         <input type="text" class="form-control" id="username" name="username" required>
@@ -42,23 +20,20 @@
                         <label for="password">Password:</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-
                     {% if error_message %}
                         <div class="alert alert-danger" role="alert">
-                          {{ error_message }}
+                            {{ error_message }}
                         </div>
                     {% endif %}
-
-                    <div class="text-center">
-                        <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>.</p>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button> <!-- Make the button block level -->
                 </form>
+                <div class="text-center mt-3"> <!-- Add top margin to the register link -->
+                    <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>.</p>
+                </div>
             </div>
         </div>
     </div>
-    
-    {% include 'footer.html' %}   
+
+    {% include 'footer.html' %}
 </body>
 </html>

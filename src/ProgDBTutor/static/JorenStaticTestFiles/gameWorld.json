@@ -1,9 +1,0 @@
-{
-  "map_width": 3,
-  "map_height": 3,
-  "terrain_tiles": [
-    ["Grass.6.6", "Grass.6.4", "Grass.6.6"],
-    ["Grass.6.4", "Water.1.2", "Grass.6.6"],
-    ["Grass.6.6", "Grass.6.4", "Grass.6.4"]
-  ]
-}

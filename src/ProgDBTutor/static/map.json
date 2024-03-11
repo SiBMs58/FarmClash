@@ -1,0 +1,9 @@
+{
+    "map_width": 1,
+    "map_height": 1,
+    "terrain_tiles": [
+        [
+            "Grass.6.6"
+        ]
+    ]
+}

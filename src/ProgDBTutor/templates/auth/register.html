@@ -1,67 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Register - {{app_data['app_name']}}</title>
-    
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    
-	<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap-4.0.0.min.css') }}">
-	<link rel="stylesheet" href="{{ url_for('static',filename='mystyle.css') }}">
-    
-	<script src="{{ url_for('static',filename='jquery-3.2.1.js') }}"></script>
-	<script src="{{ url_for('static',filename='bootstrap-4.0.0.min.js') }}"></script>
+    <title>Register - {{ app_name }}</title>
+    {% include 'head.html' %} <!-- Ensure this file includes Bootstrap CSS -->
 </head>
-<body>	
-	{% include 'header.html' %}
-    
-    <!-- 
-        Bootstrap has a grid system for aligning elements in a responsive layout.
+<body class="d-flex align-items-center vh-100"> <!-- This class combination will center the content vertically -->
+    {% include 'header.html' %}
 
-        The outer element is a container, which contains rows and columns.
-        Each row can should contain up to 12 columns. However, excess columns
-        will simply be stacked.
-
-        When adding multiple columns to a row, the framework automatically assigns
-        equal width to all columns. For variable with columns, one can use for
-        instance col-1, col-sm-2, col-md-4 or col-xl-8.
-
-        More information can be found using the following URL:
-            https://getbootstrap.com/docs/4.0/layout/grid/
-    -->
-    
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <h2 class="text-center">Register</h2>
-                <form action="/register" method="post">
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center"> <!-- This will center the column horizontally -->
+            <div class="col-md-4"> <!-- Adjust the column size as needed -->
+                <h2 class="text-center mb-4">Register</h2> <!-- Add bottom margin to the title -->
+                <form action="{{ url_for('auth.register') }}" method="post">
                     <div class="form-group">
-                        <label for="new_username">Username:</label>
-                        <input type="text" class="form-control" id="new_username" name="new_username" required>
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
                     </div>
                     <div class="form-group">
-                        <label for="new_email">Email:</label>
-                        <input type="email" class="form-control" id="new_email" name="new_email" required>
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="form-group">
-                        <label for="new_password">Password:</label>
-                        <input type="password" class="form-control" id="new_password" name="new_password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm_password">Confirm Password:</label>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     {% if error_message %}
                         <div class="alert alert-danger" role="alert">
-                          {{ error_message }}
+                            {{ error_message }}
                         </div>
                     {% endif %}
-                    <button type="submit" class="btn btn-primary">Register</button>
+                    <button type="submit" class="btn btn-primary btn-block">Register</button> <!-- Make the button block level -->
                 </form>
-                <p class="text-center">Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
+                <div class="text-center mt-3"> <!-- Add top margin to the login link -->
+                    <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a>.</p>
+                </div>
             </div>
         </div>
     </div>
-    
-    {% include 'footer.html' %}   
+
+    {% include 'footer.html' %}
 </body>
 </html>
