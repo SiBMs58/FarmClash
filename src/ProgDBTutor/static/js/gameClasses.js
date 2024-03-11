@@ -38,7 +38,7 @@ export class gameTerrainMap {
     }
 
     async initialize() {
-        //this.fetchTerrainMapData();
+        //await this.fetchTerrainMapData();
         //await this.fetchTerrainAssetList();
         await new Promise((resolve) => this.preloadTerrainAssets(resolve));
         // Safe to call stuff here
@@ -84,20 +84,19 @@ export class gameTerrainMap {
 
     // Haalt de terrain_tiles uit de database en update deze klasse
     fetchTerrainMapData() {
-        console.log("fetchTiles wordt opgeroepen...")
-        fetch('/api/get-game-terrain-map')
+        console.log("fetchTiles wordt opgeroepen...");
+        return fetch('/api/get-game-terrain-map') // Make sure to return this promise
             .then(response => response.json()) // Parse JSON response
             .then(data => {
-
                 this.width = data.width;
                 this.height = data.height;
                 this.tiles = data.terrain_tiles;
-
-            }).catch(error => console.error('gameTerrainMap.fetchTiles: ', error));
-        this.viewX = 0;
-        this.viewY = 0;
-        this.drawTiles();
+                this.viewX = 0;
+                this.viewY = 0;
+            })
+            .catch(error => console.error('gameTerrainMap.fetchTiles: ', error));
     }
+
 
 
     drawTiles() {

@@ -9,7 +9,6 @@ const mapData = generateRandomMap(40, 40);
 const terrainMap = new gameTerrainMap(mapData, tileSize, ctx);
 
 function resizeCanvas() {
-    // todo zorgen dat viewX en viewY naar geldige waardes gaan
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     ctx.imageSmoothingEnabled = false;
