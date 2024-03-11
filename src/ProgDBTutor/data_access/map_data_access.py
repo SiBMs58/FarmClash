@@ -24,36 +24,9 @@ class MapDataAccess:
         cursor.execute("INSERT INTO game_maps (user_id, width, height) VALUES (%s, %s, %s) RETURNING map_id", (user_id, width, height))
         self.db_connection.commit()
 
-    def add_default_map(self, user_id):
-        """Adds a default map to the database.For the new users
-        Create a 10x10 map with the following terrain types
-        WWWWWWWWWW
-        WWWWWWWWWW
-        WWWWWWWWWW
-        WWWGGGWWWW
-        WWWGGGWWWW
-        WWWGGGWWWW
-        WWWGGGWWWW
-        WWWWWWWWWW
-        WWWWWWWWWW
-        WWWWWWWWWW
-        """
-        cursor = self.db_connection.get_cursor()
-        # Create a 10x10 map and retrieve the map_id
-        cursor.execute("INSERT INTO game_maps (user_id, width, height) VALUES (%s, %s, %s) RETURNING map_id", (user_id, 10, 10))
-        map_id = cursor.fetchone()[0]  # Aanname dat map_id de eerste kolom is die geretourneerd wordt
 
-        # Prepare all tile inserts
-        for x in range(10):
-            for y in range(10):
-                terrain_type = 'Grass.6.6' if 3 <= y < 7 and 3 <= x < 7 else 'Water.1.2'
-                cursor.execute("INSERT INTO map_tiles (map_id, x, y, terrain_type) VALUES (%s, %s, %s, %s)", (map_id, x, y, terrain_type))
-
-        self.db_connection.commit()
-
-
-    def map_data_to_json(self, user_id, map_id):
-        """Converts map and tile data for a specific map into JSON format."""
+    """def map_data_to_json(self, user_id, map_id):
+        Converts map and tile data for a specific map into JSON format.
         map_dimensions = self.get_map_dimensions(user_id, map_id)
         if not map_dimensions:
             return json.dumps({})  # Return an empty JSON object if no map is found
@@ -74,4 +47,4 @@ class MapDataAccess:
         }
 
         # Convert to JSON
-        return json.dumps(map_data)
+        return json.dumps(map_data)"""
