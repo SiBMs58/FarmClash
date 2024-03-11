@@ -28,9 +28,6 @@ def login():
         if ((username == 'admin' and password == '123') or
                 (user_record and check_password_hash(user_record.password, password))):
             login_user(user_record)
-            new_user = user_data_access.get_user_by_username(username)
-            map = user_data_access.get_maps_by_user(new_user.user_id, 1)
-            map.to_json()
             # Make sure to redirect to a valid endpoint in your game blueprint
             return redirect(url_for('game.game'))
         else:
@@ -49,9 +46,7 @@ def register():
         success = user_data_access.add_user(User(username, password, email))
         if success:
             # TODO: Send confiration e-mail
-
-            login_user(new_user)
-
+            # Initialize default map
             return redirect(url_for('auth.login'))
         else:
             return redirect(url_for('auth.register'))

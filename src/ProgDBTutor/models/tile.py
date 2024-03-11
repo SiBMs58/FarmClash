@@ -3,3 +3,6 @@ class Tile:
         self.x = x
         self.y = y
         self.terrain_type = terrain_type
+
+    def get_terrain(self):
+        return self.terrain_type

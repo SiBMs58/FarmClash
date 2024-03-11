@@ -95,6 +95,8 @@ CREATE TABLE game_maps (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+INSERT INTO game_maps (user_id, width, height) VALUES (1, 1, 1);
+
 CREATE TABLE map_tiles (
     tile_id SERIAL PRIMARY KEY,
     map_id INT REFERENCES game_maps(map_id),
@@ -104,3 +106,5 @@ CREATE TABLE map_tiles (
     occupant_id INT, -- Optional, to link to whatever occupies the tile (a building, resource, etc.)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO map_tiles (map_id, x, y, terrain_type) VALUES (1, 0, 0, 'Grass');

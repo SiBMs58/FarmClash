@@ -2,18 +2,17 @@ import json
 import random
 
 #from Building import Building
-from tile import Tile
-
-MAP_WIDTH = 3
-MAP_HEIGHT = 3
+from models.tile import Tile
 
 
 class Map:
-    def __init__(self):
-        self.width = MAP_WIDTH
-        self.height = MAP_HEIGHT
-        self.terrain_data = [[Tile() for x in range(self.width)] for y in range(self.height)]
-        self.created_at = 0
+    def __init__(self, map_id=None, user_id=None, width=None, height=None, created_at=None):
+        self.map_id = map_id
+        self.user_id = user_id
+        self.width = width
+        self.height = height
+        self.terrain_data = None
+        self.created_at = created_at
 
     def _can_place(self, x, y, width, height):
         """
@@ -87,18 +86,17 @@ class Map:
         :return: the building at position, NONE if there is no building or it is out of bounds
         """
         if 0 < x < self.width and 0 < y < self.height:
-            return self._map[y][x].get_building()
+            return self.terrain_data[y][x].get_building()
         return None
 
-    def set_terrain(self, x, y, terrain):
+    def set_terrain(self, terrain_tiles):
         """
         Set the terrain
         :param x: x position
         :param y: y position
-        :param terrain: terrain to set
+        :param terrain_tiles: all the terrain tiles in the map
         """
-        if 0 < x < self.width and 0 < y < self.height:
-            self._map[y][x].set_terrain(terrain)
+        self.terrain_data = terrain_tiles
 
     def get_terrain(self, x, y):
         """
@@ -116,14 +114,13 @@ class Map:
         Converts the map to a dict and returns it
         :return: the dict of the map
         """
-        terrain_map = [[f"{tile.get_terrain()}" for tile in row] for row in self._map]
-        structure_map = [[tile.get_building_dict() for tile in row] for row in self._map]
+        terrain_map = [[x.get_terrain() + '.6.6' if x.get_terrain() == 'Grass' else x.get_terrain()] for x in
+                       self.terrain_data]
 
         self_map = {
             "map_width": self.width,
             "map_height": self.height,
             "terrain_tiles": terrain_map,
-            "structures": structure_map
         }
 
         return self_map
@@ -136,10 +133,10 @@ class Map:
         """
         self_map = self.to_dict()
 
-        with open("map.json", 'w') as json_file:
+        with open("static/map.json", 'w') as json_file:
             json.dump(self_map, json_file, indent=4)
 
-        with open("map.json", 'r') as json_file:
+        with open("static/map.json", 'r') as json_file:
             json_string = json_file.read()
 
         return json_string
