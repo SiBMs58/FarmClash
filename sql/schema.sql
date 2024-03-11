@@ -95,7 +95,7 @@ CREATE TABLE game_maps (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO game_maps (user_id, width, height) VALUES (1, 1, 1);
+INSERT INTO game_maps (user_id, width, height) VALUES (1, 50, 50);
 
 CREATE TABLE map_tiles (
     tile_id SERIAL PRIMARY KEY,
