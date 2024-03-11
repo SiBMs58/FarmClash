@@ -46,7 +46,7 @@ def register():
         success = user_data_access.add_user(User(username, password, email))
         if success:
             # TODO: Send confiration e-mail
-            # Initialize default map
+            # TODO: Initialize default map
             return redirect(url_for('auth.login'))
         else:
             return redirect(url_for('auth.register'))
