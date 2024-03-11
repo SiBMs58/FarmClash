@@ -23,6 +23,11 @@ terrainMap.initialize().then(() => {
     document.addEventListener('keydown', (event) => {
         handleKeyDown(event, terrainMap);
     });
+    /*
+    document.addEventListener('scroll', (event) => {
+        handleScrollInput(event, terrainMap);
+    });
+    */
 }).catch(error => {
     console.error('Initialization failed:', error);
     // todo load error page (error getekend met de map tiles)

@@ -19,3 +19,7 @@ export function handleKeyDown(event, terrainMapClass) {
       break;
   }
 }
+
+export function handleScrollInput(event, terrainMapClass) {
+
+}
