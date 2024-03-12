@@ -39,16 +39,16 @@ export class gameTerrainMap {
 
     async initialize() {
         //await this.fetchTerrainMapData();
-        //await this.fetchTerrainAssetList();
+        await this.fetchTerrainAssetList();
         await new Promise((resolve) => this.preloadTerrainAssets(resolve));
         // Safe to call stuff here
     }
 
     fetchTerrainAssetList() {
-        return fetch('/api/get-asset-list')
+        return fetch('/static/img/assets/assetList.json')
             .then(response => response.json())
             .then(data => {
-                console.log(data); // DEBUG
+                console.log(data + "  -> DE assetlist fetch werkt!"); // DEBUG
                 this.terrainAssetList =  data.terrain;
             })
             .catch(error => {
@@ -59,7 +59,7 @@ export class gameTerrainMap {
 
     preloadTerrainAssets(callback) {
         let assetMap = {};
-        let assetList = terrainAssetList; // todo als fetch werkt veranderen door 'this.terrainAssetList'
+        let assetList = this.terrainAssetList; // todo als fetch werkt veranderen door 'this.terrainAssetList'
         let totalCount = 0;
         let loadedCount = 0;
 
