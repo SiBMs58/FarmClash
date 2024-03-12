@@ -119,7 +119,7 @@ class Map:
         for row in range(self.height):
             row_list = []
             for col in range(self.width):
-                row_list.append(self.terrain_data[(row*self.width-1)+col].get_terrain())
+                row_list.append(self.terrain_data[(row*self.width)+col].get_terrain())
             terrain_map.append(row_list)
 
         self_map = {

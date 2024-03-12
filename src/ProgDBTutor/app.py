@@ -50,8 +50,6 @@ def get_users():
 @app.route('/api/maps')
 def get_maps():
     maps = map_data_access.get_all_maps()  # Assuming this method exists
-    first_map = maps[0]
-    print(first_map.to_dict())
     return jsonify([map.to_dict() for map in maps])
 
 @app.route('/api/test', methods=['POST'])
