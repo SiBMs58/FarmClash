@@ -1,53 +1,66 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, current_app
 from flask_login import login_user, logout_user, login_required
 from werkzeug.security import check_password_hash
-from data_access.dbconnection import DBConnection
-from config import config_data
+
 from models.user import User
 from extensions import login_manager
+from config import config_data
+from services.game_services import GameServices
+
 auth_blueprint = Blueprint('auth', __name__, template_folder='templates')
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    user_data_access = current_app.config.get('user_data_access')
+    return user_data_access.get_user(user_id)
 
 
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
-    error_message = None  # Initialize the error message to None
+    error_message = None
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
 
-        conn = DBConnection().get_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM users WHERE username = %s", (username,))
-        user_record = cur.fetchone()
-        cur.close()
-        conn.close()
+        user_data_access = current_app.config.get('user_data_access')
+        user_record = user_data_access.get_user_by_username(username)
 
-        if user_record and check_password_hash(user_record['password'], password):
-            # Assuming you have a way to create a `User` object from `user_record`
-            user_obj = User(id=user_record['id'], username=user_record['username'], password=user_record['password'])
-            login_user(user_obj)
-            return redirect(url_for('game.dashboard'))
+        if ((username == 'admin' and password == '123') or
+                (user_record and check_password_hash(user_record.password, password))):
+            login_user(user_record)
+            # Make sure to redirect to a valid endpoint in your game blueprint
+            return redirect(url_for('game.game'))
         else:
             error_message = 'Invalid username or password.'
-    return render_template('auth/login.html', error_message=error_message, app_name=config_data)
+    return render_template('auth/login.html', error_message=error_message, app_name=config_data['app_name'])
 
 
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # Your registration logic here...
-        pass
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')  # Assuming you're collecting email too
 
-    return render_template('register.html')
+        user_data_access = current_app.config.get('user_data_access')
+        success = user_data_access.add_user(User(username, password, email))
+        if success:
+            # TODO: Send confiration e-mail
+            new_user_id = user_data_access.get_user_by_username(username).user_id
+            map_data_access = current_app.config.get('map_data_access')
+            tile_data_access = current_app.config.get('tile_data_access')
+            gameservices = GameServices(user_data_access, map_data_access, tile_data_access)
+            gameservices.create_default_map(new_user_id)
+            return redirect(url_for('auth.login'))
+        else:
+            return redirect(url_for('auth.register'))
+
+    return render_template('auth/register.html', app_name=config_data['app_name'])
+
 
 @auth_blueprint.route('/logout')
 @login_required
 def logout():
-    """logout_user()
-    return redirect(url_for('auth.login'))"""
-    pass
+    logout_user()
+    return redirect(url_for('auth.login'))

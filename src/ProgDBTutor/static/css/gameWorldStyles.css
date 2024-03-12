@@ -1,0 +1,27 @@
+body {
+    background-color: #e6faff;
+    margin: 0;
+}
+
+img {
+    width: 5vw; /* 1/20th of the viewport width */
+    display: block;
+    image-rendering: pixelated;
+}
+
+ul.tile-list {
+    list-style-type: none; /* Remove default bullet points */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    display: flex; /* Use Flexbox */
+}
+
+/* Apply styles to list items */
+ul.tile-list li {
+    padding: 0; /* Add padding to each list item */
+}
+
+/* Style the last list item to remove the right border */
+ul.tile-list li:last-child {
+    border-right: none;
+}
