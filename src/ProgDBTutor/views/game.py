@@ -16,6 +16,8 @@ def load_user(user_id):
 def game():
     user_data_access = current_app.config.get('user_data_access')
     currUser = user_data_access.get_user_by_username(current_user.username)
+    if currUser.username == 'admin':
+        return render_template('game/admin.html', app_data=config_data)
     first_map = user_data_access.get_maps_by_user(currUser.user_id, 1)
     map_data_access = current_app.config.get('map_data_access')
     terrain_tiles = map_data_access.get_terrain_tiles(first_map.map_id)
