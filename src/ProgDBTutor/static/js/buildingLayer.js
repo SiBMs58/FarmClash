@@ -2,15 +2,6 @@ function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
-// Debug
-const terrainAssetList =
-    { terrain:
-        {
-            Grass: ["Grass.1.1","Grass.1.2","Grass.1.3","Grass.2.1","Grass.2.2","Grass.2.3","Grass.3.1","Grass.3.2","Grass.3.3","Grass.6.1","Grass.6.2","Grass.6.3","Grass.6.4","Grass.6.5","Grass.6.6","Grass.7.1","Grass.7.2","Grass.7.3","Grass.7.4","Grass.7.5","Grass.7.6"],
-            Water: ["Water.1.1","Water.1.2","Water.1.3","Water.1.4"]
-        }
-    }
-
 
 /** Tile coördinaten: (y,x)
     0 1 2 3 | x
@@ -21,45 +12,63 @@ const terrainAssetList =
     y
 */
 
-export class gameTerrainMap {
+export class BuildingMap {
     constructor(mapData, _tileSize, _ctx) {
         this.width = mapData.map_width;
         this.height = mapData.map_height;
-        this.tiles = mapData.terrain_tiles;
+        this.tiles = mapData.building_tiles;
         this.tileSize = _tileSize;
         this.ctx = _ctx;
 
         this.viewY = 0;
         this.viewX = 0;
 
-        this.terrainAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
-        this.terrainAssets = {}; // Bevat {"pad_naar_asset": imageObject}
-
+        this.buildingAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
+        this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
     }
 
     async initialize() {
-        //await this.fetchTerrainMapData();
-        await this.fetchTerrainAssetList();
-        await new Promise((resolve) => this.preloadTerrainAssets(resolve));
+        await this.fetchBuildingMapData();
+        await this.fetchBuildingAssetList();
+        await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
     }
 
-    fetchTerrainAssetList() {
-        return fetch('/static/img/assets/assetList.json')
-            .then(response => response.json())
-            .then(data => {
-                console.log(data + "  -> DE assetlist fetch werkt!"); // DEBUG
-                this.terrainAssetList =  data.terrain;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                throw error;
-            });
+    // Haalt de terrain_tiles uit de database en update deze klasse
+    async fetchBuildingMapData() {
+        try {
+            const response = await fetch('/static/JorenStaticTestFiles/testBuildingMap.json');
+            let mapData = await response.json();
+            this.width = mapData.map_width;
+            this.height = mapData.map_height;
+            this.tiles = mapData.building_tiles;
+            this.viewX = 0;
+            this.viewY = 0;
+        } catch(error) {
+            console.error('fetchBuildingAssetList() failed:', error);
+            throw error;
+        }
+
+        console.log("fetchBuildingMapData() succes");
     }
 
-    preloadTerrainAssets(callback) {
+
+    async fetchBuildingAssetList() {
+        try {
+            const response = await fetch('/static/img/assets/assetList.json');
+            const responseJson = await response.json();
+            this.BuildingAssetList = responseJson.buildings;
+        } catch (error) {
+            console.error('fetchBuildingAssetList() failed:', error);
+            throw error;
+        }
+
+        console.log("fetchBuildingAssetList() succes");
+    }
+
+    preloadBuildingAssets(callback) {
         let assetMap = {};
-        let assetList = this.terrainAssetList; // todo als fetch werkt veranderen door 'this.terrainAssetList'
+        let assetList = buildingAssetList; // todo als fetch werkt veranderen door 'this.terrainAssetList'
         let totalCount = 0;
         let loadedCount = 0;
 
@@ -82,20 +91,6 @@ export class gameTerrainMap {
         }
     }
 
-    // Haalt de terrain_tiles uit de database en update deze klasse
-    fetchTerrainMapData() {
-        console.log("fetchTiles wordt opgeroepen...");
-        return fetch('/api/get-game-terrain-map') // Make sure to return this promise
-            .then(response => response.json()) // Parse JSON response
-            .then(data => {
-                this.width = data.width;
-                this.height = data.height;
-                this.tiles = data.terrain_tiles;
-                this.viewX = 0;
-                this.viewY = 0;
-            })
-            .catch(error => console.error('gameTerrainMap.fetchTiles: ', error));
-    }
 
 
 

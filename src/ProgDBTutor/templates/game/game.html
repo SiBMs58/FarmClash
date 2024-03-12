@@ -3,7 +3,7 @@
 <head>
     <title>{{app_data['app_name']}}</title>
 
-    {% include 'head.html' %}
+    <!--{% include 'head.html' %}-->
 
     <style>
         canvas {
@@ -13,17 +13,30 @@
 
         body {
             overflow: hidden;
+            margin: 0;
         }
+
+        #buildingCanvas {
+            z-index: 2;
+        }
+        #terrainCanvas {
+            z-index: 1;
+        }
+
     </style>
 
 </head>
 <body>
 
-	{% include 'header.html' %}
+	<!--{% include 'header.html' %}-->
 
-    <canvas id="terrainCanvas"></canvas>
+    <div>
+        <canvas id="buildingCanvas"></canvas>
+        <canvas id="terrainCanvas"></canvas>
+    </div>
 
-	{% include 'footer.html' %}
+
+	<!--{% include 'footer.html' %}-->
 
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
 </body>

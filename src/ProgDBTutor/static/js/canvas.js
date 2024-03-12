@@ -1,27 +1,30 @@
-import { gameTerrainMap } from './gameClasses.js'
-import { generateRandomMap } from './developerFunctions.js'
+import { TerrainMap } from './terrainLayer.js'
+import { generateRandomTerrainMap } from './developerFunctions.js'
 import { handleKeyDown } from './userInputHandler.js'
 
-const canvas = document.getElementById('terrainCanvas');
-const ctx = canvas.getContext('2d');
+const terrainCanvas = document.getElementById('terrainCanvas');
+const terrainCtx = terrainCanvas.getContext('2d');
+
+//const buildingCanvas = document.getElementById('buildingCanvas');
+//const buildingCtx = buildingCanvas.getContext('2d');
+
 const tileSize = 64;
 
 
-const response = await fetch('/static/map.json');
-let mapData = await response.json();
-
-if (!mapData) {
-    mapData = generateRandomMap(50, 50);
-}
-
-
-const terrainMap = new gameTerrainMap(mapData, tileSize, ctx);
+const mapData = generateRandomTerrainMap(50, 50);
+const terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    ctx.imageSmoothingEnabled = false;
+    terrainCanvas.width = window.innerWidth;
+    terrainCanvas.height = window.innerHeight;
+    terrainCtx.imageSmoothingEnabled = false;
+
+    //buildingCanvas.width = window.innerWidth;
+    //buildingCanvas.height = window.innerHeight;
+    //buildingCtx.imageSmoothingEnabled = false;
+
     terrainMap.drawTiles(); // Redraw terrain after resizing
+
 }
 
 
@@ -32,13 +35,8 @@ terrainMap.initialize().then(() => {
     document.addEventListener('keydown', (event) => {
         handleKeyDown(event, terrainMap);
     });
-    /*
-    document.addEventListener('scroll', (event) => {
-        handleScrollInput(event, terrainMap);
-    });
-    */
 }).catch(error => {
-    console.error('Initialization failed:', error);
+    console.error('terrainMap initialization failed:', error);
     // todo load error page (error getekend met de map tiles)
 });
 

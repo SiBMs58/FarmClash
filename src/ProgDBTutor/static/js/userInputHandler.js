@@ -1,4 +1,4 @@
-import { gameTerrainMap } from './gameClasses.js'
+import { TerrainMap } from './terrainLayer.js'
 
 export function handleKeyDown(event, terrainMapClass) {
     switch(event.key) {
