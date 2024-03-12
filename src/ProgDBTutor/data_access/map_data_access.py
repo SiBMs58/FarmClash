@@ -11,10 +11,12 @@ class MapDataAccess:
         cursor.execute("SELECT width, height FROM game_maps WHERE map_id = %s AND user_id = %s", (map_id, user_id))
         return cursor.fetchone()  # Returns a tuple (width, height)
 
+
+
     def get_terrain_tiles(self, map_id):
         """Fetches the terrain tiles for a specific map, organized by their coordinates."""
         cursor = self.db_connection.get_cursor()
-        cursor.execute("SELECT x, y, terrain_type FROM map_tiles WHERE map_id = %s ORDER BY y, x", (map_id,))
+        cursor.execute("SELECT x, y, terrain_type FROM map_tiles WHERE map_id = %s ORDER BY x, y", (map_id,))
         tiles = cursor.fetchall()
         return [Tile(x, y, terrain_type) for x, y, terrain_type in tiles]
 
@@ -23,7 +25,6 @@ class MapDataAccess:
         cursor = self.db_connection.get_cursor()
         cursor.execute("INSERT INTO game_maps (user_id, width, height) VALUES (%s, %s, %s) RETURNING map_id", (user_id, width, height))
         self.db_connection.commit()
-
 
     """def map_data_to_json(self, user_id, map_id):
         Converts map and tile data for a specific map into JSON format.

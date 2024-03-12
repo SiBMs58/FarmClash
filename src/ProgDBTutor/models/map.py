@@ -114,14 +114,19 @@ class Map:
         Converts the map to a dict and returns it
         :return: the dict of the map
         """
-        terrain_map = [[x.get_terrain() + '.6.6' if x.get_terrain() == 'Grass' else x.get_terrain()] for x in
-                       self.terrain_data]
+        # Convert flat list of Tile objects into a 2D array based on self.width and self.height
+        terrain_map = []
+        for row in range(self.height):
+            row_list = []
+            for col in range(self.width):
+                row_list.append(self.terrain_data[(row*self.width-1)+col].get_terrain())
+            terrain_map.append(row_list)
 
         self_map = {
-            "map_width": self.width,
-            "map_height": self.height,
-            "terrain_tiles": terrain_map,
-        }
+                "map_width": self.width,
+                "map_height": self.height,
+                "terrain_tiles": terrain_map,
+            }
 
         return self_map
 

@@ -5,6 +5,7 @@ from werkzeug.security import check_password_hash
 from models.user import User
 from extensions import login_manager
 from config import config_data
+from services.game_services import GameServices
 
 auth_blueprint = Blueprint('auth', __name__, template_folder='templates')
 
@@ -47,6 +48,11 @@ def register():
         if success:
             # TODO: Send confiration e-mail
             # TODO: Initialize default map
+            new_user_id = user_data_access.get_user_by_username(username).user_id
+            map_data_access = current_app.config.get('map_data_access')
+            tile_data_access = current_app.config.get('tile_data_access')
+            gameservices = GameServices(user_data_access, map_data_access, tile_data_access)
+            gameservices.create_default_map(new_user_id)
             return redirect(url_for('auth.login'))
         else:
             return redirect(url_for('auth.register'))

@@ -4,6 +4,7 @@ from config import config_data
 from data_access.dbconnection import DBConnection
 from data_access.user_data_access import UserDataAccess
 from data_access.map_data_access import MapDataAccess
+from data_access.tile_data_access import TileDataAccess
 from extensions import login_manager
 from views.auth import auth_blueprint
 from views.game import game_blueprint
@@ -20,6 +21,8 @@ user_data_access = UserDataAccess(connection)
 app.config['user_data_access'] = user_data_access
 map_data_access = MapDataAccess(connection)
 app.config['map_data_access'] = map_data_access
+tile_data_access = TileDataAccess(connection)
+app.config['tile_data_access'] = tile_data_access
 
 # Initialize the login manager
 login_manager.init_app(app)

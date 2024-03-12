@@ -6,20 +6,20 @@
 <body>
     {% include 'header.html' %}
 
-    <div class="container-fluid mt-5"> <!-- mt-5 adds margin-top to push the content below the header -->
+    <div class="container-fluid mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-8 text-center"> <!-- Use 'text-center' for horizontal text alignment -->
+            <div class="col-md-8 text-center">
                 <h1>Dashboard</h1>
-                <div class="borderme mx-auto"> <!-- 'mx-auto' for horizontal centering of the block -->
-                    <!-- Your content goes here -->
-                    <div class="smalltitle">Test REST api:</div>
-                    <div class="my-3">
+                <div class="borderme mx-auto">
+
+                    <div class="smalltitle">Here will come friends list, recources list,...</div>
+                    <!--<div class="my-3">
                         GET <a class="larger" href="/users">/users</a><br/>
                     </div>
                     <div class="mb-3">
                         GET <a class="larger" href="/user/1">/user/1</a> <br/>
-                    </div>
-                    <!-- Additional content... -->
+                    </div>-->
+
                 </div>
                 <div class="my-3">
                     <a href="{{ url_for('auth.logout') }}">Logout</a>
