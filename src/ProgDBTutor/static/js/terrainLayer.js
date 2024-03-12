@@ -37,17 +37,16 @@ export class TerrainMap {
         this.viewY = 0;
         this.viewX = 0;
 
-        this.terrainAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
+        this.terrainAssetList = AssetList.terrain; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.terrainAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
     }
 
     async initialize() {
         await this.fetchTerrainAssetList();
-        await this.fetchTerrainMapData();
+        //await this.fetchTerrainMapData();
         await new Promise((resolve) => this.preloadTerrainAssets(resolve));
         // Safe to call stuff here
-        //this.drawTiles();
     }
 
     async fetchTerrainAssetList() {
@@ -60,8 +59,8 @@ export class TerrainMap {
             throw error;
         }
 
-        console.log("fetchTerrainAssetList() success, terrainAssetList: ");
-        console.log(AssetList);
+        console.log("fetchTerrainAssetList() success, terrainAssetList: ", this.terrainAssetList);
+        //console.log(this.terrainAssetList);
     }
 
     // Haalt de terrain_tiles uit de database en update deze klasse
@@ -79,20 +78,20 @@ export class TerrainMap {
             throw error;
         }
 
-        console.log("fetchTerrainMapData() succes");
+        console.log("fetchTerrainMapData() success");
     }
 
 
     preloadTerrainAssets(callback) {
         let assetMap = {};
-        let assetList = AssetList.terrain; // todo This should eventually be replaced by 'this.terrainAssetList' (which is fetched from server). Now using AssetList for debugging purposes.
-        //console.log("this.terrainAssetList werd nu opgevraagt")
+        let assetList = this.terrainAssetList;
         let totalCount = 0;
         let loadedCount = 0;
 
-        for (const terrainType in assetList.terrain) {
-            totalCount += assetList.terrain[terrainType].length;
-            assetList.terrain[terrainType].forEach(asset => {
+        for (const terrainType in assetList) {
+            totalCount += assetList[terrainType].length;
+            assetList[terrainType].forEach(asset => {
+                // noinspection DuplicatedCode
                 const currPath = "/static/img/assets/terrain/" + terrainType + "/" + asset + ".png";
                 const img = new Image();
                 img.src = currPath;
@@ -135,7 +134,7 @@ export class TerrainMap {
                 if (img) {
                     this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
                 } else {
-                    console.error("drawTiles(): image does not exist")
+                    console.error("TerrainMap.drawTiles(): image does not exist")
                 }
             }
         }

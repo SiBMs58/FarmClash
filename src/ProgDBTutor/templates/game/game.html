@@ -9,6 +9,9 @@
         canvas {
             margin: 0;
             image-rendering: pixelated;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         body {
@@ -16,11 +19,17 @@
             margin: 0;
         }
 
+        #canvasContainer {
+            position: relative;
+        }
+
         #buildingCanvas {
             z-index: 2;
+            border: solid red;
         }
         #terrainCanvas {
             z-index: 1;
+            border: solid black;
         }
 
     </style>
@@ -30,7 +39,7 @@
 
 	<!--{% include 'header.html' %}-->
 
-    <div>
+    <div id="canvasContainer">
         <canvas id="buildingCanvas"></canvas>
         <canvas id="terrainCanvas"></canvas>
     </div>
