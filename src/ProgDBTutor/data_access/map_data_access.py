@@ -1,5 +1,5 @@
 from models.tile import Tile
-import json
+from models.map import Map
 
 class MapDataAccess:
     def __init__(self, db_connection):
@@ -26,26 +26,13 @@ class MapDataAccess:
         cursor.execute("INSERT INTO game_maps (user_id, width, height) VALUES (%s, %s, %s) RETURNING map_id", (user_id, width, height))
         self.db_connection.commit()
 
-    """def map_data_to_json(self, user_id, map_id):
-        Converts map and tile data for a specific map into JSON format.
-        map_dimensions = self.get_map_dimensions(user_id, map_id)
-        if not map_dimensions:
-            return json.dumps({})  # Return an empty JSON object if no map is found
-
-        map_width, map_height = map_dimensions
-        tiles = self.get_terrain_tiles(map_id)
-
-        # Construct the terrain_tiles structure
-        terrain_tiles = [[None for _ in range(map_width)] for _ in range(map_height)]
-        for tile in tiles:
-            terrain_tiles[tile.y][tile.x] = tile.terrain_type
-
-        # Construct the final JSON structure
-        map_data = {
-            "map_width": map_width,
-            "map_height": map_height,
-            "terrain_tiles": terrain_tiles
-        }
-
-        # Convert to JSON
-        return json.dumps(map_data)"""
+    def get_all_maps(self):
+        cursor = self.db_connection.get_cursor()
+        cursor.execute('SELECT * FROM game_maps')
+        rows = cursor.fetchall()
+        maps = []
+        for row in rows:
+            if row['user_id'] is not 1:
+                tiles = self.get_terrain_tiles(row['map_id'])
+                maps.append(Map(row['map_id'], row['user_id'], row['width'], row['height'], tiles, row['created_at']))
+        return maps

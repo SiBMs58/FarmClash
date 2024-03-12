@@ -47,7 +47,6 @@ def register():
         success = user_data_access.add_user(User(username, password, email))
         if success:
             # TODO: Send confiration e-mail
-            # TODO: Initialize default map
             new_user_id = user_data_access.get_user_by_username(username).user_id
             map_data_access = current_app.config.get('map_data_access')
             tile_data_access = current_app.config.get('tile_data_access')

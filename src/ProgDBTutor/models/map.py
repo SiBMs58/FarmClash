@@ -6,12 +6,12 @@ from models.tile import Tile
 
 
 class Map:
-    def __init__(self, map_id=None, user_id=None, width=None, height=None, created_at=None):
+    def __init__(self, map_id=None, user_id=None, width=None, height=None, terrain_data=None, created_at=None):
         self.map_id = map_id
         self.user_id = user_id
         self.width = width
         self.height = height
-        self.terrain_data = None
+        self.terrain_data = terrain_data
         self.created_at = created_at
 
     def _can_place(self, x, y, width, height):
@@ -119,14 +119,17 @@ class Map:
         for row in range(self.height):
             row_list = []
             for col in range(self.width):
-                row_list.append(self.terrain_data[(row*self.width-1)+col].get_terrain())
+                row_list.append(self.terrain_data[(row*self.width)+col].get_terrain())
             terrain_map.append(row_list)
 
         self_map = {
+                "map_id": self.map_id,
+                "user_id": self.user_id,
                 "map_width": self.width,
                 "map_height": self.height,
                 "terrain_tiles": terrain_map,
-            }
+                "created_at": self.created_at
+        }
 
         return self_map
 
@@ -137,6 +140,9 @@ class Map:
         :return: the json as a string
         """
         self_map = self.to_dict()
+        del self_map["map_id"]
+        del self_map["user_id"]
+        del self_map["created_at"]
 
         with open("static/map.json", 'w') as json_file:
             json.dump(self_map, json_file, indent=4)

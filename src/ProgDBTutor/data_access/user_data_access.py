@@ -42,3 +42,13 @@ class UserDataAccess:
             print(f'Error adding user: {e}')
             self.db_connection.rollback()
             return None
+
+    def get_all_users(self):
+        cursor = self.db_connection.get_cursor()
+        cursor.execute('SELECT * FROM users')
+        rows = cursor.fetchall()
+        users = []
+        for row in rows:
+            user = User(row['username'], row['password'], row['email'], row['user_id'], row['created_at'])
+            users.append(user)
+        return users

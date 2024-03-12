@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, jsonify, request
 from flask_login import current_user
 from config import config_data
 from data_access.dbconnection import DBConnection
@@ -42,6 +42,25 @@ def main():
         return redirect(url_for('game.game'))  # Assuming 'game' is the function name for the game view
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view
 
+@app.route('/api/users')
+def get_users():
+    users = user_data_access.get_all_users()  # Assuming this is a method you have
+    return jsonify([user.to_dict() for user in users])  # Convert users to dicts
+
+@app.route('/api/maps')
+def get_maps():
+    maps = map_data_access.get_all_maps()  # Assuming this method exists
+    return jsonify([map.to_dict() for map in maps])
+
+@app.route('/api/test', methods=['POST'])
+def test_api():
+    # Extract details from the request for testing
+    data = request.json
+    endpoint = data['endpoint']
+    method = data['method']
+    # Additional logic to test API request based on 'endpoint' and 'method'
+    # This is a simplified placeholder. Actual implementation may vary.
+    return jsonify({"success": True, "message": "API test executed"})
 
 # RUN DEV SERVER
 if __name__ == "__main__":
