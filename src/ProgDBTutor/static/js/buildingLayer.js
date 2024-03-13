@@ -18,7 +18,6 @@ const defaultMapData = {
         ["None","None","None","None","None","None","None","Fences.4.1","None","None","Fences.3.2","Fences.4.3","Fences.3.4","None"],
         ["None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
     ]
-
 }
 
 
