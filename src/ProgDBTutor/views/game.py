@@ -15,14 +15,7 @@ def load_user(user_id):
 @login_required
 def game():
     """
-    The main game page, if the user is the admin, render the admin dashboard, otherwise render the game page
+    Renders the game view.
     :return:
     """
-    if current_user.username == 'admin':
-        return render_template('game/admin.html', app_data=config_data)
-    else:
-        return render_template('game/game.html', app_data=config_data)
-
-@game_blueprint.route('/dashboard')
-def dashboard():
-    return render_template('game/dashboard.html', app_data=config_data)
+    return render_template('game/game.html', app_data=config_data)

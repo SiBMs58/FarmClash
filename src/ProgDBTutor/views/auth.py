@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, current_app
 from flask_login import login_user, logout_user, login_required
-from werkzeug.security import check_password_hash
 
 from models.user import User
-from extensions import login_manager
+from extensions import login_manager, werkzeug_check_password_hash
 from config import config_data
 from services.game_services import GameServices
 
@@ -26,11 +25,15 @@ def login():
         user_data_access = current_app.config.get('user_data_access')
         user_record = user_data_access.get_user(username)
 
-        if ((username == 'admin' and password == '123') or
-                (user_record and check_password_hash(user_record.password, password))):
+
+        if user_record and werkzeug_check_password_hash(user_record.password, password):
             login_user(user_record)
-            # Make sure to redirect to a valid endpoint in your game blueprint
-            return redirect(url_for('game.game'))
+
+            if user_record.username == 'admin':
+                return redirect(url_for('admin.admin'))
+            else:
+                return redirect(url_for('user.user_dashboard'))
+
         else:
             error_message = 'Invalid username or password.'
     return render_template('auth/login.html', error_message=error_message, app_name=config_data['app_name'])
