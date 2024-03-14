@@ -31,6 +31,16 @@ class MapDataAccess:
         else:
             return None
 
+    def get_all_maps(self):
+        """
+        Fetches all maps out of the database
+        :return: List of map objects
+        """
+        cursor = self.db_connection.get_cursor()
+        cursor.execute("SELECT * FROM game_maps")
+        results = cursor.fetchall()
+        return [Map(result['map_id'], result['username_owner'], result['map_width'], result['map_height'], result['created_at']) for result in results]
+
     def add_map(self, map):
         """
         Adds the given map object to the database
