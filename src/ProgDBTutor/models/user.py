@@ -1,8 +1,11 @@
+from datetime import datetime
 class User:
     def __init__(self, username, password, email, created_at=None):
         self.username = username
         self.password = password
         self.email = email
+        if created_at is None:
+            created_at = datetime.now()
         self.created_at = created_at
 
     def get_id(self):
