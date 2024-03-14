@@ -6,8 +6,6 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-insert into users (username, password, email) values ('admin', '123', 'admin@admin');
-
 -- Farms Table
 CREATE TABLE farms (
     farm_id SERIAL PRIMARY KEY,
@@ -94,8 +92,6 @@ CREATE TABLE game_maps (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO game_maps (username_owner, width, height) VALUES ('admin', 50, 50);
-
 CREATE TABLE map_tiles (
     tile_id SERIAL PRIMARY KEY,
     map_id INT REFERENCES game_maps(map_id),
@@ -105,5 +101,3 @@ CREATE TABLE map_tiles (
     occupant_id INT, -- Optional, to link to whatever occupies the tile (a building, resource, etc.)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT INTO map_tiles (map_id, x, y, terrain_type) VALUES (1, 0, 0, 'Grass');

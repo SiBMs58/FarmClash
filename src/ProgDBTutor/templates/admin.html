@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title>{{ app_data['app_name'] }} - Admin Dashboard</title>
+    {% include 'head.html' %}
+
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10 text-center">
+                <h1>Admin Dashboard</h1>
+
+                <!-- User State Section -->
+                <div class="user-state-section my-4">
+                    <h2>Users</h2>
+                    <!-- Link to Users API -->
+                    <div>
+                        <a href="/api/users">Access Users API</a>
+                    </div>
+                </div>
+
+                <!-- Map State Section -->
+                <div class="map-state-section my-4">
+                    <h2>Maps</h2>
+                    <!-- Link to Maps API -->
+                    <div>
+                        <a href="/api/maps">Access Maps API</a>
+                    </div>
+                </div>
+
+
+                <!-- API Test Section
+                <div class="api-test-section my-4">
+                    <h2>Test API Requests</h2>
+                    <p>Use the form below to test API requests.</p>
+                    <form id="api-test-form">
+                        <div class="mb-3">
+                            <label for="api-endpoint" class="form-label">API Endpoint</label>
+                            <input type="text" class="form-control" id="api-endpoint" placeholder="/api/users">
+                        </div>
+                        <div class="mb-3">
+                            <label for="api-method" class="form-label">Method</label>
+                            <select class="form-select" id="api-method">
+                                <option>GET</option>
+                                <option>POST</option>
+                                <option>PUT</option>
+                                <option>DELETE</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="api-body" class="form-label">Request Body (JSON)</label>
+                            <textarea class="form-control" id="api-body" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Request</button>
+                    </form>
+                </div> -->
+
+                <div class="my-3">
+                    <a href="{{ url_for('auth.logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {% include 'footer.html' %}
+</body>
+</html>
