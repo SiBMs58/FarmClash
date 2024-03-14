@@ -1,6 +1,5 @@
 from flask import Blueprint, current_app, jsonify
 from flask_login import login_required, current_user
-from extensions import login_manager
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
@@ -29,3 +28,17 @@ def get_maps():
     map_data_access = current_app.config.get('map_data_access')
     maps = map_data_access.get_all_maps()  # Assuming this method exists
     return jsonify([map.to_dict() for map in maps])
+
+
+
+@api_blueprint.route('/terrain-map')
+@login_required
+def get_terrain_map():
+    """
+    Handles GET requests for the terrain map. This will return the terrain map, if the logged in user is admin
+    :return: The terrain map, in json format
+    """
+    map_data_access = current_app.config.get('map_data_access')
+    maps = map_data_access.get_maps_by_username_owner(current_user.username)
+    for map in maps:
+
