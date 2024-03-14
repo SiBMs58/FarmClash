@@ -30,3 +30,20 @@ class TileDataAccess:
         for result in results:
             tiles.append(Tile(result['tile_id'], result['map_id'], result['x'], result['y'], result['terrain_type'], result['occupant_id'], result['created_at']))
         return tiles
+
+    def add_tile(self, tile):
+        """
+        adds the given tile to the database
+        :param tile: A tile object
+        :return: True if the tile was added successfully, False otherwise
+        """
+        cursor = self.db_connection.get_cursor()
+        if tile.tile_id is None:
+            cursor.execute(
+                "INSERT INTO map_tiles (map_id, x, y, terrain_type, occupant_id, created_at) VALUES (%s, %s, %s, %s, %s, %s)",
+                (tile.map_id, tile.x, tile.y, tile.terrain_type, tile.occupant_id, tile.created_at))
+        else:
+            cursor.execute("INSERT INTO map_tiles (tile_id, map_id, x, y, terrain_type, occupant_id, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                       (tile.tile_id, tile.map_id, tile.x, tile.y, tile.terrain_type, tile.occupant_id, tile.created_at))
+        self.db_connection.conn.commit()
+        return True
