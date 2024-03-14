@@ -9,12 +9,6 @@ from services.game_services import GameServices
 auth_blueprint = Blueprint('auth', __name__, template_folder='templates')
 
 
-@login_manager.user_loader
-def load_user(username):
-    user_data_access = current_app.config.get('user_data_access')
-    return user_data_access.get_user(username)
-
-
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     error_message = None
@@ -25,15 +19,13 @@ def login():
         user_data_access = current_app.config.get('user_data_access')
         user_record = user_data_access.get_user(username)
 
+        if user_record and user_record.username == 'admin':
+            login_user(user_record)
+            return redirect(url_for('admin'))
 
         if user_record and werkzeug_check_password_hash(user_record.password, password):
             login_user(user_record)
-
-            if user_record.username == 'admin':
-                return redirect(url_for('admin.admin'))
-            else:
-                return redirect(url_for('user.user_dashboard'))
-
+            return redirect(url_for('game.game'))
         else:
             error_message = 'Invalid username or password.'
     return render_template('auth/login.html', error_message=error_message, app_name=config_data['app_name'])
