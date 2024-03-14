@@ -76,7 +76,7 @@
                 const userList = document.querySelector('.user-list');
                 users.forEach(user => {
                     const listItem = document.createElement('li');
-                    listItem.textContent = `User ID: ${user.user_id}, Username: ${user.username}, Email: ${user.email}, Created At: ${user.created_at}`;
+                    listItem.textContent = `User: ${user.username}, Email: ${user.email}, Created At: ${user.created_at}`;
                     userList.appendChild(listItem);
                 });
             });
@@ -89,7 +89,7 @@
                 const mapList = document.querySelector('.map-list');
                 maps.forEach(map => {
                     const listItem = document.createElement('li');
-                    listItem.innerHTML = `Map ID: ${map.map_id}, User ID: ${map.user_id}, Width: ${map.map_width}, Height: ${map.map_height}, Created At: ${map.created_at}`;
+                    listItem.innerHTML = `Map ID: ${map.map_id}, User: ${map.username}, Width: ${map.map_width}, Height: ${map.map_height}, Created At: ${map.created_at}`;
 
                     // Create a button for showing terrain data
                     const showTerrainButton = document.createElement('button');
