@@ -44,11 +44,8 @@ def register():
 
         if success:
             # TODO: Send confiration e-mail
-            """new_user_id = user_data_access.get_user_by_username(username).user_id
-            map_data_access = current_app.config.get('map_data_access')
-            tile_data_access = current_app.config.get('tile_data_access')
-            gameservices = GameServices(user_data_access, map_data_access, tile_data_access)
-            gameservices.create_default_map(new_user_id)"""
+            gameservices = GameServices(user_data_access, current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'))
+            gameservices.create_default_map(username)
 
             return redirect(url_for('auth.login'))
         else:

@@ -1,5 +1,7 @@
 from data_access.user_data_access import UserDataAccess
 from data_access.map_data_access import MapDataAccess
+from models.map import Map
+from models.tile import Tile
 
 class GameServices:
     def __init__(self, user_data_access, map_data_access, tile_data_access):
@@ -7,9 +9,10 @@ class GameServices:
         self.map_data_access = map_data_access
         self.tile_data_access = tile_data_access
 
-    def create_default_map(self, user_id):
+    def create_default_map(self, username):
         """
         Creates a default map for a user.
+        :param username: The username of the user. aka the primary key
         """
         # Logic to create a default map, involving database operations.
         # This might include checking if the user exists and if the default map already exists.
@@ -35,8 +38,9 @@ class GameServices:
             ['Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1', 'Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1'],
             ['Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1', 'Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1']
           ]
-        self.map_data_access.add_map(user_id, 34, 20)
-        map_id = self.user_data_access.get_maps_by_user(user_id, 1).map_id # Currently only the first map of the user
+        self.map_data_access.add_map(Map(None, username, 34, 20))
+        maps = self.map_data_access.get_maps_by_username_owner(username)
+        map_id = maps[0].id # TODO: Currently just get the id of the first map
         for row in range(len(terrain_tiles)):
             for col in range(len(terrain_tiles[row])):
-                self.tile_data_access.add_tile(row, col, terrain_tiles[row][col], map_id)
+                self.tile_data_access.add_tile(Tile(None, map_id, col, row, terrain_tiles[row][col], None))

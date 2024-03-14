@@ -48,7 +48,12 @@ class MapDataAccess:
         :return: True if the map was added successfully, False otherwise
         """
         cursor = self.db_connection.get_cursor()
-        cursor.execute("INSERT INTO game_maps (map_id, username_owner, width, height, created_at) VALUES (%s, %s, %s, %s, %s)",
+        if map.map_id is None:
+            cursor.execute(
+                "INSERT INTO game_maps (username_owner, width, height, created_at) VALUES (%s, %s, %s, %s, %s)",
+                (map.username_owner, map.map_width, map.map_height, map.created_at))
+        else:
+            cursor.execute("INSERT INTO game_maps (map_id, username_owner, width, height, created_at) VALUES (%s, %s, %s, %s, %s)",
                        (map.map_id, map.username_owner, map.map_width, map.map_height, map.created_at))
         self.db_connection.conn.commit()
         return True
