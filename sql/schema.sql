@@ -87,14 +87,14 @@ CREATE TABLE chat_messages (
 
 CREATE TABLE game_maps (
     map_id SERIAL PRIMARY KEY,
-    username VARCHAR(255) REFERENCES users(username),
+    username_owner VARCHAR(255) REFERENCES users(username),
     width INT NOT NULL,
     height INT NOT NULL,
     -- terrain_data TEXT, -- This could be JSON or another format to describe terrain types across the map
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO game_maps (username, width, height) VALUES ('admin', 50, 50);
+INSERT INTO game_maps (username_owner, width, height) VALUES ('admin', 50, 50);
 
 CREATE TABLE map_tiles (
     tile_id SERIAL PRIMARY KEY,
