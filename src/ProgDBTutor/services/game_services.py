@@ -37,10 +37,9 @@ class GameServices:
             ['Water.1.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1', 'Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1','Grass.6.1'],
             ['Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1', 'Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1'],
             ['Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1', 'Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1','Water.1.1']
-          ]
+        ]
         self.map_data_access.add_map(Map(None, username, 34, 20))
-        maps = self.map_data_access.get_maps_by_username_owner(username)
-        map_id = maps[0].id # TODO: Currently just get the id of the first map
+        map = self.map_data_access.get_map_by_username_owner(username) # TODO: Currently we just get the first map
         for row in range(len(terrain_tiles)):
             for col in range(len(terrain_tiles[row])):
-                self.tile_data_access.add_tile(Tile(None, map_id, col, row, terrain_tiles[row][col], None))
+                self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))

@@ -1,4 +1,4 @@
-from models.Tile import Tile
+from models.tile import Tile
 class TileDataAccess:
     def __init__(self, db_connection):
         self.db_connection = db_connection

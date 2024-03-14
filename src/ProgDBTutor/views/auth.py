@@ -46,7 +46,6 @@ def register():
             # TODO: Send confiration e-mail
             gameservices = GameServices(user_data_access, current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'))
             gameservices.create_default_map(username)
-
             return redirect(url_for('auth.login'))
         else:
             error_message = 'Failed to register user, try a different username.'
