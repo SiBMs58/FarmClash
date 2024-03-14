@@ -11,9 +11,9 @@ auth_blueprint = Blueprint('auth', __name__, template_folder='templates')
 
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(username):
     user_data_access = current_app.config.get('user_data_access')
-    return user_data_access.get_user(user_id)
+    return user_data_access.get_user(username)
 
 
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
@@ -24,7 +24,7 @@ def login():
         password = request.form.get('password')
 
         user_data_access = current_app.config.get('user_data_access')
-        user_record = user_data_access.get_user_by_username(username)
+        user_record = user_data_access.get_user(username)
 
         if ((username == 'admin' and password == '123') or
                 (user_record and check_password_hash(user_record.password, password))):
@@ -38,6 +38,7 @@ def login():
 
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
+    error_message = None
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -45,18 +46,20 @@ def register():
 
         user_data_access = current_app.config.get('user_data_access')
         success = user_data_access.add_user(User(username, password, email))
+
         if success:
             # TODO: Send confiration e-mail
-            new_user_id = user_data_access.get_user_by_username(username).user_id
+            """new_user_id = user_data_access.get_user_by_username(username).user_id
             map_data_access = current_app.config.get('map_data_access')
             tile_data_access = current_app.config.get('tile_data_access')
             gameservices = GameServices(user_data_access, map_data_access, tile_data_access)
-            gameservices.create_default_map(new_user_id)
+            gameservices.create_default_map(new_user_id)"""
+
             return redirect(url_for('auth.login'))
         else:
-            return redirect(url_for('auth.register'))
+            error_message = 'Failed to register user, try a different username.'
 
-    return render_template('auth/register.html', app_name=config_data['app_name'])
+    return render_template('auth/register.html', error_message=error_message, app_name=config_data['app_name'])
 
 
 @auth_blueprint.route('/logout')
