@@ -45,7 +45,7 @@ HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 
 @app.route('/')
 def main():
-    """"
+    """
     This is the main view.
     :return: Send to game view if logged in, else send to login view
     """
