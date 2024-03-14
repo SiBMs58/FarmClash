@@ -1,6 +1,5 @@
-from flask import Flask, redirect, url_for, jsonify, request, render_template
+from flask import Flask, redirect, url_for, render_template
 from flask_login import current_user, login_required
-from flask_principal import Principal, Permission, RoleNeed, identity_loaded, UserNeed
 from config import config_data
 from data_access.dbconnection import DBConnection
 from data_access.user_data_access import UserDataAccess
@@ -9,7 +8,9 @@ from data_access.map_data_access import MapDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
 from views.auth import auth_blueprint
 from views.game import game_blueprint
+from views.api import api_blueprint
 from models.user import User
+from extensions import login_manager
 
 
 # Initialize the Flask application
@@ -32,13 +33,10 @@ user_data_access.add_user(User(config_data['admin_username'], werkzeug_generate_
 # Initialize the login manager
 login_manager.init_app(app)
 
-# Initialize the principal
-principals = Principal(app)
-admin_permission = Permission(RoleNeed('admin'))
-
 # Blueprints
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(game_blueprint, url_prefix='/game')
+app.register_blueprint(api_blueprint, url_prefix='/api')
 
 
 DEBUG = False
@@ -47,6 +45,10 @@ HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 
 @app.route('/')
 def main():
+    """"
+    This is the main view.
+    :return: Send to game view if logged in, else send to login view
+    """
     if current_user.is_authenticated:
         return redirect(url_for('game.game'))  # Assuming 'game' is the function name for the game view
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view
@@ -57,38 +59,26 @@ def dashboard():
     """
     Renders the dashboard view, for a user.
     """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
     return render_template('dashboard.html', app_data=app_data)
 
 @app.route('/admin')
 @login_required
-@admin_permission.require(http_exception=403)
 def admin():
     """
     Renders the admin dashboard view.
     """
+    if current_user.username != 'admin':
+        return redirect(url_for('dashboard'))
     return render_template('admin.html', app_data=app_data)
 
-@app.route('/api/users')
-@login_required
-@admin_permission.require(http_exception=403)
-def get_users():
-    users = user_data_access.get_all_users()  # Assuming this is a method you have
-    return jsonify([user.to_dict() for user in users])  # Convert users to dicts
-
-@app.route('/api/maps')
-@login_required
-@admin_permission.require(http_exception=403)
-def get_maps():
-    maps = map_data_access.get_all_maps()  # Assuming this method exists
-    return jsonify([map.to_dict() for map in maps])
-
-@identity_loaded.connect_via(app)
-def on_identity_loaded(sender, identity):
-    identity.user = current_user
-    if hasattr(current_user, 'username'):
-        identity.provides.add(UserNeed(current_user.username))
-    if getattr(current_user, 'admin', False):
-        identity.provides.add(RoleNeed('admin'))
+@login_manager.user_loader
+def load_user(username):
+    """
+    This function is a user loader for the login manager. It takes a username as a parameter and returns the user data accessed using the username.
+    """
+    return user_data_access.get_user(username)
 
 # RUN DEV SERVER
 if __name__ == "__main__":
