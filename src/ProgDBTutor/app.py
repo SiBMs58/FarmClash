@@ -4,7 +4,7 @@ from config import config_data
 from data_access.dbconnection import DBConnection
 from data_access.user_data_access import UserDataAccess
 from data_access.map_data_access import MapDataAccess
-from data_access.tile_data_access import TileDataAccess
+# from data_access.tile_data_access import TileDataAccess # TODO: Implement
 from extensions import login_manager
 from views.auth import auth_blueprint
 from views.game import game_blueprint
@@ -21,8 +21,8 @@ user_data_access = UserDataAccess(connection)
 app.config['user_data_access'] = user_data_access
 map_data_access = MapDataAccess(connection)
 app.config['map_data_access'] = map_data_access
-tile_data_access = TileDataAccess(connection)
-app.config['tile_data_access'] = tile_data_access
+#tile_data_access = TileDataAccess(connection)
+#app.config['tile_data_access'] = tile_data_access
 
 # Initialize the login manager
 login_manager.init_app(app)
@@ -51,16 +51,6 @@ def get_users():
 def get_maps():
     maps = map_data_access.get_all_maps()  # Assuming this method exists
     return jsonify([map.to_dict() for map in maps])
-
-@app.route('/api/test', methods=['POST'])
-def test_api():
-    # Extract details from the request for testing
-    data = request.json
-    endpoint = data['endpoint']
-    method = data['method']
-    # Additional logic to test API request based on 'endpoint' and 'method'
-    # This is a simplified placeholder. Actual implementation may vary.
-    return jsonify({"success": True, "message": "API test executed"})
 
 # RUN DEV SERVER
 if __name__ == "__main__":
