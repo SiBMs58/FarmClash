@@ -40,5 +40,10 @@ def get_terrain_map():
     """
     map_data_access = current_app.config.get('map_data_access')
     maps = map_data_access.get_maps_by_username_owner(current_user.username)
+    if maps is None:
+        return "No maps found", 404
     for map in maps:
+        tile_data_access = current_app.config.get('tile_data_access')
+        tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
+        return jsonify([tile.to_dict() for tile in tiles])
 
