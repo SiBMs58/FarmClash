@@ -1,34 +1,40 @@
+from datetime import datetime
 class User:
-    def __init__(self, username, password, email, user_id=None, created_at=None):
-        self.user_id = user_id
+    def __init__(self, username, password, email, created_at=None):
         self.username = username
         self.password = password
         self.email = email
+        if created_at is None:
+            created_at = datetime.now()
         self.created_at = created_at
 
-    @staticmethod
-    def get(user_id):
-        # This method should be updated to fetch a user by their user_id from the database
-        pass
-
-    @property
-    def is_active(self):
-        # Potentially, you could check if the account is active (e.g., not deleted). For now, we'll return True.
-        return True
-
-    @property
-    def is_authenticated(self):
-        # Assuming a user instantiated is authenticated, return True
-        return True
-
     def get_id(self):
-        # Flask-Login uses this method to manage user sessions. It expects a unicode string identifying the user.
-        return str(self.user_id)
+        """
+        Returns the primary key of the user, this is used by Flask-Login.
+        :return: the primary key of the user
+        """
+        return self.username
+
+    def is_authenticated(self):
+        """
+        Returns True if the user is authenticated, i.e. they have provided valid credentials. This is used by Flask-Login.
+        :return:
+        """
+        return True
+
+    def is_active(self):
+        """
+        Returns True if the user is active, i.e. they have not been deactivated. This is used by Flask-Login.
+        :return:
+        """
+        return True
 
     def to_dict(self):
-        # Useful for JSON responses in APIs
+        """
+        Converts the user to a dict and returns it, this is useful for sending data to the client from the server aka api requests
+        :return: the user as a dict
+        """
         return {
-            'user_id': self.user_id,
             'username': self.username,
             'password': self.password,  # Be cautious about exposing passwords.
             'email': self.email,
