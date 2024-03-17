@@ -3,6 +3,7 @@ import { BuildingMap} from "./buildingLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
 import * as inputHandler from './userInputHandler.js'
 import { Ticker } from './ticker.js'
+import { handleScrollInput } from './userInputHandler.js'
 
 const terrainCanvas = document.getElementById('terrainCanvas');
 const terrainCtx = terrainCanvas.getContext('2d');
@@ -58,6 +59,15 @@ async function initializeGame() {
             const y = event.clientY;
 
             inputHandler.handleClickInput(x, y, [buildingMap, terrainMap]);
+        });
+        document.addEventListener('mousedown', (event) => {
+            handleScrollInput(event, terrainMap);
+        });
+        document.addEventListener('mousemove', (event) => {
+            handleScrollInput(event, terrainMap);
+        });
+        document.addEventListener('mouseup', (event) => {
+            handleScrollInput(event, terrainMap);
         });
 
         ticker.start();
