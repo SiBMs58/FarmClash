@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="">
 <head>
     <title>{{ app_data['app_name'] }}</title>
     {% include 'head.html' %}
@@ -12,7 +13,7 @@
                 <h1>Dashboard</h1>
                 <div class="borderme mx-auto">
 
-                    <div class="smalltitle">Here will come friends list, recources list,...</div>
+                    <div class="smalltitle">Here will come friends and messages</div>
                     <!--<div class="my-3">
                         GET <a class="larger" href="/users">/users</a><br/>
                     </div>
@@ -20,9 +21,6 @@
                         GET <a class="larger" href="/user/1">/user/1</a> <br/>
                     </div>-->
 
-                </div>
-                <div class="my-3">
-                    <a href="{{ url_for('auth.logout') }}">Logout</a>
                 </div>
             </div>
         </div>

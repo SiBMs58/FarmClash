@@ -19,11 +19,11 @@
 </head>
 <body>
 
-	{% include 'header.html' %}
+	{% include 'game_header.html' %}
 
     <canvas id="terrainCanvas"></canvas>
 
-	{% include 'footer.html' %}
+	{% include 'game_footer.html' %}
 
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
 </body>

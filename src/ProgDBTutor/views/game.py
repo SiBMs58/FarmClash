@@ -28,3 +28,6 @@ def game():
 @game_blueprint.route('/dashboard')
 def dashboard():
     return render_template('game/dashboard.html', app_data=config_data)
+@game_blueprint.route('/settings')
+def settings():
+    return render_template('/game/settings.html', app_data=config_data)
