@@ -1,3 +1,5 @@
+import { BaseMap } from "./BaseMapKlasse.js";
+
 const EMPTY_TILE = "None";
 
 function getAssetDir(assetName) {
@@ -30,16 +32,13 @@ const defaultMapData = {
     y
 */
 
-export class BuildingMap {
+export class BuildingMap extends BaseMap {
     constructor(mapData = defaultMapData, _tileSize, _ctx) {
-        this.width = mapData.map_width;
-        this.height = mapData.map_height;
-        this.tiles = mapData.building_tiles;
-        this.tileSize = _tileSize;
-        this.ctx = _ctx;
 
-        this.viewY = 0;
-        this.viewX = 0;
+        super(mapData, _tileSize);
+
+        this.tiles = mapData.building_tiles;
+        this.ctx = _ctx;
 
         this.buildingAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
@@ -130,8 +129,6 @@ export class BuildingMap {
         const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
         const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
 
-        debugger;
-
         for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
             for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
                 let filePath;
@@ -156,18 +153,14 @@ export class BuildingMap {
     }
 
 
-    isValidPosition(y, x) {
-        return y >= 0 && y < this.height
-            && x >= 0 && x < this.width;
-    }
-
     getTile(y, x) {
-        if (this.isValidPosition(y, x)) {
-            return this.tiles[y][x];
-        } else {
-            console.error("gameTerrainMap : Invalid position: (y:", y, ", x:", x, ")");
-            return null;
+        try {
+            this.isValidTilePosition(y,x)
+        } catch (error) {
+            console.error(error.message)
         }
+
+        return this.tiles[y][x];
     }
 
     toJSON() {
@@ -176,53 +169,6 @@ export class BuildingMap {
             map_height: this.height,
             terrain_tiles: this.tiles
         };
-    }
-
-
-    // --------------
-    // MOVE FUNCTIONS
-
-    scrollLeft() {
-        if (this.viewX > 0) {
-            this.viewX -= 1;
-            this.drawTiles()
-            console.log(`pijltje naar links is ingedrukt viewY: ${this.viewX}`);
-        } else {
-            console.log("kan niet verder, je zit aan de rand");
-        }
-
-    }
-
-    scrollUp() {
-        if (this.viewY > 0) {
-            this.viewY -= 1;
-            this.drawTiles()
-            console.log(`pijltje naar boven is ingedrukt viewY: ${this.viewY}`);
-        } else {
-            console.log("kan niet verder, je zit aan de rand");
-        }
-    }
-
-    scrollRight() {
-        if (this.viewX < this.width - Math.ceil(window.innerWidth/this.tileSize)) {
-            this.viewX += 1;
-            this.drawTiles()
-            console.log(`pijltje naar rechts is ingedrukt viewY: ${this.viewX}`);
-        } else {
-            console.log(`kan niet verder, je zit aan de rand: viewX ${this.viewX}`);
-        }
-
-    }
-
-    scrollDown() {
-        if (this.viewY < this.height - Math.ceil(window.innerHeight/this.tileSize)) {
-            this.viewY += 1;
-            this.drawTiles()
-            console.log(`pijltje naar beneden is ingedrukt viewY: ${this.viewY}`);
-        } else {
-            console.log(`kan niet verder, je zit aan de rand: viewY ${this.viewY}`);
-        }
-
     }
 
 }

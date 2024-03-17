@@ -2,6 +2,7 @@ import { TerrainMap } from './terrainLayer.js'
 import { BuildingMap} from "./buildingLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
 import { handleKeyDown } from './userInputHandler.js'
+import { Ticker } from './ticker.js'
 
 const terrainCanvas = document.getElementById('terrainCanvas');
 const terrainCtx = terrainCanvas.getContext('2d');
@@ -17,6 +18,8 @@ const terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
 
 const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx);
 
+const ticker = new Ticker([terrainMap, buildingMap]);
+
 function resizeCanvas() {
     terrainCanvas.width = window.innerWidth;
     terrainCanvas.height = window.innerHeight;
@@ -26,10 +29,12 @@ function resizeCanvas() {
     buildingCanvas.height = window.innerHeight;
     buildingCtx.imageSmoothingEnabled = false;
 
-    // Redraw terrain after resizing
-    terrainMap.drawTiles();
-    buildingMap.drawTiles();
-
+    try { // Redraw terrain after resizing
+        terrainMap.drawTiles();
+        buildingMap.drawTiles();
+    } catch (error) {
+        console.error("Resize failed:", error);
+    }
 }
 
 
@@ -43,6 +48,9 @@ async function initializeGame() {
         document.addEventListener('keydown', (event) => {
             handleKeyDown(event, terrainMap, buildingMap);
         });
+
+        ticker.start();
+
     } catch (error) {
         console.error('Initialization failed:', error);
         // Handle initialization error

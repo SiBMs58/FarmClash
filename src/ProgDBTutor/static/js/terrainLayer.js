@@ -1,3 +1,5 @@
+import { BaseMap } from "./BaseMapKlasse.js";
+
 function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
@@ -26,16 +28,13 @@ const AssetList =
     y
 */
 
-export class TerrainMap {
+export class TerrainMap extends BaseMap {
     constructor(mapData, _tileSize, _ctx) {
-        this.width = mapData.map_width;
-        this.height = mapData.map_height;
-        this.tiles = mapData.terrain_tiles;
-        this.tileSize = _tileSize;
-        this.ctx = _ctx;
 
-        this.viewY = 0;
-        this.viewX = 0;
+        super(mapData, _tileSize);
+
+        this.tiles = mapData.terrain_tiles;
+        this.ctx = _ctx;
 
         this.terrainAssetList = AssetList.terrain; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.terrainAssets = {}; // Bevat {"pad_naar_asset": imageObject}
@@ -140,19 +139,14 @@ export class TerrainMap {
         }
     }
 
-
-    isValidPosition(y, x) {
-        return y >= 0 && y < this.height
-            && x >= 0 && x < this.width;
-    }
-
     getTile(y, x) {
-        if (this.isValidPosition(y, x)) {
-            return this.tiles[y][x];
-        } else {
-            console.error("gameTerrainMap : Invalid position: (y:", y, ", x:", x, ")");
-            return null;
+        try {
+            this.isValidTilePosition(y,x)
+        } catch (error) {
+            console.error(error.message)
         }
+
+        return this.tiles[y][x];
     }
 
     toJSON() {
@@ -164,50 +158,6 @@ export class TerrainMap {
     }
 
 
-    // --------------
-    // MOVE FUNCTIONS
 
-    scrollLeft() {
-        if (this.viewX > 0) {
-            this.viewX -= 1;
-            this.drawTiles()
-            console.log(`pijltje naar links is ingedrukt viewY: ${this.viewX}`);
-        } else {
-            console.log("kan niet verder, je zit aan de rand");
-        }
-
-    }
-
-    scrollUp() {
-        if (this.viewY > 0) {
-            this.viewY -= 1;
-            this.drawTiles()
-            console.log(`pijltje naar boven is ingedrukt viewY: ${this.viewY}`);
-        } else {
-            console.log("kan niet verder, je zit aan de rand");
-        }
-    }
-
-    scrollRight() {
-        if (this.viewX < this.width - Math.ceil(window.innerWidth/this.tileSize)) {
-            this.viewX += 1;
-            this.drawTiles()
-            console.log(`pijltje naar rechts is ingedrukt viewY: ${this.viewX}`);
-        } else {
-            console.log(`kan niet verder, je zit aan de rand: viewX ${this.viewX}`);
-        }
-
-    }
-
-    scrollDown() {
-        if (this.viewY < this.height - Math.ceil(window.innerHeight/this.tileSize)) {
-            this.viewY += 1;
-            this.drawTiles()
-            console.log(`pijltje naar beneden is ingedrukt viewY: ${this.viewY}`);
-        } else {
-            console.log(`kan niet verder, je zit aan de rand: viewY ${this.viewY}`);
-        }
-
-    }
 
 }
