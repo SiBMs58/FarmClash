@@ -1,26 +1,33 @@
 import { TerrainMap } from './terrainLayer.js'
 import { BuildingMap} from "./buildingLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
-import * as inputHandler from './userInputHandler.js'
+import { UserInputHandler} from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
-import { handleScrollInput } from './userInputHandler.js'
 
-const terrainCanvas = document.getElementById('terrainCanvas');
-const terrainCtx = terrainCanvas.getContext('2d');
-
-const buildingCanvas = document.getElementById('buildingCanvas');
-const buildingCtx = buildingCanvas.getContext('2d');
-
+// Set on-screen tileSize-
 const tileSize = 64;
 
-
+// Create terrain map
+const terrainCanvas = document.getElementById('terrainCanvas');
+const terrainCtx = terrainCanvas.getContext('2d');
 const mapData = generateRandomTerrainMap(50, 50);
 const terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
 
+// Create building map
+const buildingCanvas = document.getElementById('buildingCanvas');
+const buildingCtx = buildingCanvas.getContext('2d');
 const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx);
 
+// Create ticker
 const ticker = new Ticker([terrainMap, buildingMap]);
 
+// Create userInputHandler
+const userInputHandler = new UserInputHandler([buildingMap, terrainMap]);
+
+
+/**
+ * Gets called everytime window dimensions change.
+ */
 function resizeCanvas() {
     terrainCanvas.width = window.innerWidth;
     terrainCanvas.height = window.innerHeight;
@@ -38,11 +45,7 @@ function resizeCanvas() {
     }
 }
 
-function handleClick(x, y) {
-    console.log(`click on x: ${x}, y: ${y}`);
-}
-
-
+// Initialises the game step by step in correct order.
 async function initializeGame() {
     try {
         await terrainMap.initialize();
@@ -50,25 +53,6 @@ async function initializeGame() {
 
         resizeCanvas(); // Initial resize and draw
         window.addEventListener('resize', resizeCanvas);
-        document.addEventListener('keydown', (event) => {
-            inputHandler.handleKeyDown(event, terrainMap, buildingMap);
-        });
-
-        document.addEventListener('click', (event) => {
-            const x = event.clientX;
-            const y = event.clientY;
-
-            inputHandler.handleClickInput(x, y, [buildingMap, terrainMap]);
-        });
-        document.addEventListener('mousedown', (event) => {
-            handleScrollInput(event, terrainMap);
-        });
-        document.addEventListener('mousemove', (event) => {
-            handleScrollInput(event, terrainMap);
-        });
-        document.addEventListener('mouseup', (event) => {
-            handleScrollInput(event, terrainMap);
-        });
 
         ticker.start();
 

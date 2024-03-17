@@ -1,85 +1,142 @@
 import { TerrainMap } from './terrainLayer.js'
 
-export function handleKeyDown(event, terrainMapClass, buildingMapClass) {
-    switch(event.key) {
-    case 'ArrowLeft':
-      terrainMapClass.scrollLeft();
-      buildingMapClass.scrollLeft();
-      break;
-    case 'ArrowUp':
-      terrainMapClass.scrollUp();
-      buildingMapClass.scrollUp();
-      break;
-    case 'ArrowRight':
-      terrainMapClass.scrollRight();
-      buildingMapClass.scrollRight();
-      break;
-    case 'ArrowDown':
-      terrainMapClass.scrollDown();
-      buildingMapClass.scrollDown();
-      break;
-    default:
-      // Optional: handle any other keys
-      break;
-  }
-}
 
-let isMouseDown = false;
-let lastMouseX = 0;
-let lastMouseY = 0;
+export class UserInputHandler {
+    constructor(_classes) {
+        this.classes = _classes;
 
-export function handleScrollInput(event, terrainMapClass) {
-    switch (event.type) {
-        case 'mousedown':
-            isMouseDown = true;
-            lastMouseX = event.clientX;
-            lastMouseY = event.clientY;
-            break;
-        case 'mouseup':
-            isMouseDown = false;
-            break;
-        case 'mousemove':
-            if (isMouseDown) {
-                const deltaX = (event.clientX - lastMouseX);
-                const deltaY = (event.clientY - lastMouseY);
-                if (deltaX > 10 ){
-                    lastMouseX = event.clientX;
-                    terrainMapClass.scrollLeft();
-                }
-
-                else if (deltaX < -10){
-                    lastMouseX = event.clientX;
-                    terrainMapClass.scrollRight();
-                }
-                if (deltaY > 10 ){
-                    lastMouseY = event.clientY;
-                    terrainMapClass.scrollUp();
-                }
-
-                else if (deltaY < -10){
-                    lastMouseY = event.clientY;
-                    terrainMapClass.scrollDown();
-                }
+        this.isMouseDown = false;
+        this.lastMouseX = 0;
+        this.lastMouseY = 0;
 
 
+        // Add event listeners:
 
-            }
-            break;
-        default:
-            break;
+        document.addEventListener('keydown', (event) => {
+            this.handleKeyDown(event);
+        });
+
+        document.addEventListener('click', (event) => {
+            const x = event.clientX;
+            const y = event.clientY;
+
+            this.handleClickInput(x, y);
+        });
+        document.addEventListener('mousedown', (event) => {
+            this.handleScrollInput(event);
+        });
+        document.addEventListener('mousemove', (event) => {
+            this.handleScrollInput(event);
+        });
+        document.addEventListener('mouseup', (event) => {
+            this.handleScrollInput(event);
+        });
     }
-}
 
-/** Checks all layer classes one by one to see if user clicked on something in the layer.
- *
- * @param x on screen
- * @param y on screen
- * @param layerClasses example: [UI, buildingMap, terrainMap]
- */
-export function handleClickInput(x, y, layerClasses) {
-    for (const currClass of layerClasses) {
-        if (currClass.handleClick(x,y)) {
-            break;
+    sendScrollMessage(direction) {
+        switch (direction) {
+            case 'Left':
+                for (const _class of this.classes) {
+                    _class.scrollLeft();
+                }
+                break;
+            case 'Up':
+                for (const _class of this.classes) {
+                    _class.scrollUp();
+                }
+                break;
+            case 'Right':
+                for (const _class of this.classes) {
+                    _class.scrollRight();
+                }
+                break;
+            case 'Down':
+                for (const _class of this.classes) {
+                    _class.scrollDown();
+                }
+                break;
         }
     }
+
+    handleKeyDown(event, terrainMapClass, buildingMapClass) {
+        switch(event.key) {
+            case 'ArrowLeft':
+                this.sendScrollMessage('Left');
+                break;
+            case 'ArrowUp':
+                this.sendScrollMessage('Up');
+                break;
+            case 'ArrowRight':
+                this.sendScrollMessage('Right');
+                break;
+            case 'ArrowDown':
+                this.sendScrollMessage('Down');
+                break;
+            default:
+                // Optional: handle any other keys
+                break;
+        }
+    }
+
+    handleScrollInput(event, terrainMapClass) {
+        let movementSensitivity = 50;
+
+        switch (event.type) {
+            case 'mousedown':
+                this.isMouseDown = true;
+                this.lastMouseX = event.clientX;
+                this.lastMouseY = event.clientY;
+                break;
+            case 'mouseup':
+                this.isMouseDown = false;
+                break;
+            case 'mousemove':
+                if (this.isMouseDown) {
+                    const deltaX = (event.clientX - this.lastMouseX);
+                    const deltaY = (event.clientY - this.lastMouseY);
+                    if (deltaX > movementSensitivity ){
+                        this.lastMouseX = event.clientX;
+                        this.sendScrollMessage('Left');
+                    }
+
+                    else if (deltaX < -movementSensitivity){
+                        this.lastMouseX = event.clientX;
+                        this.sendScrollMessage('Right');
+                    }
+                    if (deltaY > movementSensitivity ){
+                        this.lastMouseY = event.clientY;
+                        this.sendScrollMessage('Up');
+                    }
+
+                    else if (deltaY < -movementSensitivity){
+                        this.lastMouseY = event.clientY;
+                        this.sendScrollMessage('Down');
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /** Checks all layer classes one by one to see if user clicked on something in the layer.
+     *
+     * @param x on screen
+     * @param y on screen
+     */
+    handleClickInput(x, y) {
+        for (const currClass of this.classes) {
+            if (currClass.handleClick(x,y)) {
+                break;
+            }
+        }
+    }
+
 }
+
+
+
+
+
+
+
