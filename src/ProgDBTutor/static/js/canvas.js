@@ -3,6 +3,7 @@ import { BuildingMap} from "./buildingLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
 import { handleKeyDown } from './userInputHandler.js'
 import { Ticker } from './ticker.js'
+import { handleScrollInput } from './userInputHandler.js'
 
 const terrainCanvas = document.getElementById('terrainCanvas');
 const terrainCtx = terrainCanvas.getContext('2d');
@@ -47,6 +48,15 @@ async function initializeGame() {
         window.addEventListener('resize', resizeCanvas);
         document.addEventListener('keydown', (event) => {
             handleKeyDown(event, terrainMap, buildingMap);
+        });
+        document.addEventListener('mousedown', (event) => {
+            handleScrollInput(event, terrainMap);
+        });
+        document.addEventListener('mousemove', (event) => {
+            handleScrollInput(event, terrainMap);
+        });
+        document.addEventListener('mouseup', (event) => {
+            handleScrollInput(event, terrainMap);
         });
 
         ticker.start();
