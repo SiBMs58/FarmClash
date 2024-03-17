@@ -18,14 +18,15 @@ export class BaseMap{
         throw new Error (`isValidTilePosition(): Not a valid tile position: (y: ${y} x: ${x})`);
     }
 
-        // --------------
+
+    // --------------
     // MOVE FUNCTIONS
 
     scrollLeft() {
         if (this.viewX > 0) {
             this.viewX -= 1;
             this.drawTiles()
-            console.log(`pijltje naar links is ingedrukt viewY: ${this.viewX}`);
+            //console.log(`pijltje naar links is ingedrukt viewY: ${this.viewX}`);
         } else {
             console.log("kan niet verder, je zit aan de rand");
         }
@@ -36,7 +37,7 @@ export class BaseMap{
         if (this.viewY > 0) {
             this.viewY -= 1;
             this.drawTiles()
-            console.log(`pijltje naar boven is ingedrukt viewY: ${this.viewY}`);
+            //console.log(`pijltje naar boven is ingedrukt viewY: ${this.viewY}`);
         } else {
             console.log("kan niet verder, je zit aan de rand");
         }
@@ -46,7 +47,7 @@ export class BaseMap{
         if (this.viewX < this.width - Math.ceil(window.innerWidth/this.tileSize)) {
             this.viewX += 1;
             this.drawTiles()
-            console.log(`pijltje naar rechts is ingedrukt viewY: ${this.viewX}`);
+            //console.log(`pijltje naar rechts is ingedrukt viewY: ${this.viewX}`);
         } else {
             console.log(`kan niet verder, je zit aan de rand: viewX ${this.viewX}`);
         }
@@ -57,7 +58,7 @@ export class BaseMap{
         if (this.viewY < this.height - Math.ceil(window.innerHeight/this.tileSize)) {
             this.viewY += 1;
             this.drawTiles()
-            console.log(`pijltje naar beneden is ingedrukt viewY: ${this.viewY}`);
+            //console.log(`pijltje naar beneden is ingedrukt viewY: ${this.viewY}`);
         } else {
             console.log(`kan niet verder, je zit aan de rand: viewY ${this.viewY}`);
         }

@@ -152,6 +152,22 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    tick() {
+        //console.log("building layer tick");
+    }
+
+    handleClick(x,y) {
+        let tileX = Math.floor(x/this.tileSize) + this.viewX;
+        let tileY = Math.floor(y/this.tileSize) + this.viewY;
+
+        if (this.tiles[tileY][tileX] === EMPTY_TILE ) {
+            return false;
+        }
+
+        console.log(`click op building layer, tile x: ${tileX}, y: ${tileY}`);
+        return true;
+    }
+
 
     getTile(y, x) {
         try {

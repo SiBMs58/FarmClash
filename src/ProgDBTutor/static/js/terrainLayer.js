@@ -139,6 +139,18 @@ export class TerrainMap extends BaseMap {
         }
     }
 
+    tick() {
+        //console.log("Terrain layer tick");
+    }
+
+    handleClick(x,y) {
+        let tileX = Math.floor(x/this.tileSize) + this.viewX;
+        let tileY = Math.floor(y/this.tileSize) + this.viewY;
+
+        console.log(`click op terrain layer, tile x: ${tileX}, y: ${tileY}`);
+        return true;
+    }
+
     getTile(y, x) {
         try {
             this.isValidTilePosition(y,x)

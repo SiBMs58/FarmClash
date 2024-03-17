@@ -1,7 +1,7 @@
 import { TerrainMap } from './terrainLayer.js'
 import { BuildingMap} from "./buildingLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
-import { handleKeyDown } from './userInputHandler.js'
+import * as inputHandler from './userInputHandler.js'
 import { Ticker } from './ticker.js'
 
 const terrainCanvas = document.getElementById('terrainCanvas');
@@ -37,6 +37,10 @@ function resizeCanvas() {
     }
 }
 
+function handleClick(x, y) {
+    console.log(`click on x: ${x}, y: ${y}`);
+}
+
 
 async function initializeGame() {
     try {
@@ -46,7 +50,14 @@ async function initializeGame() {
         resizeCanvas(); // Initial resize and draw
         window.addEventListener('resize', resizeCanvas);
         document.addEventListener('keydown', (event) => {
-            handleKeyDown(event, terrainMap, buildingMap);
+            inputHandler.handleKeyDown(event, terrainMap, buildingMap);
+        });
+
+        document.addEventListener('click', (event) => {
+            const x = event.clientX;
+            const y = event.clientY;
+
+            inputHandler.handleClickInput(x, y, [buildingMap, terrainMap]);
         });
 
         ticker.start();

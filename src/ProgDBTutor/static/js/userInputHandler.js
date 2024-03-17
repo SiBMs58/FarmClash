@@ -27,3 +27,17 @@ export function handleKeyDown(event, terrainMapClass, buildingMapClass) {
 export function handleScrollInput(event, terrainMapClass) {
 
 }
+
+/** Checks all layer classes one by one to see if user clicked on something in the layer.
+ *
+ * @param x on screen
+ * @param y on screen
+ * @param layerClasses example: [UI, buildingMap, terrainMap]
+ */
+export function handleClickInput(x, y, layerClasses) {
+    for (const currClass of layerClasses) {
+        if (currClass.handleClick(x,y)) {
+            break;
+        }
+    }
+}
