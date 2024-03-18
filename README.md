@@ -29,3 +29,14 @@ pip3 install -r requirements.txt
 cd src/ProgDBTutor
 python app.py
 ```
+
+
+### Compile LaTeX Manual
+```bash
+cd docs
+pdflatex manual.tex
+rm manual.aux
+rm manual.log
+rm manual.out
+rm manual.toc
+```
