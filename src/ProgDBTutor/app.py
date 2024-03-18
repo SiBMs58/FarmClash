@@ -63,6 +63,16 @@ def dashboard():
         return redirect(url_for('admin'))
     return render_template('dashboard.html', app_data=app_data)
 
+@app.route('/settings')
+@login_required
+def settings():
+    """
+    Renders the settings view, for a user.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('settings.html', app_data=app_data)
+
 @app.route('/admin')
 @login_required
 def admin():
