@@ -1,10 +1,12 @@
-export class BaseMap{
+export class BaseMap {
     constructor(mapData, _tileSize) {
         this.tileSize = _tileSize;
-        this.width = mapData.map_width;
-        this.height = mapData.map_height;
+        this.map_width = mapData.map_width;
+        this.map_height = mapData.map_height;
         this.viewY = 0;
         this.viewX = 0;
+
+        this.ownNextClick = false;
     }
 
     drawTiles() {
@@ -12,7 +14,7 @@ export class BaseMap{
     }
 
     isValidTilePosition(y, x) {
-        if (y >= 0 && y < this.height && x >= 0 && x < this.width) {
+        if (y >= 0 && y < this.map_height && x >= 0 && x < this.map_width) {
             return true;
         }
         throw new Error (`isValidTilePosition(): Not a valid tile position: (y: ${y} x: ${x})`);
@@ -44,7 +46,7 @@ export class BaseMap{
     }
 
     scrollRight() {
-        if (this.viewX < this.width - Math.ceil(window.innerWidth/this.tileSize)) {
+        if (this.viewX < this.map_width - Math.ceil(window.innerWidth/this.tileSize)) {
             this.viewX += 1;
             this.drawTiles()
             //console.log(`pijltje naar rechts is ingedrukt viewY: ${this.viewX}`);
@@ -55,7 +57,7 @@ export class BaseMap{
     }
 
     scrollDown() {
-        if (this.viewY < this.height - Math.ceil(window.innerHeight/this.tileSize)) {
+        if (this.viewY < this.map_height - Math.ceil(window.innerHeight/this.tileSize)) {
             this.viewY += 1;
             this.drawTiles()
             //console.log(`pijltje naar beneden is ingedrukt viewY: ${this.viewY}`);

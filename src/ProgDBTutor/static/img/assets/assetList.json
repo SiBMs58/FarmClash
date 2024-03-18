@@ -6,6 +6,9 @@
   },
   "buildings":
   {
-    "Fences": ["Fences.1.1","Fences.1.2","Fences.1.3","Fences.1.4","Fences.2.1","Fences.2.2","Fences.2.3","Fences.2.4","Fences.3.1","Fences.3.2","Fences.3.3","Fences.3.4","Fences.4.1","Fences.4.2","Fences.4.3","Fences.4.4"]
+    "Fences": ["Fences.1.1","Fences.1.2","Fences.1.3","Fences.1.4","Fences.2.1","Fences.2.2","Fences.2.3","Fences.2.4","Fences.3.1","Fences.3.2","Fences.3.3","Fences.3.4","Fences.4.1","Fences.4.2","Fences.4.3","Fences.4.4"],
+    "BiomeThings": ["BiomeThings.1.1","BiomeThings.1.2","BiomeThings.1.3","BiomeThings.2.1","BiomeThings.2.2","BiomeThings.2.3"],
+    "ChickenHouse": ["ChickenHouse.1.1","ChickenHouse.1.2","ChickenHouse.1.3","ChickenHouse.2.1","ChickenHouse.2.2","ChickenHouse.2.3","ChickenHouse.3.1","ChickenHouse.3.2","ChickenHouse.3.3"]
+
   }
 }

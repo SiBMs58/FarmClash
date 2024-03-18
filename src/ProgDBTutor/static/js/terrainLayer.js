@@ -67,8 +67,8 @@ export class TerrainMap extends BaseMap {
         try {
             const response = await fetch('/static/map.json');
             let mapData = await response.json();
-            this.width = mapData.map_width;
-            this.height = mapData.map_height;
+            this.map_width = mapData.map_width;
+            this.map_height = mapData.map_height;
             this.tiles = mapData.terrain_tiles;
             this.viewX = 0;
             this.viewY = 0;
@@ -163,8 +163,8 @@ export class TerrainMap extends BaseMap {
 
     toJSON() {
         return {
-            map_width: this.width,
-            map_height: this.height,
+            map_width: this.map_width,
+            map_height: this.map_height,
             terrain_tiles: this.tiles
         };
     }

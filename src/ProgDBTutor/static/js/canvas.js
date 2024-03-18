@@ -5,7 +5,7 @@ import { UserInputHandler} from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
 // Set on-screen tileSize-
-const tileSize = 64;
+export const tileSize = 50;
 
 // Create terrain map
 const terrainCanvas = document.getElementById('terrainCanvas');
@@ -62,26 +62,12 @@ async function initializeGame() {
     }
 }
 
-initializeGame();
 
 
+initializeGame().then(
+    // Add code that is dependent on initialisation
+);
 
-
-
-/*
-terrainMap.initialize().then(() => {
-    resizeCanvas(); // Initial resize and draw
-    window.addEventListener('resize', resizeCanvas);
-    document.addEventListener('keydown', (event) => {
-        handleKeyDown(event, terrainMap);
-    });
-}).catch(error => {
-    console.error('terrainMap initialization failed:', error);
-    // todo load error page (error getekend met de map tiles)
-});
-*/
-
-//terrainMap.fetchTiles();
 
 
 
