@@ -43,3 +43,5 @@ class GameServices:
         for row in range(len(terrain_tiles)):
             for col in range(len(terrain_tiles[row])):
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
+
+    # TODO: def initialize_resources(self):
