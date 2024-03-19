@@ -148,6 +148,15 @@ export class BuildingMap extends BaseMap {
         this.prevMouseMoveBuildingLoc = null; // [y, x]
     }
 
+    /**
+     * Looks like:
+     * [["None"  ,     "None"         ,["Fence.1.1", fence5], "None"],
+     * ["None"  ,["Fence.1.2", fence6],       "None"        , "None],
+     * ... ]
+     *
+     *  --> ["tileAsset", "buildingName"] or "None"
+     *
+     */
     generateBuildingTileMap() {
         const toReturn = [];
         for (let i = 0; i < this.map_height; i++) {
@@ -161,11 +170,11 @@ export class BuildingMap extends BaseMap {
             if (!Object.hasOwnProperty.call(this.buildingInformation, buildingKey)) {
                 continue;
             }
-            const buildingName = buildingKey;
-            const locationY = this.buildingInformation[buildingKey].building_location[0];
-            const locationX = this.buildingInformation[buildingKey].building_location[1];
-            for (const currTile of this.buildingInformation[buildingKey].tile_rel_locations) {
-                const newTileMapElement = [currTile[1], buildingName];
+            const currBuilding = this.buildingInformation[buildingKey];
+            const locationY = currBuilding.building_location[0];
+            const locationX = currBuilding.building_location[1];
+            for (const currTile of currBuilding.tile_rel_locations) {
+                const newTileMapElement = [currTile[1], buildingKey];
                 const currMapLocationY = locationY + currTile[0][0];
                 const currMapLocationX = locationX + currTile[0][1];
                 toReturn[currMapLocationY][currMapLocationX] = newTileMapElement;
@@ -254,7 +263,7 @@ export class BuildingMap extends BaseMap {
         this.ctx.clearRect(x_tile, y_tile, this.tileSize, this.tileSize);
     }
 
-    drawTiles() {
+    drawTiles2() {
         this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
 
         const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
@@ -283,6 +292,48 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    drawBuilding(building) {
+        const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
+        const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
+        const screen_buildLocationY = building.building_location[0] - this.viewY;
+        const screen_buildLocationX = building.building_location[1] - this.viewX;
+
+        for (const tile of building.tile_rel_locations) {
+            const screen_currTileLocY = screen_buildLocationY + tile[0][0];
+            const screen_currTileLocX = screen_buildLocationX + tile[0][1];
+            if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
+                continue;
+            }
+            const filePath = "/static/img/assets/buildings/" + getAssetDir(tile[1]) + "/" + tile[1] + ".png";
+            const img = this.buildingAssets[filePath];
+            if (img) {
+                this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
+            } else {
+                console.error("BuildingMap.drawTiles(): image does not exist")
+            }
+        }
+    }
+
+    /**
+     * Draws the buildings.
+     * @param topBuilding optional: Can be set if a building needs to be drawn on top of all other buildings.
+     */
+    drawTiles(topBuilding = null) {
+        this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
+        for (const buildingKey in this.buildingInformation) {
+            if (!Object.hasOwnProperty.call(this.buildingInformation, buildingKey)) {
+                continue;
+            }
+            const currBuilding = this.buildingInformation[buildingKey];
+            this.drawBuilding(currBuilding);
+        }
+        // Draw top again
+        if (topBuilding !== null) {
+            this.drawBuilding(topBuilding);
+        }
+
+    }
+
     tick() {
         //console.log("building layer tick");
     }
@@ -291,20 +342,21 @@ export class BuildingMap extends BaseMap {
      * Moves a building relative to its original location.
      * @param rel_y
      * @param rel_x
-     * @param buildingName the name of the building as mentioned in the input json.
-     * @param shadowMove set this to true if
+     * @param buildingToMove
+     * @param setToTop
      */
-    moveBuilding(rel_y, rel_x, buildingName, shadowMove = false) {
-        const buildingToMove = this.buildingInformation[buildingName];
+    moveBuilding(rel_y, rel_x, buildingToMove, setToTop = false) {
+        //const buildingToMove = this.buildingInformation[buildingName];
         buildingToMove.building_location[0] += rel_y;
         buildingToMove.building_location[1] += rel_x;
-        /*
-        buildingToMove.building_location[0] += rel_y - buildingToMove.building_location[0];
-        buildingToMove.building_location[1] += rel_x - buildingToMove.building_location[1];
-         */
 
         this.tiles = this.generateBuildingTileMap();
-        this.drawTiles();
+
+        if (setToTop) {
+            this.drawTiles(buildingToMove);
+        } else {
+            this.drawTiles();
+        }
     }
 
     handleMouseMove(client_x, client_y) {
@@ -327,10 +379,10 @@ export class BuildingMap extends BaseMap {
         console.log(`relDistanceY ${relDistanceY}, relDistanceX ${relDistanceX}`);
 
         if (relDistanceX !== 0 || relDistanceY !== 0) {
-            this.moveBuilding(relDistanceY, relDistanceX, this.buildingClickedName, true);
+            const buildingToMove = this.buildingInformation[this.buildingClickedName];
+            this.moveBuilding(relDistanceY, relDistanceX, buildingToMove, true);
             this.prevMouseMoveBuildingLoc[0] = tileY;
             this.prevMouseMoveBuildingLoc[1] = tileX;
-            //this.prevMouseMoveBuildingLoc = null;
         }
 
     }
@@ -355,11 +407,6 @@ export class BuildingMap extends BaseMap {
 
         // Click while moving building
         if (this.movingBuilding === true) {
-            //const relDistanceY = tileY - this.prevClick[0];
-            //const relDistanceX = tileX - this.prevClick[1];
-
-            //this.moveBuilding(relDistanceY, relDistanceX, this.buildingClickedName);
-
             this.movingBuilding = false;
             this.ownNextClick = false;
             this.prevMouseMoveBuildingLoc = null;
