@@ -45,7 +45,9 @@ function resizeCanvas() {
     }
 }
 
-// Initialises the game step by step in correct order.
+/**
+ * Initialises the game step by step in correct order.
+ */
 async function initializeGame() {
     try {
         await terrainMap.initialize();
@@ -61,7 +63,6 @@ async function initializeGame() {
         // Handle initialization error
     }
 }
-
 
 
 initializeGame().then(

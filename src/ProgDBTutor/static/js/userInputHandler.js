@@ -1,6 +1,9 @@
 import { tileSize } from './canvas.js'
 
 export class UserInputHandler {
+    /**
+     * @param _classes all the classes that need to react to some kind of input
+     */
     constructor(_classes) {
         this.classes = _classes;
 
@@ -12,7 +15,7 @@ export class UserInputHandler {
 
         this.priorityClickClass = null;
 
-
+        // ———————————————————
         // Add event listeners:
 
         document.addEventListener('keydown', (event) => {
@@ -25,7 +28,8 @@ export class UserInputHandler {
             this.handleClickInput(x, y);
         }); */
 
-        // To check whether click or drag
+        // To check whether to register click or drag
+
         let clickStartPosition = null;
         document.addEventListener('mousedown', (event) => {
             clickStartPosition = { x: event.clientX, y: event.clientY };
@@ -58,6 +62,9 @@ export class UserInputHandler {
         });
     }
 
+    /**
+     * Sends the right display scroll message to all subscribed classes.
+     */
     sendScrollMessage(direction) {
         switch (direction) {
             case 'Left':
@@ -83,6 +90,9 @@ export class UserInputHandler {
         }
     }
 
+    /**
+     * Handles the keyDown event.
+     */
     handleKeyDown(event) {
         switch(event.key) {
             case 'ArrowLeft':
@@ -103,7 +113,11 @@ export class UserInputHandler {
         }
     }
 
-    handleScrollInput(event, terrainMapClass) {
+    /**
+     * Handles when screen is dragged ——> needs to scroll
+     * @param event the event object
+     */
+    handleScrollInput(event) {
         switch (event.type) {
             case 'mousedown':
                 this.isMouseDown = true;
@@ -121,7 +135,6 @@ export class UserInputHandler {
                         this.lastMouseX = event.clientX;
                         this.sendScrollMessage('Left');
                     }
-
                     else if (deltaX < -this.mouseScrollSensitivity){
                         this.lastMouseX = event.clientX;
                         this.sendScrollMessage('Right');
@@ -130,7 +143,6 @@ export class UserInputHandler {
                         this.lastMouseY = event.clientY;
                         this.sendScrollMessage('Up');
                     }
-
                     else if (deltaY < -this.mouseScrollSensitivity){
                         this.lastMouseY = event.clientY;
                         this.sendScrollMessage('Down');

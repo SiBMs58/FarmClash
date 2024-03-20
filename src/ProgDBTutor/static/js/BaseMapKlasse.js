@@ -1,28 +1,48 @@
 export class BaseMap {
+    /**
+     * This is the base class used by 'BuildingMap' and 'TerrainMap' to extract duplicate code.
+     * @param mapData
+     * @param _tileSize
+     */
     constructor(mapData, _tileSize) {
         this.tileSize = _tileSize;
         this.map_width = mapData.map_width;
         this.map_height = mapData.map_height;
+
+        // Top-left corner of the displayed tiles on the screen.
         this.viewY = 0;
         this.viewX = 0;
 
         this.ownNextClick = false;
     }
 
+    /**
+     * This is a function that needs to be overridden and gives an error otherwise.
+     */
     drawTiles() {
         throw new Error ("drawTiles is een pure virtual function and needs to be overridden");
     }
 
-    isValidTilePosition(y, x) {
-        if (y >= 0 && y < this.map_height && x >= 0 && x < this.map_width) {
+    /**
+     * Checks whether a tile coordinate is valid, which means that it's inside the stored Map.
+     * @param y_tile
+     * @param x_tile
+     * @returns {boolean} returns true if position is valid.
+     */
+    isValidTilePosition(y_tile, x_tile) {
+        if (y_tile >= 0 && y_tile < this.map_height && x_tile >= 0 && x_tile < this.map_width) {
             return true;
         }
-        throw new Error (`isValidTilePosition(): Not a valid tile position: (y: ${y} x: ${x})`);
+        throw new Error (`isValidTilePosition(): Not a valid tile position: (y: ${y_tile} x: ${x_tile})`);
     }
 
 
-    // --------------
-    // MOVE FUNCTIONS
+    /**
+     *  ——————————————
+     *  MOVE FUNCTIONS
+     *  ——————————————
+     *  These functions move the displayed portion of the map. They get called by the UserInputHandler.
+     */
 
     scrollLeft() {
         if (this.viewX > 0) {

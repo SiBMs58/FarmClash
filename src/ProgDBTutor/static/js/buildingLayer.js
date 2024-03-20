@@ -1,17 +1,24 @@
 import { BaseMap } from "./BaseMapKlasse.js";
 
+/**
+ * Sets the string value of
+ */
 const EMPTY_TILE = "None";
 
 function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
+/**
+ * Example of the generated grid will look like:
+ * This will be used to check for overlap and possibly by other classes to check the building layout.
+ */
 const defaultMapData = {
     map_width: 50,
     map_height: 50,
     building_tiles: [
         ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-        ["None","Fences.4.1","None","None      ","None","None","None","None      ","None","Fences.4.1","None      ","None      ","None      ","None"],
+        ["None","[Fences.4.1","None","None      ","None","None","None","None      ","None","Fences.4.1","None      ","None      ","None      ","None"],
         ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
         ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
         ["None","None      ","None",["Fences.4.1", "fence2"],"None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
@@ -20,20 +27,6 @@ const defaultMapData = {
         ["None","None      ","None","None      ","None","None","None","Fences.4.1","None","None      ","Fences.3.2","Fences.4.3","Fences.3.4","None"],
         ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
     ]
-    /*
-    building_locations: [
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-        ["None","fence1    ","None","None      ","None","None","None","None      ","None","fence4    ","None      ","None      ","None      ","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-        ["None","None      ","None","fence2    ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","fence5    ","fence5    ","fence5    ","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","fence5    ","None      ","fence5    ","None"],
-        ["None","None      ","None","None      ","None","None","None","fence3    ","None","None      ","fence5    ","fence5    ","fence5    ","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-    ],
-
-     */
 }
 
 /**
@@ -128,6 +121,11 @@ const defaultMapData2 = {
 
 
 export class BuildingMap extends BaseMap {
+    /**
+     * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
+     * @param _tileSize The tile size to be displayed on screen.
+     * @param _ctx context needed for drawing on-screen.
+     */
     constructor(mapData = defaultMapData2, _tileSize, _ctx) {
 
         super(mapData, _tileSize);
@@ -184,15 +182,21 @@ export class BuildingMap extends BaseMap {
         return toReturn;
     }
 
+    /**
+     * Initialises the building layer. Fetches everything that needs to be fetched from the server, and stores it.
+     */
     async initialize() {
         await this.fetchBuildingAssetList();
         //await this.fetchBuildingMapData();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
-        debugger;
+        //debugger;
         console.log("debug");
     }
 
+    /**
+     * Fetches the 'assetList.json' which is used to later fetch the right assets.
+     */
     async fetchBuildingAssetList() {
         try {
             const response = await fetch('/static/img/assets/assetList.json');
@@ -206,7 +210,9 @@ export class BuildingMap extends BaseMap {
         console.log("fetchBuildingAssetList() success, buildingAssetList: ", this.buildingAssetList);
     }
 
-    // Haalt de terrain_tiles uit de database en update deze klasse
+    /**
+     * Fetches the buildingMapData json which stores the layout and other information needed.
+     */
     async fetchBuildingMapData() {
         try {
             const response = await fetch('/static/JorenStaticTestFiles/testBuildingMap.json');
@@ -224,6 +230,10 @@ export class BuildingMap extends BaseMap {
         console.log("fetchBuildingMapData() success");
     }
 
+    /**
+     * Preloads the assets from the server and stores it in 'this.buildingAssets'.
+     * 'callback' function is called when the function is done fetching.
+     */
     preloadBuildingAssets(callback) {
         let assetMap = {};
         let assetList = this.buildingAssetList;
@@ -258,11 +268,18 @@ export class BuildingMap extends BaseMap {
     }
 
 
-
-    clearTile(x_tile, y_tile) {
-        this.ctx.clearRect(x_tile, y_tile, this.tileSize, this.tileSize);
+    /**
+     * Clears a specific tile relative to the screen (not the buildingMap)
+     * @param x_tile_screen
+     * @param y_tile_screen
+     */
+    clearTile(x_tile_screen, y_tile_screen) {
+        this.ctx.clearRect(x_tile_screen, y_tile_screen, this.tileSize, this.tileSize);
     }
 
+    /**
+     * Old draw function. Draws using the generated 'this.tiles'.
+     */
     drawTiles2() {
         this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
 
@@ -292,6 +309,10 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    /**
+     * Draws a building.
+     * @param building a building object of 'this.buildingInformation'
+     */
     drawBuilding(building) {
         const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
         const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
@@ -315,7 +336,7 @@ export class BuildingMap extends BaseMap {
     }
 
     /**
-     * Draws the buildings.
+     * Draws the buildings. 'this.buildingInformation'
      * @param topBuilding optional: Can be set if a building needs to be drawn on top of all other buildings.
      */
     drawTiles(topBuilding = null) {
@@ -334,6 +355,9 @@ export class BuildingMap extends BaseMap {
 
     }
 
+    /**
+     * Gets called by the Tick class with regular time intervals.
+     */
     tick() {
         //console.log("building layer tick");
     }
@@ -342,8 +366,8 @@ export class BuildingMap extends BaseMap {
      * Moves a building relative to its original location.
      * @param rel_y
      * @param rel_x
-     * @param buildingToMove
-     * @param setToTop
+     * @param buildingToMove object from 'this.buildingInformation'
+     * @param setToTop if marked true, sets the building being moved to the top of the screen.
      */
     moveBuilding(rel_y, rel_x, buildingToMove, setToTop = false) {
         //const buildingToMove = this.buildingInformation[buildingName];
@@ -359,6 +383,11 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    /**
+     * Gets called by the 'UserInputHandler' class every time the mouse moves.
+     * @param client_x x value on-screen
+     * @param client_y y value on-screen
+     */
     handleMouseMove(client_x, client_y) {
         if (!this.movingBuilding) {
             return;
@@ -387,6 +416,12 @@ export class BuildingMap extends BaseMap {
 
     }
 
+    /**
+     * Gets called when user clicks.
+     * @param client_x x click on screen
+     * @param client_y y click on screen
+     * @returns {boolean} Returns true when click is used by this class.
+     */
     handleClick(client_x,client_y) {
         //debugger;
         let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
@@ -417,7 +452,7 @@ export class BuildingMap extends BaseMap {
         return true;
     }
 
-
+    /*
     getTile(y, x) {
         try {
             this.isValidTilePosition(y,x)
@@ -435,4 +470,5 @@ export class BuildingMap extends BaseMap {
             terrain_tiles: this.tiles
         };
     }
+    */
 }

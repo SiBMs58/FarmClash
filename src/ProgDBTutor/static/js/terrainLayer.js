@@ -4,7 +4,9 @@ function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
-// Debug
+/**
+ * This is the asset list that isn't fetched from the database and is used for debugging purposes.
+ */
 const AssetList =
     {
         terrain:
@@ -29,6 +31,11 @@ const AssetList =
 */
 
 export class TerrainMap extends BaseMap {
+    /**
+     * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
+     * @param _tileSize The tile size to be displayed on screen.
+     * @param _ctx context needed for drawing on-screen.
+     */
     constructor(mapData, _tileSize, _ctx) {
 
         super(mapData, _tileSize);
@@ -41,6 +48,9 @@ export class TerrainMap extends BaseMap {
 
     }
 
+    /**
+     * Initialises the terrain layer. Fetches everything that needs to be fetched from the server, and stores it.
+     */
     async initialize() {
         await this.fetchTerrainAssetList();
         //await this.fetchTerrainMapData();
@@ -48,6 +58,9 @@ export class TerrainMap extends BaseMap {
         // Safe to call stuff here
     }
 
+    /**
+     * Fetches the 'assetList.json' which is used to later fetch the right assets.
+     */
     async fetchTerrainAssetList() {
         try {
             const response = await fetch('/static/img/assets/assetList.json');
@@ -62,7 +75,9 @@ export class TerrainMap extends BaseMap {
         //console.log(this.terrainAssetList);
     }
 
-    // Haalt de terrain_tiles uit de database en update deze klasse
+    /**
+     * Fetches the terrainMapData json which stores the layout and other information needed.
+     */
     async fetchTerrainMapData() {
         try {
             const response = await fetch('/static/map.json');
@@ -80,7 +95,10 @@ export class TerrainMap extends BaseMap {
         console.log("fetchTerrainMapData() success");
     }
 
-
+    /**
+     * Preloads the assets from the server and stores it in 'this.terrainAssets'.
+     * 'callback' function is called when the function is done fetching.
+     */
     preloadTerrainAssets(callback) {
         let assetMap = {};
         let assetList = this.terrainAssetList;
@@ -114,7 +132,9 @@ export class TerrainMap extends BaseMap {
         }
     }
 
-
+    /**
+     * Draws the tiles on screen using the 'this.tiles' map.
+     */
     drawTiles() {
         const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
         const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
@@ -139,10 +159,21 @@ export class TerrainMap extends BaseMap {
         }
     }
 
+    /**
+     * Gets called by the Tick class with regular time intervals.
+     */
     tick() {
         //console.log("Terrain layer tick");
+        waterAnimation()
+
     }
 
+    /**
+     * Handles click from user.
+     * @param x
+     * @param y
+     * @returns {boolean} returns true if the click is used by this class.
+     */
     handleClick(x,y) {
         let tileX = Math.floor(x/this.tileSize) + this.viewX;
         let tileY = Math.floor(y/this.tileSize) + this.viewY;
@@ -151,6 +182,7 @@ export class TerrainMap extends BaseMap {
         return true;
     }
 
+    /*
     getTile(y, x) {
         try {
             this.isValidTilePosition(y,x)
@@ -169,7 +201,5 @@ export class TerrainMap extends BaseMap {
         };
     }
 
-
-
-
+    */
 }
