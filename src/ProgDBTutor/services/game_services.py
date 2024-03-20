@@ -129,10 +129,11 @@ class GameServices:
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
 
     def initialize_resources(self, username):
+        """
+        Initialize default, starting resources when a user registers
+        :param username:  The username object of the user
+        """
         self.resource_data_access.add_resource(Resource(1, username, "Money", 50))
         self.resource_data_access.add_resource(Resource(2, username, "Potato", 20))
         self.resource_data_access.add_resource(Resource(3, username, "Carrot", 0))
         self.resource_data_access.add_resource(Resource(4, username, "Wheat", 0))
-
-
-
