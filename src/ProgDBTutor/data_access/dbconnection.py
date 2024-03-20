@@ -16,7 +16,7 @@ class DBConnection:
 
     def _connect(self):
         try:
-            self.conn = psycopg2.connect(f"dbname='{self.dbname}' user='{self.dbuser}'")
+            self.conn = psycopg2.connect(dbname=self.dbname, user=self.dbuser)
         except Exception as e:
             print(f'ERROR: Unable to connect to the database: {e}')
             raise
