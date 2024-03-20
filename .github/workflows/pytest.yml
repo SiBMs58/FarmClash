@@ -25,6 +25,8 @@ jobs:
         pip install -r requirements.txt  # Install dependencies from the requirements file
 
     - name: Run tests
+      env:
+        PYTHONPATH: ${{ github.workspace }}/src/ProgDBTutor
       run: |
         cd src/ProgDBTutor
         pytest tests  # Run tests
