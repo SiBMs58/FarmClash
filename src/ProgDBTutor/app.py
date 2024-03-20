@@ -86,6 +86,16 @@ def admin():
         return redirect(url_for('dashboard'))
     return render_template('admin.html', app_data=app_data)
 
+@app.route('/jasmine_tests')
+@login_required
+def jasmine_tests():
+    """
+    Renders the jasmine tests view.
+    """
+    if current_user.username != 'admin':
+        return redirect(url_for('dashboard'))
+    return render_template('jasmine-tests.html', app_data=app_data)
+
 @login_manager.user_loader
 def load_user(username):
     """
