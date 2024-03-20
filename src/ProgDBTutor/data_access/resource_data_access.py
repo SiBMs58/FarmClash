@@ -24,7 +24,11 @@ class ResourceDataAccess:
         :return: True if added successfully, False otherwise
         """
         cursor = self.db_connection.get_cursor()
-        cursor.execute('INSERT INTO resources (resource_type, amount, username_owner) VALUES (%s, %s, %s)',
-                       (resource.resource_type, resource.amount, resource.username_owner))
+        if resource.resource_id is None:
+            cursor.execute('INSERT INTO resources (type, quantity, owner) VALUES (%s, %s, %s)',
+                           (resource.resource_type, resource.amount, resource.username_owner))
+        else:
+            cursor.execute('INSERT INTO resources (resource_id, type, quantity, owner) VALUES (%s, %s, %s, %s)',
+                           (resource.resource_id, resource.resource_type, resource.amount, resource.username_owner))
         self.db_connection.conn.commit()
         return True
