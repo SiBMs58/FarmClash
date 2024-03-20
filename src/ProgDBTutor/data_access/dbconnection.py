@@ -8,16 +8,15 @@ from psycopg2.extras import DictCursor
 
 
 class DBConnection:
-    def __init__(self, dbname, dbuser, dbpassword='postgres'):
+    def __init__(self, dbname, dbuser):
         self.dbname = dbname
         self.dbuser = dbuser
-        self.dbpassword = dbpassword
         self.conn = None
         self._connect()
 
     def _connect(self):
         try:
-            self.conn = psycopg2.connect(f"dbname='{self.dbname}' user='{self.dbuser}' password='{self.dbpassword}'")
+            self.conn = psycopg2.connect(dbname=self.dbname, user=self.dbuser)
         except Exception as e:
             print(f'ERROR: Unable to connect to the database: {e}')
             raise

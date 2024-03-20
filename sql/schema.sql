@@ -1,18 +1,15 @@
 -- Users Table
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(255) PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-insert into users (username, password, email) values ('admin', '123', 'admin@admin');
-
 -- Farms Table
 CREATE TABLE farms (
     farm_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id),
+    username_owner VARCHAR(255) REFERENCES users(username),
     name VARCHAR(255) NOT NULL,
     level INT DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -54,7 +51,7 @@ CREATE TABLE market (
 -- Resources Table to track user resources like money, crops, etc.
 CREATE TABLE resources (
     resource_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id),
+    owner VARCHAR(255) REFERENCES users(username),
     type VARCHAR(255) NOT NULL,
     quantity INT DEFAULT 0
 );
@@ -72,30 +69,28 @@ CREATE TABLE attacks (
 -- Friendships Table to track friendships between users
 CREATE TABLE friendships (
     friendship_id SERIAL PRIMARY KEY,
-    user_id_1 INT REFERENCES users(user_id),
-    user_id_2 INT REFERENCES users(user_id),
+    user_1 VARCHAR(255) REFERENCES users(username),
+    user_2 VARCHAR(255) REFERENCES users(username),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Chat Messages Table
 CREATE TABLE chat_messages (
     message_id SERIAL PRIMARY KEY,
-    sender_id INT REFERENCES users(user_id),
-    receiver_id INT REFERENCES users(user_id),
+    sender VARCHAR(255) REFERENCES users(username),
+    receiver VARCHAR(255) REFERENCES users(username),
     message_text TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE game_maps (
     map_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id),
+    username_owner VARCHAR(255) REFERENCES users(username),
     width INT NOT NULL,
     height INT NOT NULL,
     -- terrain_data TEXT, -- This could be JSON or another format to describe terrain types across the map
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT INTO game_maps (user_id, width, height) VALUES (1, 50, 50);
 
 CREATE TABLE map_tiles (
     tile_id SERIAL PRIMARY KEY,
@@ -106,5 +101,3 @@ CREATE TABLE map_tiles (
     occupant_id INT, -- Optional, to link to whatever occupies the tile (a building, resource, etc.)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT INTO map_tiles (map_id, x, y, terrain_type) VALUES (1, 0, 0, 'Grass');
