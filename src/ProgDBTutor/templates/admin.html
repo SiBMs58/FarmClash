@@ -2,7 +2,16 @@
 <head>
     <title>{{ app_data['app_name'] }} - Admin Dashboard</title>
     {% include 'head.html' %}
-
+    <!-- Jasmine CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jasmine-core@latest/lib/jasmine-core/jasmine.css">
+    <script src="https://cdn.jsdelivr.net/npm/jasmine-core@latest/lib/jasmine-core/jasmine.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jasmine-core@latest/lib/jasmine-core/jasmine-html.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jasmine-core@latest/lib/jasmine-core/boot0.js"></script>
+    <!-- This will be added dynamically, and run the tests on button click -->
+    <script src="https://cdn.jsdelivr.net/npm/jasmine-core@latest/lib/jasmine-core/boot1.js"></script>
+    <!-- Source scripts -->
+    <script type="module" src="{{ url_for('static', filename='js/BaseMapKlasse.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/tests/basemap-tests.js') }}"></script>
 </head>
 <body>
     {% include 'header.html' %}
@@ -29,6 +38,18 @@
                         <a href="/api/maps">Access Maps API</a>
                     </div>
                 </div>
+
+                <!-- Test Section -->
+                <div class="map-state-section my-4">
+                    <h2>Tests</h2>
+                    <div class="text-center">
+                        <!-- Add a button to run tests -->
+                        <button id="run-tests-btn" class="btn btn-primary">Run Tests</button>
+                    </div>
+                    <!-- Placeholder for Jasmine test results -->
+                    <div id="jasmine-container"></div>
+                </div>
+
 
 
                 <!-- API Test Section
@@ -64,7 +85,7 @@
         </div>
     </div>
 
-
+    <!--<script src="{{ url_for('static', filename='js/tests/init-tests.js') }}"></script>-->
 
     {% include 'footer.html' %}
 </body>
