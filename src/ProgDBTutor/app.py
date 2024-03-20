@@ -64,7 +64,7 @@ def dashboard():
     """
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
-    return render_template('dashboard.html', app_data=app_data)
+    return render_template('friends.html', app_data=app_data)
 
 @app.route('/settings')
 @login_required
