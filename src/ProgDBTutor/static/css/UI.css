@@ -1,0 +1,105 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', cursive;
+    font-weight: bold;
+}
+header {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 100%; /* spans the full width */
+    background-color: transparent;
+    z-index: 1000; /* header is above other content */
+}
+
+
+.home-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px
+}
+
+.resource-btn {
+    position: absolute;
+    top: 10px;
+    left: 65px
+}
+.overlay{
+    position: absolute;
+    top: 0; /* Position at the top of the viewport */
+    left: 120px; /* Position at the left of the viewport */
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.popup {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: 20px;
+    background-color: transparent;
+    border-radius: 10px;
+}
+.popup p {
+    margin: 0 10px;
+    white-space: nowrap;
+}
+
+
+
+.money-display{
+    position: absolute;
+    top: 0;
+    transform: translateY(+90%);
+    right: 120px;
+    display: flex;
+    align-items: center;
+}
+.money-display p {
+    margin: 0;
+    padding-right: 5px;
+}
+.money-display img {
+    height: 20px;
+}
+.setting-btn{
+    position: absolute;
+    top: 0;
+    transform: translateY(+20%);
+    right: 65px;
+}
+.chat-btn {
+    position: absolute;
+    top: 0;
+    transform: translateY(+20%);
+    right: 10px;
+}
+
+
+
+
+
+
+
+footer {
+    position: absolute; /* Positions the footer absolutely relative to its positioned ancestor */
+    bottom: 0; /* Aligns to the bottom */
+    left: 0; /* Aligns to the left */
+    width: 100%; /* Ensures the footer spans the full width */
+    background-color: transparent;
+    z-index: 1000; /* Ensures the footer is above other content */
+}
+.copyright{
+    font-size: 10px;
+    position: absolute; /* Positions the footer absolutely relative to its positioned ancestor */
+    bottom: 0;
+    left: 20px;
+}
+
+
