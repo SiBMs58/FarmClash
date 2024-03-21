@@ -191,8 +191,6 @@ export class TerrainMap extends BaseMap {
         else{
             this.time +=1;
         }
-
-
     }
 
     /**
