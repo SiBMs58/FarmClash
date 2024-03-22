@@ -423,11 +423,14 @@ export class BuildingMap extends BaseMap {
      * @param setToTop if marked true, sets the building being moved to the top of the screen.
      */
     moveBuilding(rel_y, rel_x, buildingToMove, setToTop = false) {
+
+        /*
         if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
             console.log("Move successful");
         } else {
             console.log("Move not valid");
         }
+        */
 
         buildingToMove.building_location[0] += rel_y;
         buildingToMove.building_location[1] += rel_x;
@@ -439,6 +442,8 @@ export class BuildingMap extends BaseMap {
         } else {
             this.drawTiles();
         }
+
+        this.updateBuildingMapDB();
     }
 
     /**
@@ -481,7 +486,7 @@ export class BuildingMap extends BaseMap {
      * @returns {boolean} Returns true when click is used by this class.
      */
     handleClick(client_x,client_y) {
-        //debugger;
+        debugger;
         let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
         let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
 

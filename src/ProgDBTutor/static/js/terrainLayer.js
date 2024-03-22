@@ -56,7 +56,7 @@ export class TerrainMap extends BaseMap {
      * Initialises the terrain layer. Fetches everything that needs to be fetched from the server, and stores it.
      */
     async initialize() {
-        await this.fetchTerrainAssetList();
+        //await this.fetchTerrainAssetList();
         //await this.fetchTerrainMapData();
         await new Promise((resolve) => this.preloadTerrainAssets(resolve));
         // Safe to call stuff here
