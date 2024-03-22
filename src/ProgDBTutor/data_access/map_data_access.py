@@ -23,6 +23,7 @@ class MapDataAccess:
         :param username_owner: the username of the owner
         :return: The map object with the given username_owner, if not found return None
         """
+        # TODO: implement getting more maps than one
         cursor = self.db_connection.get_cursor()
         cursor.execute("SELECT * FROM game_maps WHERE username_owner = %s", (username_owner,))
         result = cursor.fetchone()
