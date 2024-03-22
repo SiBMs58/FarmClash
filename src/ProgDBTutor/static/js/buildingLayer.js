@@ -486,7 +486,7 @@ export class BuildingMap extends BaseMap {
      * @returns {boolean} Returns true when click is used by this class.
      */
     handleClick(client_x,client_y) {
-        debugger;
+        //debugger;
         let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
         let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
 
