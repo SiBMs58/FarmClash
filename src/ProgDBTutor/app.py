@@ -52,7 +52,6 @@ def main():
     This is the main view.
     :return: Send to game view if logged in, else send to login view
     """
-    app.config['base_url'] = request.base_url
     if current_user.is_authenticated:
         return redirect(url_for('game.game'))  # Assuming 'game' is the function name for the game view
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view
