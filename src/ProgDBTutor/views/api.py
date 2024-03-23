@@ -38,6 +38,11 @@ def get_terrain_map():
     Handles GET requests for the terrain map. This will return the terrain map, if the logged in user is admin
     :return: The terrain map, in json format
     """
+
+    # Voor debugging
+    return jsonify({"status": "success", "message": "This is a test response"})
+
+    # Code die wrs niet werkt:
     map_data_access = current_app.config.get('map_data_access')
     map = map_data_access.get_maps_by_username_owner(current_user.username) # TODO: Handle more maps than one
     if map is None:

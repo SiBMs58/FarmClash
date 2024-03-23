@@ -57,7 +57,7 @@ export class TerrainMap extends BaseMap {
      */
     async initialize() {
         await this.fetchTerrainAssetList();
-        //await this.fetchTerrainMapData();
+        await this.fetchTerrainMapData();
         await new Promise((resolve) => this.preloadTerrainAssets(resolve));
         // Safe to call stuff here
     }
@@ -84,17 +84,45 @@ export class TerrainMap extends BaseMap {
      */
 
     async fetchTerrainMapData() {
-        const BASE_URL = "http://localhost:5000";
+        //const BASE_URL = "http://localhost:5000";
+
+
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+
+        //debugger;
         try {
-            debugger;
+            // Basic test of de fetch is gelukt of niet
             const fetchLink = BASE_URL + "/api/terrain-map";
+            //debugger;
             const response = await fetch(fetchLink);
-            let mapData = await response.json();
-            this.map_width = mapData.map_width;
-            this.map_height = mapData.map_height;
-            this.tiles = mapData.terrain_tiles;
-            this.viewX = 0;
-            this.viewY = 0;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            } else {
+                console.log("Joepie response is oké");
+            }
+            let terrainMapData = await response.json();
+            if (terrainMapData.message) { // Moet niet per se
+                console.log("Message from the server:", terrainMapData.message);
+            }
+
+
+            // Map proberen initialiseren:
+            if (terrainMapData.map_width) {
+                this.map_width = terrainMapData.map_width;
+            } else {
+                console.log("map_width niet gevonden -> default wordt gebruikt"); // todo later engels maken
+            }
+            if (terrainMapData.map_height) {
+                this.map_height = terrainMapData.map_height;
+            } else {
+                console.log("map_height niet gevonden -> default wordt gebruikt");
+            }
+            if (terrainMapData.terrain_tiles) {
+                this.tiles = terrainMapData.terrain_tiles;
+            } else {
+                console.log("terrain_tiles niet gevonden -> default wordt gebruikt");
+            }
+
         } catch(error) {
             console.error('fetchTerrainAssetList() failed:', error);
             throw error;
