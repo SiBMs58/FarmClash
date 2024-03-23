@@ -19,7 +19,6 @@ app = Flask('FarmClash')
 app.secret_key = config_data['secret_key']
 app_data = dict()
 app_data['app_name'] = config_data['app_name']
-app_data['base_url'] = request.url_root
 # Database connection
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAccess(connection)
@@ -53,6 +52,7 @@ def main():
     This is the main view.
     :return: Send to game view if logged in, else send to login view
     """
+    app_data['base_url'] = request.url_root
     if current_user.is_authenticated:
         return redirect(url_for('game.game'))  # Assuming 'game' is the function name for the game view
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view

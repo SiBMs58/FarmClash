@@ -1,6 +1,8 @@
 from flask import Blueprint, current_app, jsonify
 from flask_login import login_required, current_user
 
+from services.game_services import GameServices
+
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
 @api_blueprint.route('/users')
@@ -43,9 +45,8 @@ def get_terrain_map():
     # for map in maps:
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    game_services = current_app.config.get('game_services')
+    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
-    print(formatted_terrain_map)
     return jsonify(formatted_terrain_map)
 
 @api_blueprint.route('/resources')
