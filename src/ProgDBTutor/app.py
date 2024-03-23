@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, request
 from flask_login import current_user, login_required
 from config import config_data
 from data_access.dbconnection import DBConnection
@@ -52,6 +52,7 @@ def main():
     This is the main view.
     :return: Send to game view if logged in, else send to login view
     """
+    app_data['base_url'] = request.url_root
     if current_user.is_authenticated:
         return redirect(url_for('game.game'))  # Assuming 'game' is the function name for the game view
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view
@@ -85,6 +86,16 @@ def admin():
     if current_user.username != 'admin':
         return redirect(url_for('dashboard'))
     return render_template('admin.html', app_data=app_data)
+
+@app.route('/jasmine_tests')
+@login_required
+def jasmine_tests():
+    """
+    Renders the jasmine tests view.
+    """
+    if current_user.username != 'admin':
+        return redirect(url_for('dashboard'))
+    return render_template('jasmine-tests.html', app_data=app_data)
 
 @login_manager.user_loader
 def load_user(username):

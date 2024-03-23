@@ -60,6 +60,9 @@ export class UserInputHandler {
             const y = event.clientY;
             this.handleMouseMove(x, y);
         });
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault(); // Prevents the default context menu from appearing
+        });
     }
 
     /**
@@ -196,10 +199,3 @@ export class UserInputHandler {
     }
 
 }
-
-
-
-
-
-
-

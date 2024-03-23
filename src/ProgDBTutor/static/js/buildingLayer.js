@@ -17,15 +17,15 @@ const defaultMapData = {
     map_width: 50,
     map_height: 50,
     building_tiles: [
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-        ["None","[Fences.4.1","None","None      ","None","None","None","None      ","None","Fences.4.1","None      ","None      ","None      ","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-        ["None","None      ","None",["Fences.4.1", "fence2"],"None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","Fences.1.2","Fences.4.3","Fences.1.4","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","Fences.2.1","None      ","Fences.2.1","None"],
-        ["None","None      ","None","None      ","None","None","None","Fences.4.1","None","None      ","Fences.3.2","Fences.4.3","Fences.3.4","None"],
-        ["None","None      ","None","None      ","None","None","None","None      ","None","None      ","None      ","None      ","None      ","None"],
+        ["None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
+        ["None",["Fences.4.1", "fences1"],"None","None","None","None","None","None","None",["Fences.4.1", "fence4"],"None","None","None","None"],
+        ["None","None","None","None","None","None","None","None",["Fences.4.1", "fence3"],"None","None","None","None","None"],
+        ["None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
+        ["None","None","None",["Fences.4.1", "fence2"],"None","None","None","None","None","None","None","None","None","None"],
+        ["None","None","None","None","None","None","None","None","None","None",["Fences.1.2", "fence5"],["Fences.4.3", "fence5"],["Fences.1.4", "fence5"],"None"],
+        ["None","None","None","None","None","None","None","None","None","None",["Fences.2.1", "fence5"],"None",["Fences.2.1", "fence5"],"None"],
+        ["None","None","None","None","None","None","None","None","None","None",["Fences.3.2", "fence5"],["Fences.4.3", "fence5"],["Fences.3.4", "fence5"],"None"],
+        ["None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
     ]
 }
 
@@ -38,6 +38,7 @@ const defaultMapData2 = {
 
     building_information: {
         fence1: {
+            self_key: "fence1", // Must be the exact key of this sub-object
             display_name: "Fence", // Name displayed to the user
             level: 1, // Building level
             // ... More information to come
@@ -48,6 +49,7 @@ const defaultMapData2 = {
 
         },
         fence2: {
+            self_key: "fence2",
             display_name: "Fence",
             level: 1,
             building_location: [2, 2],
@@ -56,6 +58,7 @@ const defaultMapData2 = {
             ]
         },
         fence3: {
+            self_key: "fence3",
             display_name: "Fence",
             level: 1,
             building_location: [8, 8],
@@ -65,6 +68,7 @@ const defaultMapData2 = {
 
         },
         fence_square: {
+            self_key: "fence_square",
             display_name: "Fence",
             level: 1,
             building_location: [6, 11],
@@ -80,6 +84,7 @@ const defaultMapData2 = {
             ]
         },
         chicken_house: {
+            self_key: "chicken_house",
             display_name: "Chicken House",
             level: 1,
             building_location: [12, 11],
@@ -96,6 +101,7 @@ const defaultMapData2 = {
             ]
         },
         tree: {
+            self_key: "tree",
             display_name: "Tree",
             level: 1,
             building_location: [12, 4],
@@ -243,7 +249,6 @@ export class BuildingMap extends BaseMap {
         for (const buildingType in assetList) {
             totalCount += assetList[buildingType].length;
             assetList[buildingType].forEach(asset => {
-                // noinspection DuplicatedCode
                 const currPath = "/static/img/assets/buildings/" + buildingType + "/" + asset + ".png";
                 const img = new Image();
                 img.src = currPath;
@@ -252,7 +257,7 @@ export class BuildingMap extends BaseMap {
                     loadedCount++;
                     if (loadedCount === totalCount) {
                         this.buildingAssets = assetMap;
-                        callback(); // Als alle images geladen zijn -> callback
+                        callback(); // If all images are loaded -> callback
                     }
                 };
                 img.onerror = () => {
@@ -280,6 +285,7 @@ export class BuildingMap extends BaseMap {
     /**
      * Old draw function. Draws using the generated 'this.tiles'.
      */
+    /*
     drawTiles2() {
         this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
 
@@ -289,7 +295,7 @@ export class BuildingMap extends BaseMap {
         for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
             for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
                 let filePath;
-                if (this.tiles[i_map] && this.tiles[i_map][j_map]) { // todo beter maken
+                if (this.tiles[i_map] && this.tiles[i_map][j_map]) {
                     const currTile = this.tiles[i_map][j_map];
                     if (currTile === EMPTY_TILE) {
                         this.clearTile(x_screen * this.tileSize, y_screen * this.tileSize);
@@ -308,6 +314,7 @@ export class BuildingMap extends BaseMap {
             }
         }
     }
+     */
 
     /**
      * Draws a building.
@@ -363,6 +370,52 @@ export class BuildingMap extends BaseMap {
     }
 
     /**
+     *
+     * @param rel_y
+     * @param rel_x
+     * @param buildingToMove object from 'this.buildingInformation'
+     * @returns {boolean} returns true if the move is to a valid location, false if the move isn't valid
+     */
+    checkValidMoveLocation(rel_y, rel_x, buildingToMove) {
+        //debugger;
+
+        let foundOverlap = false;
+
+        let forbiddenTiles = [];
+
+        let buildingInfoCopy = structuredClone(this.buildingInformation);
+        delete buildingInfoCopy[buildingToMove.self_key];
+        // todo beter maken -> je moet nie verwijderen
+        // Finding all forbidden tiles
+        for (const key of buildingInfoCopy) {
+            for (const currTile of buildingInfoCopy[key].tile_rel_locations) {
+                const currYValue = buildingInfoCopy[key].building_location[0] + currTile[0][0];
+                const currXValue = buildingInfoCopy[key].building_location[1] + currTile[0][1];
+                forbiddenTiles.push([currYValue, currXValue]);
+            }
+        }
+
+        // Finding all new tile locations
+        let newLocations = [];
+        for (const currTile of buildingToMove.tile_rel_locations) {
+            const currNewYValue = buildingToMove.building_location[0] + rel_y + currTile[0][0];
+            const currNewXValue = buildingToMove.building_location[1] + rel_x + currTile[0][1];
+            newLocations.push([currNewYValue, currNewXValue]);
+        }
+
+        // Check for other building overlap
+        for (const currTile of newLocations) {
+            let existsInForbiddenTiles = forbiddenTiles.some(([y, x]) =>
+                y === currTile[0] && x === currTile[1]
+            );
+            if (existsInForbiddenTiles) {
+                foundOverlap = true;
+            }
+        }
+        return !foundOverlap;
+    }
+
+    /**
      * Moves a building relative to its original location.
      * @param rel_y
      * @param rel_x
@@ -370,7 +423,15 @@ export class BuildingMap extends BaseMap {
      * @param setToTop if marked true, sets the building being moved to the top of the screen.
      */
     moveBuilding(rel_y, rel_x, buildingToMove, setToTop = false) {
-        //const buildingToMove = this.buildingInformation[buildingName];
+
+        /*
+        if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
+            console.log("Move successful");
+        } else {
+            console.log("Move not valid");
+        }
+        */
+
         buildingToMove.building_location[0] += rel_y;
         buildingToMove.building_location[1] += rel_x;
 
@@ -381,6 +442,8 @@ export class BuildingMap extends BaseMap {
         } else {
             this.drawTiles();
         }
+
+        this.updateBuildingMapDB();
     }
 
     /**
@@ -405,7 +468,7 @@ export class BuildingMap extends BaseMap {
         const relDistanceY = tileY - this.prevMouseMoveBuildingLoc[0];
         const relDistanceX = tileX - this.prevMouseMoveBuildingLoc[1];
 
-        console.log(`relDistanceY ${relDistanceY}, relDistanceX ${relDistanceX}`);
+        //console.log(`relDistanceY ${relDistanceY}, relDistanceX ${relDistanceX}`);
 
         if (relDistanceX !== 0 || relDistanceY !== 0) {
             const buildingToMove = this.buildingInformation[this.buildingClickedName];
@@ -452,6 +515,37 @@ export class BuildingMap extends BaseMap {
         return true;
     }
 
+
+    toJSON() {
+        return JSON.stringify({
+            map_width: this.map_width,
+            map_height: this.map_height,
+            building_information: this.buildingInformation
+        });
+    }
+
+    async updateBuildingMapDB() {
+        const mapDataJson = this.toJSON(); // Serialize the map data to JSON
+        try {
+            const response = await fetch('update-building-map', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: mapDataJson // Send the serialized map data as the request body
+            });
+
+            if (response.ok) {
+                const jsonResponse = await response.json();
+                console.log('BuildingMap DB update successful:', jsonResponse);
+            } else {
+                console.error('BuildingMap DB update failed with status:', response.status);
+            }
+        } catch (error) {
+            console.error('Failed to update map in database:', error);
+        }
+    }
+
     /*
     getTile(y, x) {
         try {
@@ -463,12 +557,5 @@ export class BuildingMap extends BaseMap {
         return this.tiles[y][x];
     }
 
-    toJSON() {
-        return {
-            map_width: this.map_width,
-            map_height: this.map_height,
-            terrain_tiles: this.tiles
-        };
-    }
     */
 }

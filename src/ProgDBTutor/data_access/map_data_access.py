@@ -17,12 +17,13 @@ class MapDataAccess:
         else:
             return None
 
-    def get_map_by_username_owner(self, username_owner):
+    def get_maps_by_username_owner(self, username_owner):
         """
         Fetches the map with the given username_owner out of the database
         :param username_owner: the username of the owner
         :return: The map object with the given username_owner, if not found return None
         """
+        # TODO: implement getting more maps than one
         cursor = self.db_connection.get_cursor()
         cursor.execute("SELECT * FROM game_maps WHERE username_owner = %s", (username_owner,))
         result = cursor.fetchone()
