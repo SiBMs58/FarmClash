@@ -527,7 +527,7 @@ export class BuildingMap extends BaseMap {
     async updateBuildingMapDB() {
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON
         try {
-            const response = await fetch('update-building-map', {
+            const response = await fetch('${BASE_URL}/game/update-building-map', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

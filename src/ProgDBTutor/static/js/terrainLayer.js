@@ -57,7 +57,7 @@ export class TerrainMap extends BaseMap {
      */
     async initialize() {
         await this.fetchTerrainAssetList();
-        await this.fetchTerrainMapData();
+        //await this.fetchTerrainMapData();
         await new Promise((resolve) => this.preloadTerrainAssets(resolve));
         // Safe to call stuff here
     }
@@ -82,9 +82,13 @@ export class TerrainMap extends BaseMap {
     /**
      * Fetches the terrainMapData json which stores the layout and other information needed.
      */
+
     async fetchTerrainMapData() {
+        const BASE_URL = "http://localhost:5000";
         try {
-            const response = await fetch('${BASE_URL}/api/terrain-map');
+            debugger;
+            const fetchLink = BASE_URL + "/api/terrain-map";
+            const response = await fetch(fetchLink);
             let mapData = await response.json();
             this.map_width = mapData.map_width;
             this.map_height = mapData.map_height;
