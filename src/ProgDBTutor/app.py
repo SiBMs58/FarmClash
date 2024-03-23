@@ -52,7 +52,7 @@ def main():
     This is the main view.
     :return: Send to game view if logged in, else send to login view
     """
-    app_data['base_url'] = request.url_root
+    app.config['base_url'] = request.base_url
     if current_user.is_authenticated:
         return redirect(url_for('game.game'))  # Assuming 'game' is the function name for the game view
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view
@@ -103,6 +103,10 @@ def load_user(username):
     This function is a user loader for the login manager. It takes a username as a parameter and returns the user data accessed using the username.
     """
     return user_data_access.get_user(username)
+
+@app.context_processor
+def inject_base_url():
+    return dict(base_url=request.url_root)
 
 # RUN DEV SERVER
 if __name__ == "__main__":
