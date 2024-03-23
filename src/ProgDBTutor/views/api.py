@@ -43,7 +43,10 @@ def get_terrain_map():
     # for map in maps:
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    return jsonify([tile.to_dict() for tile in tiles])
+    game_services = current_app.config.get('game_services')
+    formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
+    print(formatted_terrain_map)
+    return jsonify(formatted_terrain_map)
 
 @api_blueprint.route('/resources')
 @login_required

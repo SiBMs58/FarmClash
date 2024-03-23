@@ -45,3 +45,32 @@ class GameServices:
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
 
     # TODO: def initialize_resources(self):
+
+
+    def reformat_terrain_map(self, tile_data, map_width, map_height):
+        """
+        Generate the formatted (so the front end can easily read it) terrain map data based on the provided tile data.
+        Parameters:
+            tile_data (list): A list of dictionaries containing the x, y, and terrain_type for each tile.
+            map_width (int): The width of the map.
+            map_height (int): The height of the map.
+        Returns: dict: A dictionary containing the formatted map data with map_width, map_height, and terrain_tiles.
+        """
+        # Initialize the terrain tiles grid with a default value
+        terrain_tiles = [["Water.1.1" for _ in range(map_width)] for _ in range(map_height)]
+
+        # Populate the terrain tiles grid based on the provided tile data
+        for tile in tile_data:
+            x = tile['x']
+            y = tile['y']
+            terrain_type = tile['terrain_type']
+            terrain_tiles[y][x] = terrain_type
+
+        # Construct the final structure
+        formatted_data = {
+            "map_width": map_width,
+            "map_height": map_height,
+            "terrain_tiles": terrain_tiles
+        }
+
+        return formatted_data
