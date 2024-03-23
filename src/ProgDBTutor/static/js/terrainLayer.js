@@ -35,6 +35,8 @@ export class TerrainMap extends BaseMap {
      * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
+     * @param time amount of frames passed
+     * @param cycle animation part
      */
     constructor(mapData, _tileSize, _ctx) {
 
@@ -45,6 +47,8 @@ export class TerrainMap extends BaseMap {
 
         this.terrainAssetList = AssetList.terrain; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.terrainAssets = {}; // Bevat {"pad_naar_asset": imageObject}
+        this.time = 0;
+        this.cycle = 1;
 
     }
 
@@ -53,7 +57,7 @@ export class TerrainMap extends BaseMap {
      */
     async initialize() {
         await this.fetchTerrainAssetList();
-        //await this.fetchTerrainMapData();
+        await this.fetchTerrainMapData();
         await new Promise((resolve) => this.preloadTerrainAssets(resolve));
         // Safe to call stuff here
     }
@@ -80,7 +84,7 @@ export class TerrainMap extends BaseMap {
      */
     async fetchTerrainMapData() {
         try {
-            const response = await fetch('/static/map.json');
+            const response = await fetch('${BASE_URL}/api/terrain-map');
             let mapData = await response.json();
             this.map_width = mapData.map_width;
             this.map_height = mapData.map_height;
@@ -159,12 +163,42 @@ export class TerrainMap extends BaseMap {
         }
     }
 
+    waterAnimation() {
+        if (this.time > 24){
+            this.time -= 24;
+            const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
+            const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
+            for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
+                for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
+                    const currTile = this.tiles[i_map][j_map];
+                    if (getAssetDir(currTile) == "Water"){
+                        let filePath = "/static/img/assets/terrain/" + getAssetDir(currTile) + "/" + "Water.1."+ this.cycle.toString() + ".png";
+                        const img = this.terrainAssets[filePath];
+                        if (img) {
+                            this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
+                        } else {
+                            console.error("waterAnimation : TerrainMap.drawTiles(): image does not exist")
+                            console.error(filePath)
+                        }
+                    }
+                }
+            }
+            this.cycle +=1;
+            if (this.cycle == 5){
+                this.cycle = 1;
+            }
+        }
+        else{
+            this.time +=1;
+        }
+    }
+
     /**
      * Gets called by the Tick class with regular time intervals.
      */
     tick() {
         //console.log("Terrain layer tick");
-        waterAnimation()
+        this.waterAnimation();
 
     }
 

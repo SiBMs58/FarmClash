@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, request
 from flask_login import current_user, login_required
 from config import config_data
 from data_access.dbconnection import DBConnection
@@ -19,6 +19,7 @@ app = Flask('FarmClash')
 app.secret_key = config_data['secret_key']
 app_data = dict()
 app_data['app_name'] = config_data['app_name']
+app_data['base_url'] = request.url_root
 # Database connection
 connection = DBConnection(dbname=config_data['dbname'], dbuser=config_data['dbuser'])
 user_data_access = UserDataAccess(connection)
