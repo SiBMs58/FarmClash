@@ -40,11 +40,11 @@ def get_terrain_map():
     """
 
     # Voor debugging
-    return jsonify({"status": "success", "message": "This is a test response"})
+    #return jsonify({"status": "success", "message": "This is a test response"})
 
     # Code die wrs niet werkt:
     map_data_access = current_app.config.get('map_data_access')
-    map = map_data_access.get_maps_by_username_owner(current_user.username) # TODO: Handle more maps than one
+    map = map_data_access.get_map_by_username_owner(current_user.username) # TODO: Handle more maps than one
     if map is None:
         return "No maps found", 404
     # for map in maps:
