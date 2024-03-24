@@ -6,10 +6,12 @@ from data_access.user_data_access import UserDataAccess
 from data_access.map_data_access import MapDataAccess
 from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
+from data_access.friendship_data_access import FriendshipDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
+from views.friends import friends_blueprint
 from models.user import User
 from extensions import login_manager
 
@@ -29,6 +31,8 @@ tile_data_access = TileDataAccess(connection)
 app.config['tile_data_access'] = tile_data_access
 resource_data_access = ResourceDataAccess(connection)
 app.config['resource_data_access'] = resource_data_access
+friendship_data_access = FriendshipDataAccess(connection)
+app.config['friendship_data_access'] = friendship_data_access
 
 # Insert the admin user
 user_data_access.add_user(User(config_data['admin_username'], werkzeug_generate_password_hash(config_data['admin_password']), config_data['admin_email']))
@@ -40,6 +44,7 @@ login_manager.init_app(app)
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
+app.register_blueprint(friends_blueprint, url_prefix='/friends')
 
 
 DEBUG = False
@@ -55,16 +60,6 @@ def main():
     if current_user.is_authenticated:
         return redirect(url_for('game.game'))  # Assuming 'game' is the function name for the game view
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view
-
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    """
-    Renders the dashboard view, for a user.
-    """
-    if current_user.username == 'admin':
-        return redirect(url_for('admin'))
-    return render_template('dashboard.html', app_data=app_data)
 
 @app.route('/settings')
 @login_required
