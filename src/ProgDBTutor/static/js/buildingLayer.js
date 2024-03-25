@@ -52,7 +52,7 @@ const defaultMapData2 = {
             self_key: "fence2",
             display_name: "Fence",
             level: 1,
-            building_location: [2, 2],
+            building_location: [5, 7],
             tile_rel_locations: [
                 [[0, 0], "Fences.4.1"],
             ]
