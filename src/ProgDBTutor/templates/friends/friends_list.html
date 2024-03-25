@@ -29,9 +29,10 @@
                 friendsList.innerHTML = ''; // Clear the list
                 friends.forEach(friend => {
                     const listItem = document.createElement('li');
-                    listItem.className = 'list-group-item';
+                    listItem.className = 'list-group-item clickable';
                     listItem.textContent = friend;
                     // Optionally, you can add a link to view the friend's profile or initiate chat
+                    listItem.onclick = function() { loadChat(friend); }; // Load chat when friend is clicked
                     friendsList.appendChild(listItem);
                 });
             })

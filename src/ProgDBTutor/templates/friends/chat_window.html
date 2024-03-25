@@ -1,12 +1,128 @@
 <!-- Chat Column -->
-<div class="col-md-8">
-    <h2>Chat with <!-- Insert dynamic friend name here --> SiBMs</h2>
-    <div class="chat-messages" style="height: 400px; overflow-y: scroll;">
-        {% for message in messages %}
-            <div class="{{ 'sent' if message.sender_id == user_id else 'received' }}">
-                {{ message.text }}
-            </div>
-        {% endfor %}
+<div class="col-md-8 chat-window">
+    <h2>Chat with <span id="chat-with-name">...</span></h2> <!-- Dynamic friend name here -->
+    <div id="chat-messages" class="chat-messages" style="height: 400px; overflow-y: scroll;">
+        <!-- Messages will be dynamically loaded here -->
     </div>
-    <!-- Optionally, add a form for sending new messages here -->
+    <!-- Form for sending new messages -->
+    <form id="send-message-form">
+        <input type="hidden" name="receiver" id="receiver" value="">
+        <div class="input-group">
+            <input type="text" name="message" id="message-input" class="form-control" placeholder="Type a message..." required>
+            <div class="input-group-append">
+                <button type="button" id="send-message-btn" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </form>
+
+
 </div>
+
+
+<script>
+    // Function to load chat messages
+    function loadChat(friend_name) {
+        // Here you would make an API call to fetch the chat messages
+        // For this example, we're just updating the chat window title
+        const chatWithName = document.getElementById('chat-with-name');
+        chatWithName.textContent = friend_name;
+
+        const receiver = document.getElementById('receiver');
+        receiver.value = friend_name;
+
+        // Clear previous messages
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.innerHTML = ''; // Use innerHTML to clear the messages
+
+        // Fetch messages and populate `chatMessages`
+        fetch(`/api/messages/${friend_name}`) // This should be the URL to your API endpoint for fetching messages
+            .then(response => response.json())
+            .then(messages => {
+                // Assuming 'messages' is sorted by 'created_at' in ascending order
+                let lastMessageDate = null;
+
+                messages.forEach((msg, index) => {
+                    const currentDate = new Date(msg.created_at);
+
+                    // Create elements for the message and its timestamp
+                    const messageDiv = document.createElement('div');
+                    const messageContent = document.createElement('p');
+                    messageContent.textContent = msg.message;
+                    messageDiv.className = msg.sender === friend_name ? 'received' : 'sent';
+
+                    // Append the message text to the message div
+                    messageDiv.appendChild(messageContent);
+
+                    // Check if there's a need to insert a timestamp divider
+                    if (lastMessageDate) {
+                        const hourDifference = Math.abs(currentDate - lastMessageDate) / 36e5;
+                        if (hourDifference >= 1) {
+                            // Insert timestamp divider
+                            const timeDivider = document.createElement('div');
+                            timeDivider.className = 'time-divider';
+                            timeDivider.textContent = lastMessageDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                            chatMessages.appendChild(timeDivider);
+                        }
+                    }
+
+                    // Append the current message
+                    chatMessages.appendChild(messageDiv);
+
+                    // Update lastMessageDate with the current message's date
+                    lastMessageDate = currentDate;
+
+                    // For the last message in the array, also append a timestamp divider
+                    if (index === messages.length - 1) {
+                        const timeDivider = document.createElement('div');
+                        timeDivider.className = 'time-divider';
+                        timeDivider.textContent = currentDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                        chatMessages.appendChild(timeDivider);
+                    }
+                });
+
+
+            })
+            .catch(error => console.error('Error fetching messages:', error));
+    }
+
+    // AJAX call to send a message
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('send-message-btn').addEventListener('click', function() {
+            const receiver = document.getElementById('receiver').value;
+            const message = document.getElementById('message-input').value;
+
+            fetch('{{ url_for("friends.add_message") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'X-CSRFToken': ' csrf_token() '  // If using Flask-WTF CSRF protection
+                },
+                body: JSON.stringify({
+                    receiver: receiver,
+                    message: message
+                }),
+                // credentials: 'same-origin'  // Necessary for including cookies, e.g., CSRF token
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Assuming your Flask route returns JSON
+            })
+            .then(data => {
+                console.log('Message sent:', data);
+                document.getElementById('message-input').value = '';  // Clear the input field
+                // TODO: Add message to the chat window
+                const chatMessages = document.getElementById('chat-messages');
+                const messageDiv = document.createElement('div');
+                debugger;
+                messageDiv.className = 'sent'; // TODO: Change this to 'received' if the message is received
+                messageDiv.textContent = message;
+                chatMessages.appendChild(messageDiv);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>

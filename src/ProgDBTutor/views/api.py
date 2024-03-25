@@ -79,3 +79,18 @@ def get_friends():
             list_of_friends.append(friend.user1)
     return jsonify(list_of_friends)
 
+@api_blueprint.route('/messages/<string:friend_name>')
+@login_required
+def get_messages(friend_name):
+    """
+    Handles GET requests for all messages. This will return a list of all messages, for the current user
+    :return: A list of all messages, in json format
+    """
+    chatmessage_data_access = current_app.config.get('chatmessage_data_access')
+    current_user_object = current_app.config.get('user_data_access').get_user(current_user.username)
+    friend_user_object = current_app.config.get('user_data_access').get_user(friend_name)
+    messages = chatmessage_data_access.get_messages(current_user_object, friend_user_object)
+    if messages:
+        return jsonify([message.to_dict() for message in messages])
+    else:
+        return jsonify({"message": "No messages found"}), 200  # Consider returning an empty list with a 200 OK

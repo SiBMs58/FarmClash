@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from config import config_data
 
 from models.friendship import Friendship
+from models.chatmessage import ChatMessage
 
 
 friends_blueprint = Blueprint('friends', __name__, template_folder='templates')
@@ -50,11 +51,20 @@ def add_friend(friend_name):
 
     return render_template('friends/dashboard.html',  app_data=config_data)
 
-@friends_blueprint.route('/send_message', methods=['POST'])
+@friends_blueprint.route('/add_message', methods=['POST'])
 @login_required
-def send_message():
-    pass
+def add_message():
+    """
+    Handles POST requests for adding a message
+    """
+    chatmessage_data_access = current_app.config.get('chatmessage_data_access')
+    data = request.get_json()
+    sender = current_user.username
+    receiver = data['receiver']
+    message = data['message']
+    # Assuming the add_message method returns a boolean indicating success
+    if chatmessage_data_access.add_message(ChatMessage(sender, receiver, message)):
+        return jsonify({'status': 'success', 'message': 'Message sent successfully.'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Failed to send message.'}), 500
 
-@friends_blueprint.route('/get_messages', methods=['GET'])
-def get_messages():
-    pass

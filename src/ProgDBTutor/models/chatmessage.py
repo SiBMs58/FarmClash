@@ -1,6 +1,6 @@
 from datetime import datetime
 class ChatMessage:
-    def __init__(self, message_id, sender, receiver, message, created_at=None):
+    def __init__(self, sender, receiver, message, message_id=None, created_at=None):
         self.message_id = message_id
         self.sender = sender
         self.receiver = receiver
