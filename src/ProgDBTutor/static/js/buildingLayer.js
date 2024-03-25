@@ -34,7 +34,7 @@ const defaultMapData = {
  */
 const defaultMapData2 = {
     map_width: 58,
-    map_height: 35,
+    map_height: 43,
 
     building_information: {
         fence1: {
