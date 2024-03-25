@@ -3,7 +3,6 @@
 <head>
     <title>{{app_data['app_name']}}</title>
 
-    <!--{% include 'head.html' %}-->
 
     <style>
         canvas {
@@ -38,7 +37,7 @@
 <body>
 
 
-	{% include 'header.html' %}
+	{% include 'game/game_UI.html' %}
 
     <div id="canvasContainer">
         <canvas id="buildingCanvas"></canvas>
@@ -46,9 +45,6 @@
     </div>
 
 
-
-
-	<!--{% include 'footer.html' %}-->
 
 
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>

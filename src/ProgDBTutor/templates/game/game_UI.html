@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="../static/css/UI.css">
-    <title>game header</title>
-    {% include 'head.html' %}
+    <link rel="stylesheet" type="text/css" href="../../static/css/UI.css">
+    <title>game UI</title>
 </head>
 <body>
     <header>
         <div class="home-btn">
-            <img src="../static/img/home_btn.png" alt="🏡" usemap="#homeMap" id="home-btn">
+            <img src="../../static/img/buttons/home_btn.png" alt="🏡" usemap="#homeMap" id="home-btn">
             <map name="homeMap">
                 <area shape="rect" coords="0,0,150,150" alt="🏡" href="{{ url_for('main') }}">
             </map>
         </div>
 
         <div class="resource-btn">
-            <img src="../static/img/resource_btn.png" alt="🌱" id="resource-btn">
+            <img src="../../static/img/buttons/resource_btn.png" alt="🌱" id="resource-btn">
         </div>
         <div class="overlay" id="resource-overlay">
             <div class="popup">
@@ -24,25 +23,24 @@
         </div>
 
         <div class="money-display">
-            <p>100</p> <!-- This will be updated dynamically -->
-            <img src="../static/img/coin_symbol.png" alt="🪙">
+            <p>0</p> <!-- This will be updated dynamically -->
+            <img src="../../static/img/symbols/coin_symbol.png" alt="🪙">
         </div>
 
         <div class="setting-btn">
-            <img src="../static/img/setting_btn.png" alt="⚙️" usemap="#settingMap" id="setting-btn">
+            <img src="../../static/img/buttons/setting_btn.png" alt="⚙️" usemap="#settingMap" id="setting-btn">
             <map name="settingMap">
                 <area shape="rect" coords="0,0,150,150" alt="⚙️" href="{{ url_for('settings') }}">
             </map>
         </div>
 
         <div class="chat-btn">
-            <img src="../static/img/chat_btn.png" alt="💬" usemap="#chatMap" id="chat-btn">
+            <img src="../../static/img/buttons/chat_btn.png" alt="💬" usemap="#chatMap" id="chat-btn">
             <map name="chatMap">
-                <area shape="rect" coords="0,0,150,150" alt="💬" href="{{ url_for('dashboard') }}">
+                <area shape="rect" coords="0,0,150,150" alt="💬" href="{{ url_for('friends') }}">
             </map>
         </div>
     </header>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const resourceButton = document.getElementById('resource-btn');
@@ -51,7 +49,7 @@
 
             resourceButton.addEventListener('click', function() {
                 overlay.style.display = clickedResourceButton ? 'none' : 'flex';
-                resourceButton.src = clickedResourceButton ? "../static/img/resource_btn.png" : "../static/img/resource_pbtn.png";
+                resourceButton.src = clickedResourceButton ? "../static/img/buttons/resource_btn.png" : "../static/img/buttons/resource_pbtn.png";
                 clickedResourceButton = !clickedResourceButton;
             });
 
@@ -101,5 +99,28 @@
             }
         }
     </script>
+
+
+
+
+
+
+    <footer>
+        <div class="market-btn">
+            <img src="../../static/img/buttons/market_btn.png" alt="🛒" usemap="#marketMap" id="market-btn">
+            <map name="marketMap">
+                <area shape="rect" coords="0,0,150,150" alt="🛒" href="{{ url_for('market') }}">
+            </map>
+        </div>
+        <div class="copyright">
+            &copy; Team3 – Universiteit Antwerpen - PPDB
+        </div>
+        <div class="attack-btn">
+            <img src="../../static/img/buttons/attack_btn.png" alt="⚔️" usemap="#attackMap" id="attack-btn">
+            <map name="attackMap">
+                <area shape="rect" coords="0,0,150,150" alt="⚔️" href="{{ url_for('attack') }}">
+            </map>
+        </div>
+    </footer>
 </body>
 </html>

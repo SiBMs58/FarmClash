@@ -66,6 +66,17 @@ def dashboard():
         return redirect(url_for('admin'))
     return render_template('dashboard.html', app_data=app_data)
 
+@app.route('/friends')
+@login_required
+def friends():
+    """
+    Renders the dashboard view, for a user.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('friends.html', app_data=app_data)
+
+
 @app.route('/settings')
 @login_required
 def settings():
@@ -75,6 +86,29 @@ def settings():
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
     return render_template('settings.html', app_data=app_data)
+
+
+@app.route('/market')
+@login_required
+def market():
+    """
+    Renders the market view.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('market.html', app_data=app_data)
+
+
+@app.route('/attack')
+@login_required
+def attack():
+    """
+    Renders the attack dashboard view.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('attack.html', app_data=app_data)
+
 
 @app.route('/admin')
 @login_required
