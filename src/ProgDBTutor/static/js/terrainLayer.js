@@ -84,11 +84,7 @@ export class TerrainMap extends BaseMap {
      */
 
     async fetchTerrainMapData() {
-        //const BASE_URL = "http://localhost:5000";
-
-
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-
         //debugger;
         try {
             // Basic test of de fetch is gelukt of niet
@@ -109,16 +105,19 @@ export class TerrainMap extends BaseMap {
             // Map proberen initialiseren:
             if (terrainMapData.map_width) {
                 this.map_width = terrainMapData.map_width;
+                console.log("map_width wordt ingeladen...");
             } else {
                 console.log("map_width niet gevonden -> default wordt gebruikt"); // todo later engels maken
             }
             if (terrainMapData.map_height) {
                 this.map_height = terrainMapData.map_height;
+                console.log("map_height wordt ingeladen...");
             } else {
                 console.log("map_height niet gevonden -> default wordt gebruikt");
             }
             if (terrainMapData.terrain_tiles) {
                 this.tiles = terrainMapData.terrain_tiles;
+                console.log("tiles worden ingeladen...");
             } else {
                 console.log("terrain_tiles niet gevonden -> default wordt gebruikt");
             }
@@ -248,24 +247,4 @@ export class TerrainMap extends BaseMap {
         return true;
     }
 
-    /*
-    getTile(y, x) {
-        try {
-            this.isValidTilePosition(y,x)
-        } catch (error) {
-            console.error(error.message)
-        }
-
-        return this.tiles[y][x];
-    }
-
-    toJSON() {
-        return {
-            map_width: this.map_width,
-            map_height: this.map_height,
-            terrain_tiles: this.tiles
-        };
-    }
-
-    */
 }

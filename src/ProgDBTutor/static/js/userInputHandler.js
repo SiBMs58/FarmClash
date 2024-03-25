@@ -15,32 +15,28 @@ export class UserInputHandler {
 
         this.priorityClickClass = null;
 
+        const canvas = document.getElementById('buildingCanvas');
+        const rect = canvas.getBoundingClientRect();
+
+
         // ———————————————————
         // Add event listeners:
 
         document.addEventListener('keydown', (event) => {
             this.handleKeyDown(event);
         });
-        /* document.addEventListener('click', (event) => {
-            const x = event.clientX;
-            const y = event.clientY;
-
-            this.handleClickInput(x, y);
-        }); */
-
         // To check whether to register click or drag
-
         let clickStartPosition = null;
         document.addEventListener('mousedown', (event) => {
-            clickStartPosition = { x: event.clientX, y: event.clientY };
+            clickStartPosition = { x: event.clientX - rect.left, y: event.clientY - rect.top};
             this.handleScrollInput(event);
         });
         document.addEventListener('mouseup', (event) => {
             this.handleScrollInput(event);
 
             if (clickStartPosition !== null) {
-                const dx = Math.abs(event.clientX - clickStartPosition.x);
-                const dy = Math.abs(event.clientY - clickStartPosition.y);
+                const dx = Math.abs((event.clientX - rect.left) - clickStartPosition.x);
+                const dy = Math.abs((event.clientY - rect.top) - clickStartPosition.y);
 
                 const threshold = 5; // Adjust as needed
 
@@ -49,15 +45,15 @@ export class UserInputHandler {
                     return;
                 }
 
-                const x = event.clientX;
-                const y = event.clientY;
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
                 this.handleClickInput(x, y);
             }
         });
         document.addEventListener('mousemove', (event) => {
             this.handleScrollInput(event);
-            const x = event.clientX;
-            const y = event.clientY;
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
             this.handleMouseMove(x, y);
         });
         document.addEventListener('contextmenu', function(event) {

@@ -442,8 +442,6 @@ export class BuildingMap extends BaseMap {
         } else {
             this.drawTiles();
         }
-
-        this.updateBuildingMapDB();
     }
 
     /**
@@ -495,6 +493,8 @@ export class BuildingMap extends BaseMap {
             return false;
         }
 
+        console.log(`click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
+
         // Click on building and not yet moving
         if (this.movingBuilding === false) {
             this.movingBuilding = true;
@@ -508,10 +508,8 @@ export class BuildingMap extends BaseMap {
             this.movingBuilding = false;
             this.ownNextClick = false;
             this.prevMouseMoveBuildingLoc = null;
+            this.updateBuildingMapDB();
         }
-
-
-        console.log(`click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
         return true;
     }
 
@@ -525,9 +523,11 @@ export class BuildingMap extends BaseMap {
     }
 
     async updateBuildingMapDB() {
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        const fetchLink = BASE_URL + "/game/update-building-map";
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON
         try {
-            const response = await fetch('${BASE_URL}/game/update-building-map', {
+            const response = await fetch(fetchLink, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
