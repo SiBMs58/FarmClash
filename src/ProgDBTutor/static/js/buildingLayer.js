@@ -33,8 +33,8 @@ const defaultMapData = {
  * Here's an example of what the buildMap json needs to look like.
  */
 const defaultMapData2 = {
-    map_width: 50,
-    map_height: 50,
+    map_width: 58,
+    map_height: 35,
 
     building_information: {
         fence1: {
