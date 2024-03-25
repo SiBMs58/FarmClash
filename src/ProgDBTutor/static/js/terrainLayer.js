@@ -4,6 +4,20 @@ function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
+function startsWith(name, prefix) {
+    return name.slice(0, prefix.length) === prefix;
+}
+
+
+function getNextAssetName(assetName) {
+    let parts = assetName.split('.');
+    let lastPart = parts.pop();
+    let num = parseInt(lastPart) || 0;
+    num = (num === 1) ? 2 : (num === 2) ? 1 : num;
+    return parts.join('.') + '.' + num.toString() + '.png';
+}
+
+
 /**
  * This is the asset list that isn't fetched from the database and is used for debugging purposes.
  */
@@ -202,8 +216,8 @@ export class TerrainMap extends BaseMap {
             for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
                 for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
                     const currTile = this.tiles[i_map][j_map];
-                    if (getAssetDir(currTile) == "Water"){
-                        let filePath = "/static/img/assets/terrain/" + getAssetDir(currTile) + "/" + "Water.1."+ this.cycle.toString() + ".png";
+                    if (getAssetDir(currTile) === "Water"){
+                        let filePath = "/static/img/assets/terrain/Water/" + getNextAssetName(currTile);
                         const img = this.terrainAssets[filePath];
                         if (img) {
                             this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
