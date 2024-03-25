@@ -60,3 +60,22 @@ def get_resources():
     resources = resource_data_access.get_resources(current_user.username)
     return jsonify([resource.to_dict() for resource in resources])
 
+
+@api_blueprint.route('/friends')
+@login_required
+def get_friends():
+    """
+    Handles GET requests for all friends. This will return a list of all friends, for the current user
+    :return: A list of all friends, in json format
+    """
+    friendship_data_access = current_app.config.get('friendship_data_access')
+    current_user_object = current_app.config.get('user_data_access').get_user(current_user.username)
+    friends = friendship_data_access.get_friends(current_user_object)
+    list_of_friends = []
+    for friend in friends:
+        if friend.user1 == current_user.username:
+            list_of_friends.append(friend.user2)
+        elif friend.user2 == current_user.username:
+            list_of_friends.append(friend.user1)
+    return jsonify(list_of_friends)
+

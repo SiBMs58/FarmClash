@@ -1,0 +1,12 @@
+<!-- Chat Column -->
+<div class="col-md-8">
+    <h2>Chat with <!-- Insert dynamic friend name here --> SiBMs</h2>
+    <div class="chat-messages" style="height: 400px; overflow-y: scroll;">
+        {% for message in messages %}
+            <div class="{{ 'sent' if message.sender_id == user_id else 'received' }}">
+                {{ message.text }}
+            </div>
+        {% endfor %}
+    </div>
+    <!-- Optionally, add a form for sending new messages here -->
+</div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="">
 <head>
-    <title>{{ app_data['app_name'] }}</title>
+    <title>Dashboard - {{ app_data['app_name'] }}</title>
     {% include 'head.html' %}
 </head>
 <body>
@@ -11,16 +11,15 @@
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
                 <h1>Dashboard</h1>
-                <div class="borderme mx-auto">
-
-                    <div class="smalltitle">Here will come friends and messages</div>
-                    <!--<div class="my-3">
-                        GET <a class="larger" href="/users">/users</a><br/>
-                    </div>
-                    <div class="mb-3">
-                        GET <a class="larger" href="/user/1">/user/1</a> <br/>
+                <div class="row">
+                    <!-- Friends Column -->
+                    {% include 'friends/friends_list.html' %}
+                    <!-- Chat Column -->
+                    {% include 'friends/chat_window.html' %}
+                    <!-- Profile Column
+                    <div class="col-md-4">
+                         include 'profile/profile.html'
                     </div>-->
-
                 </div>
                 <div class="my-3">
                     <a href="{{ url_for('auth.logout') }}">Logout</a>
@@ -30,5 +29,11 @@
     </div>
 
     {% include 'footer.html' %}
+    <script>
+        // Automatically load friends when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFriends();
+        });
+    </script>
 </body>
 </html>
