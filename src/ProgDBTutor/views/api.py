@@ -1,6 +1,8 @@
 from flask import Blueprint, current_app, jsonify
 from flask_login import login_required, current_user
 
+from services.game_services import GameServices
+
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
 @api_blueprint.route('/users')
@@ -36,14 +38,20 @@ def get_terrain_map():
     Handles GET requests for the terrain map. This will return the terrain map, if the logged in user is admin
     :return: The terrain map, in json format
     """
+
+    # Voor debugging
+    #return jsonify({"status": "success", "message": "This is a test response"})
+
     map_data_access = current_app.config.get('map_data_access')
-    maps = map_data_access.get_maps_by_username_owner(current_user.username)
-    if maps is None:
+    map = map_data_access.get_map_by_username_owner(current_user.username) # TODO: Handle more maps than one
+    if map is None:
         return "No maps found", 404
-    for map in maps:
-        tile_data_access = current_app.config.get('tile_data_access')
-        tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-        return jsonify([tile.to_dict() for tile in tiles])
+    # for map in maps:
+    tile_data_access = current_app.config.get('tile_data_access')
+    tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
+    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'))
+    formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
+    return jsonify(formatted_terrain_map)
 
 @api_blueprint.route('/resources')
 @login_required

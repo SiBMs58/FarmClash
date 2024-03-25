@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, request
 from flask_login import current_user, login_required
 from config import config_data
 from data_access.dbconnection import DBConnection
@@ -86,12 +86,26 @@ def admin():
         return redirect(url_for('dashboard'))
     return render_template('admin.html', app_data=app_data)
 
+@app.route('/jasmine_tests')
+@login_required
+def jasmine_tests():
+    """
+    Renders the jasmine tests view.
+    """
+    if current_user.username != 'admin':
+        return redirect(url_for('dashboard'))
+    return render_template('jasmine-tests.html', app_data=app_data)
+
 @login_manager.user_loader
 def load_user(username):
     """
     This function is a user loader for the login manager. It takes a username as a parameter and returns the user data accessed using the username.
     """
     return user_data_access.get_user(username)
+
+@app.context_processor
+def inject_base_url():
+    return dict(base_url=request.url_root)
 
 # RUN DEV SERVER
 if __name__ == "__main__":

@@ -57,7 +57,7 @@ export class TerrainMap extends BaseMap {
      */
     async initialize() {
         await this.fetchTerrainAssetList();
-        //await this.fetchTerrainMapData();
+        await this.fetchTerrainMapData();
         await new Promise((resolve) => this.preloadTerrainAssets(resolve));
         // Safe to call stuff here
     }
@@ -82,15 +82,46 @@ export class TerrainMap extends BaseMap {
     /**
      * Fetches the terrainMapData json which stores the layout and other information needed.
      */
+
     async fetchTerrainMapData() {
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        //debugger;
         try {
-            const response = await fetch('/static/map.json');
-            let mapData = await response.json();
-            this.map_width = mapData.map_width;
-            this.map_height = mapData.map_height;
-            this.tiles = mapData.terrain_tiles;
-            this.viewX = 0;
-            this.viewY = 0;
+            // Basic test of de fetch is gelukt of niet
+            const fetchLink = BASE_URL + "/api/terrain-map";
+            //debugger;
+            const response = await fetch(fetchLink);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            } else {
+                console.log("Joepie response is oké");
+            }
+            let terrainMapData = await response.json();
+            if (terrainMapData.message) { // Moet niet per se
+                console.log("Message from the server:", terrainMapData.message);
+            }
+
+
+            // Map proberen initialiseren:
+            if (terrainMapData.map_width) {
+                this.map_width = terrainMapData.map_width;
+                console.log("map_width wordt ingeladen...");
+            } else {
+                console.log("map_width niet gevonden -> default wordt gebruikt"); // todo later engels maken
+            }
+            if (terrainMapData.map_height) {
+                this.map_height = terrainMapData.map_height;
+                console.log("map_height wordt ingeladen...");
+            } else {
+                console.log("map_height niet gevonden -> default wordt gebruikt");
+            }
+            if (terrainMapData.terrain_tiles) {
+                this.tiles = terrainMapData.terrain_tiles;
+                console.log("tiles worden ingeladen...");
+            } else {
+                console.log("terrain_tiles niet gevonden -> default wordt gebruikt");
+            }
+
         } catch(error) {
             console.error('fetchTerrainAssetList() failed:', error);
             throw error;
@@ -191,8 +222,6 @@ export class TerrainMap extends BaseMap {
         else{
             this.time +=1;
         }
-
-
     }
 
     /**
@@ -218,24 +247,4 @@ export class TerrainMap extends BaseMap {
         return true;
     }
 
-    /*
-    getTile(y, x) {
-        try {
-            this.isValidTilePosition(y,x)
-        } catch (error) {
-            console.error(error.message)
-        }
-
-        return this.tiles[y][x];
-    }
-
-    toJSON() {
-        return {
-            map_width: this.map_width,
-            map_height: this.map_height,
-            terrain_tiles: this.tiles
-        };
-    }
-
-    */
 }
