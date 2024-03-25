@@ -387,10 +387,10 @@ export class BuildingMap extends BaseMap {
         delete buildingInfoCopy[buildingToMove.self_key];
         // todo beter maken -> je moet nie verwijderen
         // Finding all forbidden tiles
-        for (const key of buildingInfoCopy) {
-            for (const currTile of buildingInfoCopy[key].tile_rel_locations) {
-                const currYValue = buildingInfoCopy[key].building_location[0] + currTile[0][0];
-                const currXValue = buildingInfoCopy[key].building_location[1] + currTile[0][1];
+        for (const building of Object.values(buildingInfoCopy)) {
+            for (const currTile of building.tile_rel_locations) {
+                const currYValue = building.building_location[0] + currTile[0][0];
+                const currXValue = building.building_location[1] + currTile[0][1];
                 forbiddenTiles.push([currYValue, currXValue]);
             }
         }
@@ -424,13 +424,13 @@ export class BuildingMap extends BaseMap {
      */
     moveBuilding(rel_y, rel_x, buildingToMove, setToTop = false) {
 
-        /*
         if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
             console.log("Move successful");
+            // zet ui op groen
         } else {
             console.log("Move not valid");
+            // zet ui op rood
         }
-        */
 
         buildingToMove.building_location[0] += rel_y;
         buildingToMove.building_location[1] += rel_x;
@@ -474,7 +474,6 @@ export class BuildingMap extends BaseMap {
             this.prevMouseMoveBuildingLoc[0] = tileY;
             this.prevMouseMoveBuildingLoc[1] = tileX;
         }
-
     }
 
     /**
@@ -500,6 +499,8 @@ export class BuildingMap extends BaseMap {
             this.movingBuilding = true;
             this.ownNextClick = true;
             this.buildingClickedName = this.tiles[tileY][tileX][1];
+            this.currBuildingOrgLocation = Array.from(this.buildingInformation[this.buildingClickedName].building_location);
+            console.log("orig location: " + this.currBuildingOrgLocation);
             return true;
         }
 
@@ -508,7 +509,22 @@ export class BuildingMap extends BaseMap {
             this.movingBuilding = false;
             this.ownNextClick = false;
             this.prevMouseMoveBuildingLoc = null;
-            this.updateBuildingMapDB();
+
+            const buildingToMove = this.buildingInformation[this.buildingClickedName];
+            if (this.checkValidMoveLocation(0,0, buildingToMove)) {
+                console.log("Op een juiste plek geplaatst");
+                this.updateBuildingMapDB();
+            } else {
+                //debugger;
+                console.log("Building new location: " + buildingToMove.building_location);
+                const revertRelY = this.currBuildingOrgLocation[0] - buildingToMove.building_location[0];
+                const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
+                this.moveBuilding(revertRelY, revertRelX, buildingToMove);
+                console.error("Geplaatst op een invalid locatie");
+
+            }
+            // check of move valid is met rel_x, rel_y = 0
+            // Terug naar originele locatie
         }
         return true;
     }

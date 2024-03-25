@@ -94,7 +94,7 @@ export class TerrainMap extends BaseMap {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             } else {
-                console.log("Joepie response is oké");
+                console.log("Joepie terrain response is oké");
             }
             let terrainMapData = await response.json();
             if (terrainMapData.message) { // Moet niet per se
