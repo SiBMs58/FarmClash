@@ -9,12 +9,11 @@ function startsWith(name, prefix) {
 }
 
 
-function getNextAssetName(assetName) {
+function getNextAssetName(assetName, cycle) {
     let parts = assetName.split('.');
     let lastPart = parts.pop();
-    let num = parseInt(lastPart) || 0;
-    num = (num === 1) ? 2 : (num === 2) ? 1 : num;
-    return parts.join('.') + '.' + num.toString() + '.png';
+    //let num = parseInt(lastPart) || 0;
+    return parts.join('.') + '.' + cycle.toString() + '.png';
 }
 
 
@@ -209,15 +208,15 @@ export class TerrainMap extends BaseMap {
     }
 
     waterAnimation() {
-        if (this.time > 24){
-            this.time -= 24;
+        if (this.time > 48){
+            this.time -= 48;
             const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
             const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
             for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
                 for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
                     const currTile = this.tiles[i_map][j_map];
                     if (getAssetDir(currTile) === "Water"){
-                        let filePath = "/static/img/assets/terrain/Water/" + getNextAssetName(currTile);
+                        let filePath = "/static/img/assets/terrain/Water/" + getNextAssetName(currTile, this.cycle);
                         const img = this.terrainAssets[filePath];
                         if (img) {
                             this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
@@ -228,10 +227,8 @@ export class TerrainMap extends BaseMap {
                     }
                 }
             }
-            this.cycle +=1;
-            if (this.cycle == 5){
-                this.cycle = 1;
-            }
+
+            this.cycle = 3 - this.cycle;
         }
         else{
             this.time +=1;
