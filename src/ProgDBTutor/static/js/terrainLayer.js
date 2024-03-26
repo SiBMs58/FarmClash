@@ -208,6 +208,30 @@ export class TerrainMap extends BaseMap {
     }
 
     waterAnimation() {
+        const animationSpeed = 48;
+        if (this.time > animationSpeed){
+            this.time -= animationSpeed;
+
+            for (let i = 0; i < this.map_height; i++) {
+                for (let j = 0; j < this.map_width; j++) {
+                    const currTileDir = getAssetDir(this.tiles[i][j]);
+                    if (currTileDir === "Water") {
+                        this.tiles[i][j] = getNextAssetName(this.tiles[i][j], this.cycle);
+                        //debugger;
+                    }
+                }
+            }
+
+            this.drawTiles();
+
+            this.cycle = 3 - this.cycle;
+        }
+        else{
+            this.time +=1;
+        }
+    }
+
+    waterAnimation2() {
         if (this.time > 48){
             this.time -= 48;
             const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
@@ -240,7 +264,7 @@ export class TerrainMap extends BaseMap {
      */
     tick() {
         //console.log("Terrain layer tick");
-        this.waterAnimation();
+        this.waterAnimation2();
 
     }
 
