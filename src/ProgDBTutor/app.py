@@ -6,10 +6,13 @@ from data_access.user_data_access import UserDataAccess
 from data_access.map_data_access import MapDataAccess
 from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
+from data_access.friendship_data_access import FriendshipDataAccess
+from data_access.chatmessage_data_access import ChatMessageDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
+from views.friends import friends_blueprint
 from views.market import market_blueprint
 from models.user import User
 from extensions import login_manager
@@ -30,6 +33,10 @@ tile_data_access = TileDataAccess(connection)
 app.config['tile_data_access'] = tile_data_access
 resource_data_access = ResourceDataAccess(connection)
 app.config['resource_data_access'] = resource_data_access
+friendship_data_access = FriendshipDataAccess(connection)
+app.config['friendship_data_access'] = friendship_data_access
+chatmessage_data_access = ChatMessageDataAccess(connection)
+app.config['chatmessage_data_access'] = chatmessage_data_access
 
 # Insert the admin user
 user_data_access.add_user(User(config_data['admin_username'], werkzeug_generate_password_hash(config_data['admin_password']), config_data['admin_email']))
@@ -42,6 +49,7 @@ app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
+app.register_blueprint(friends_blueprint, url_prefix='/friends')
 
 
 DEBUG = False
