@@ -1,0 +1,44 @@
+<!-- Friends List -->
+<div class="col-md-4">
+    <h2>Friends</h2>
+    <!-- Search Box -->
+    <form action="{{ url_for('friends.search_friends') }}" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" class="form-control" name="query" placeholder="Search new friends...">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+        </div>
+    </form>
+    <!-- Friends List -->
+    <ul id="friends-list" class="list-group">
+        <!-- Friends will be loaded here by the JavaScript function -->
+    </ul>
+</div>
+
+<script>
+    // Function to load friends from the API
+    function loadFriends() {
+        fetch('/api/friends')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(friends => {
+                const friendsList = document.getElementById('friends-list');
+                friendsList.innerHTML = ''; // Clear the list
+                friends.forEach(friend => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item clickable';
+                    listItem.textContent = friend;
+                    // Optionally, you can add a link to view the friend's profile or initiate chat
+                    listItem.onclick = function() { loadChat(friend); }; // Load chat when friend is clicked
+                    friendsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching friends:', error));
+    }
+
+    // Call the loadFriends function on page load
+    document.addEventListener('DOMContentLoaded', loadFriends);
+</script>
