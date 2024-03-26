@@ -43,6 +43,11 @@ def search_friends():
 @friends_blueprint.route('/add_friend/<string:friend_name>', methods=['POST'])
 @login_required
 def add_friend(friend_name):
+    """
+    Handles POST requests for adding a friend
+    :param friend_name: The name of the friend
+    :return: Redenders the dashboard view
+    """
     user_data_access = current_app.config.get('user_data_access')
     user_1 = user_data_access.get_user(current_user.username)
     user_2 = user_data_access.get_user(friend_name)

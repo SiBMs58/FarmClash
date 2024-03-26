@@ -5,7 +5,7 @@
 
 </head>
 <body>
-    {% include 'header.html' %}
+    {% include 'logged_in_header.html' %}
 
     <div class="container-fluid mt-5">
         <div class="row justify-content-center">
@@ -30,6 +30,18 @@
                     </div>
                 </div>
 
+                <!-- Test Section -->
+                <div class="map-state-section my-4">
+                    <h2>Tests</h2>
+                    <div class="text-center">
+                        <!-- Add a button to run tests -->
+                        <a href="{{ url_for('jasmine_tests') }}">
+                            <button id="run-tests-btn" class="btn btn-primary">Run Tests</button>
+                        </a>
+                    </div>
+                    <!-- Placeholder for Jasmine test results -->
+                    <div id="jasmine-container"></div>
+                </div>
 
                 <!-- API Test Section
                 <div class="api-test-section my-4">
