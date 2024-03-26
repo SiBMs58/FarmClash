@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crop Market</title>
-    <link rel="stylesheet" href="cropMarket.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/market/cropMarket.css') }}">
 </head>
 <body>
     <div class="market-container">
         <!-- button to go back to the market menu -->
-        <a class="back-button" href="../market.html">Back</a>
+        <a class="back-button" href="{{ url_for('market.html') }}">Back</a>
         <!-- text for the crop market -->
         <h1>Welcome to the Crop Market!</h1>
         <div class="stand">
@@ -117,6 +117,6 @@
             </div>
         </div>
     </div>
-    <script src="cropMarket.js"></script>
+    <script src="{{ url_for('static', filename='../../static/js/market/cropMarket.js') }}"></script>
 </body>
 </html>

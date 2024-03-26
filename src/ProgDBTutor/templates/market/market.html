@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market</title>
-    <link rel="stylesheet" href="market.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/market/market.css') }}">
 </head>
 <body>
     <div class="market-container">
@@ -17,7 +17,7 @@
     </div>
     <!-- Button to go back to the game -->
     <button class="back-button">Back</button>
-    <script src="market.js"></script>
+    <script src="{{ url_for('static', filename='../static/js/market/market.js') }}"></script>
 </body>
 </html>
 

@@ -14,7 +14,7 @@ function sellCrop(crop) {
 }
 /*function to go back to the menu of the market*/
 function goBack(){
-    window.location.href="../market.html"; // Go back to the market when you click the 'Back' button
+    window.location.href="../../../templates/market/market.html"; // Go back to the market when you click the 'Back' button
 }
 // Function to update total price for a specific crop
 function updateTotalPrice(crop) {
