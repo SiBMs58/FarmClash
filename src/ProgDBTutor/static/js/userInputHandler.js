@@ -106,6 +106,9 @@ export class UserInputHandler {
             case 'ArrowDown':
                 this.sendScrollMessage('Down');
                 break;
+            case 'Escape':
+                // todo move van gebouw cancelen als je het aan het verplaatsen bent
+                break;
             default:
                 // Optional: handle any other keys
                 break;

@@ -131,8 +131,9 @@ export class BuildingMap extends BaseMap {
      * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
+     * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
      */
-    constructor(mapData = defaultMapData2, _tileSize, _ctx) {
+    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance) {
 
         super(mapData, _tileSize);
 
@@ -142,6 +143,8 @@ export class BuildingMap extends BaseMap {
 
         this.buildingAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
+
+        this.terrainMapInstance = terrainMapInstance;
 
 
         // Variables to remember the click state
@@ -377,15 +380,10 @@ export class BuildingMap extends BaseMap {
      * @returns {boolean} returns true if the move is to a valid location, false if the move isn't valid
      */
     checkValidMoveLocation(rel_y, rel_x, buildingToMove) {
-        //debugger;
-
-        let foundOverlap = false;
-
         let forbiddenTiles = [];
 
         let buildingInfoCopy = structuredClone(this.buildingInformation);
         delete buildingInfoCopy[buildingToMove.self_key];
-        // todo beter maken -> je moet nie verwijderen
         // Finding all forbidden tiles
         for (const building of Object.values(buildingInfoCopy)) {
             for (const currTile of building.tile_rel_locations) {
@@ -409,10 +407,37 @@ export class BuildingMap extends BaseMap {
                 y === currTile[0] && x === currTile[1]
             );
             if (existsInForbiddenTiles) {
-                foundOverlap = true;
+                return false;
             }
         }
-        return !foundOverlap;
+
+        // Check for forbidden terrain overlap
+        for (const currTile of newLocations) {
+            const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
+            const terrainType = getAssetDir(correspondingTerrainTile);
+            if (terrainType === "Water") {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    inBounds(rel_y, rel_x, buildingToMove) {
+        // Finding all new tile locations
+        let newLocations = [];
+        for (const currTile of buildingToMove.tile_rel_locations) {
+            const currNewYValue = buildingToMove.building_location[0] + rel_y + currTile[0][0];
+            const currNewXValue = buildingToMove.building_location[1] + rel_x + currTile[0][1];
+            newLocations.push([currNewYValue, currNewXValue]);
+        }
+
+        for (const currTile of newLocations) {
+            if (currTile[0] < 0 || currTile[0] >= this.map_height || currTile[1] < 0 || currTile[1] >= this.map_width) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -423,24 +448,27 @@ export class BuildingMap extends BaseMap {
      * @param setToTop if marked true, sets the building being moved to the top of the screen.
      */
     moveBuilding(rel_y, rel_x, buildingToMove, setToTop = false) {
+        if (this.inBounds(rel_y, rel_x, buildingToMove)) {
+            if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
+                console.log("Move successful");
+                // zet ui op groen
+            } else {
+                console.log("Move not valid");
+                // zet ui op rood
+            }
 
-        if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
-            console.log("Move successful");
-            // zet ui op groen
+            buildingToMove.building_location[0] += rel_y;
+            buildingToMove.building_location[1] += rel_x;
+            this.tiles = this.generateBuildingTileMap();
+
+            if (setToTop) {
+                this.drawTiles(buildingToMove);
+            } else {
+                this.drawTiles();
+            }
+
         } else {
-            console.log("Move not valid");
-            // zet ui op rood
-        }
-
-        buildingToMove.building_location[0] += rel_y;
-        buildingToMove.building_location[1] += rel_x;
-
-        this.tiles = this.generateBuildingTileMap();
-
-        if (setToTop) {
-            this.drawTiles(buildingToMove);
-        } else {
-            this.drawTiles();
+            console.log("can't move out of bounds");
         }
     }
 
@@ -500,27 +528,24 @@ export class BuildingMap extends BaseMap {
             this.ownNextClick = true;
             this.buildingClickedName = this.tiles[tileY][tileX][1];
             this.currBuildingOrgLocation = Array.from(this.buildingInformation[this.buildingClickedName].building_location);
-            console.log("orig location: " + this.currBuildingOrgLocation);
             return true;
         }
 
         // Click while moving building
         if (this.movingBuilding === true) {
-            this.movingBuilding = false;
-            this.ownNextClick = false;
-            this.prevMouseMoveBuildingLoc = null;
-
             const buildingToMove = this.buildingInformation[this.buildingClickedName];
+
             if (this.checkValidMoveLocation(0,0, buildingToMove)) {
+                this.movingBuilding = false;
+                this.ownNextClick = false;
+                this.prevMouseMoveBuildingLoc = null;
                 console.log("Op een juiste plek geplaatst");
                 this.updateBuildingMapDB();
             } else {
-                //debugger;
-                console.log("Building new location: " + buildingToMove.building_location);
-                const revertRelY = this.currBuildingOrgLocation[0] - buildingToMove.building_location[0];
-                const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
-                this.moveBuilding(revertRelY, revertRelX, buildingToMove);
-                console.error("Geplaatst op een invalid locatie");
+                //const revertRelY = this.currBuildingOrgLocation[0] - buildingToMove.building_location[0];
+                //const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
+                //this.moveBuilding(revertRelY, revertRelX, buildingToMove);
+                console.error("invalid locatie om gebouw te plaatsen");
 
             }
             // check of move valid is met rel_x, rel_y = 0
