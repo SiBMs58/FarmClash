@@ -29,15 +29,26 @@
         border-radius: 20px; /* Example of customizing input field */
     }
     .custom-header {
-        background-image: url('../../static/img/vecteezy_woodgrain-background_164590.jpg.png');
+        background-image: url('../../static/img/backround-wood.png');
         background-size: cover;
         color: wheat;
+
     }
      .btn-custom-search{
-            background-color:green;
+            background-image: url('../../static/img/Screenshot 2024-03-26 at 7.57.28 PM.png');
             color:wheat;
-        }
+     }
 
+     .custom-chat-window.card {
+            border-radius: 20px; /* Set border-radius to 20px for rounded corners */
+     }
+     .custom-chat-window{
+         background-color: papayawhip;
+     }
+
+     .card-header{
+         border-radius: 20px;
+     }
 
     </style>
 
@@ -49,7 +60,7 @@
 <body>
 
 <div class="col-md-8">
-    <div class="card border chat-window custom-chat-window">
+    <div class="card border chat-window custom-chat-window" >
         <div class="card-header custom-header text-white" id="chat-header">Chat with <span id="chat-with-name">...</span></div>
         <div id="chat-messages" class="chat-messages card-body custom-chat-body">
             <!-- Messages will be dynamically loaded here -->
