@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap CSS -->
-     <link rel="stylesheet" href="cc.css">
+
 
     <style>
 
@@ -28,7 +28,20 @@
     .custom-input {
         border-radius: 20px; /* Example of customizing input field */
     }
+    .custom-header {
+        background-image: url('../../static/img/vecteezy_woodgrain-background_164590.jpg.png');
+        background-size: cover;
+        color: wheat;
+    }
+     .btn-custom-search{
+            background-color:green;
+            color:wheat;
+        }
+
+
     </style>
+
+
 
 
 
@@ -37,7 +50,7 @@
 
 <div class="col-md-8">
     <div class="card border chat-window custom-chat-window">
-        <div class="card-header bg-primary text-white" id="chat-header">Chat with <span id="chat-with-name">...</span></div>
+        <div class="card-header custom-header text-white" id="chat-header">Chat with <span id="chat-with-name">...</span></div>
         <div id="chat-messages" class="chat-messages card-body custom-chat-body">
             <!-- Messages will be dynamically loaded here -->
         </div>
@@ -46,7 +59,7 @@
             <div class="input-group">
                 <input type="text" name="message" id="message-input" class="form-control custom-input" placeholder="Type a message..." required>
                 <div class="input-group-append">
-                    <button type="button" id="send-message-btn" class="btn btn-primary">Send</button>
+                    <button type="button" id="send-message-btn" class="btn btn-custom-search">Send</button>
                 </div>
             </div>
         </form>

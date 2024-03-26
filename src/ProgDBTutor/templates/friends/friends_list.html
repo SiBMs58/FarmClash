@@ -13,10 +13,18 @@
             margin-bottom: 10px;
             margin-top: 50px;
 
+        }
+        .custom-header{
 
+            background-image: url('../../static/img/vecteezy_woodgrain-background_164590.jpg.png');
+            background-size: cover;
+            color: wheat /* Optionally, set the text color to contrast with the background */
 
-
-}
+        }
+        .btn-custom-search{
+            background-color:green;
+            color:wheat;
+        }
 
     </style>
 
@@ -27,13 +35,13 @@
 
 <div class="col-md-4" id="friends-column">
     <div class="card">
-        <div class="card-header bg-primary text-white">Friends</div>
+        <div class="card-header custom-header text-white">Friends</div>
         <div class="card-body">
             <!-- Search Box -->
             <form action="{{ url_for('friends.search_friends') }}" method="get" class="mb-3">
                 <div class="input-group">
                     <input type="text" class="form-control" name="query" placeholder="Search...">
-                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                    <button class="btn btn-custom-search" type="submit" id="button-addon2">Search</button>
                 </div>
             </form>
             <!-- Friends List -->
