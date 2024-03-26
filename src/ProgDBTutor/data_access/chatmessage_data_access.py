@@ -10,8 +10,12 @@ class ChatMessageDataAccess:
         :return: True if the message was added successfully, False otherwise
         """
         cursor = self.db_connection.get_cursor()
-        cursor.execute("INSERT INTO chat_messages (sender, receiver, message_text, sent_at) VALUES (%s, %s, %s, %s)",
-                       (message.sender, message.receiver, message.message, message.created_at))
+        if message.message_id is None:
+            cursor.execute(
+                "INSERT INTO chat_messages (sender, receiver, message_text, sent_at) VALUES (%s, %s, %s, %s)",
+                (message.sender, message.receiver, message.message, message.created_at))
+        else:
+            cursor.execute("INSERT INTO chat_messages (message_id, sender, receiver, message_text, sent_at) VALUES (%s, %s, %s, %s, %s)", (message.message_id, message.sender, message.receiver, message.message, message.created_at))
         self.db_connection.conn.commit()
         return True
 
