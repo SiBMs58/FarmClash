@@ -1,21 +1,56 @@
 <!-- Chat Column -->
-<div class="col-md-8 chat-window">
-    <h2>Chat with <span id="chat-with-name">...</span></h2> <!-- Dynamic friend name here -->
-    <div id="chat-messages" class="chat-messages" style="height: 400px; overflow-y: scroll;">
-        <!-- Messages will be dynamically loaded here -->
-    </div>
-    <!-- Form for sending new messages -->
-    <form id="send-message-form">
-        <input type="hidden" name="receiver" id="receiver" value="">
-        <div class="input-group">
-            <input type="text" name="message" id="message-input" class="form-control" placeholder="Type a message..." required>
-            <div class="input-group-append">
-                <button type="button" id="send-message-btn" class="btn btn-primary">Send</button>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+     <link rel="stylesheet" href="cc.css">
+
+    <style>
+
+        /* Custom CSS classes for chat window customization */
+    .custom-chat-window {
+        height: 500px; /* Adjust height as needed */
+        width: 700px;
+        margin-bottom: 10px;
+        margin-top:50px;
+    }
+
+    .custom-chat-body {
+        overflow-y: scroll; /* Enable vertical scrolling */
+    }
+
+    .custom-card-footer {
+        border-top: 1px solid #ccc; /* Add border to the footer */
+    }
+
+    .custom-input {
+        border-radius: 20px; /* Example of customizing input field */
+    }
+    </style>
+
+
+
+</head>
+<body>
+
+<div class="col-md-8">
+    <div class="card border chat-window custom-chat-window">
+        <div class="card-header bg-primary text-white" id="chat-header">Chat with <span id="chat-with-name">...</span></div>
+        <div id="chat-messages" class="chat-messages card-body custom-chat-body">
+            <!-- Messages will be dynamically loaded here -->
         </div>
-    </form>
-
-
+        <form id="send-message-form" class="card-footer custom-card-footer">
+            <input type="hidden" name="receiver" id="receiver" value="">
+            <div class="input-group">
+                <input type="text" name="message" id="message-input" class="form-control custom-input" placeholder="Type a message..." required>
+                <div class="input-group-append">
+                    <button type="button" id="send-message-btn" class="btn btn-primary">Send</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 
@@ -126,3 +161,5 @@
         });
     });
 </script>
+</body>
+</html>

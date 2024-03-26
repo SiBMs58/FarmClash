@@ -1,0 +1,43 @@
+
+        /* Add your custom CSS styles here */
+
+
+        body {
+            font-family: 'Press Start 2P', cursive; /* Pixel-style font */
+        }
+        .chat-container {
+            height: 430px;
+            overflow-y: scroll;
+        }
+        .friends-container {
+            height: 400px;
+            overflow-y: scroll;
+
+        }
+        .message-bubble {
+            max-width: 70%;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 15px;
+        }
+        .sent {
+            background-color: #007bff;;
+            color: white;
+            float: right;
+        }
+        .received {
+            background-color: #f0f0f0;
+            color: black;
+            float: left;
+        }
+
+        .message-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* Align messages to the left */
+    }
+
+    .sent .message-container {
+    justify-content: flex-start; /* Align sent messages to the right */
+    }
+

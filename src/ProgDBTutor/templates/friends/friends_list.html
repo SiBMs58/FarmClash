@@ -1,17 +1,47 @@
 <!-- Friends List -->
-<div class="col-md-4">
-    <h2>Friends</h2>
-    <!-- Search Box -->
-    <form action="{{ url_for('friends.search_friends') }}" method="get" class="mb-3">
-        <div class="input-group">
-            <input type="text" class="form-control" name="query" placeholder="Search new friends...">
-            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+     <link rel="stylesheet" href="cc.css">
+
+    <style>
+
+        #friends-column {
+            margin-bottom: 10px;
+            margin-top: 50px;
+
+
+
+
+}
+
+    </style>
+
+
+
+</head>
+<body>
+
+<div class="col-md-4" id="friends-column">
+    <div class="card">
+        <div class="card-header bg-primary text-white">Friends</div>
+        <div class="card-body">
+            <!-- Search Box -->
+            <form action="{{ url_for('friends.search_friends') }}" method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="query" placeholder="Search...">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                </div>
+            </form>
+            <!-- Friends List -->
+            <ul id="friends-list" class="list-group">
+                <!-- Friends will be loaded here by the JavaScript function -->
+            </ul>
         </div>
-    </form>
-    <!-- Friends List -->
-    <ul id="friends-list" class="list-group">
-        <!-- Friends will be loaded here by the JavaScript function -->
-    </ul>
+    </div>
 </div>
 
 <script>
@@ -42,3 +72,5 @@
     // Call the loadFriends function on page load
     document.addEventListener('DOMContentLoaded', loadFriends);
 </script>
+</body>
+</html>
