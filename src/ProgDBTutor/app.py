@@ -10,6 +10,7 @@ from extensions import login_manager, werkzeug_generate_password_hash
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
+from views.market import market_blueprint
 from models.user import User
 from extensions import login_manager
 
@@ -40,6 +41,7 @@ login_manager.init_app(app)
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
+app.register_blueprint(market_blueprint, url_prefix='/market')
 
 
 DEBUG = False
@@ -77,17 +79,6 @@ def settings():
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
     return render_template('settings.html', app_data=app_data)
-
-
-@app.route('/market')
-@login_required
-def market():
-    """
-    Renders the market view.
-    """
-    if current_user.username == 'admin':
-        return redirect(url_for('admin'))
-    return render_template('market.html', app_data=app_data)
 
 
 @app.route('/attack')

@@ -5,19 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/market/market.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/UI.css') }}">
 </head>
 <body>
     <div class="market-container">
         <!-- Button to go to the animal shop -->
-        <button class="animal-button" onclick="goToAnimals()">Animals</button>
+        <button class="animal-button"><a href="{{ url_for('market.animals') }}">Animals</a></button>
         <!-- Text that says where you are -->
         <div class="market-text">Market</div>
         <!-- Button to go to the crop shop -->
-        <button class="crops-button" onclick="goToCrops()">Crops</button>
+        <button class="crops-button"><a href="{{ url_for('market.crops') }}">Crops</a></button>
     </div>
     <!-- Button to go back to the game -->
-    <button class="back-button">Back</button>
-    <script src="{{ url_for('static', filename='../static/js/market/market.js') }}"></script>
+    <div class="back-btn">
+        <img src="../static/img/buttons/back_btn.png" alt="{{ app_data['app_name'] }}" usemap="#backMap" id="back-btn">
+        <map name="backMap">
+            <area shape="rect" coords="0,0,150,150" alt="{{ app_data['app_name'] }}" href="{{ url_for('main') }}">
+        </map>
+    </div>
 </body>
 </html>
 
