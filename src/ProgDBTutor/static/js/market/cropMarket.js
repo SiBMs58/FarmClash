@@ -1,10 +1,18 @@
 // Sales function for the crop, must be connected to the backend
 function sellCrop(crop) {
     var counterElement = document.getElementById(crop.toLowerCase() + "-counter");
-    var count = parseInt(counterElement.innerText);
-    var priceElement = document.getElementById(crop.toLowerCase() + "-price"); // Price element
-    var price = parseInt(priceElement.innerText); // Current price
-    var totalPrice = count * price; // Calculate total price
+    // Collect the prize with the emoji
+    var priceWithEmoji = document.getElementById(crop + "-price").innerText;
+
+    // Remove the emoji from the text
+    var priceText = priceWithEmoji.replace(/[^0-9.-]+/g,"");
+
+    // Convert the text to a number
+    var price = parseFloat(priceText);
+    // The amount of crops of that type, you are going to sell
+    var count = parseInt(document.getElementById(crop + "-counter").innerText);
+    // Total price you will receive
+    var totalPrice = count * price;
     alert("You've sold " + count + " " + crop + "(s) for a total of $" + totalPrice + "!");
 
     // Reset the counter to 0
@@ -18,11 +26,20 @@ function goBack(){
 }
 // Function to update total price for a specific crop
 function updateTotalPrice(crop) {
-    var total = 0;
-    var price = parseFloat(document.getElementById(crop + "-price").innerText);
+   var total = 0;
+
+    // Get the prize with the emoji
+    var priceWithEmoji = document.getElementById(crop + "-price").innerText;
+
+    // Remove the emoji from the text
+    var priceText = priceWithEmoji.replace(/[^0-9.-]+/g,"");
+
+    // Convert the text to a number
+    var price = parseFloat(priceText);
+
     var count = parseInt(document.getElementById(crop + "-counter").innerText);
     total = count * price;
-    document.getElementById(crop + "-total-price").innerText = 'Total: ' + total.toFixed(0);
+    document.getElementById(crop + "-total-price").innerText = 'Total price: ' + total.toFixed(0);
 }
 // Function to increase the counter
 function incrementCounter(crop) {
