@@ -37,7 +37,7 @@ def search_friends():
                 matching_users_not_friends.append(user)
     else:
         matching_users_not_friends = []
-    return render_template('friends/friends_search_results.html', users=matching_users_not_friends)
+    return render_template('friends/friends_search_results.html', users=matching_users_not_friends, app_data=config_data)
 
 
 @friends_blueprint.route('/add_friend/<string:friend_name>', methods=['POST'])
