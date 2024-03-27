@@ -30,19 +30,24 @@ class GameServices:
             for col in range(len(terrain_tiles[row])):
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
 
-
     def initialize_resources(self, username):
         """
         Initialize default, starting resources when a user registers
         :param username:  The username object of the user
         """
         self.resource_data_access.add_resource(Resource(None, username, "Money", 50))
-        self.resource_data_access.add_resource(Resource(None, username, "Potato", 20))
+        self.resource_data_access.add_resource(Resource(None, username, "Corn", 20))
         self.resource_data_access.add_resource(Resource(None, username, "Carrot", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Cauliflower", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Tomato", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Eggplant", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Lettuce", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Wheat", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Beetroot", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Daikon", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Zucchini", 0))
 
     # TODO: def initialize_resources(self):
-
 
     def reformat_terrain_map(self, tile_data, map_width, map_height):
         """
@@ -58,7 +63,7 @@ class GameServices:
         # Populate the terrain tiles grid based on the provided tile data
         for tile in tile_data:
             terrain_type = tile.terrain_type
-            #print(tile.y, tile.x, terrain_type)
+            # print(tile.y, tile.x, terrain_type)
             terrain_tiles[tile.y][tile.x] = terrain_type
 
         # Construct the final structure
@@ -69,4 +74,3 @@ class GameServices:
         }
 
         return formatted_data
-

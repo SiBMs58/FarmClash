@@ -72,7 +72,7 @@
             resources.forEach(resource => {
                 if(resource.resource_type === 'Money') return; // Skip money
 
-                const symbol = getSymbolForResourceType(resource.resource_type);
+                const symbol = getImage(resource.resource_type);
                 resourceHTML += `<p>${resource.amount}${symbol}</p>`;
             });
 
@@ -88,12 +88,18 @@
             }
         }
 
-        function getSymbolForResourceType(resourceType) {
+        function getImage(resourceType) {
             switch(resourceType) {
-                case 'Wheat': return '🌾';
-                case 'Potato': return '🥔';
-                case 'Carrot': return '🥕';
-                case 'Corn': return '🌽';
+                case 'Corn': return '<img src="../../static/img/symbols/Corn.png" alt="🌽">';
+                case 'Carrot': return '<img src="../../static/img/symbols/Carrot.png" alt="🥕">';
+                case 'Cauliflower': return '<img src="../../static/img/symbols/Cauliflower.png" alt="⚪🥦">';
+                case 'Tomato': return '<img src="../../static/img/symbols/Tomato.png" alt="🍅">';
+                case 'Eggplant': return '<img src="../../static/img/symbols/Eggplant.png" alt="🍆">';
+                case 'Lettuce': return '<img src="../../static/img/symbols/Lettuce.png" alt="🥬">';
+                case 'Wheat': return '<img src="../../static/img/symbols/Wheat.png" alt="🌾">';
+                case 'Beetroot': return '<img src="../../static/img/symbols/Beetroot.png" alt="🟣🌱">';
+                case 'Daikon': return '<img src="../../static/img/symbols/Daikon.png" alt="⚪🌱">';
+                case 'Zucchini': return '<img src="../../static/img/symbols/Zucchini.png" alt="🥒">';
                 // Add more as needed
                 default: return ''; // Default case if no symbol is matched
             }

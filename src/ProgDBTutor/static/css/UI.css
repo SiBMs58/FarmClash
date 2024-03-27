@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Press Start 2P';
+    font-family: 'Press Start 2P', Arial, sans-serif;
     font-weight: bold;
 }
 header {
@@ -45,10 +45,18 @@ header {
     border-radius: 10px;
 }
 .popup p {
+    display: inline-block;
     margin: 0 10px;
+    vertical-align: middle;
     white-space: nowrap;
+    text-rendering: optimizeLegibility
 }
-
+.popup img {
+    height: 25px;
+    margin: 0 5px;
+    transform: translateY(-2px);
+    vertical-align: middle;
+}
 
 
 .money-display{

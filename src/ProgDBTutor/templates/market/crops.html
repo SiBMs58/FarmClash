@@ -18,22 +18,31 @@
                 <!-- Total price for tomato -->
                 <div class="total-price" id="tomato-total-price">Total price: 0</div>
                 <!-- sell button for the tomato -->
+
                 <button class="crop-button" onclick="sellCrop('tomato')">
-                    <div>
-                        <img src="../../static/img/symbols/Tomato.png" alt="🍅">
-                        <br>
-                        <span>sell</span>
-                    </div>
+                    <img src="../../static/img/symbols/Tomato.png" alt="🍅">
+                    <br>
+                    <span>sell</span>
                 </button>
                 <span class="price" id="tomato-price">&#129689; 10</span> <!--price -->
                 <!--counter to increase/decrease the amount of tomatoes you are going to sell-->
                 <div class="counter">
                     <!-- button to decrease the counter-->
-                    <button class="counter-button" onclick="decrementCounter('tomato')">-</button>
+                    <div class="back-btn">
+                    <img src="../../static/img/buttons/minus_btn.png" alt="{{ app_data['app_name'] }}" usemap="#lessTomato" id="back-btn">
+                    <map name="lessTomato">
+                        <area shape="rect" coords="0,0,150,150" alt="{{ app_data['app_name'] }}" onclick="decrementCounter('tomato')">
+                    </map>
+                    </div>
                     <!-- the counter with the amount of tomatoes you are going to sell-->
                     <span class="counter-value" id="tomato-counter">0</span>
                     <!-- button to decrease the counter-->
-                    <button class="counter-button" onclick="incrementCounter('tomato')">+</button>
+                    <div class="back-btn">
+                    <img src="../../static/img/buttons/plus_btn.png" alt="{{ app_data['app_name'] }}" usemap="#moreTomato" id="back-btn">
+                    <map name="moreTomato">
+                        <area shape="rect" coords="0,0,150,150" alt="{{ app_data['app_name'] }}" onclick="incrementCounter('tomato')">
+                    </map>
+                    </div>
                 </div>
             </div>
             <!-- containter for the carrot -->

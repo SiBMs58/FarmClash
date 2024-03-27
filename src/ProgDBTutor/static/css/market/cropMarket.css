@@ -8,10 +8,10 @@
 body, html {
     height: 100%; /* Ensure body and html take the full height of the viewport */
     overflow: hidden; /* Hide any overflow content */
+    font-family: 'Press Start 2P', Arial, sans-serif;
 }
 .back-button {
-    font-family: bold;
-    background-color: #8B4513; /* background color: brown*/
+    background-color: #8B4513;
     border: none;
     color: white;
     padding: 2vh 2vw;/*padding*/
@@ -60,22 +60,17 @@ body, html {
 
 .crop-button {
     font-size: 3vw; /* The size of the text within the button */
-    background-color: #8B4513; /* Brown color */
-    border: none;
-    color: white;
-    padding: 2vh 2vw;
-    margin-bottom: 1vh;
-    margin-top: 2vh;
+    background-color: #e8cfa6; /* Brown color */
+    color: #c49a6c;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: 5px;
     cursor: pointer;
-    width: 10vw; /* Adjusted width of the button */
-    height: 10vw; /* Adjusted height of the button */
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .crop-button div {
+     padding: 10px 20px;
     margin-top: 5%; /* Move the text to the bottom */
     font-size: 70%; /* Make the text inside the button smaller */
 }
@@ -85,8 +80,8 @@ body, html {
 }
 
 .crop-button:hover {
-    background-color: #8e7c61; /* Background color of the button that is used to sell a crop when you
-                                  are on the button */
+    background-color: #c49a6c;
+    color: #aa7959;
 }
 
 .counter {
@@ -117,6 +112,14 @@ body {
     height: 100%;/*use the maximum space*/
     margin: 0;/*delete unnecessary space*/
     padding: 0;/*delete unnecessary space*/
+    user-select: none;
+    /* Prevent dragging of the element */
+    user-drag: none;
+    /* Additional styles to ensure compatibility */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 
