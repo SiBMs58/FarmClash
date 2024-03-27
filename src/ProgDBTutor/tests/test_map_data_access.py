@@ -39,7 +39,7 @@ def test_get_map_by_username_owner_found(map_data_access, mock_db_connection):
         'map_id': 1, 'username_owner': username_owner, 'width': 100, 'height': 100, 'created_at': datetime.now()
     }
 
-    result = map_data_access.get_maps_by_username_owner(username_owner)
+    result = map_data_access.get_map_by_username_owner(username_owner)
     assert result is not None
     assert isinstance(result, Map)
     assert result.username_owner == username_owner

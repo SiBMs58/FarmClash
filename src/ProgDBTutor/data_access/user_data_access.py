@@ -46,3 +46,16 @@ class UserDataAccess:
         cursor.execute("SELECT * FROM users")
         results = cursor.fetchall()
         return [User(result['username'], result['password'], result['email'], result['created_at']) for result in results]
+
+    def search_users(self, query):
+        """
+        Searches for users whose usernames contain the given query string.
+        :param query: The search query string.
+        :return: List of User objects for users whose usernames match the query.
+        """
+        cursor = self.db_connection.get_cursor()
+        like_query = f"%{query}%"
+        cursor.execute("SELECT * FROM users WHERE username LIKE %s", (like_query,))
+        results = cursor.fetchall()
+        return [User(result['username'], result['password'], result['email'], result['created_at']) for result in
+                results]

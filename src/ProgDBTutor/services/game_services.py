@@ -58,7 +58,7 @@ class GameServices:
         # Populate the terrain tiles grid based on the provided tile data
         for tile in tile_data:
             terrain_type = tile.terrain_type
-            print(tile.y, tile.x, terrain_type)
+            #print(tile.y, tile.x, terrain_type)
             terrain_tiles[tile.y][tile.x] = terrain_type
 
         # Construct the final structure
