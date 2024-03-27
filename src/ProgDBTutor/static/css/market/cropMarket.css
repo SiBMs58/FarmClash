@@ -1,3 +1,14 @@
+/* Reset default margin and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+body, html {
+    height: 100%; /* Ensure body and html take the full height of the viewport */
+    overflow: hidden; /* Hide any overflow content */
+}
 .back-button {
     font-family: bold;
     background-color: #8B4513; /* background color: brown*/
@@ -47,15 +58,30 @@
     margin-top: 5vh; /* Space above the title */
 }
 
-
 .crop-button {
-    font-size: 5vw;
+    font-size: 3vw; /* The size of the text within the button */
     background-color: #8B4513; /* Brown color */
     border: none;
     color: white;
     padding: 2vh 2vw;
     margin-bottom: 1vh;
+    margin-top: 2vh;
     cursor: pointer;
+    width: 10vw; /* Adjusted width of the button */
+    height: 10vw; /* Adjusted height of the button */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.crop-button div {
+    margin-top: 5%; /* Move the text to the bottom */
+    font-size: 70%; /* Make the text inside the button smaller */
+}
+
+.crop-button span:first-child {
+    font-size: 150%; /* Maintain the size of the emoji */
 }
 
 .crop-button:hover {
@@ -69,7 +95,7 @@
 }
 
 .counter-button {
-    font-size: 3vw;
+    font-size: 1.5vw;
     padding: 0.5vw 1vw;
     background-color: #bfaa8e; /* Light brown color */
     border: 0.2em solid #8e7c61;
@@ -82,7 +108,7 @@
 }
 
 .counter-value {
-    font-size: 4vw;
+    font-size: 2vw;
     margin: 0 1vw;
 }
 
