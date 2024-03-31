@@ -76,7 +76,7 @@ Specify the license under which the project is released.
 - [API Documentation](docs/api.pdf)
 
 ## Contact
-- Project Supervisor: Prof. Bart Goethals
+- Project Supervisor: Prof. Bart Goethals, Joey De Pauw and Marco Favier
 - Scrum Master: Annick De Bruyn
 - Team Members: [Camille De Vuyst](link-to-your-github), [Joren Van der Sande](link-to-your-github), [Thomas De Volder](link-to-your-github), [Faisal Ettarrahi](link-to-your-github), [Ferhat Van Herck](link-to-your-github), [Siebe Mees](https://github.com/SiBMs58)
 
