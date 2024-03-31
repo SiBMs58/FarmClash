@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, jsonify
+from flask import Blueprint, current_app, jsonify, abort
 from flask_login import login_required, current_user
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
@@ -29,6 +29,19 @@ def get_maps():
     maps = map_data_access.get_all_maps()  # Assuming this method exists
     return jsonify([map.to_dict() for map in maps])
 
+@api_blueprint.route('/resources')
+@login_required
+def get_all_resources():
+    """
+    Handles GET requests for all resources. This will return a list of all resources, if the logged in user is admin
+    :return: A list of all resources, in json format
+    """
+    if current_user.username != 'admin':
+        return 403
+    resource_data_access = current_app.config.get('resource_data_access')
+    resources = resource_data_access.get_all_resources()
+    return jsonify([resource.to_dict() for resource in resources])
+
 @api_blueprint.route('/terrain-map')
 @login_required
 def get_terrain_map():
@@ -45,14 +58,23 @@ def get_terrain_map():
         tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
         return jsonify([tile.to_dict() for tile in tiles])
 
-@api_blueprint.route('/resources')
+
+@api_blueprint.route('/resources/<string:username>')
 @login_required
-def get_resources():
+def get_resources(username):
     """
-    Handles GET requests for all resources. This will return a list of all resources, for the current user
-    :return: A lsit of all resources, in json format
+    Handles GET requests for all resources. This will return a list of all resources for the specified user.
+    :param username: The username of the user whose resources are being requested.
+    :return: A list of all resources for the specified user, in json format.
     """
+    # Check if the current user is allowed to fetch resources for the specified username
+    if current_user.username != username and not current_user.is_admin():
+        # If not, return a 403 Forbidden response
+        abort(403)
+
     resource_data_access = current_app.config.get('resource_data_access')
-    resources = resource_data_access.get_resources(current_user.username)
+    # Fetch resources for the specified username instead of the current user
+    resources = resource_data_access.get_resources(username)
+
     return jsonify([resource.to_dict() for resource in resources])
 

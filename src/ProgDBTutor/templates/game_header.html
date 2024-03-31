@@ -55,16 +55,22 @@
                 clickedResourceButton = !clickedResourceButton;
             });
 
-            fetch('/api/resources')
-            .then(response => response.json())
-            .then(data => {
-                updateResources(data);
-                updateMoney(data); // Call a separate function to update money
-            })
-            .catch(error => {
-                console.error('Error fetching resources:', error);
-                document.querySelector('.popup').innerHTML = `<p>Error fetching resources. Please try again later.</p>`;
-            });
+            fetch('/api/resources/{{ current_user.username }}')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateResources(data);
+                    updateMoney(data); // Assuming this function correctly extracts and updates money from the data
+                })
+                .catch(error => {
+                    console.error('Error fetching resources:', error);
+                    document.querySelector('.popup').innerHTML = `<p>Error fetching resources. Please try again later.</p>`;
+                });
+
         });
 
         function updateResources(resources) {
