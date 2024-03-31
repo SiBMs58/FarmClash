@@ -20,17 +20,46 @@ This project is developed as part of the Programming Project Databases course at
 ## Getting Started
 ### Prerequisites
 List of necessary installations and their setup.
+- Python 3
+- PostgreSQL
+- The cloned repository
+```bash
+git clone https://github.com/SiBMs58/FarmClash.git
+```
 
 ### Installation
 Step-by-step guide to get a development environment running.
-#### Compile LaTeX Manual
+#### 1. Initialize the database
+* The app uses a PostgreSQL database. Create a new database called `dbtutor`with `app` user as the owner. This could be a different db or user which can be changed in the [config](src/ProgDBTutor/config.py).
+* Run the following command to initialize the database (make sure you are in the root directory of the project):
+```bash
+psql dbtutor -U app -f sql/schema.sql
+```
+This will initialize the database with the necessary tables and data.
+#### 2. Setup and activate virtual env
+```bash
+virtualenv -p python3 env
+source env/bin/activate
+pip3 install -r requirements.txt
+```
+This will create, and activate a virtual environment and install the necessary packages.
+#### 3. Run the app
+```bash
+cd src/ProgDBTutor
+python3 app.py
+```
+This will start the Flask server on `localhost:5000` or at the IPs given by flask.
+
+#### Optional info: Compile LaTeX
 ```bash
 cd docs
-pdflatex technical-report.tex
-rm technical-report.aux
-rm technical-report.log
-rm technical-report.out
-rm technical-report.toc
+pdflatex api.tex  # First compilation
+pdflatex api.tex  # Second compilation to update the TOC
+rm api.aux
+rm api.log
+rm api.out
+# Optionally, keep api.toc for future compilations unless you need to remove it for specific reasons
+
 ```
 
 ## Usage
@@ -44,7 +73,7 @@ Specify the license under which the project is released.
 
 ## Additional Documentation
 - [Technical Report](docs/technical-report.pdf)
-- [API Documentation](link-to-api-documentation)
+- [API Documentation](docs/api.pdf)
 
 ## Contact
 - Project Supervisor: Prof. Bart Goethals
