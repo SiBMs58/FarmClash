@@ -43,8 +43,8 @@ class GameServices:
         self.resource_data_access.add_resource(Resource(None, username, "Eggplant", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Lettuce", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Wheat", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Beetroot", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Daikon", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Turnip", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Parsnip", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Zucchini", 0))
 
     # TODO: def initialize_resources(self):

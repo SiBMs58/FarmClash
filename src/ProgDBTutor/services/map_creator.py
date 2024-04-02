@@ -111,8 +111,8 @@ def random_water(specials=False):
     probabilities = [0.5] * 4
 
     if specials:
-        water_tiles.extend(["S" + str(i) for i in range(1, 21)])
-        probabilities.extend([0.04] * 7 + [0.005] + [0.04] * 12)
+        water_tiles.extend(["S" + str(i) for i in range(1, 20)])
+        probabilities.extend([0.04] * 7 + [0.005] + [0.04] * 11)
 
     return random.choices(water_tiles, weights=probabilities)[0]
 

@@ -6,16 +6,15 @@
 </head>
 <body>
     <header>
-        <div class="home-btn">
-            <img src="../../static/img/buttons/home_btn.png" alt="🏡" usemap="#homeMap" id="home-btn">
-            <map name="homeMap">
-                <area shape="rect" coords="0,0,150,150" alt="🏡" href="{{ url_for('main') }}">
-            </map>
-        </div>
+        <button id="home-btn" class="home-btn">
+            <a href="{{ url_for('main') }}">
+                <img src="../../static/img/buttons/home_btn.png" alt="🏡">
+            </a>
+        </button>
 
-        <div class="resource-btn">
-            <img src="../../static/img/buttons/resource_btn.png" alt="🌱" id="resource-btn">
-        </div>
+        <button id="resource-btn" class="resource-btn" onclick="clickResources()">
+            <img src="../../static/img/buttons/resource_btn.png" alt="🌱">
+        </button>
         <div class="overlay" id="resource-overlay">
             <div class="popup">
                 <!-- The resource amounts of the user will be inserted here dynamically -->
@@ -24,34 +23,30 @@
 
         <div class="money-display">
             <p>0</p> <!-- This will be updated dynamically -->
-            <img src="../../static/img/symbols/Coin.png" alt="🪙">
+            <img src="../../static/img/resources/Coin.png" alt="🪙">
         </div>
 
-        <div class="setting-btn">
-            <img src="../../static/img/buttons/setting_btn.png" alt="⚙️" usemap="#settingMap" id="setting-btn">
-            <map name="settingMap">
-                <area shape="rect" coords="0,0,150,150" alt="⚙️" href="{{ url_for('settings') }}">
-            </map>
-        </div>
-
-        <div class="chat-btn">
-            <img src="../../static/img/buttons/chat_btn.png" alt="💬" usemap="#chatMap" id="chat-btn">
-            <map name="chatMap">
-                <area shape="rect" coords="0,0,150,150" alt="💬" href="{{ url_for('friends.dashboard') }}">
-            </map>
-        </div>
+        <button id="setting-btn" class="setting-btn">
+            <a href="{{ url_for('settings') }}">
+                <img src="../../static/img/buttons/setting_btn.png" alt="⚙️">
+            </a>
+        </button>
+        <button id="chat-btn" class="chat-btn">
+            <a href="{{ url_for('friends.dashboard') }}">
+                <img src="../../static/img/buttons/chat_btn.png" alt="💬">
+            </a>
+        </button>
     </header>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        let clickedResourceButton = false;
+
+        function clickResources() {
             const resourceButton = document.getElementById('resource-btn');
             const overlay = document.getElementById('resource-overlay');
-            let clickedResourceButton = false;
 
-            resourceButton.addEventListener('click', function() {
-                overlay.style.display = clickedResourceButton ? 'none' : 'flex';
-                resourceButton.src = clickedResourceButton ? "../static/img/buttons/resource_btn.png" : "../static/img/buttons/resource_pbtn.png";
-                clickedResourceButton = !clickedResourceButton;
-            });
+            overlay.style.display = clickedResourceButton ? 'none' : 'flex';
+           resourceButton.querySelector('img').src = clickedResourceButton ? "../static/img/buttons/resource_btn.png" : "../static/img/buttons/resource_pbtn.png";
+            clickedResourceButton = !clickedResourceButton;
 
             fetch('/api/resources')
             .then(response => response.json())
@@ -63,7 +58,7 @@
                 console.error('Error fetching resources:', error);
                 document.querySelector('.popup').innerHTML = `<p>Error fetching resources. Please try again later.</p>`;
             });
-        });
+        }
 
         function updateResources(resources) {
             const popupDiv = document.querySelector('.popup');
@@ -90,16 +85,16 @@
 
         function getImage(resourceType) {
             switch(resourceType) {
-                case 'Corn': return '<img src="../../static/img/symbols/Corn.png" alt="🌽">';
-                case 'Carrot': return '<img src="../../static/img/symbols/Carrot.png" alt="🥕">';
-                case 'Cauliflower': return '<img src="../../static/img/symbols/Cauliflower.png" alt="⚪🥦">';
-                case 'Tomato': return '<img src="../../static/img/symbols/Tomato.png" alt="🍅">';
-                case 'Eggplant': return '<img src="../../static/img/symbols/Eggplant.png" alt="🍆">';
-                case 'Lettuce': return '<img src="../../static/img/symbols/Lettuce.png" alt="🥬">';
-                case 'Wheat': return '<img src="../../static/img/symbols/Wheat.png" alt="🌾">';
-                case 'Beetroot': return '<img src="../../static/img/symbols/Beetroot.png" alt="🟣🌱">';
-                case 'Daikon': return '<img src="../../static/img/symbols/Daikon.png" alt="⚪🌱">';
-                case 'Zucchini': return '<img src="../../static/img/symbols/Zucchini.png" alt="🥒">';
+                case 'Corn': return '<img src="../../static/img/resources/Corn.png" alt="🌽">';
+                case 'Carrot': return '<img src="../../static/img/resources/Carrot.png" alt="🥕">';
+                case 'Cauliflower': return '<img src="../../static/img/resources/Cauliflower.png" alt="⚪🥦">';
+                case 'Tomato': return '<img src="../../static/img/resources/Tomato.png" alt="🍅">';
+                case 'Eggplant': return '<img src="../../static/img/resources/Eggplant.png" alt="🍆">';
+                case 'Lettuce': return '<img src="../../static/img/resources/Lettuce.png" alt="🥬">';
+                case 'Wheat': return '<img src="../../static/img/resources/Wheat.png" alt="🌾">';
+                case 'Turnip': return '<img src="../../static/img/resources/Turnip.png" alt="🟣🌱">';
+                case 'Parsnip': return '<img src="../../static/img/resources/Parsnip.png" alt="⚪🌱">';
+                case 'Zucchini': return '<img src="../../static/img/resources/Zucchini.png" alt="🥒">';
                 // Add more as needed
                 default: return ''; // Default case if no symbol is matched
             }
@@ -112,21 +107,19 @@
 
 
     <footer>
-        <div class="market-btn">
-            <img src="../../static/img/buttons/market_btn.png" alt="🛒" usemap="#marketMap" id="market-btn">
-            <map name="marketMap">
-                <area shape="rect" coords="0,0,150,150" alt="🛒" href="{{ url_for('market.market') }}">
-            </map>
-        </div>
+        <button id="market-btn" class="market-btn">
+            <a href="{{ url_for('market.market') }}">
+                <img src="../../static/img/buttons/market_btn.png" alt="🛒">
+            </a>
+        </button>
         <div class="copyright">
             &copy; Team3 – Universiteit Antwerpen - PPDB
         </div>
-        <div class="attack-btn">
-            <img src="../../static/img/buttons/attack_btn.png" alt="⚔️" usemap="#attackMap" id="attack-btn">
-            <map name="attackMap">
-                <area shape="rect" coords="0,0,150,150" alt="⚔️" href="{{ url_for('attack') }}">
-            </map>
-        </div>
+        <button id="attack-btn" class="attack-btn">
+            <a href="{{ url_for('attack') }}">
+                <img src="../../static/img/buttons/attack_btn.png" alt="⚔️">
+            </a>
+        </button>
     </footer>
 </body>
 </html>
