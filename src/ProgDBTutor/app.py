@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from config import config_data
 from data_access.dbconnection import DBConnection
 from data_access.user_data_access import UserDataAccess
+from data_access.building_data_acces import BuildingDataAccess
 from data_access.map_data_access import MapDataAccess
 from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
@@ -15,6 +16,7 @@ from views.api import api_blueprint
 from views.friends import friends_blueprint
 from views.market import market_blueprint
 from models.user import User
+from models.building import Building
 from extensions import login_manager
 
 
@@ -37,6 +39,8 @@ friendship_data_access = FriendshipDataAccess(connection)
 app.config['friendship_data_access'] = friendship_data_access
 chatmessage_data_access = ChatMessageDataAccess(connection)
 app.config['chatmessage_data_access'] = chatmessage_data_access
+building_data_access = BuildingDataAccess(connection)
+app.config['building_data_access'] = building_data_access
 
 # Insert the admin user
 user_data_access.add_user(User(config_data['admin_username'], werkzeug_generate_password_hash(config_data['admin_password']), config_data['admin_email']))

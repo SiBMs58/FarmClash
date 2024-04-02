@@ -244,15 +244,29 @@ export class BuildingMap extends BaseMap {
      * Fetches the buildingMapData json which stores the layout and other information needed.
      */
     async fetchBuildingMapData() {
-        // Klopt totaal niet
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        const fetchLink = BASE_URL + "/game/fetch-building-information";
         try {
-            const response = await fetch('/static/JorenStaticTestFiles/testBuildingMap.json');
-            let mapData = await response.json();
-            this.map_width = mapData.map_width;
-            this.map_height = mapData.map_height;
-            this.tiles = mapData.building_tiles;
+            const response = await fetch(fetchLink);
+            const mapData = await response.json();
+
+            // Check if mapData contains building_information
+            debugger;
+
+            if ("building_information" in mapData) {
+                this.buildingInformation = mapData.building_information;
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+            } else {
+            // No buildings found
+                await this.updateBuildingMapDB();
+                console.log("No buildings found.");
+
+            }
+
+            // Resetting view coordinates
             this.viewX = 0;
             this.viewY = 0;
+
         } catch(error) {
             console.error('fetchBuildingAssetList() failed:', error);
             throw error;
@@ -614,6 +628,8 @@ export class BuildingMap extends BaseMap {
                 },
                 body: mapDataJson // Send the serialized map data as the request body
             });
+
+            debugger;
 
             if (response.ok) {
                 const jsonResponse = await response.json();

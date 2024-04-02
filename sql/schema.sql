@@ -17,10 +17,14 @@ CREATE TABLE farms (
 
 -- Buildings Table
 CREATE TABLE buildings (
-    building_id SERIAL PRIMARY KEY,
+    building_id VARCHAR(255) PRIMARY KEY,
+    username_owner VARCHAR(255) REFERENCES users(username),
     farm_id INT REFERENCES farms(farm_id),
     building_type VARCHAR(255) NOT NULL,
     level INT DEFAULT 1,
+    x INT NOT NULL,
+    y INT NOT NULL,
+    tile_rel_locations JSONB,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
