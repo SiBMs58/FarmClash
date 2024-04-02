@@ -1,4 +1,5 @@
 import { BaseMap } from "./BaseMapKlasse.js";
+import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
 
 /**
  * Sets the string value of
@@ -39,19 +40,17 @@ const defaultMapData2 = {
     building_information: {
         fence1: {
             self_key: "fence1", // Must be the exact key of this sub-object
-            display_name: "Fence", // Name displayed to the user
-            level: 1, // Building level
-            // ... More information to come
+            general_information: "fence", // Link to the general information of this building type
+            level: 4, // Building level (set "None" if not relevant)
             building_location: [5, 4], // --> [y (height), x (width)], it's best practice to take the top-left corner of the building
             tile_rel_locations: [ // location relative to 'building_location'
                 [[0, 0], "Fences.4.1"], // [ rel_location ([y, x]), "Tile asset"]
             ]
-
         },
         fence2: {
             self_key: "fence2",
-            display_name: "Fence",
-            level: 1,
+            general_information: "fence",
+            level: 3,
             building_location: [5, 7],
             tile_rel_locations: [
                 [[0, 0], "Fences.4.1"],
@@ -59,17 +58,16 @@ const defaultMapData2 = {
         },
         fence3: {
             self_key: "fence3",
-            display_name: "Fence",
-            level: 1,
+            general_information: "fence",
+            level: 2,
             building_location: [8, 8],
             tile_rel_locations: [
                 [[0, 0], "Fences.4.1"],
             ]
-
         },
         fence_square: {
             self_key: "fence_square",
-            display_name: "Fence",
+            general_information: "fence",
             level: 1,
             building_location: [6, 11],
             tile_rel_locations: [
@@ -85,8 +83,8 @@ const defaultMapData2 = {
         },
         chicken_house: {
             self_key: "chicken_house",
-            display_name: "Chicken House",
-            level: 1,
+            general_information: "chicken_house",
+            level: 3,
             building_location: [12, 11],
             tile_rel_locations: [
                 [[0, 0], "ChickenHouse.1.1"],
@@ -102,9 +100,9 @@ const defaultMapData2 = {
         },
         tree: {
             self_key: "tree",
-            display_name: "Tree",
-            level: 1,
-            building_location: [12, 4],
+            general_information: "tree",
+            level: "None",
+            building_location: [9, 15],
             tile_rel_locations: [
                 [[0, 0], "BiomeThings.1.2"],
                 [[0, 1], "BiomeThings.1.3"],
@@ -113,6 +111,28 @@ const defaultMapData2 = {
             ]
         }
     },
+
+    building_general_information: {
+        chicken_house: {
+            display_name: "Chicken House", // Name to be displayed in the popup
+            explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
+                "This vital building is where your feathered friends lay eggs, ready for " +
+                "market sale. Upgrade to boost production. Every egg sold brings you one " +
+                "step closer to agricultural dominance.",
+            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
+            other_stats: [["Eggs/hour", [1,2,3,4,5,6,7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]] // All other stats specific for this building. ["Stat name display", [array of all values per level]]
+        },
+        fence: {
+            display_name: "Fence",
+            explanation: "Strategically place your fences in order to defend you farm from intruders as effectively as possible.",
+            upgrade_costs: [500, 1000, 2000, 3500],
+            other_stats: [["Defence", [50, 100, 150, 200, 400]]]
+        },
+        tree: {
+            display_name: "Tree",
+            explanation: "This is just a tree."
+        }
+    }
 }
 
 
@@ -138,6 +158,7 @@ export class BuildingMap extends BaseMap {
         super(mapData, _tileSize);
 
         this.buildingInformation = mapData.building_information;
+        this.buildingGeneralInformation = mapData.building_general_information
         this.tiles = this.generateBuildingTileMap();
         this.ctx = _ctx;
 
@@ -223,6 +244,7 @@ export class BuildingMap extends BaseMap {
      * Fetches the buildingMapData json which stores the layout and other information needed.
      */
     async fetchBuildingMapData() {
+        // Klopt totaal niet
         try {
             const response = await fetch('/static/JorenStaticTestFiles/testBuildingMap.json');
             let mapData = await response.json();
@@ -460,6 +482,9 @@ export class BuildingMap extends BaseMap {
             buildingToMove.building_location[0] += rel_y;
             buildingToMove.building_location[1] += rel_x;
             this.tiles = this.generateBuildingTileMap();
+            if (isPopupOpen) {
+                closePopup();
+            }
 
             if (setToTop) {
                 this.drawTiles(buildingToMove);
@@ -510,7 +535,7 @@ export class BuildingMap extends BaseMap {
      * @param client_y y click on screen
      * @returns {boolean} Returns true when click is used by this class.
      */
-    handleClick(client_x,client_y) {
+    handleClick(client_x, client_y) {
         //debugger;
         let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
         let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
@@ -540,7 +565,7 @@ export class BuildingMap extends BaseMap {
                 this.ownNextClick = false;
                 this.prevMouseMoveBuildingLoc = null;
                 console.log("Op een juiste plek geplaatst");
-                this.updateBuildingMapDB();
+                this.updateBuildingMapDB().then(/* If something needs to happen after the update */);
             } else {
                 //const revertRelY = this.currBuildingOrgLocation[0] - buildingToMove.building_location[0];
                 //const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
@@ -552,6 +577,20 @@ export class BuildingMap extends BaseMap {
             // Terug naar originele locatie
         }
         return true;
+    }
+
+    handleRightClick(client_x, client_y) {
+        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
+        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
+
+        if (this.tiles[tileY][tileX] !== EMPTY_TILE) {
+            console.log(`Right click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
+            const buildingName = this.tiles[tileY][tileX][1];
+            openPopup(this.buildingInformation, this.buildingGeneralInformation, buildingName);
+            return true;
+        }
+        return false;
+
     }
 
 

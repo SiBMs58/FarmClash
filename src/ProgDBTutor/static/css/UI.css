@@ -4,6 +4,11 @@ body {
     font-family: 'Press Start 2P';
     font-weight: bold;
 }
+
+img {
+    image-rendering: pixelated; /* Zet anti-aliasing uit */
+}
+
 header {
     position: relative;
     margin: 0;

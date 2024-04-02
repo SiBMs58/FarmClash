@@ -13,7 +13,7 @@ function getNextAssetName(assetName, cycle) {
     let parts = assetName.split('.');
     let lastPart = parts.pop();
     //let num = parseInt(lastPart) || 0;
-    return parts.join('.') + '.' + cycle.toString() + '.png';
+    return parts.join('.') + '.' + cycle.toString();
 }
 
 
@@ -60,8 +60,9 @@ export class TerrainMap extends BaseMap {
 
         this.terrainAssetList = AssetList.terrain; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.terrainAssets = {}; // Bevat {"pad_naar_asset": imageObject}
+
         this.time = 0;
-        this.cycle = 1;
+        this.cycle = 2;
 
     }
 
@@ -208,7 +209,7 @@ export class TerrainMap extends BaseMap {
     }
 
     waterAnimation() {
-        const animationSpeed = 48;
+        const animationSpeed = 36;
         if (this.time > animationSpeed){
             this.time -= animationSpeed;
 
@@ -217,7 +218,6 @@ export class TerrainMap extends BaseMap {
                     const currTileDir = getAssetDir(this.tiles[i][j]);
                     if (currTileDir === "Water") {
                         this.tiles[i][j] = getNextAssetName(this.tiles[i][j], this.cycle);
-                        //debugger;
                     }
                 }
             }
@@ -227,7 +227,8 @@ export class TerrainMap extends BaseMap {
             this.cycle = 3 - this.cycle;
         }
         else{
-            this.time +=1;
+            this.time += 1;
+            //console.log(this.time);
         }
     }
 
@@ -264,7 +265,7 @@ export class TerrainMap extends BaseMap {
      */
     tick() {
         //console.log("Terrain layer tick");
-        this.waterAnimation2();
+        this.waterAnimation();
 
     }
 

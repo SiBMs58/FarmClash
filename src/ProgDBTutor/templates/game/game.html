@@ -15,10 +15,20 @@
         body {
             overflow: hidden;
             margin: 0;
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none;    /* Firefox */
+            -ms-user-select: none;     /* Internet Explorer/Edge */
+            user-select: none;         /* Non-prefixed version, currently supported by Chrome, Opera, and Edge */
+        }
+
+        img {
+            -webkit-user-drag: none;
+            user-select: none;
         }
 
         #canvasContainer {
             position: relative;
+            z-index: 0;
         }
 
         #buildingCanvas {
@@ -29,22 +39,20 @@
             z-index: 1;
             <!--border: solid black;-->
         }
-
     </style>
+
 
 </head>
 <body>
 
-
 	{% include 'game/game_UI.html' %}
+
+    {% include 'game/pop-up.html' %}
 
     <div id="canvasContainer">
         <canvas id="buildingCanvas"></canvas>
         <canvas id="terrainCanvas"></canvas>
     </div>
-
-
-
 
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
 </body>
