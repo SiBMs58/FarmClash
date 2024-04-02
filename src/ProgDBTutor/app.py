@@ -17,7 +17,6 @@ from views.market import market_blueprint
 from models.user import User
 from extensions import login_manager
 
-
 # Initialize the Flask application
 app = Flask('FarmClash')
 app.secret_key = config_data['secret_key']
@@ -39,7 +38,9 @@ chatmessage_data_access = ChatMessageDataAccess(connection)
 app.config['chatmessage_data_access'] = chatmessage_data_access
 
 # Insert the admin user
-user_data_access.add_user(User(config_data['admin_username'], werkzeug_generate_password_hash(config_data['admin_password']), config_data['admin_email']))
+user_data_access.add_user(
+    User(config_data['admin_username'], werkzeug_generate_password_hash(config_data['admin_password']),
+         config_data['admin_email']))
 
 # Initialize the login manager
 login_manager.init_app(app)
@@ -50,7 +51,6 @@ app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
-
 
 DEBUG = False
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -110,6 +110,7 @@ def admin():
         return redirect(url_for('dashboard'))
     return render_template('admin.html', app_data=app_data)
 
+
 @app.route('/jasmine_tests')
 @login_required
 def jasmine_tests():
@@ -120,6 +121,7 @@ def jasmine_tests():
         return redirect(url_for('dashboard'))
     return render_template('jasmine-tests.html', app_data=app_data)
 
+
 @login_manager.user_loader
 def load_user(username):
     """
@@ -127,9 +129,11 @@ def load_user(username):
     """
     return user_data_access.get_user(username)
 
+
 @app.context_processor
 def inject_base_url():
     return dict(base_url=request.url_root)
+
 
 # RUN DEV SERVER
 if __name__ == "__main__":
