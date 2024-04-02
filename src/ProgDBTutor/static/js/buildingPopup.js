@@ -39,9 +39,11 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
         buildingStats.style.display = "block";
         upgradeButton.style.display = "block";
         document.getElementById('level-stat').innerText = "Level: " + building.level;
-        document.getElementById('building-upgrade-cost-number').innerText = generalInformation.upgrade_costs[building.level]
+        document.getElementById('building-upgrade-cost-number').innerText = generalInformation.upgrade_costs[building.level-1]
         const list = document.getElementById('building-stats');
-        for (let i = 3; i < list.children.length; i++) {
+        const listLength = list.children.length;
+        for (let i = listLength-1; i > 2; i--) {
+            //debugger;
             list.removeChild(list.children[i]);
         }
         for (let i = 0; i < generalInformation.other_stats.length; i++) {
@@ -53,7 +55,6 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
             list.appendChild(listItem);
         }
     }
-
 
     popup.classList.add('show');
     isPopupOpen = true;
