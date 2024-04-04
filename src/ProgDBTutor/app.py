@@ -6,13 +6,16 @@ from data_access.user_data_access import UserDataAccess
 from data_access.map_data_access import MapDataAccess
 from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
+from data_access.friendship_data_access import FriendshipDataAccess
+from data_access.chatmessage_data_access import ChatMessageDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
+from views.friends import friends_blueprint
+from views.market import market_blueprint
 from models.user import User
 from extensions import login_manager
-
 
 # Initialize the Flask application
 app = Flask('FarmClash')
@@ -29,9 +32,15 @@ tile_data_access = TileDataAccess(connection)
 app.config['tile_data_access'] = tile_data_access
 resource_data_access = ResourceDataAccess(connection)
 app.config['resource_data_access'] = resource_data_access
+friendship_data_access = FriendshipDataAccess(connection)
+app.config['friendship_data_access'] = friendship_data_access
+chatmessage_data_access = ChatMessageDataAccess(connection)
+app.config['chatmessage_data_access'] = chatmessage_data_access
 
 # Insert the admin user
-user_data_access.add_user(User(config_data['admin_username'], werkzeug_generate_password_hash(config_data['admin_password']), config_data['admin_email']))
+user_data_access.add_user(
+    User(config_data['admin_username'], werkzeug_generate_password_hash(config_data['admin_password']),
+         config_data['admin_email']))
 
 # Initialize the login manager
 login_manager.init_app(app)
@@ -40,7 +49,8 @@ login_manager.init_app(app)
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
-
+app.register_blueprint(market_blueprint, url_prefix='/market')
+app.register_blueprint(friends_blueprint, url_prefix='/friends')
 
 DEBUG = False
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -56,15 +66,17 @@ def main():
         return redirect(url_for('game.game'))  # Assuming 'game' is the function name for the game view
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view
 
-@app.route('/dashboard')
+
+@app.route('/friends')
 @login_required
-def dashboard():
+def friends():
     """
     Renders the dashboard view, for a user.
     """
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
-    return render_template('dashboard.html', app_data=app_data)
+    return render_template('friends.html', app_data=app_data)
+
 
 @app.route('/settings')
 @login_required
@@ -76,6 +88,18 @@ def settings():
         return redirect(url_for('admin'))
     return render_template('settings.html', app_data=app_data)
 
+
+@app.route('/attack')
+@login_required
+def attack():
+    """
+    Renders the attack dashboard view.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('attack.html', app_data=app_data)
+
+
 @app.route('/admin')
 @login_required
 def admin():
@@ -85,6 +109,7 @@ def admin():
     if current_user.username != 'admin':
         return redirect(url_for('dashboard'))
     return render_template('admin.html', app_data=app_data)
+
 
 @app.route('/jasmine_tests')
 @login_required
@@ -96,6 +121,7 @@ def jasmine_tests():
         return redirect(url_for('dashboard'))
     return render_template('jasmine-tests.html', app_data=app_data)
 
+
 @login_manager.user_loader
 def load_user(username):
     """
@@ -103,9 +129,11 @@ def load_user(username):
     """
     return user_data_access.get_user(username)
 
+
 @app.context_processor
 def inject_base_url():
     return dict(base_url=request.url_root)
+
 
 # RUN DEV SERVER
 if __name__ == "__main__":

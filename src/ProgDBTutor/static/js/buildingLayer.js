@@ -33,8 +33,8 @@ const defaultMapData = {
  * Here's an example of what the buildMap json needs to look like.
  */
 const defaultMapData2 = {
-    map_width: 50,
-    map_height: 50,
+    map_width: 58,
+    map_height: 43,
 
     building_information: {
         fence1: {
@@ -52,7 +52,7 @@ const defaultMapData2 = {
             self_key: "fence2",
             display_name: "Fence",
             level: 1,
-            building_location: [2, 2],
+            building_location: [5, 7],
             tile_rel_locations: [
                 [[0, 0], "Fences.4.1"],
             ]
@@ -131,8 +131,9 @@ export class BuildingMap extends BaseMap {
      * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
+     * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
      */
-    constructor(mapData = defaultMapData2, _tileSize, _ctx) {
+    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance) {
 
         super(mapData, _tileSize);
 
@@ -142,6 +143,8 @@ export class BuildingMap extends BaseMap {
 
         this.buildingAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
+
+        this.terrainMapInstance = terrainMapInstance;
 
 
         // Variables to remember the click state
@@ -377,20 +380,15 @@ export class BuildingMap extends BaseMap {
      * @returns {boolean} returns true if the move is to a valid location, false if the move isn't valid
      */
     checkValidMoveLocation(rel_y, rel_x, buildingToMove) {
-        //debugger;
-
-        let foundOverlap = false;
-
         let forbiddenTiles = [];
 
         let buildingInfoCopy = structuredClone(this.buildingInformation);
         delete buildingInfoCopy[buildingToMove.self_key];
-        // todo beter maken -> je moet nie verwijderen
         // Finding all forbidden tiles
-        for (const key of buildingInfoCopy) {
-            for (const currTile of buildingInfoCopy[key].tile_rel_locations) {
-                const currYValue = buildingInfoCopy[key].building_location[0] + currTile[0][0];
-                const currXValue = buildingInfoCopy[key].building_location[1] + currTile[0][1];
+        for (const building of Object.values(buildingInfoCopy)) {
+            for (const currTile of building.tile_rel_locations) {
+                const currYValue = building.building_location[0] + currTile[0][0];
+                const currXValue = building.building_location[1] + currTile[0][1];
                 forbiddenTiles.push([currYValue, currXValue]);
             }
         }
@@ -409,10 +407,37 @@ export class BuildingMap extends BaseMap {
                 y === currTile[0] && x === currTile[1]
             );
             if (existsInForbiddenTiles) {
-                foundOverlap = true;
+                return false;
             }
         }
-        return !foundOverlap;
+
+        // Check for forbidden terrain overlap
+        for (const currTile of newLocations) {
+            const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
+            const terrainType = getAssetDir(correspondingTerrainTile);
+            if (terrainType === "Water") {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    inBounds(rel_y, rel_x, buildingToMove) {
+        // Finding all new tile locations
+        let newLocations = [];
+        for (const currTile of buildingToMove.tile_rel_locations) {
+            const currNewYValue = buildingToMove.building_location[0] + rel_y + currTile[0][0];
+            const currNewXValue = buildingToMove.building_location[1] + rel_x + currTile[0][1];
+            newLocations.push([currNewYValue, currNewXValue]);
+        }
+
+        for (const currTile of newLocations) {
+            if (currTile[0] < 0 || currTile[0] >= this.map_height || currTile[1] < 0 || currTile[1] >= this.map_width) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -423,27 +448,28 @@ export class BuildingMap extends BaseMap {
      * @param setToTop if marked true, sets the building being moved to the top of the screen.
      */
     moveBuilding(rel_y, rel_x, buildingToMove, setToTop = false) {
+        if (this.inBounds(rel_y, rel_x, buildingToMove)) {
+            if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
+                console.log("Move successful");
+                // zet ui op groen
+            } else {
+                console.log("Move not valid");
+                // zet ui op rood
+            }
 
-        /*
-        if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
-            console.log("Move successful");
+            buildingToMove.building_location[0] += rel_y;
+            buildingToMove.building_location[1] += rel_x;
+            this.tiles = this.generateBuildingTileMap();
+
+            if (setToTop) {
+                this.drawTiles(buildingToMove);
+            } else {
+                this.drawTiles();
+            }
+
         } else {
-            console.log("Move not valid");
+            console.log("can't move out of bounds");
         }
-        */
-
-        buildingToMove.building_location[0] += rel_y;
-        buildingToMove.building_location[1] += rel_x;
-
-        this.tiles = this.generateBuildingTileMap();
-
-        if (setToTop) {
-            this.drawTiles(buildingToMove);
-        } else {
-            this.drawTiles();
-        }
-
-        this.updateBuildingMapDB();
     }
 
     /**
@@ -476,7 +502,6 @@ export class BuildingMap extends BaseMap {
             this.prevMouseMoveBuildingLoc[0] = tileY;
             this.prevMouseMoveBuildingLoc[1] = tileX;
         }
-
     }
 
     /**
@@ -495,23 +520,37 @@ export class BuildingMap extends BaseMap {
             return false;
         }
 
+        console.log(`click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
+
         // Click on building and not yet moving
         if (this.movingBuilding === false) {
             this.movingBuilding = true;
             this.ownNextClick = true;
             this.buildingClickedName = this.tiles[tileY][tileX][1];
+            this.currBuildingOrgLocation = Array.from(this.buildingInformation[this.buildingClickedName].building_location);
             return true;
         }
 
         // Click while moving building
         if (this.movingBuilding === true) {
-            this.movingBuilding = false;
-            this.ownNextClick = false;
-            this.prevMouseMoveBuildingLoc = null;
+            const buildingToMove = this.buildingInformation[this.buildingClickedName];
+
+            if (this.checkValidMoveLocation(0,0, buildingToMove)) {
+                this.movingBuilding = false;
+                this.ownNextClick = false;
+                this.prevMouseMoveBuildingLoc = null;
+                console.log("Op een juiste plek geplaatst");
+                this.updateBuildingMapDB();
+            } else {
+                //const revertRelY = this.currBuildingOrgLocation[0] - buildingToMove.building_location[0];
+                //const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
+                //this.moveBuilding(revertRelY, revertRelX, buildingToMove);
+                console.error("invalid locatie om gebouw te plaatsen");
+
+            }
+            // check of move valid is met rel_x, rel_y = 0
+            // Terug naar originele locatie
         }
-
-
-        console.log(`click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
         return true;
     }
 
@@ -525,9 +564,11 @@ export class BuildingMap extends BaseMap {
     }
 
     async updateBuildingMapDB() {
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        const fetchLink = BASE_URL + "/game/update-building-map";
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON
         try {
-            const response = await fetch('update-building-map', {
+            const response = await fetch(fetchLink, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

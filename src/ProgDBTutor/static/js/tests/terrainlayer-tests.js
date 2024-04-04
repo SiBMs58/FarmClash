@@ -1,3 +1,6 @@
+import { TerrainMap } from "../terrainLayer.js"
+
+
 describe("TerrainMap Tests", function() {
     let terrainMap;
     let mockCtx;
@@ -32,6 +35,7 @@ describe("TerrainMap Tests", function() {
 
     describe("Drawing Functionality", function() {
         it("should draw terrain tiles correctly", function() {
+            debugger;
             // This test assumes that you can verify the drawImage method is called correctly.
             // In practice, you might need to mock or spy on additional functionality to fully test drawing logic.
             terrainMap.drawTiles();

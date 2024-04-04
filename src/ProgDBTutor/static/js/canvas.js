@@ -16,7 +16,7 @@ const terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
-const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx);
+const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap);
 
 // Create ticker
 const ticker = new Ticker([terrainMap, buildingMap]);

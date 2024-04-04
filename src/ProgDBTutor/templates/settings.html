@@ -3,16 +3,21 @@
     <title>{{ app_data['app_name'] }}</title>
     {% include 'head.html' %}
 </head>
+<html lang="en">
 <body>
-
-    {% include 'header.html' %}
+    {% include 'logged_in_header.html' %}
 
     <div class="container-fluid mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
                 <h1>Settings</h1>
-                <div class="my-3">
-                    <a href="{{ url_for('auth.logout') }}">Logout</a>
+                <div class="logout-btn">
+                    <div class="my-3">
+                        <img src="../static/img/buttons/logout_btn.png" alt="Logout" usemap="#logoutMap" id="logout-btn">
+                        <map name="logoutMap">
+                            <area shape="rect" coords="0,0,150,150" alt="Logout" href="{{ url_for('auth.logout') }}">
+                        </map>
+                    </div>
                 </div>
             </div>
         </div>

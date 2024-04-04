@@ -4,6 +4,19 @@ function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
+function startsWith(name, prefix) {
+    return name.slice(0, prefix.length) === prefix;
+}
+
+
+function getNextAssetName(assetName, cycle) {
+    let parts = assetName.split('.');
+    let lastPart = parts.pop();
+    //let num = parseInt(lastPart) || 0;
+    return parts.join('.') + '.' + cycle.toString() + '.png';
+}
+
+
 /**
  * This is the asset list that isn't fetched from the database and is used for debugging purposes.
  */
@@ -82,15 +95,46 @@ export class TerrainMap extends BaseMap {
     /**
      * Fetches the terrainMapData json which stores the layout and other information needed.
      */
+
     async fetchTerrainMapData() {
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        //debugger;
         try {
-            const response = await fetch('${BASE_URL}/api/terrain-map');
-            let mapData = await response.json();
-            this.map_width = mapData.map_width;
-            this.map_height = mapData.map_height;
-            this.tiles = mapData.terrain_tiles;
-            this.viewX = 0;
-            this.viewY = 0;
+            // Basic test of de fetch is gelukt of niet
+            const fetchLink = BASE_URL + "/api/terrain-map";
+            //debugger;
+            const response = await fetch(fetchLink);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            } else {
+                console.log("Joepie terrain response is oké");
+            }
+            let terrainMapData = await response.json();
+            if (terrainMapData.message) { // Moet niet per se
+                console.log("Message from the server:", terrainMapData.message);
+            }
+
+
+            // Map proberen initialiseren:
+            if (terrainMapData.map_width) {
+                this.map_width = terrainMapData.map_width;
+                console.log("map_width wordt ingeladen...");
+            } else {
+                console.log("map_width niet gevonden -> default wordt gebruikt"); // todo later engels maken
+            }
+            if (terrainMapData.map_height) {
+                this.map_height = terrainMapData.map_height;
+                console.log("map_height wordt ingeladen...");
+            } else {
+                console.log("map_height niet gevonden -> default wordt gebruikt");
+            }
+            if (terrainMapData.terrain_tiles) {
+                this.tiles = terrainMapData.terrain_tiles;
+                console.log("tiles worden ingeladen...");
+            } else {
+                console.log("terrain_tiles niet gevonden -> default wordt gebruikt");
+            }
+
         } catch(error) {
             console.error('fetchTerrainAssetList() failed:', error);
             throw error;
@@ -164,15 +208,39 @@ export class TerrainMap extends BaseMap {
     }
 
     waterAnimation() {
-        if (this.time > 24){
-            this.time -= 24;
+        const animationSpeed = 48;
+        if (this.time > animationSpeed){
+            this.time -= animationSpeed;
+
+            for (let i = 0; i < this.map_height; i++) {
+                for (let j = 0; j < this.map_width; j++) {
+                    const currTileDir = getAssetDir(this.tiles[i][j]);
+                    if (currTileDir === "Water") {
+                        this.tiles[i][j] = getNextAssetName(this.tiles[i][j], this.cycle);
+                        //debugger;
+                    }
+                }
+            }
+
+            this.drawTiles();
+
+            this.cycle = 3 - this.cycle;
+        }
+        else{
+            this.time +=1;
+        }
+    }
+
+    waterAnimation2() {
+        if (this.time > 48){
+            this.time -= 48;
             const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
             const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
             for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
                 for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
                     const currTile = this.tiles[i_map][j_map];
-                    if (getAssetDir(currTile) == "Water"){
-                        let filePath = "/static/img/assets/terrain/" + getAssetDir(currTile) + "/" + "Water.1."+ this.cycle.toString() + ".png";
+                    if (getAssetDir(currTile) === "Water"){
+                        let filePath = "/static/img/assets/terrain/Water/" + getNextAssetName(currTile, this.cycle);
                         const img = this.terrainAssets[filePath];
                         if (img) {
                             this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
@@ -183,10 +251,8 @@ export class TerrainMap extends BaseMap {
                     }
                 }
             }
-            this.cycle +=1;
-            if (this.cycle == 5){
-                this.cycle = 1;
-            }
+
+            this.cycle = 3 - this.cycle;
         }
         else{
             this.time +=1;
@@ -198,7 +264,7 @@ export class TerrainMap extends BaseMap {
      */
     tick() {
         //console.log("Terrain layer tick");
-        this.waterAnimation();
+        this.waterAnimation2();
 
     }
 
@@ -216,24 +282,4 @@ export class TerrainMap extends BaseMap {
         return true;
     }
 
-    /*
-    getTile(y, x) {
-        try {
-            this.isValidTilePosition(y,x)
-        } catch (error) {
-            console.error(error.message)
-        }
-
-        return this.tiles[y][x];
-    }
-
-    toJSON() {
-        return {
-            map_width: this.map_width,
-            map_height: this.map_height,
-            terrain_tiles: this.tiles
-        };
-    }
-
-    */
 }
