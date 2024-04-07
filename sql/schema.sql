@@ -33,7 +33,15 @@ CREATE TABLE crops (
     crop_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     growth_time INT NOT NULL, -- Time in hours
-    sell_price INT NOT NULL
+    sell_price INT NOT NULL  -- base sell price
+);
+
+-- Animal Table
+CREATE TABLE animals (
+    crop_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    growth_time INT NOT NULL, -- Time in hours
+    sell_price INT NOT NULL -- base sell price
 );
 
 -- Planted Crops Table to track crops planted on a farm
@@ -49,6 +57,8 @@ CREATE TABLE market (
     market_id SERIAL PRIMARY KEY,
     crop_id INT REFERENCES crops(crop_id),
     current_price INT NOT NULL,
+    current_quantity_crop INT,
+    prev_quantity_crop INT,
     last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

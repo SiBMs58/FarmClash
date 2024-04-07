@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, current_app, request, jsonify
 from flask_login import login_required, current_user
 
 from models.building import Building
+from models.market import Market
+from models.crops import Crop
 from datetime import datetime
 import json
 
@@ -20,6 +22,9 @@ def game():
 
 
 
+"""
+Building fetch and update functions
+"""
 
 @game_blueprint.route('/update-building-map', methods=['POST'])
 def update_map():
@@ -35,7 +40,7 @@ def update_map():
         building_information = json_data["building_information"]
 
         for building_info in building_information.values():
-            building_type = building_info["display_name"]
+            building_type = building_info["general_information"]
             level = building_info["level"]
             created_at = datetime.now()
             tile_rel_locations_json = json.dumps(building_info["tile_rel_locations"])  # Serialize to JSON
@@ -75,8 +80,6 @@ def update_map():
 
 
 
-
-
 @game_blueprint.route('/fetch-building-information', methods=['GET'])
 def fetch_building_information():
     try:
@@ -93,7 +96,7 @@ def fetch_building_information():
         for building in buildings:
             building_info = {
                 "self_key": building.building_id,
-                "display_name": building.building_type,
+                "general_information": building.building_type,
                 "level": building.level,
                 "building_location": [building.x, building.y],
                 "tile_rel_locations": building.tile_rel_locations
@@ -108,3 +111,98 @@ def fetch_building_information():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+
+
+
+"""
+Markt fetch and update functions
+"""
+from datetime import datetime, timedelta
+
+@game_blueprint.route('/update-market', methods=['POST'])
+def update_market():
+    """
+    Handles POST requests to insert market count data into the database.
+    Expects crop name and sale amount in the request body as JSON.
+    """
+    try:
+        # Get the crop name and sale amount from the request body
+        json_data = request.json
+        crop_name = json_data["crop"]
+        sale = json_data["sale"]
+
+
+        # Fetch the crop ID based on the crop name
+        crops_data_access = current_app.config.get('crops_data_access')
+        crop = crops_data_access.get_crop_by_name(crop_name)
+
+        if not crop:
+            # If crop doesn't exist, create a new crop with default values
+            new_crop = Crop(crop_name)
+            crops_data_access.add_crop(new_crop)
+            crop = new_crop
+
+        crop_id = crops_data_access.get_id_from_name(crop_name)
+
+        # Get current market data
+        market_data_access = current_app.config.get('market_data_access')
+        market = market_data_access.get_market_data(crop_id)
+
+        if market:
+            # Update the last update time
+
+            # Check if more than 1 minute has passed since the last update
+            if  datetime.now() - market.last_update > timedelta(minutes=1):
+                market.last_update = datetime.now()
+                # Update prev_quantity_crop and reset current_quantity_crop
+                market.prev_quantity_crop = market.current_quantity_crop
+                market.current_quantity_crop = 0
+
+            # Update the existing market entry
+            market.current_quantity_crop += sale
+            market_data_access.add_market_data(market)
+        else:
+            # No existing market data found, create a new entry with crop's base price
+            new_market = Market(crop_id, crop.sell_price, sale, 0, datetime.now())
+            market_data_access.add_market_data(new_market)
+
+        return jsonify({"status": "success", "message": "Market data updated successfully"})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+
+@game_blueprint.route('/fetch-crop-price', methods=['GET'])
+def fetch_crop_price():
+    try:
+        # Get the crop name from the query parameters
+        crop_name = request.args.get('crop')
+
+        crops_data_access = current_app.config.get('crops_data_access')
+        crop = crops_data_access.get_crop_by_name(crop_name)
+
+        if not crop:
+            # If crop doesn't exist, create a new crop with default values
+            new_crop = Crop(crop_name)
+            crops_data_access.add_crop(new_crop)
+            crop = new_crop
+
+        crop_id = crops_data_access.get_id_from_name(crop_name)
+
+        # Query the database to fetch the price of the crop from the market
+        market_data_access = current_app.config.get('market_data_access')
+        market = market_data_access.get_market_data(crop_id)
+
+        if market:
+            # If market data exists for the crop, return its price
+            return jsonify({"price": market.current_price})
+        else:
+            # If market data doesn't exist, return an error message
+            return jsonify({"error": "Market data not found for the crop"}), 404
+
+    except Exception as e:
+        # If any error occurs, return an error response
+        return jsonify({"error": str(e)}), 500

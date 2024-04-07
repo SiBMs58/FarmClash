@@ -101,7 +101,7 @@ const defaultMapData2 = {
         tree: {
             self_key: "tree",
             general_information: "tree",
-            level: "None",
+            level: 0,
             building_location: [9, 15],
             tile_rel_locations: [
                 [[0, 0], "BiomeThings.1.2"],
@@ -217,7 +217,7 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        //await this.fetchBuildingMapData();
+        await this.fetchBuildingMapData();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
         //debugger;
@@ -251,11 +251,15 @@ export class BuildingMap extends BaseMap {
             const mapData = await response.json();
 
             // Check if mapData contains building_information
-            debugger;
+            //debugger;
 
             if ("building_information" in mapData) {
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
                 this.buildingInformation = mapData.building_information;
                 console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.tiles);
             } else {
             // No buildings found
                 await this.updateBuildingMapDB();
@@ -620,6 +624,7 @@ export class BuildingMap extends BaseMap {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         const fetchLink = BASE_URL + "/game/update-building-map";
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON
+        console.log('BuildingMap DB ', mapDataJson);
         try {
             const response = await fetch(fetchLink, {
                 method: 'POST',
@@ -629,7 +634,7 @@ export class BuildingMap extends BaseMap {
                 body: mapDataJson // Send the serialized map data as the request body
             });
 
-            debugger;
+            //debugger;
 
             if (response.ok) {
                 const jsonResponse = await response.json();
