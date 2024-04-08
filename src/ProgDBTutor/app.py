@@ -52,7 +52,7 @@ app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
 
-DEBUG = True
+DEBUG = False
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
 
 
