@@ -11,7 +11,16 @@ export const tileSize = 50;
 const terrainCanvas = document.getElementById('terrainCanvas');
 const terrainCtx = terrainCanvas.getContext('2d');
 const mapData = generateRandomTerrainMap(50, 50);
-const terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
+let terrainMap;
+if (window.friend) {
+    // If friendData is available, use it in the constructor
+    console.log("Friend data is available", window.friend);
+    terrainMap = new TerrainMap(mapData, tileSize, terrainCtx, window.friend);
+} else {
+    // If friendData is not available, omit it from the constructor
+    terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
+}
+console.log(terrainMap);
 
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
