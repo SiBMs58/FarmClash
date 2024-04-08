@@ -73,3 +73,13 @@ def add_message():
     else:
         return jsonify({'status': 'error', 'message': 'Failed to send message.'}), 500
 
+@friends_blueprint.route('/visit_friend_world/<string:friend_name>', methods=['GET'])
+@login_required
+def visit_friend(friend_name):
+    """
+    Renders the visit friend view, for a user. This allows the user to visit a friend's world.
+    """
+    user_data_access = current_app.config.get('user_data_access')
+    friend = user_data_access.get_user(friend_name)
+
+    return render_template('friends/visit_friend.html', friend=friend, app_data=config_data)

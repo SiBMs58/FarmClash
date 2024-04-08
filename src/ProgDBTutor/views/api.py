@@ -38,15 +38,28 @@ def get_terrain_map():
     Handles GET requests for the terrain map. This will return the terrain map, if the logged in user is admin
     :return: The terrain map, in json format
     """
-
-    # Voor debugging
-    #return jsonify({"status": "success", "message": "This is a test response"})
-
     map_data_access = current_app.config.get('map_data_access')
     map = map_data_access.get_map_by_username_owner(current_user.username) # TODO: Handle more maps than one
     if map is None:
         return "No maps found", 404
     # for map in maps:
+    tile_data_access = current_app.config.get('tile_data_access')
+    tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
+    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'))
+    formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
+    return jsonify(formatted_terrain_map)
+
+@api_blueprint.route('/terrain-map/<string:friend_username>')
+@login_required
+def get_friend_terrain_map(friend_username):
+    """
+    Handles GET requests for the terrain map. This will return the terrain map, for the friend
+    :return: The terrain map, in json format
+    """
+    map_data_access = current_app.config.get('map_data_access')
+    map = map_data_access.get_map_by_username_owner(friend_username)
+    if map is None:
+        return "No maps found", 404
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
     game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'))
@@ -98,3 +111,16 @@ def get_messages(friend_name):
         return jsonify([message.to_dict() for message in messages])
     else:
         return jsonify({"message": "No messages found"}), 200  # Consider returning an empty list with a 200 OK
+
+
+@api_blueprint.route('/resources/<string:friend_name>')
+@login_required
+def get_friend_resources(friend_name):
+    """
+    Handles GET requests for all resources. This will return a list of all resources, for the friend
+    :return: A list of all resources, in json format
+    """
+    resource_data_access = current_app.config.get('resource_data_access')
+    resources = resource_data_access.get_resources(friend_name)
+    return jsonify([resource.to_dict() for resource in resources])
+
