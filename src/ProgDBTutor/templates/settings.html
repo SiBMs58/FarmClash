@@ -2,27 +2,77 @@
 <head>
     <title>{{ app_data['app_name'] }}</title>
     {% include 'head.html' %}
+   < <link rel="stylesheet" href="../../static/css/settings.css"> <!--or different image -->
 </head>
 <html lang="en">
 <body>
     {% include 'logged_in_header.html' %}
 
-    <div class="container-fluid mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8 text-center">
-                <h1>Settings</h1>
-                <div class="logout-btn">
-                    <div class="my-3">
-                        <img src="../static/img/buttons/logout_btn.png" alt="Logout" usemap="#logoutMap" id="logout-btn">
-                        <map name="logoutMap">
-                            <area shape="rect" coords="0,0,150,150" alt="Logout" href="{{ url_for('auth.logout') }}">
-                        </map>
-                    </div>
-                </div>
+     <h1>Settings</h1>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col">
+                LOG-OUT
+            </div>
+            <div class="col-auto">
+                <div class="logout-btn"></div>
+                <img src="../static/img/buttons/logout_btn.png" alt="Logout" usemap="#logoutMap" id= class="image-button">
+                <map name="logoutMap">
+                    <area shape="rect" coords="0,0,150,150" alt="Logout" href="{{ url_for('auth.logout') }}">
+                </map>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                SOUND
+            </div>
+            <div class="col-auto">
+                <div class="sound-btn"></div>
+                <img src="../static/img/buttons/minus_btn.png"  class="sound-image-button" data-sound-src="sound1.mp3" onclick="soundDown()">
+                <span>&nbsp;</span>
+                <p id="soundNumber"> 0 </p>
+                <p> % </p>
+                <span>&nbsp;</span>
+                <img src="../static/img/buttons/plus_btn.png" class="sound-image-button" data-sound-src="discord-notification.mp3" onclick="soundUp()">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                MUTE
+            </div>
+            <div class="col-auto">
+               <div class="mute-btn"></div>
+                <img src="../static/img/buttons/logout_btn.png" class="image-button image-button3">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                ZOOM
+            </div>
+            <div class="col-auto">
+                <div class="zoom-btn"></div>
+                <img src="../static/img/buttons/minus_btn.png" class="image-button image-button4" onclick="zoomDownPrecent()">
+                <span>&nbsp;</span>
+                <p id="zoomNumber"> 0 </p>
+                <p>% </p>
+                <span>&nbsp;</span>
+                <img src="../static/img/buttons/plus_btn.png" class="image-button image-button5" onclick="zoomUpPrecent()">
             </div>
         </div>
     </div>
 
-    {% include 'footer.html' %}
+
+    <script src="../static/js/sound.js"></script>
+    <script src="../static/js/settings.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+
+    <!--{% include 'footer.html' %}-->
 </body>
 </html>

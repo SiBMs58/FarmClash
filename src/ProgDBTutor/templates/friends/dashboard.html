@@ -7,10 +7,12 @@
     <style>
 
         body {
-            background-image: url("../../static/img/backround_dashboard.png");
-            background-size: cover; /* Ensure the background image covers the entire viewport */
-            background-repeat: no-repeat; /* Prevent the background image from repeating */
-            /* Optionally, you can add more CSS properties to customize the background image */
+            background-image: url("../../static/img/backround_dashboard.png");  /* or different image: ../../static/img/backround_dashboard.png  */
+            background-size: cover;
+            background-repeat: no-repeat;
+
+
+
         }
 
     </style>
@@ -21,7 +23,7 @@
   <div class="container-fluid mt-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <h1 class="text-center">Dashboard</h1>
+            <h1 class="text-center">Friends</h1>
             <div class="row">
                 <!-- Friends Column -->
                 {% include 'friends/friends_list.html' %}

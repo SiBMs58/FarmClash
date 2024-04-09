@@ -1,0 +1,41 @@
+body{
+     background-image: url('../../static/img/water_map.gif'); /* or different image: ../../static/img/backround_dashboard.png  */
+      cursor: url('../../static/img/cursor.png'), auto;
+}
+
+h1{
+    text-align: center;
+    padding-top: 20px;
+}
+
+.container{
+
+
+    border: 15px solid #aa7959;
+    border-radius: 10px;
+    background-color: #e8cfa6;
+    height: 650px;
+    margin-top: 45px;
+
+
+}
+
+
+
+.row{
+    margin-bottom: 40px;
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.col-auto {
+    display: flex;
+    align-items: center;
+}
+
+.image-button {
+        background-image: url('../img/buttons/plus_btn.png');
+        background-size: cover; /* Adjust this as needed */
+
+    }
