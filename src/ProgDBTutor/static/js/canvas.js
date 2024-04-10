@@ -5,18 +5,18 @@ import { UserInputHandler} from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
 // Set on-screen tileSize-
-export const tileSize = 50;
+export let tileSize = 50;
 
 // Create terrain map
 const terrainCanvas = document.getElementById('terrainCanvas');
 const terrainCtx = terrainCanvas.getContext('2d');
 const mapData = generateRandomTerrainMap(50, 50);
-const terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
+export let terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
 
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
-const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap);
+export let buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap);
 
 // Create ticker
 const ticker = new Ticker([terrainMap, buildingMap]);
@@ -72,13 +72,12 @@ initializeGame().then(
 
 
 
+//export function updateTileSize(){
+ //   tileSize +=  countZoom; // Adjust tileSize based on countZoom
+ //   terrainMap.setTileSize(tileSize);
+  //  buildingMap.setTileSize(tileSize);
 
-
-
-
-
-
-
+//}
 
 
 

@@ -2,7 +2,7 @@
 <head>
     <title>{{ app_data['app_name'] }}</title>
     {% include 'head.html' %}
-   < <link rel="stylesheet" href="../../static/css/settings.css"> <!--or different image -->
+    <link rel="stylesheet" href="../static/css/settings.css"> <!--or different image -->
 </head>
 <html lang="en">
 <body>
@@ -31,12 +31,12 @@
             </div>
             <div class="col-auto">
                 <div class="sound-btn"></div>
-                <img src="../static/img/buttons/minus_btn.png"  class="sound-image-button" data-sound-src="sound1.mp3" onclick="soundDown()">
+                <img src="../static/img/buttons/minus_btn.png"  class="sound-image-button1" onclick="soundDown()" id="sounddown">
                 <span>&nbsp;</span>
-                <p id="soundNumber"> 0 </p>
+                <p id="soundNumber"> 50 </p>
                 <p> % </p>
                 <span>&nbsp;</span>
-                <img src="../static/img/buttons/plus_btn.png" class="sound-image-button" data-sound-src="discord-notification.mp3" onclick="soundUp()">
+                <img src="../static/img/buttons/plus_btn.png" class="sound-image-button2"  onclick="soundUp()" id="soundup">
 
             </div>
         </div>
@@ -47,7 +47,19 @@
             </div>
             <div class="col-auto">
                <div class="mute-btn"></div>
-                <img src="../static/img/buttons/logout_btn.png" class="image-button image-button3">
+                <img src="../static/img/buttons/logout_btn.png" class="sound-image-button3" onclick="muten()" id="muteButton" >
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                BACKROUND SOUND
+            </div>
+            <div class="col-auto">
+               <div class="mute-btn"></div>
+                <img src="../static/img/buttons/logout_btn.png" class="sound-image-button6" id="playBackgroundMusicButton" >
 
             </div>
         </div>
@@ -58,19 +70,20 @@
             </div>
             <div class="col-auto">
                 <div class="zoom-btn"></div>
-                <img src="../static/img/buttons/minus_btn.png" class="image-button image-button4" onclick="zoomDownPrecent()">
+                <img src="../static/img/buttons/minus_btn.png" class="sound-image-button4"  onclick="zoomDownPrecent()">
                 <span>&nbsp;</span>
                 <p id="zoomNumber"> 0 </p>
                 <p>% </p>
                 <span>&nbsp;</span>
-                <img src="../static/img/buttons/plus_btn.png" class="image-button image-button5" onclick="zoomUpPrecent()">
+                <img src="../static/img/buttons/plus_btn.png" class="sound-image-button5"  onclick="zoomUpPrecent()">
             </div>
         </div>
     </div>
 
 
-    <script src="../static/js/sound.js"></script>
-    <script src="../static/js/settings.js"></script>
+    <script  src="../static/js/sound.js"></script>
+    <script   src="../static/js/settings.js"></script>
+    <script  src="../static/js/canvas.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 
     <!--{% include 'footer.html' %}-->
