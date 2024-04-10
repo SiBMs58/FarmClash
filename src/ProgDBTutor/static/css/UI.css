@@ -3,17 +3,17 @@ body {
     padding: 0;
     font-family: 'Press Start 2P', Arial, sans-serif;
     font-weight: bold;
-    cursor: url('../../static/img/cursor.png'), auto;
+    cursor: url('../img/UI/pointer.png'), auto;
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE 10+ */
     user-select: none; /* Standard syntax */
 }
 body:active {
-    cursor: url('../../static/img/click_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_click.png'), auto;
 }
 header {
-    cursor: url('../../static/img/cursor.png'), auto;
+    cursor: url('../img/UI/pointer.png'), auto;
     position: relative;
     margin: 0;
     padding: 0;
@@ -28,7 +28,7 @@ header {
     z-index: 1000; /* header is above other content */
 }
 header:active {
-    cursor: url('../../static/img/click_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_click.png'), auto;
 }
 .home-btn {
     position: absolute;
@@ -45,7 +45,7 @@ header:active {
 .market-btn:hover,
 .attack-btn:hover,
 img:hover {
-    cursor: url('../../static/img/hover_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_hover.png'), auto;
 }
 .home-btn:focus ,
 .resource-btn:focus ,
@@ -133,7 +133,7 @@ img:hover {
 
 
 footer {
-    cursor: url('../../static/img/cursor.png'), auto;
+    cursor: url('../img/UI/pointer.png'), auto;
     position: absolute; /* Positions the footer absolutely relative to its positioned ancestor */
     bottom: 0; /* Aligns to the bottom */
     left: 0; /* Aligns to the left */

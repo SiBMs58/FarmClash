@@ -1,13 +1,13 @@
 body {
     font-family: Arial, sans-serif;
     font-size: 10px;
-    background-image: url('../../static/img/water_map.gif');
+    background-image: url('../img/water.gif');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     image-rendering: pixelated;
     user-select: none;
-    cursor: url('../../static/img/cursor.png'), auto;
+    cursor: url('../img/UI/pointer.png'), auto;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -16,15 +16,15 @@ body {
 }
 
 body:active {
-    cursor: url('../../static/img/click_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_click.png'), auto;
 }
 
 button:hover {
-    cursor: url('../../static/img/hover_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_hover.png'), auto;
 }
 
 button:active {
-    cursor: url('../../static/img/click_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_click.png'), auto;
 }
 
 img {
