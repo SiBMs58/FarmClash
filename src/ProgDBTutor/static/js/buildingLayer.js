@@ -44,7 +44,7 @@ const defaultMapData2 = {
             // ... More information to come
             building_location: [5, 4], // --> [y (height), x (width)], it's best practice to take the top-left corner of the building
             tile_rel_locations: [ // location relative to 'building_location'
-                [[0, 0], "Fences.4.1"], // [ rel_location ([y, x]), "Tile asset"]
+                [[0, 0], "Fence.L4"], // [ rel_location ([y, x]), "Tile asset"]
             ]
 
         },
@@ -54,7 +54,7 @@ const defaultMapData2 = {
             level: 1,
             building_location: [5, 7],
             tile_rel_locations: [
-                [[0, 0], "Fences.4.1"],
+                [[0, 0], "Fence.L5"],
             ]
         },
         fence3: {
@@ -63,53 +63,82 @@ const defaultMapData2 = {
             level: 1,
             building_location: [8, 8],
             tile_rel_locations: [
-                [[0, 0], "Fences.4.1"],
+                [[0, 0], "Fence.L3"],
             ]
 
         },
-        fence_square: {
-            self_key: "fence_square",
+        fences_lv1: {
+            self_key: "fences_lv1",
             display_name: "Fence",
             level: 1,
             building_location: [6, 11],
             tile_rel_locations: [
-                [[0, 0], "Fences.1.2"],
-                [[0, 1], "Fences.4.3"],
-                [[0, 2], "Fences.1.4"],
-                [[1, 2], "Fences.2.1"],
-                [[2, 2], "Fences.3.4"],
-                [[2, 1], "Fences.4.3"],
-                [[2, 0], "Fences.3.2"],
-                [[1, 0], "Fences.2.1"],
+                [[0, 0], "Fence.L1.OZ"],
+                [[0, 1], "Fence.L1.OW"],
+                [[0, 2], "Fence.L1.ZW"],
+                [[1, 2], "Fence.L1.NZ"],
+                [[2, 2], "Fence.L1.NW"],
+                [[2, 1], "Fence.L1.OW"],
+                [[2, 0], "Fence.L1.NO"],
+                [[1, 0], "Fence.L1.NZ"],
             ]
         },
-        chicken_house: {
-            self_key: "chicken_house",
-            display_name: "Chicken House",
-            level: 1,
+        fences_lv9: {
+            self_key: "fences_lv9",
+            display_name: "Fence",
+            level: 9,
+            building_location: [6, 15],
+            tile_rel_locations: [
+                [[0, 0], "Fence.L9.OZ"],
+                [[0, 1], "Fence.L9.OW"],
+                [[0, 2], "Fence.L9.ZW"],
+                [[1, 2], "Fence.L9.NZ"],
+                [[2, 2], "Fence.L9.NW"],
+                [[2, 1], "Fence.L9.OW"],
+                [[2, 0], "Fence.L9.NO"],
+                [[1, 0], "Fence.L9.NZ"],
+            ]
+        },
+        fences_lv10: {
+            self_key: "fences_lv10",
+            display_name: "Fence",
+            level: 10,
+            building_location: [6, 19],
+            tile_rel_locations: [
+                [[0, 0], "Fence.L10.OZ"],
+                [[0, 1], "Fence.L10.OW"],
+                [[0, 2], "Fence.L10.ZW"],
+                [[1, 2], "Fence.L10.NZ"],
+                [[2, 2], "Fence.L10.NW"],
+                [[2, 1], "Fence.L10.OW"],
+                [[2, 0], "Fence.L10.NO"],
+                [[1, 0], "Fence.L10.NZ"],
+            ]
+        },
+        chicken_coop: {
+            self_key: "chicken_coop",
+            display_name: "Chicken Coop",
+            level: 5,
             building_location: [12, 11],
             tile_rel_locations: [
-                [[0, 0], "ChickenHouse.1.1"],
-                [[0, 1], "ChickenHouse.1.2"],
-                [[0, 2], "ChickenHouse.1.3"],
-                [[1, 0], "ChickenHouse.2.1"],
-                [[1, 1], "ChickenHouse.2.2"],
-                [[1, 2], "ChickenHouse.2.3"],
-                [[2, 0], "ChickenHouse.3.1"],
-                [[2, 1], "ChickenHouse.3.2"],
-                [[2, 2], "ChickenHouse.3.3"],
+                [[0, 0], "Chickencoop.L1.1.1"],
+                [[0, 1], "Chickencoop.L1.1.2"],
+                [[1, 0], "Chickencoop.L1.2.1"],
+                [[1, 1], "Chickencoop.L1.2.2"],
+                [[2, 0], "Chickencoop.L1.3.1"],
+                [[2, 1], "Chickencoop.L1.3.2"],
             ]
         },
-        tree: {
-            self_key: "tree",
-            display_name: "Tree",
+        Coin_well: {
+            self_key: "Coin_well",
+            display_name: "Coin well",
             level: 1,
             building_location: [12, 4],
             tile_rel_locations: [
-                [[0, 0], "BiomeThings.1.2"],
-                [[0, 1], "BiomeThings.1.3"],
-                [[1, 0], "BiomeThings.2.2"],
-                [[1, 1], "BiomeThings.2.3"],
+                [[0, 0], "Coinwell.0%.1.1"],
+                [[0, 1], "Coinwell.0%.1.2"],
+                [[1, 0], "Coinwell.0%.2.1"],
+                [[1, 1], "Coinwell.0%.2.2"],
             ]
         }
     },
