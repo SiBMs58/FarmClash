@@ -26,7 +26,7 @@ function setQuantityList() {
 
 function startIncrease(index) {
     clearInterval(intervals[index - 1]);
-    document.getElementById(`plusImage${index}`).src = "../../static/img/buttons/plus_pbtn.png";
+    document.getElementById(`plusImage${index}`).src = "../../static/img/UI/plus_pbtn.png";
     intervals[index - 1] = setInterval(function () {
         increaseQuantity(index);
     }, 100);
@@ -34,7 +34,7 @@ function startIncrease(index) {
 
 function startDecrease(index) {
     clearInterval(intervals[index - 1]);
-    document.getElementById(`minusImage${index}`).src = "../../static/img/buttons/minus_pbtn.png";
+    document.getElementById(`minusImage${index}`).src = "../../static/img/UI/minus_pbtn.png";
     intervals[index - 1] = setInterval(function () {
         decreaseQuantity(index);
     }, 100);
@@ -61,16 +61,16 @@ function decreaseQuantity(index) {
 function stopAction() {
     intervals.forEach((interval, index) => {
         clearInterval(interval);
-        document.getElementById(`plusImage${index + 1}`).src = "../../static/img/buttons/plus_btn.png";
-        document.getElementById(`minusImage${index + 1}`).src = "../../static/img/buttons/minus_btn.png";
+        document.getElementById(`plusImage${index + 1}`).src = "../../static/img/UI/plus_btn.png";
+        document.getElementById(`minusImage${index + 1}`).src = "../../static/img/UI/minus_btn.png";
     });
 }
 
 function sell() {
-    document.getElementById('sell-image').src = '../../static/img/buttons/sell_pbtn.png';
+    document.getElementById('sell-image').src = '../../static/img/UI/sell_pbtn.png';
     setTimeout(() => {
         // Revert button image to default variant
-        document.getElementById('sell-image').src = '../../static/img/buttons/sell_btn.png';
+        document.getElementById('sell-image').src = '../../static/img/UI/sell_btn.png';
 
         // Process the sale
         let inputValues = document.querySelectorAll('input[type="number"]');

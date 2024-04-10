@@ -45,7 +45,7 @@
             const overlay = document.getElementById('resource-overlay');
 
             overlay.style.display = clickedResourceButton ? 'none' : 'flex';
-           resourceButton.querySelector('img').src = clickedResourceButton ? "../static/img/buttons/resource_btn.png" : "../static/img/buttons/resource_pbtn.png";
+           resourceButton.querySelector('img').src = clickedResourceButton ? "../static/img/UI/resource_btn.png" : "../static/img/UI/resource_pbtn.png";
             clickedResourceButton = !clickedResourceButton;
 
             fetch('/api/resources')
