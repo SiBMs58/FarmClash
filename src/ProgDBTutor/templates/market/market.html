@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../static/css/market.css">
+    <title>{{ app_data['app_name'] }}</title>
+    {% include 'head.html' %}
+</head>
+<body>
+{% include 'logged_in_header.html' %}
+<div class="marketplace">
+        <div class="product-row">
+            <div class="product">
+                <img src="../../static/img/crates/wheat_crate.png" alt="Wheat" class="crate-image" title="Wheat">
+                <p id="price1">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton1" class="quantity-button" onmousedown="startDecrease(1)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage1" draggable="false"> </button>
+                <label for="quantity1"></label><input type="number" id="quantity1" min="0" value="0">
+                <button id="increaseButton1" class="quantity-button" onmousedown="startIncrease(1)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage1" draggable="false"> </button>
+            </div>
+            <div class="product">
+                <img src="../../static/img/crates/carrot_crate.png" alt="Carrot" class="crate-image" title="Carrot">
+                <p id="price2">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton2" class="quantity-button" onmousedown="startDecrease(2)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage2" draggable="false"> </button>
+                <label for="quantity2"></label><input type="number" id="quantity2" min="0" value="0">
+                <button id="increaseButton2" class="quantity-button" onmousedown="startIncrease(2)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage2" draggable="false"> </button>
+            </div>
+            <div class="product">
+                <img src="../../static/img/crates/cauliflower_crate.png" alt="Cauliflower" class="crate-image" title="Cauliflower">
+                <p id="price3">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton3" class="quantity-button" onmousedown="startDecrease(3)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage3" draggable="false"> </button>
+                <label for="quantity3"></label><input type="number" id="quantity3" min="0" value="0">
+                <button id="increaseButton3" class="quantity-button" onmousedown="startIncrease(3)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage3" draggable="false"> </button>
+            </div>
+            <div class="product">
+                <img src="../../static/img/crates/corn_crate.png" alt="Corn" class="crate-image" title="Corn">
+                <p id="price4">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton4" class="quantity-button" onmousedown="startDecrease(4)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage4" draggable="false"> </button>
+                <label for="quantity4"></label><input type="number" id="quantity4" min="0" value="0">
+                <button id="increaseButton4" class="quantity-button" onmousedown="startIncrease(4)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage4" draggable="false"> </button>
+            </div>
+            <div class="product">
+                <img src="../../static/img/crates/eggplant_crate.png" alt="Eggplant" class="crate-image" title="Eggplant">
+                <p id="price5">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton5" class="quantity-button" onmousedown="startDecrease(5)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage5" draggable="false"> </button>
+                <label for="quantity5"></label><input type="number" id="quantity5" min="0" value="0">
+                <button id="increaseButton5" class="quantity-button" onmousedown="startIncrease(5)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage5" draggable="false"> </button>
+            </div>
+        </div>
+        <div class="product-row">
+            <div class="product">
+                <img src="../../static/img/crates/lettuce_crate.png" alt="Lettuce" class="crate-image" title="Lettuce">
+                <p id="price6">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton6" class="quantity-button" onmousedown="startDecrease(6)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage6" draggable="false"> </button>
+                <label for="quantity6"></label><input type="number" id="quantity6" min="0" value="0">
+                <button id="increaseButton6" class="quantity-button" onmousedown="startIncrease(6)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage6" draggable="false"> </button>
+            </div>
+            <div class="product">
+                <img src="../../static/img/crates/parsnip_crate.png" alt="Parsnip" class="crate-image" title="Parsnip">
+                <p id="price7">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton7" class="quantity-button" onmousedown="startDecrease(7)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage7" draggable="false"> </button>
+                <label for="quantity7"></label><input type="number" id="quantity7" min="0" value="0">
+                <button id="increaseButton7" class="quantity-button" onmousedown="startIncrease(7)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage7" draggable="false"> </button>
+            </div>
+            <div class="product">
+                <img src="../../static/img/crates/tomato_crate.png" alt="Tomato" class="crate-image" title="Tomato">
+                <p id="price8">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton8" class="quantity-button" onmousedown="startDecrease(8)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage8" draggable="false"> </button>
+                <label for="quantity8"></label><input type="number" id="quantity8" min="0" value="0">
+                <button id="increaseButton8" class="quantity-button" onmousedown="startIncrease(8)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage8" draggable="false"> </button>
+            </div>
+            <div class="product">
+                <img src="../../static/img/crates/turnip_crate.png" alt="Turnip" class="crate-image" title="Turnip">
+                <p id="price9">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton9" class="quantity-button" onmousedown="startDecrease(9)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage9" draggable="false"> </button>
+                <label for="quantity9"></label><input type="number" id="quantity9" min="0" value="0">
+                <button id="increaseButton9" class="quantity-button" onmousedown="startIncrease(9)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage9" draggable="false"> </button>
+            </div>
+            <div class="product">
+                <img src="../../static/img/crates/zucchini_crate.png" alt="Zucchini" class="crate-image" title="Zucchini">
+                <p id="price10">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
+                <button id="decreaseButton10" class="quantity-button" onmousedown="startDecrease(10)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage10" draggable="false"> </button>
+                <label for="quantity10"></label><input type="number" id="quantity10" min="0" value="0">
+                <button id="increaseButton10" class="quantity-button" onmousedown="startIncrease(10)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage10" draggable="false"> </button>
+            </div>
+        </div>
+    <div class="cart">
+        <button id="sell-btn" class="sell-btn" onmousedown="sell()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/sell_btn.png" alt="sell" id="sell-image" draggable="false"> </button>
+    </div>
+</div>
+<script src="../../static/js/market.js"></script>
+{% include 'footer.html' %}
+</body>
+</html>

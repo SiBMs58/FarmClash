@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="../static/css/UI.css">
+    <title>game branch header</title>
+</head>
+<body>
+    <button id="back-btn" class="back-btn">
+        <a href="{{ url_for('main') }}">
+            <img src="../static/img/buttons/back_btn.png" alt="{{ app_data['app_name'] }}">
+        </a>
+    </button>
+    <div class="welcome-user">
+        <a class="nav-item nav-link" href="{{ request.path }}">Welcome, {{ current_user.username }}!</a>
+    </div>
+</body>
+</html>

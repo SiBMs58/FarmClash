@@ -1,49 +1,83 @@
-import { gameTerrainMap } from './gameClasses.js'
-import { generateRandomMap } from './developerFunctions.js'
-import { handleKeyDown } from './userInputHandler.js'
+import { TerrainMap } from './terrainLayer.js'
+import { BuildingMap} from "./buildingLayer.js";
+import { generateRandomTerrainMap } from './developerFunctions.js'
+import { UserInputHandler} from "./userInputHandler.js";
+import { Ticker } from './ticker.js'
 
-const canvas = document.getElementById('terrainCanvas');
-const ctx = canvas.getContext('2d');
-const tileSize = 64;
+// Set on-screen tileSize-
+export const tileSize = 50;
 
-
-const response = await fetch('/static/map.json');
-let mapData = await response.json();
-
-if (!mapData) {
-    mapData = generateRandomMap(50, 50);
+// Create terrain map
+const terrainCanvas = document.getElementById('terrainCanvas');
+const terrainCtx = terrainCanvas.getContext('2d');
+const mapData = generateRandomTerrainMap(50, 50);
+let terrainMap;
+if (window.friend) {
+    // If friendData is available, use it in the constructor
+    console.log("Friend data is available", window.friend);
+    terrainMap = new TerrainMap(mapData, tileSize, terrainCtx, window.friend);
+} else {
+    // If friendData is not available, omit it from the constructor
+    terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
 }
+console.log(terrainMap);
+
+// Create building map
+const buildingCanvas = document.getElementById('buildingCanvas');
+const buildingCtx = buildingCanvas.getContext('2d');
+const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap);
+
+// Create ticker
+const ticker = new Ticker([terrainMap, buildingMap]);
+
+// Create userInputHandler
+const userInputHandler = new UserInputHandler([buildingMap, terrainMap]);
 
 
-const terrainMap = new gameTerrainMap(mapData, tileSize, ctx);
-
+/**
+ * Gets called everytime window dimensions change.
+ */
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    ctx.imageSmoothingEnabled = false;
-    terrainMap.drawTiles(); // Redraw terrain after resizing
+    terrainCanvas.width = window.innerWidth;
+    terrainCanvas.height = window.innerHeight;
+    terrainCtx.imageSmoothingEnabled = false;
+
+    buildingCanvas.width = window.innerWidth;
+    buildingCanvas.height = window.innerHeight;
+    buildingCtx.imageSmoothingEnabled = false;
+
+    try { // Redraw terrain after resizing
+        terrainMap.drawTiles();
+        buildingMap.drawTiles();
+    } catch (error) {
+        console.error("Resize failed:", error);
+    }
+}
+
+/**
+ * Initialises the game step by step in correct order.
+ */
+async function initializeGame() {
+    try {
+        await terrainMap.initialize();
+        await buildingMap.initialize();
+
+        resizeCanvas(); // Initial resize and draw
+        window.addEventListener('resize', resizeCanvas);
+
+        ticker.start();
+
+    } catch (error) {
+        console.error('Initialization failed:', error);
+        // Handle initialization error
+    }
 }
 
 
-// Game wereld initiäliseren
-terrainMap.initialize().then(() => {
-    resizeCanvas(); // Initial resize and draw
-    window.addEventListener('resize', resizeCanvas);
-    document.addEventListener('keydown', (event) => {
-        handleKeyDown(event, terrainMap);
-    });
-    /*
-    document.addEventListener('scroll', (event) => {
-        handleScrollInput(event, terrainMap);
-    });
-    */
-}).catch(error => {
-    console.error('Initialization failed:', error);
-    // todo load error page (error getekend met de map tiles)
-});
+initializeGame().then(
+    // Add code that is dependent on initialisation
+);
 
-
-//terrainMap.fetchTiles();
 
 
 

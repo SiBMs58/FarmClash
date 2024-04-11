@@ -2,28 +2,49 @@
 <html lang="en">
 <head>
     <title>{{app_data['app_name']}}</title>
-
     {% include 'head.html' %}
-
     <style>
         canvas {
             margin: 0;
             image-rendering: pixelated;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         body {
             overflow: hidden;
+            margin: 0;
         }
+
+        #canvasContainer {
+            position: relative;
+        }
+
+        #buildingCanvas {
+            z-index: 2;
+            <!--border: solid red;-->
+        }
+        #terrainCanvas {
+            z-index: 1;
+            <!--border: solid black;-->
+        }
+
     </style>
 
 </head>
 <body>
 
-	{% include 'game_header.html' %}
 
-    <canvas id="terrainCanvas"></canvas>
+	{% include 'game/game_UI.html' %}
 
-	{% include 'game_footer.html' %}
+    <div id="canvasContainer">
+        <canvas id="buildingCanvas"></canvas>
+        <canvas id="terrainCanvas"></canvas>
+    </div>
+
+
+
 
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
 </body>

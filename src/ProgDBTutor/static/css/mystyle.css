@@ -23,3 +23,40 @@ footer {
 a, button {
     cursor: pointer; /* This will change the cursor to the 'click' pointer when hovering */
 }
+
+/* Styles for chat messages */
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adds space between messages */
+}
+
+/* Styles for messages sent by the current user */
+.sent {
+    align-self: flex-end; /* Aligns sent messages to the right */
+    max-width: 70%;
+    padding: 8px 15px;
+    background-color: #C0D470;
+    color: white;
+    border-radius: 15px 0px 15px 15px; /* Rounded corners except top-right */
+    margin-right: 10px; /* Ensures some space from the edge */
+}
+
+/* Styles for messages received from friends */
+.received {
+    align-self: flex-start; /* Aligns received messages to the left */
+    max-width: 70%;
+    padding: 8px 15px;
+    background-color: #f1f1f1; /* Light grey background */
+    color: black; /* Dark text color for contrast */
+    border-radius: 0px 15px 15px 15px; /* Rounded corners except top-left */
+    margin-left: 10px; /* Ensures some space from the edge */
+}
+
+.time-divider {
+    text-align: center;
+    margin: 10px 0;
+    color: #888;
+    font-size: 0.85rem;
+}
+
