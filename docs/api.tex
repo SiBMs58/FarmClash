@@ -1,5 +1,5 @@
-
 \documentclass[12pt]{article}
+\usepackage{listings}
 
 
 \title{FarmClash - API Blueprint for Web-based Idle Game}
@@ -113,6 +113,7 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
 \end{itemize}
 
 \section{Terrain Map}
+
 \subsection{General Terrain Map Information}
 \begin{itemize}
     \item Endpoint: \texttt{/terrain-map}
@@ -120,33 +121,33 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \item Description: Get a look at all the terrain tiles in the map.
     \item Access: Requires \texttt{logged in} user privileges.
     \item Response: A JSON array of tile objects, each containing:
-    \begin{verbatim}
-[
-  {
-    "map_height":2,
-    "map_width":2,
-    "terrain_tiles": [[Water1.1, Water1.2], [Water2.1, Water2.2]]
-    }
-]
-    \end{verbatim}
+    \begin{lstlisting}[breaklines]
+    [
+      {
+        "map_height": 2,
+        "map_width": 2,
+        "terrain_tiles": [[Water1.1, Water1.2], [Water2.1, Water2.2]]
+      }
+    ]
+    \end{lstlisting}
 \end{itemize}
 
 \subsection{Specific Terrain Tile Information}
 \begin{itemize}
-    \item Endpoint: \texttt{/terrain-map//terrain-map/<string:friend_username>}
+    \item Endpoint: \texttt{/terrain-map/<string:friend\_username>}
     \item Method: GET
     \item Description: Get a look at a user specific terrain tile in the map.
     \item Access: Requires \texttt{logged in} user privileges.
     \item Response: A JSON object containing the terrain tile information:
-    \begin{verbatim}
-[
-  {
-    "map_height":2,
-    "map_width":2,
-    "terrain_tiles": [[Water1.1, Water1.2], [Water2.1, Water2.2]]
-    }
-]
-    \end{verbatim}
+    \begin{lstlisting}[breaklines]
+    [
+      {
+        "map_height": 2,
+        "map_width": 2,
+        "terrain_tiles": [[Water1.1, Water1.2], [Water2.1, Water2.2]]
+      }
+    ]
+    \end{lstlisting}
 \end{itemize}
 
 \section{Friendships}
@@ -167,7 +168,7 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
 
 \section{Chat}
 \begin{itemize}
-    \item Endpoint: \texttt{/messages/<string:friend_name>}
+    \item Endpoint: \texttt{/messages/<string:friend\_name>}
     \item Method: GET
     \item Description: Get a list of all chat messages for the current user.
     \item Access: Requires \texttt{logged in} user privileges.
