@@ -1,6 +1,4 @@
 \documentclass[12pt]{article}
-\usepackage{listings}
-
 
 \title{FarmClash - API Blueprint for Web-based Idle Game}
 \author{Camille De Vuyst, Joren Van der Sande, Thomas De Volder,\\ Faisal Ettarrahi, Ferhat Van Herck, Siebe Mees}
@@ -121,15 +119,18 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \item Description: Get a look at all the terrain tiles in the map.
     \item Access: Requires \texttt{logged in} user privileges.
     \item Response: A JSON array of tile objects, each containing:
-    \begin{lstlisting}[breaklines]
+    \begin{verbatim}
     [
       {
         "map_height": 2,
         "map_width": 2,
-        "terrain_tiles": [[Water1.1, Water1.2], [Water2.1, Water2.2]]
+        "terrain_tiles": [
+          [Water1.1, Water1.2],
+          [Water2.1, Water2.2]
+        ]
       }
     ]
-    \end{lstlisting}
+    \end{verbatim}
 \end{itemize}
 
 \subsection{Specific Terrain Tile Information}
@@ -139,15 +140,18 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \item Description: Get a look at a user specific terrain tile in the map.
     \item Access: Requires \texttt{logged in} user privileges.
     \item Response: A JSON object containing the terrain tile information:
-    \begin{lstlisting}[breaklines]
+    \begin{verbatim}
     [
       {
         "map_height": 2,
         "map_width": 2,
-        "terrain_tiles": [[Water1.1, Water1.2], [Water2.1, Water2.2]]
+        "terrain_tiles": [
+          [Water1.1, Water1.2],
+          [Water2.1, Water2.2]
+        ]
       }
     ]
-    \end{lstlisting}
+    \end{verbatim}
 \end{itemize}
 
 \section{Friendships}
