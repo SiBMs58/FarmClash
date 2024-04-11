@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farm Clash</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+  <script src="{{ url_for('static', filename='../../static/js/book.js') }}" defer></script>
+</head>
+<body>
+  <!--prev button-->
+  <!--button to go back in the book-->
+  <button id="prev-btn">
+    <i class="fas fa-arrow-circle-left"></i>
+  </button>
+  <!--the book from which one reads-->
+  <div id="book" class="book">
+    <!--cover-->
+    <div id="c1" class="cover">
+        <!--front side of the cover-->
+      <div class="front-cover">
+          <div id="fC" class="front-content">
+              <!--title of the book-->
+              <h1>Farm Clash</h1>
+          </div>
+      </div>
+        <!--backside of the cover-->
+      <div class="back-cover">
+          <div id="fB" class="back-content">
+              <h1>FrontCover Back</h1>
+          </div>
+      </div>
+    </div>
+      <!--the first paper in the book-->
+    <div id="p1" class="paper">
+        <!--front side of the first paper-->
+      <div class="front">
+          <!--content of the front side of the first paper-->
+        <div id="f1" class="front-content">
+            <h1>Front1</h1>
+        </div>
+      </div>
+        <!--back side of the first page-->
+      <div class="back">
+          <!--content of the back side of the first paper-->
+        <div id="b1" class="back-content">
+            <h1>Back1</h1>
+        </div>
+      </div>
+    </div>
+    <!--second paper of the book-->
+    <div id="p2" class="paper">
+        <!--front side of the second page-->
+      <div class="front">
+          <!--content of the front side of the second paper-->
+        <div id="f2" class="front-content">
+            <h1>Front2</h1>
+        </div>
+      </div>
+        <!--back side of the second page-->
+      <div class="back">
+          <!--content of the back side of the second paper-->
+        <div id="b2" class="back-content">
+            <h1>Back2</h1>
+        </div>
+      </div>
+    </div>
+    <!--third paper of the book-->
+    <div id="p3" class="paper">
+         <!--front side of the third page-->
+      <div class="front">
+          <!--content of the front side of the third paper-->
+        <div id="f3" class="front-content">
+            <h1>Front3</h1>
+        </div>
+      </div>
+        <!--back side of the third page-->
+      <div class="back">
+          <!--content of the back side of the third paper-->
+        <div id="b3" class="back-content">
+            <h1>Back3</h1>
+        </div>
+      </div>
+    </div>
+    <!--back cover-->
+    <div id="c2" class="cover">
+        <!--front side of the back cover-->
+        <div class="front-cover">
+            <!--content of the front side of the back cover-->
+            <div id="FBC" class="front-content">
+                <h1>BackCoverFront</h1>
+            </div>
+        </div>
+        <!--back side of the back cover-->
+        <div class="back-cover">
+            <!--content of the back side of the back cover-->
+            <div id="BBC" class="back-content">
+                <h1>BackCoverBack</h1>
+            </div>
+        </div>
+    </div>
+  </div>
+  <!--next button-->
+  <!--button to continue in the book-->
+  <button id="next-btn">
+    <i class="fas fa-arrow-circle-right"></i>
+  </button>
+</body>
+</html>
