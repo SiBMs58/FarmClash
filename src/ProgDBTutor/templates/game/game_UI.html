@@ -38,6 +38,10 @@
         </button>
     </header>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndDisplayResources(); // Fetch and display resources on document load
+        });
+
         let clickedResourceButton = false;
 
         function clickResources() {
@@ -45,9 +49,13 @@
             const overlay = document.getElementById('resource-overlay');
 
             overlay.style.display = clickedResourceButton ? 'none' : 'flex';
-           resourceButton.querySelector('img').src = clickedResourceButton ? "../static/img/buttons/resource_btn.png" : "../static/img/buttons/resource_pbtn.png";
+            resourceButton.querySelector('img').src = clickedResourceButton ? "../static/img/buttons/resource_btn.png" : "../static/img/buttons/resource_pbtn.png";
             clickedResourceButton = !clickedResourceButton;
 
+            fetchAndDisplayResources(); // Refactor fetching and displaying into a separate function
+        }
+
+        function fetchAndDisplayResources() {
             fetch('/api/resources')
             .then(response => response.json())
             .then(data => {
