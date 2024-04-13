@@ -1,39 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/auth.css') }}">
+
     <title>Login - {{ app_name }}</title>
-    {% include 'head.html' %} <!-- Ensure this file includes Bootstrap CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body class="d-flex align-items-center vh-100"> <!-- This class combination will center the content vertically -->
-    {% include 'header.html' %}
-
-    <div class="container-fluid mt-5">
-        <div class="row justify-content-center"> <!-- This will center the column horizontally -->
-            <div class="col-md-4"> <!-- Adjust the column size as needed -->
-                <h2 class="text-center mb-4">Login</h2> <!-- Add bottom margin to the title -->
-                <form action="/auth/login" method="post">
-                    <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    {% if error_message %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ error_message }}
-                        </div>
-                    {% endif %}
-                    <button type="submit" class="btn btn-primary btn-block">Login</button> <!-- Make the button block level -->
-                </form>
-                <div class="text-center mt-3"> <!-- Add top margin to the register link -->
-                    <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>.</p>
-                </div>
-            </div>
+<body>
+<div class="logo-tab">
+     <img src="{{ url_for('static',filename='img/UI/login_tab.2.png') }}" alt="Farmclash" draggable="false">
+</div>
+<div class="form-container">
+    <form action="/auth/login" method="post">
+        <div class="form-group">
+            <input type="text" name="username" placeholder="Username" required>
         </div>
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+        {% if error_message %}
+        <div class="error">{{ error_message }}</div>
+        {% endif %}
+        <button type="submit" id="login-btn">
+            <img src="{{ url_for('static',filename='img/UI/big_login_btn.png') }}" alt="Login" draggable="false">
+        </button> <!-- Make the button block level -->
+    </form>
+    <div class="register-link">
+        <p>Don't have an account?</p>
+        <p><a href="{{ url_for('auth.register') }} " draggable="false">Register here</a>.</p>
     </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginBtn = document.getElementById('login-btn');
+        const originalImgSrc = "{{ url_for('static',filename='img/UI/big_login_btn.png') }}";
+        const activeImgSrc = "{{ url_for('static',filename='img/UI/big_login_pbtn.png') }}";
 
-    {% include 'footer.html' %}
+
+        loginBtn.addEventListener('mousedown', function() {
+            loginBtn.querySelector('img').src = activeImgSrc;
+        });
+
+        loginBtn.addEventListener('mouseup', function() {
+            loginBtn.querySelector('img').src = originalImgSrc;
+        });
+
+        loginBtn.addEventListener('mouseleave', function() {
+            loginBtn.querySelector('img').src = originalImgSrc;
+        });
+    });
+</script>
+<footer class="footer">
+    <p>&copy; Team 3 – Universiteit Antwerpen - PPDB</p>
+    <img alt="ua-logo" src="{{ url_for('static',filename='img/ua_logo.png') }}" draggable="false" class="img-fluid" style="height:30px;"/>
+</footer>
 </body>
 </html>
