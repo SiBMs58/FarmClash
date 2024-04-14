@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Visit {{ friend['username'] }}'s World - {{ app_data['app_name'] }}</title>
+    {% include 'head.html' %}
+    <style>
+        canvas {
+            margin: 0;
+            image-rendering: pixelated;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        body {
+            overflow: hidden;
+            margin: 0;
+        }
+
+        #canvasContainer {
+            position: relative;
+        }
+
+        #canvasContainer {
+            position: relative;
+        }
+
+        #buildingCanvas {
+            z-index: 2;
+            <!--border: solid red;-->
+        }
+        #terrainCanvas {
+            z-index: 1;
+            <!--border: solid black;-->
+        }
+
+    </style>
+
+</head>
+<body>
+
+    {% include 'game/visit_friend_UI.html' %} <!-- This would be a new include for the UI when visiting -->
+
+    <div id="canvasContainer">
+        <canvas id="buildingCanvas"></canvas>
+        <canvas id="terrainCanvas"></canvas>
+    </div>
+
+    <!-- When visiting a friend's world -->
+<script id="dataScript" type="module" data-friend="{{ friend['username'] | string }}" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
+<script>
+    // Attach friend to the window object to make it globally accessible
+    window.friend = document.getElementById('dataScript').getAttribute('data-friend');
+    console.log(window.friend);
+</script>
+
+
+</body>
+</html>

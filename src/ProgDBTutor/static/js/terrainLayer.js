@@ -48,12 +48,13 @@ export class TerrainMap extends BaseMap {
      * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
+     * @param username The username of the player, used to fetch the right map data.
      * @param time amount of frames passed
      * @param cycle animation part
      */
-    constructor(mapData, _tileSize, _ctx) {
+    constructor(mapData, _tileSize, _ctx, username) {
 
-        super(mapData, _tileSize);
+        super(mapData, _tileSize, username);
 
         this.tiles = mapData.terrain_tiles;
         this.ctx = _ctx;
@@ -101,8 +102,11 @@ export class TerrainMap extends BaseMap {
         //debugger;
         try {
             // Basic test of de fetch is gelukt of niet
-            const fetchLink = BASE_URL + "/api/terrain-map";
-            //debugger;
+            let fetchLink = BASE_URL + "/api/terrain-map";
+            if (this.username) {
+                 fetchLink += `/${this.username}`;
+            }
+            console.log("fetchLink:", fetchLink);
             const response = await fetch(fetchLink);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

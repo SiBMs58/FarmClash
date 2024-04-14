@@ -36,7 +36,7 @@ a, button {
     align-self: flex-end; /* Aligns sent messages to the right */
     max-width: 70%;
     padding: 8px 15px;
-    background-color: #007bff; /* Bootstrap primary color */
+    background-color: #C0D470;
     color: white;
     border-radius: 15px 0px 15px 15px; /* Rounded corners except top-right */
     margin-right: 10px; /* Ensures some space from the edge */
