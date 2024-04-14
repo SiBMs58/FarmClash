@@ -1,23 +1,51 @@
-let quantities = [59, 47, 50, 100, 20, 50, 78, 83, 85, 17];
-let intervals = new Array(10).fill(null);
-let prices = [10, 20, 30, 15, 25, 18, 22, 17, 12, 28];
-const market = ['Wheat', 'Carrot', 'Cauliflower', 'Corn', 'Eggplant', 'Lettuce', 'Parsnip', 'Tomato', 'Turnip', 'Zucchini'];
+let market = {};
+market.quantities = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+market.intervals = new Array(10).fill(null);
+market.prices = [1, 3, 5, 10, 15, 12, 17, 17, 20, 25];
+market.crops = ['Wheat', 'Carrot', 'Corn', 'Cauliflower', 'Eggplant', 'Lettuce', 'Parsnip', 'Tomato', 'Turnip', 'Zucchini'];
 
 setPriceList();
 setQuantityList();
 function setPriceList() {
+
     //TODO read current prices from database
-    // set prices in list
-    for (let i = 1; i <= market.length; i++) {
+    /* still need to make api/market
+    fetch('/api/market')
+     .then(response => response.json())
+     .then(data => {
+         data.forEach((resource) => {
+             if (!market.crops.includes(resource.resource_type)) return; // Skip non-crops
+             market.prices[market.crops.indexOf(resource.resource_type)] = resource.new_price;
+         });
+     })
+     .catch(error => {
+         console.error('Error fetching prices:', error);
+     });
+     */
+
+    // display prices
+    for (let i = 1; i <= market.crops.length; i++) {
         const priceElement = document.getElementById(`price${i}`);
         if (priceElement) {
-            priceElement.innerHTML = `${prices[i-1]} <img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"/>`;
+            priceElement.innerHTML = '<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">';
+            priceElement.innerHTML += getAmountDisplay(market.prices[i - 1])
+            priceElement.innerHTML += '<img src="../../static/img/UI/display.money.right.png"  alt="🪙" draggable="false">'
         }
     }
 }
 function setQuantityList() {
-    //TODO read current quantities from database
-    // set quantities in list
+     fetch('/api/resources')
+     .then(response => response.json())
+     .then(data => {
+         data.forEach((resource) => {
+             if (!market.crops.includes(resource.resource_type)) return; // Skip non-crops
+             market.quantities[market.crops.indexOf(resource.resource_type)] = resource.amount;
+         });
+     })
+     .catch(error => {
+         console.error('Error fetching resources:', error);
+     });
+
 }
 
 
@@ -25,17 +53,17 @@ function setQuantityList() {
 
 
 function startIncrease(index) {
-    clearInterval(intervals[index - 1]);
+    clearInterval(market.intervals[index - 1]);
     document.getElementById(`plusImage${index}`).src = "../../static/img/UI/plus_pbtn.png";
-    intervals[index - 1] = setInterval(function () {
+    market.intervals[index - 1] = setInterval(function () {
         increaseQuantity(index);
     }, 100);
 }
 
 function startDecrease(index) {
-    clearInterval(intervals[index - 1]);
+    clearInterval(market.intervals[index - 1]);
     document.getElementById(`minusImage${index}`).src = "../../static/img/UI/minus_pbtn.png";
-    intervals[index - 1] = setInterval(function () {
+    market.intervals[index - 1] = setInterval(function () {
         decreaseQuantity(index);
     }, 100);
 }
@@ -43,7 +71,7 @@ function startDecrease(index) {
 function increaseQuantity(index) {
     let inputField = document.getElementById(`quantity${index}`);
     let currentValue = parseInt(inputField.value);
-    if (currentValue < quantities[index - 1]) {
+    if (currentValue < market.quantities[index - 1]) {
         currentValue++;
         inputField.value = currentValue;
     }
@@ -59,7 +87,7 @@ function decreaseQuantity(index) {
 }
 
 function stopAction() {
-    intervals.forEach((interval, index) => {
+    market.intervals.forEach((interval, index) => {
         clearInterval(interval);
         document.getElementById(`plusImage${index + 1}`).src = "../../static/img/UI/plus_btn.png";
         document.getElementById(`minusImage${index + 1}`).src = "../../static/img/UI/minus_btn.png";
@@ -82,26 +110,28 @@ function sell() {
 
         quantitiesArray.forEach((quantity, index) => {
             if (quantity !== 0) {
-                let cropPrice = prices[index];
+                let cropPrice = market.prices[index];
                 let cropTotalPrice = cropPrice * quantity;
 
                 totalSalePrice += cropTotalPrice;
 
-                soldMessage += `\n${quantity} ${market[index]}${quantity > 1 ? 's' : ''} for $${cropTotalPrice}`;
+                soldMessage += `\n${quantity} ${market.crops[index]}${quantity > 1 ? 's' : ''} for $${cropTotalPrice}`;
                 anySold = true;
 
                 // Subtract sold quantity from the limit
-                quantities[index] -= quantity;
+                market.quantities[index] -= quantity;
 
                 // Reset the input value
                 inputValues[index].value = 0;
+
+                //TODO update database entry
+                // on resource table of user and market.crops[index] with new market.quantities
+                // on market table with quantities sold (and current timestamp?)
+                // on resource table of user and "Money" with +cropTotalPrice
             }
         });
 
         if (anySold) {
-            //TODO Notify database with new quantities sold
-            // Notify database with the quantities kept
-            // Notify database with the increased coins
             soldMessage += `\nTotal Sale Price: $${totalSalePrice}`;
             alert(soldMessage);
         } else {
@@ -117,7 +147,7 @@ function sell() {
 document.querySelectorAll('input[type="number"]').forEach(function(inputField, index) {
     inputField.addEventListener('input', function(event) {
         let currentValue = parseInt(event.target.value);
-        let maxLimit = quantities[index]; // Get the maximum limit from the 'quantities' array
+        let maxLimit = market.quantities[index]; // Get the maximum limit from the 'quantities' array
 
         // Check if the current value is within the allowed range
         if (isNaN(currentValue) || currentValue < 0) {
@@ -127,3 +157,14 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField, i
         }
     });
 });
+
+
+function getAmountDisplay(amount){
+    let value = amount.toString();
+
+    let HTML = ''
+    for (let i = 0; i < value.length; i++) {
+        HTML += `<img src="../../static/img/UI/display.${value[i]}.png" alt="${value[i]}" draggable="false">`;
+    }
+    return HTML
+}

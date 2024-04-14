@@ -65,7 +65,6 @@
                 default: return ''; // Default case if no symbol is matched
             }
         }
-
         function getAmountDisplay(amount){
             let value = amount.toString();
             if (value === "0"){

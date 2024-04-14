@@ -30,7 +30,7 @@ header {
 header:active {
     cursor: url('../img/UI/pointer_click.png'), auto;
 }
-.home-btn:hover,
+.leaderboard-btn:hover,
 .resource-btn:hover,
 .chat-btn:hover,
 .setting-btn:hover,
@@ -39,7 +39,7 @@ header:active {
 img:hover {
     cursor: url('../img/UI/pointer_hover.png'), auto;
 }
-.home-btn:focus ,
+.leaderboard-btn:focus ,
 .resource-btn:focus ,
 .chat-btn:focus ,
 .setting-btn:focus ,
@@ -48,7 +48,7 @@ img:hover {
 .attack-btn:focus {
     outline: none;
 }
-.home-btn {
+.leaderboard-btn {
     position: absolute;
     top: 10px;
     left: 10px;
