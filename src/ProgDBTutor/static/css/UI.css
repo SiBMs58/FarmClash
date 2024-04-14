@@ -30,14 +30,6 @@ header {
 header:active {
     cursor: url('../img/UI/pointer_click.png'), auto;
 }
-.home-btn {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: none;
-    border: none;
-    padding: 0;
-}
 .home-btn:hover,
 .resource-btn:hover,
 .chat-btn:hover,
@@ -56,6 +48,14 @@ img:hover {
 .attack-btn:focus {
     outline: none;
 }
+.home-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+}
 .resource-btn {
     position: absolute;
     top: 10px;
@@ -63,51 +63,6 @@ img:hover {
     background: none;
     border: none;
     padding: 0;
-}
-.overlay{
-    position: absolute;
-    top: 0; /* Position at the top of the viewport */
-    left: 120px; /* Position at the left of the viewport */
-    display: none;
-    justify-content: center;
-    align-items: center;
-}
-.popup {
-    display: flex;
-    flex-wrap: nowrap;
-    margin-top: 20px;
-    background-color: transparent;
-    border-radius: 10px;
-}
-.popup p {
-    display: inline-block;
-    margin: 0 10px;
-    vertical-align: middle;
-    white-space: nowrap;
-    text-rendering: optimizeLegibility
-}
-.popup img {
-    height: 25px;
-    margin: 0 5px;
-    transform: translateY(-2px);
-    vertical-align: middle;
-}
-
-
-.money-display{
-    position: absolute;
-    top: 0;
-    transform: translateY(+90%);
-    right: 120px;
-    display: flex;
-    align-items: center;
-}
-.money-display p {
-    margin: 0;
-    padding-right: 5px;
-}
-.money-display img {
-    height: 20px;
 }
 .chat-btn{
     position: absolute;
@@ -125,31 +80,6 @@ img:hover {
     border: none;
     padding: 0;
 }
-
-
-
-
-
-
-
-footer {
-    cursor: url('../img/UI/pointer.png'), auto;
-    position: absolute; /* Positions the footer absolutely relative to its positioned ancestor */
-    bottom: 0; /* Aligns to the bottom */
-    left: 0; /* Aligns to the left */
-    width: 100%; /* Ensures the footer spans the full width */
-    background-color: transparent;
-    z-index: 1000; /* Ensures the footer is above other content */
-}
-
-.copyright{
-    font-size: 8px;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 .market-btn {
     position: absolute;
     bottom: 10px;
@@ -158,7 +88,6 @@ footer {
     border: none;
     padding: 0;
 }
-
 .attack-btn {
     position: absolute;
     bottom: 10px;
@@ -171,18 +100,60 @@ footer {
 
 
 
-.back-btn {
+.overlay{
+    position: absolute;
+    top: -10px;
+    left: 120px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.popup {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: 20px;
+    background-color: transparent;
+    border-radius: 10px;
+}
+.popup img {
+    height: 48px;
+    vertical-align: middle;
+    image-rendering: pixelated;
+}
+
+
+
+.money-display {
     position: absolute;
     top: 10px;
-    left: 10px;
-    background: none;
-    border: none;
-    padding: 0;
+    right: 120px;
+    display: flex;
+    align-items: center;
 }
-.welcome-user{
-    position: absolute;
-    top: 10px;
-    right: 10px
+.money-display img {
+    margin-right: 0; /* Remove margin between images */
+    height: 48px;
+    image-rendering: pixelated;
 }
+
+
+
+footer {
+    cursor: url('../img/UI/pointer.png'), auto;
+    position: absolute; /* Positions the footer absolutely relative to its positioned ancestor */
+    bottom: 0; /* Aligns to the bottom */
+    left: 0; /* Aligns to the left */
+    width: 100%; /* Ensures the footer spans the full width */
+    background-color: transparent;
+    z-index: 1000; /* Ensures the footer is above other content */
+    font-size: 8px;
+    justify-content: center;
+}
+
+
+
+
+
+
 
 

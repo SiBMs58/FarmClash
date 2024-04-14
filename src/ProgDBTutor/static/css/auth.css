@@ -1,11 +1,18 @@
-html {
+
+
+html::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: url("../img/terrain.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    image-rendering: pixelated;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    filter: blur(3px); /* Adjust the blur radius as needed */
+    z-index: -1;
 }
 
 
@@ -119,19 +126,5 @@ button:active{
     cursor: url('../img/UI/dark_cursor.png'), auto;
 }
 
-.footer {
-    position: fixed;
-    color: black;
-    font-size: 8px;
-    bottom: 0;
-    image-rendering: auto;
-    text-rendering: optimizeLegibility;
-    width: 95%;
-    background-color: transparent;
-    z-index: 999;
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Vertically center the items */
-}
 
 
