@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="../static/css/UI.css">
+    <title>game header</title>
+    {% include 'head.html' %}
+</head>
+<body>
+    <header>
+        <div class="home-btn">
+            <img src="../static/img/home_btn.png" alt="🏡" usemap="#homeMap" id="home-btn">
+            <map name="homeMap">
+                <area shape="rect" coords="0,0,150,150" alt="🏡" href="{{ url_for('main') }}">
+            </map>
+        </div>
+
+        <div class="resource-btn">
+            <img src="../static/img/resource_btn.png" alt="🌱" id="resource-btn">
+        </div>
+        <div class="overlay" id="resource-overlay">
+            <div class="popup">
+                <!-- The resource amounts of the user will be inserted here dynamically -->
+            </div>
+        </div>
+
+        <div class="money-display">
+            <p>100</p> <!-- This will be updated dynamically -->
+            <img src="../static/img/coin_symbol.png" alt="🪙">
+        </div>
+
+        <div class="setting-btn">
+            <img src="../static/img/setting_btn.png" alt="⚙️" usemap="#settingMap" id="setting-btn">
+            <map name="settingMap">
+                <area shape="rect" coords="0,0,150,150" alt="⚙️" href="{{ url_for('settings') }}">
+            </map>
+        </div>
+
+        <div class="chat-btn">
+            <img src="../static/img/chat_btn.png" alt="💬" usemap="#chatMap" id="chat-btn">
+            <map name="chatMap">
+                <area shape="rect" coords="0,0,150,150" alt="💬" href="{{ url_for('dashboard') }}">
+            </map>
+        </div>
+    </header>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const resourceButton = document.getElementById('resource-btn');
+            const overlay = document.getElementById('resource-overlay');
+            let clickedResourceButton = false;
+
+            resourceButton.addEventListener('click', function() {
+                overlay.style.display = clickedResourceButton ? 'none' : 'flex';
+                resourceButton.src = clickedResourceButton ? "../static/img/resource_btn.png" : "../static/img/resource_pbtn.png";
+                clickedResourceButton = !clickedResourceButton;
+            });
+
+            console.log('Fetching resources...');
+            fetch('/api/resources')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateResources(data);
+                    updateMoney(data); // Assuming this function correctly extracts and updates money from the data
+                })
+                .catch(error => {
+                    console.error('Error fetching resources:', error);
+                    document.querySelector('.popup').innerHTML = `<p>Error fetching resources. Please try again later.</p>`;
+                });
+
+        });
+
+        function updateResources(resources) {
+            const popupDiv = document.querySelector('.popup');
+            let resourceHTML = '';
+
+            resources.forEach(resource => {
+                if(resource.resource_type === 'Money') return; // Skip money
+
+                const symbol = getSymbolForResourceType(resource.resource_type);
+                resourceHTML += `<p>${resource.amount}${symbol}</p>`;
+            });
+
+            popupDiv.innerHTML = resourceHTML;
+        }
+
+        function updateMoney(resources) {
+            const moneyDisplay = document.querySelector('.money-display p');
+            const moneyResource = resources.find(resource => resource.resource_type === 'Money');
+
+            if(moneyResource) {
+                moneyDisplay.textContent = `${moneyResource.amount}`;
+            }
+        }
+
+        function getSymbolForResourceType(resourceType) {
+            switch(resourceType) {
+                case 'Wheat': return '🌾';
+                case 'Potato': return '🥔';
+                case 'Carrot': return '🥕';
+                case 'Corn': return '🌽';
+                // Add more as needed
+                default: return ''; // Default case if no symbol is matched
+            }
+        }
+    </script>
+</body>
+</html>

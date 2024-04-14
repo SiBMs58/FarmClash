@@ -61,7 +61,12 @@
 
 <div class="col-md-8">
     <div class="card border chat-window custom-chat-window" >
-        <div class="card-header custom-header text-white" id="chat-header">Chat with <span id="chat-with-name">...</span></div>
+
+        <div class="card-header custom-header text-white" id="chat-header">
+            Chat with <span id="chat-with-name">...</span>
+            <!-- The 'Visit World' button will be added here by JavaScript -->
+        </div>
+
         <div id="chat-messages" class="chat-messages card-body custom-chat-body">
             <!-- Messages will be dynamically loaded here -->
         </div>
@@ -92,6 +97,24 @@
         // Clear previous messages
         const chatMessages = document.getElementById('chat-messages');
         chatMessages.innerHTML = ''; // Use innerHTML to clear the messages
+
+        // Remove any existing 'Visit World' button
+        const existingButton = document.getElementById('visit-friends-world-btn');
+        if (existingButton) {
+            existingButton.remove();
+        }
+
+        // Create the 'Visit World' button
+        const visitWorldButton = document.createElement('button');
+        visitWorldButton.id = 'visit-friends-world-btn';
+        visitWorldButton.textContent = 'Visit World';
+        visitWorldButton.className = 'btn btn-custom-search';
+        visitWorldButton.style.float = 'right';
+        visitWorldButton.onclick = visitFriendsWorld; // Assuming you've defined this function
+
+        // Append the button to the header
+        const chatHeader = document.getElementById('chat-header');
+        chatHeader.appendChild(visitWorldButton);
 
         // Fetch messages and populate `chatMessages`
         fetch(`/api/messages/${friend_name}`) // This should be the URL to your API endpoint for fetching messages
@@ -184,6 +207,16 @@
             });
         });
     });
+
+    // Function to handle the 'Visit World' action
+    function visitFriendsWorld() {
+        const friendName = document.getElementById('receiver').value;
+        // Here you would either navigate to the world or make an API call
+        console.log(`Visiting ${friendName}'s world...`);
+        window.location.href = `/friends/visit_friend_world/${friendName}`;
+        // Example: window.location.href = `/world/${friendName}`;
+    }
+
 </script>
 </body>
 </html>

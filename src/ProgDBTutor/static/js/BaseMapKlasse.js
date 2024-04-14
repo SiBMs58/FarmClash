@@ -3,11 +3,13 @@ export class BaseMap {
      * This is the base class used by 'BuildingMap' and 'TerrainMap' to extract duplicate code.
      * @param mapData
      * @param _tileSize
+     * @param username
      */
-    constructor(mapData, _tileSize) {
+    constructor(mapData, _tileSize, username) {
         this.tileSize = _tileSize;
         this.map_width = mapData.map_width;
         this.map_height = mapData.map_height;
+        this.username = username;
 
         // Top-left corner of the displayed tiles on the screen.
         this.viewY = 0;
