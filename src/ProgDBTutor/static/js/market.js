@@ -2,11 +2,13 @@ let market = {};
 market.quantities = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 market.intervals = new Array(10).fill(null);
 market.prices = [1, 3, 5, 10, 15, 12, 17, 17, 20, 25];
-market.crops = ['Wheat', 'Carrot', 'Corn', 'Cauliflower', 'Eggplant', 'Lettuce', 'Parsnip', 'Tomato', 'Turnip', 'Zucchini'];
+market.crops = ["Wheat", "Carrot", "Corn", "Lettuce", "Tomato", "Turnip", "Zucchini", "Parsnip", "Cauliflower", "Eggplant"];
 
-setPriceList();
+
+setPricesFromAPI();
+displayPrices();
 setQuantityList();
-function setPriceList() {
+function setPricesFromAPI() {
 
     //TODO read current prices from database
     /* still need to make api/market
@@ -23,7 +25,8 @@ function setPriceList() {
      });
      */
 
-    // display prices
+}
+function displayPrices(){
     for (let i = 1; i <= market.crops.length; i++) {
         const priceElement = document.getElementById(`price${i}`);
         if (priceElement) {

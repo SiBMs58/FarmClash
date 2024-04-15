@@ -35,17 +35,56 @@ class GameServices:
         Initialize default, starting resources when a user registers
         :param username:  The username object of the user
         """
+        # Money
         self.resource_data_access.add_resource(Resource(None, username, "Money", 50))
-        self.resource_data_access.add_resource(Resource(None, username, "Corn", 20))
+
+        # Crops (can be stolen in an attack)
+        self.resource_data_access.add_resource(Resource(None, username, "Wheat", 100))
         self.resource_data_access.add_resource(Resource(None, username, "Carrot", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Cauliflower", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Tomato", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Eggplant", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Corn", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Lettuce", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Wheat", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Tomato", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Turnip", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Parsnip", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Zucchini", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Parsnip", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Cauliflower", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Eggplant", 0))
+
+        # From Chickens
+        self.resource_data_access.add_resource(Resource(None, username, "Egg", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Rustic Egg", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Crimson Egg", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Emerald Egg", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Sapphire Egg", 0))
+
+        # From Cows
+        self.resource_data_access.add_resource(Resource(None, username, "Milk", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Chocolate Milk", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Strawberry Milk", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Blueberry Milk", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Soy Milk", 0))
+
+        # From Goats
+        self.resource_data_access.add_resource(Resource(None, username, "Wool", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Alpaca Wool", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Cashmere Wool", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Dolphin Wool", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Irish Wool", 0))
+
+        # From Pigs
+        self.resource_data_access.add_resource(Resource(None, username, "Truffle", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Winter Truffle", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Bronze Truffle", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Gold Truffle", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Forest Truffle", 0))
+
+        # From exploring (can also be stolen in an attack)
+        self.resource_data_access.add_resource(Resource(None, username, "Stick", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Stone", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Plank", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Log", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Ingot", 0))
+
 
     # TODO: def initialize_resources(self):
 
