@@ -53,12 +53,12 @@ This will start the Flask server on `localhost:5000` or at the IPs given by flas
 #### Optional info: Compile LaTeX
 ```bash
 cd docs
-pdflatex api.tex  # First compilation
-pdflatex api.tex  # Second compilation to update the TOC
-rm api.aux
-rm api.log
-rm api.out
-# Optionally, keep api.toc for future compilations unless you need to remove it for specific reasons
+pdflatex technical-report.tex  # First compilation
+pdflatex technical-report.tex  # Second compilation to update the TOC
+rm technical-report.aux
+rm technical-report.log
+rm technical-report.out
+# Optionally, keep technical-report.toc for future compilations unless you need to remove it for specific reasons
 ```
 
 ## Usage
