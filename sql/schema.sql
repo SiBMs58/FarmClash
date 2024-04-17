@@ -54,12 +54,12 @@ CREATE TABLE planted_crops (
 
 -- Market Table for dynamic pricing (Optional, depends on game mechanics)
 CREATE TABLE market (
-    market_id SERIAL PRIMARY KEY,
-    crop_id INT REFERENCES crops(crop_id),
+    crop_name VARCHAR(255) NOT NULL PRIMARY KEY,
     current_price INT NOT NULL,
     current_quantity_crop INT,
     prev_quantity_crop INT,
-    last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_crop_name UNIQUE (crop_name)
 );
 
 -- Resources Table to track user resources like money, crops, etc.

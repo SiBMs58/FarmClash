@@ -1,8 +1,8 @@
 from datetime import datetime
 
 class Market:
-    def __init__(self, crop_id, current_price, current_quantity_crop, prev_quantity_crop, last_update=None):
-        self.crop_id = crop_id
+    def __init__(self, crop_name, current_price, current_quantity_crop, prev_quantity_crop, last_update=None):
+        self.crop_name = crop_name
         self.current_price = current_price
         self.current_quantity_crop = current_quantity_crop
         self.prev_quantity_crop = prev_quantity_crop
@@ -12,7 +12,7 @@ class Market:
 
     def to_dict(self):
         return {
-            'crop_id': self.crop_id,
+            'crop_name': self.crop_name,
             'current_price': self.current_price,
             'current_quantity_crop': self.current_quantity_crop,
             'prev_quantity_crop': self.prev_quantity_crop,

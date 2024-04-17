@@ -119,7 +119,6 @@ def fetch_building_information():
 """
 Markt fetch and update functions
 """
-from datetime import datetime, timedelta
 
 @game_blueprint.route('/update-market', methods=['POST'])
 def update_market():
@@ -133,22 +132,9 @@ def update_market():
         crop_name = json_data["crop"]
         sale = json_data["sale"]
 
-
-        # Fetch the crop ID based on the crop name
-        crops_data_access = current_app.config.get('crops_data_access')
-        crop = crops_data_access.get_crop_by_name(crop_name)
-
-        if not crop:
-            # If crop doesn't exist, create a new crop with default values
-            new_crop = Crop(crop_name)
-            crops_data_access.add_crop(new_crop)
-            crop = new_crop
-
-        crop_id = crops_data_access.get_id_from_name(crop_name)
-
         # Get current market data
         market_data_access = current_app.config.get('market_data_access')
-        market = market_data_access.get_market_data(crop_id)
+        market = market_data_access.get_market_data(crop_name)
 
         if market:
             # Update the last update time
@@ -165,7 +151,7 @@ def update_market():
             market_data_access.add_market_data(market)
         else:
             # No existing market data found, create a new entry with crop's base price
-            new_market = Market(crop_id, crop.sell_price, sale, 0, datetime.now())
+            new_market = Market(crop_name, 10, sale, 0, datetime.now())
             market_data_access.add_market_data(new_market)
 
         return jsonify({"status": "success", "message": "Market data updated successfully"})
@@ -181,20 +167,9 @@ def fetch_crop_price():
         # Get the crop name from the query parameters
         crop_name = request.args.get('crop')
 
-        crops_data_access = current_app.config.get('crops_data_access')
-        crop = crops_data_access.get_crop_by_name(crop_name)
-
-        if not crop:
-            # If crop doesn't exist, create a new crop with default values
-            new_crop = Crop(crop_name)
-            crops_data_access.add_crop(new_crop)
-            crop = new_crop
-
-        crop_id = crops_data_access.get_id_from_name(crop_name)
-
         # Query the database to fetch the price of the crop from the market
         market_data_access = current_app.config.get('market_data_access')
-        market = market_data_access.get_market_data(crop_id)
+        market = market_data_access.get_market_data(crop_name)
 
         if market:
             # If market data exists for the crop, return its price
