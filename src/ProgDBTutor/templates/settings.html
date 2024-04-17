@@ -31,12 +31,12 @@
             </div>
             <div class="col-auto">
                 <div class="sound-btn"></div>
-                <img src="../static/img/buttons/minus_btn.png"  class="sound-image-button1" onclick="soundDown()" id="sounddown">
+                <img src="../static/img/buttons/minus_btn.png"  class="sound-image-button1"  id="sounddown">
                 <span>&nbsp;</span>
                 <p id="soundNumber"> 50 </p>
                 <p> % </p>
                 <span>&nbsp;</span>
-                <img src="../static/img/buttons/plus_btn.png" class="sound-image-button2"  onclick="soundUp()" id="soundup">
+                <img src="../static/img/buttons/plus_btn.png" class="sound-image-button2"   id="soundup">
 
             </div>
         </div>
@@ -70,18 +70,19 @@
             </div>
             <div class="col-auto">
                 <div class="zoom-btn"></div>
-                <img src="../static/img/buttons/minus_btn.png" class="sound-image-button4"  onclick="zoomDownPrecent()">
+                <img src="../static/img/buttons/minus_btn.png" class="sound-image-button4" id="zoomDownButton" >
                 <span>&nbsp;</span>
                 <p id="zoomNumber"> 0 </p>
                 <p>% </p>
                 <span>&nbsp;</span>
-                <img src="../static/img/buttons/plus_btn.png" class="sound-image-button5"  onclick="zoomUpPrecent()">
+                <img src="../static/img/buttons/plus_btn.png" class="sound-image-button5" id="zoomUpButton">
             </div>
         </div>
     </div>
 
 
     <script  src="../static/js/sound.js"></script>
+     <script  src="../static/js/zoom.js"></script>
     <script   src="../static/js/settings.js"></script>
     <script  src="../static/js/canvas.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>

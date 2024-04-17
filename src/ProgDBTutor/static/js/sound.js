@@ -2,6 +2,9 @@
 //TODO: sounds werken in normal mode
 //TODO zoom functie
 //TODO: Howler gebruiken ???
+
+const baseURL = 'http://192.168.0.224:5000/src/ProgDBTutor/static/js';
+
 class GameSoundManager {
     constructor() {
         this.soundButtons = [];
@@ -10,8 +13,9 @@ class GameSoundManager {
     }
 
     addSoundButton(imageElement, soundSrc, volume = 1) {
-        const sound = new Audio(soundSrc);
+       const sound = new Audio( soundSrc);
         sound.volume = volume;
+        //sound.crossOrigin = "anonymous";
 
         const soundButton = {
             imageElement: imageElement,
@@ -99,10 +103,10 @@ document.addEventListener('DOMContentLoaded', function() {
     soundManager.addSoundButton(soundButton4, 'discord-notification.mp3', 0.7);
 
     const soundButton5 = document.querySelector('.sound-image-button5');
-    soundManager.addSoundButton(soundButton5, 'sounds/discord-notification.mp3', 0.7);
+    soundManager.addSoundButton(soundButton5, 'discord-notification.mp3', 0.7);
 
      const soundButton6 = document.querySelector('.sound-image-button6');
-    soundManager.addSoundButton(soundButton6, 'sounds/discord-notification.mp3', 0.7);
+    soundManager.addSoundButton(soundButton6, 'discord-notification.mp3', 0.7);
 
     // Adjust volume for buttons algemeen
     //soundManager.setVolume(0.1);
