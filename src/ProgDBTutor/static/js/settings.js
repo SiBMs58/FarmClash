@@ -1,5 +1,6 @@
 //TODO: buttons plays without debug
 //TODO: fix the premission for zoomen
+//TODO: buttons aanpassen
 
 //import { zoomIn, zoomOut } from './zoomFunctions.js';
 

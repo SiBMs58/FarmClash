@@ -3,7 +3,7 @@
 //TODO zoom functie
 //TODO: Howler gebruiken ???
 
-const baseURL = 'http://192.168.0.224:5000/src/ProgDBTutor/static/js';
+//const baseURL = 'http://192.168.0.224:5000/src/ProgDBTutor/static/js';
 
 class GameSoundManager {
     constructor() {
@@ -12,10 +12,10 @@ class GameSoundManager {
         this.muted = false;
     }
 
-    addSoundButton(imageElement, soundSrc, volume = 1) {
-       const sound = new Audio( soundSrc);
-        sound.volume = volume;
-        //sound.crossOrigin = "anonymous";
+    addSoundButton(imageElement, sound, volume = 1) {
+       //const sound = new Audio( soundSrc);
+       sound.volume = volume;
+       // sound.crossOrigin = "anonymous";
 
         const soundButton = {
             imageElement: imageElement,
@@ -91,7 +91,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const soundManager = new GameSoundManager();
 
     const soundButton1 = document.querySelector('.sound-image-button1');
-    soundManager.addSoundButton(soundButton1, 'discord-notification.mp3', 0.7);
+    var audio = new Audio();
+    var scripts = document.getElementsByTagName('script');
+    var currentScript = scripts[scripts.length - 1];
+    var scriptSource = currentScript.src;
+    var scriptDir = scriptSource.substring(0, scriptSource.lastIndexOf('/'));
+    audio.src = scriptDir + '/discord-notification.mp3';
+
+    console.log("Audio source:", audio.src); // Log the audio source for debugging
+
+    soundManager.addSoundButton(soundButton1, audio, 0.7);
+
 
     const soundButton2 = document.querySelector('.sound-image-button2');
     soundManager.addSoundButton(soundButton2, 'discord-notification.mp3', 0.7);
