@@ -366,7 +366,11 @@ export class BuildingMap extends BaseMap {
             }
             const filePath = "/static/img/assets/buildings/" + getAssetDir(tile[1]) + "/" + tile[1] + ".png";
             const img = this.buildingAssets[filePath];
+
+            const grassPath = "/static/img/assets/terrain/Water/Water.1.png";
+            const grassImage = this.buildingAssets[grassPath];
             if (img) {
+                this.ctx.drawImage(grassImage, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
                 this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
             } else {
                 console.error("BuildingMap.drawTiles(): image does not exist")
@@ -385,6 +389,7 @@ export class BuildingMap extends BaseMap {
                 continue;
             }
             const currBuilding = this.buildingInformation[buildingKey];
+
             this.drawBuilding(currBuilding);
         }
         // Draw top again
