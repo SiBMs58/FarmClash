@@ -71,7 +71,7 @@ Guidelines for how others can contribute to the project.
 Specify the license under which the project is released.
 
 ## Additional Documentation
-- [Technical Report](docs/technical-report.pdf)
+- [Technical Report](docs/api.pdf)
 - [API Documentation](docs/api.pdf)
 
 ## Contact

@@ -198,4 +198,28 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \end{verbatim}
 \end{itemize}
 
+\section{Leaderboard}
+\begin{itemize}
+    \item Endpoint: \texttt{/leaderboard}
+    \item Method: GET
+    \item Description: Get a list of top 3 users, 2 friends and yourself sorted by their score.
+    \item Access: Requires \texttt{logged in} user privileges.
+    \item Response: A JSON array of user objects, each containing:
+    \begin{verbatim}
+[
+  {
+    "place": 1,
+    "username": "username",
+    "score": 100
+  },
+  {
+    "place": 2,
+    "username": "anotherUsername",
+    "score": 200
+  }
+  // Additional user objects as needed
+]
+    \end{verbatim}
+\end{itemize}
+
 \end{document}
