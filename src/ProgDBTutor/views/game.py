@@ -21,3 +21,12 @@ def update_map():
     map_width = map_data.get('map_width') # check om te zien of de json goed is doorgestuurd
     # Process the map data as needed...
     return jsonify({'status': 'success', 'message': 'Map updated successfully', 'map_width': map_width})
+
+@game_blueprint.route('/leaderboard')
+@login_required
+def leaderboard():
+    """
+    Renders the leaderboard view.
+    :return:
+    """
+    return render_template('game/leaderboard.html', app_data=config_data)
