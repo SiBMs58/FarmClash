@@ -85,7 +85,6 @@ class GameServices:
         self.resource_data_access.add_resource(Resource(None, username, "Log", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Ingot", 0))
 
-
     def reformat_terrain_map(self, tile_data, map_width, map_height):
         """
         Generate the formatted (so the front end can easily read it) terrain map data based on the provided tile data.

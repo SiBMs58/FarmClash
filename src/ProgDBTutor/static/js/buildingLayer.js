@@ -5,29 +5,10 @@ import { BaseMap } from "./BaseMapKlasse.js";
  */
 const EMPTY_TILE = "None";
 
-function getAssetDir(assetName) {
+function getAssetType(assetName) {
     return assetName.split('.')[0];
 }
 
-/**
- * Example of the generated grid will look like:
- * This will be used to check for overlap and possibly by other classes to check the building layout.
- */
-const defaultMapData = {
-    map_width: 50,
-    map_height: 50,
-    building_tiles: [
-        ["None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
-        ["None",["Fences.4.1", "fences1"],"None","None","None","None","None","None","None",["Fences.4.1", "fence4"],"None","None","None","None"],
-        ["None","None","None","None","None","None","None","None",["Fences.4.1", "fence3"],"None","None","None","None","None"],
-        ["None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
-        ["None","None","None",["Fences.4.1", "fence2"],"None","None","None","None","None","None","None","None","None","None"],
-        ["None","None","None","None","None","None","None","None","None","None",["Fences.1.2", "fence5"],["Fences.4.3", "fence5"],["Fences.1.4", "fence5"],"None"],
-        ["None","None","None","None","None","None","None","None","None","None",["Fences.2.1", "fence5"],"None",["Fences.2.1", "fence5"],"None"],
-        ["None","None","None","None","None","None","None","None","None","None",["Fences.3.2", "fence5"],["Fences.4.3", "fence5"],["Fences.3.4", "fence5"],"None"],
-        ["None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
-    ]
-}
 
 /**
  * Here's an example of what the buildMap json needs to look like.
@@ -125,8 +106,8 @@ const defaultMapData2 = {
                 [[0, 1], "Chickencoop.L1.1.2"],
                 [[1, 0], "Chickencoop.L1.2.1"],
                 [[1, 1], "Chickencoop.L1.2.2"],
-                [[2, 0], "Chickencoop.L1.3.1"],
-                [[2, 1], "Chickencoop.L1.3.2"],
+                [[2, 0], "Chickencoop.3.1"],
+                [[2, 1], "Chickencoop.3.2"],
             ]
         },
         Coin_well: {
@@ -333,7 +314,7 @@ export class BuildingMap extends BaseMap {
                         this.clearTile(x_screen * this.tileSize, y_screen * this.tileSize);
                         continue;
                     }
-                    filePath = "/static/img/assets/buildings/" + getAssetDir(currTile[0]) + "/" + currTile[0] + ".png"; // currTile[0] want dit bestaat uit ["tileAsset", "buildingName"]
+                    filePath = "/static/img/assets/buildings/" + getAssetType(currTile[0]) + "/" + currTile[0] + ".png"; // currTile[0] want dit bestaat uit ["tileAsset", "buildingName"]
                 } else { // Out-of bounds
                     continue;
                 }
@@ -361,16 +342,31 @@ export class BuildingMap extends BaseMap {
         for (const tile of building.tile_rel_locations) {
             const screen_currTileLocY = screen_buildLocationY + tile[0][0];
             const screen_currTileLocX = screen_buildLocationX + tile[0][1];
+
+            /* This works but very buggy, also doesnt take in to account water and buildings beneath
+            const grassImg = new Image();
+            grassImg.src = "/static/img/assets/terrain/Grass/Grass.1.png";
+            grassImg.onload = () => {
+                this.ctx.drawImage(grassImg, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
+                 if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
+                continue;
+            }
+
+            const img = this.buildingAssets["/static/img/assets/buildings/" + getAssetType(tile[1]) + "/" + tile[1] + ".png"];
+            if (img) {
+                this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
+            } else {
+                console.error("BuildingMap.drawTiles(): image does not exist")
+            }
+            };
+             */
+
             if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
                 continue;
             }
-            const filePath = "/static/img/assets/buildings/" + getAssetDir(tile[1]) + "/" + tile[1] + ".png";
-            const img = this.buildingAssets[filePath];
 
-            const grassPath = "/static/img/assets/terrain/Water/Water.1.png";
-            const grassImage = this.buildingAssets[grassPath];
+            const img = this.buildingAssets["/static/img/assets/buildings/" + getAssetType(tile[1]) + "/" + tile[1] + ".png"];
             if (img) {
-                this.ctx.drawImage(grassImage, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
                 this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
             } else {
                 console.error("BuildingMap.drawTiles(): image does not exist")
@@ -448,7 +444,7 @@ export class BuildingMap extends BaseMap {
         // Check for forbidden terrain overlap
         for (const currTile of newLocations) {
             const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
-            const terrainType = getAssetDir(correspondingTerrainTile);
+            const terrainType = getAssetType(correspondingTerrainTile);
             if (terrainType === "Water") {
                 return false;
             }
