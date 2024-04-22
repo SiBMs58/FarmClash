@@ -4,7 +4,8 @@ from flask_login import login_required, current_user
 from models.building import Building
 from models.market import Market
 from models.crops import Crop
-from datetime import datetime
+from datetime import datetime, timedelta
+import random
 import json
 
 from config import config_data
@@ -120,6 +121,28 @@ def fetch_building_information():
 Markt fetch and update functions
 """
 
+
+def update_price(last_count, current_count, last_price):
+    if last_price == 10 or current_count == 30:
+        last_price = 20
+    # Calculate the ratio of current count to last count
+    count_ratio = current_count / last_count if last_count != 0 else 1
+    if count_ratio >= 1:
+        numb = [0.7,0.8,0.9]
+        random_factor = numb[random.randint(0, 2)]
+    else:
+        numb = [1.1, 1.2, 1.3]
+        random_factor = numb[random.randint(0, 2)]
+
+    # Calculate the new price
+    new_price = last_price * random_factor
+
+    # Ensure the price is within the specified range
+    new_price = max(10, min(30, round(new_price)))
+
+    # return jsonify({"count_ratio": count_ratio, "random_factor" : random_factor, "new_price" : new_price})
+    return new_price
+
 @game_blueprint.route('/update-market', methods=['POST'])
 def update_market():
     """
@@ -142,9 +165,20 @@ def update_market():
             # Check if more than 1 minute has passed since the last update
             if  datetime.now() - market.last_update > timedelta(minutes=1):
                 market.last_update = datetime.now()
+
+                last_count = market.prev_quantity_crop
+                current_count = market.current_quantity_crop
+                last_price = market.current_price
+                new_price = update_price(last_count, current_count, last_price)
+
                 # Update prev_quantity_crop and reset current_quantity_crop
+
                 market.prev_quantity_crop = market.current_quantity_crop
                 market.current_quantity_crop = 0
+
+                # change the price based on sales and random variable
+
+                market.current_price = new_price
 
             # Update the existing market entry
             market.current_quantity_crop += sale
@@ -173,6 +207,18 @@ def fetch_crop_price():
 
         if market:
             # If market data exists for the crop, return its price
+            if  datetime.now() - market.last_update > timedelta(minutes=1):
+                market.last_update = datetime.now()
+
+                last_count = market.prev_quantity_crop
+                current_count = market.current_quantity_crop
+                last_price = market.current_price
+                new_price = update_price(last_count, current_count, last_price)
+
+                # change the price based on sales and random variable
+                market.current_price = new_price
+                market_data_access.add_market_data(market)
+
             return jsonify({"price": market.current_price})
         else:
             # If market data doesn't exist, return an error message
