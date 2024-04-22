@@ -31,6 +31,11 @@
             z-index: 0;
         }
 
+        #uiCanvas {
+            z-index: 3;
+            border: solid red;
+        }
+
         #buildingCanvas {
             z-index: 2;
             <!--border: solid red;-->
@@ -50,6 +55,7 @@
     {% include 'game/pop-up.html' %}
 
     <div id="canvasContainer">
+        <canvas id="uiCanvas"></canvas>
         <canvas id="buildingCanvas"></canvas>
         <canvas id="terrainCanvas"></canvas>
     </div>

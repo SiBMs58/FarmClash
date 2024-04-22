@@ -33,7 +33,7 @@ const defaultMapData = {
 /**
  * Here's an example of what the buildMap json needs to look like.
  */
-const defaultMapData2 = {
+export const defaultMapData2 = {
     map_width: 58,
     map_height: 43,
 
@@ -152,8 +152,9 @@ export class BuildingMap extends BaseMap {
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
      * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
+     * @param uiLayerInstance This instance is needed to draw the correct building UI.
      */
-    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance) {
+    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, uiLayerInstance) {
 
         super(mapData, _tileSize);
 
@@ -166,6 +167,7 @@ export class BuildingMap extends BaseMap {
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
         this.terrainMapInstance = terrainMapInstance;
+        this.uiLayerInstance = uiLayerInstance;
 
 
         // Variables to remember the click state
@@ -217,7 +219,7 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        await this.fetchBuildingMapData();
+        //await this.fetchBuildingMapData();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
         //debugger;
@@ -515,20 +517,27 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    hoveringOverBuilding(tileX, tileY) {
+
+    }
+
     /**
      * Gets called by the 'UserInputHandler' class every time the mouse moves.
      * @param client_x x value on-screen
      * @param client_y y value on-screen
      */
     handleMouseMove(client_x, client_y) {
+        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
+        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
+
         if (!this.movingBuilding) {
+            if (this.hoveringOverBuilding(tileX, tileY)) {
+                const buildingHoverName = this.tiles[tileY][tileX][1];
+                this.uiLayerInstance.drawHoverUI(buildingHoverName, this.viewX, this.viewY);
+            }
             return;
         }
 
-        //console.log("we zijn in de functie 2")
-
-        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
-        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
 
         if (this.prevMouseMoveBuildingLoc === null) {
             this.prevMouseMoveBuildingLoc = [tileY, tileX];
@@ -536,8 +545,6 @@ export class BuildingMap extends BaseMap {
 
         const relDistanceY = tileY - this.prevMouseMoveBuildingLoc[0];
         const relDistanceX = tileX - this.prevMouseMoveBuildingLoc[1];
-
-        //console.log(`relDistanceY ${relDistanceY}, relDistanceX ${relDistanceX}`);
 
         if (relDistanceX !== 0 || relDistanceY !== 0) {
             const buildingToMove = this.buildingInformation[this.buildingClickedName];

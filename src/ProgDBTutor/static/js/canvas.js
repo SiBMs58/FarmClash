@@ -1,7 +1,8 @@
 import { TerrainMap } from './terrainLayer.js'
-import { BuildingMap} from "./buildingLayer.js";
+import { BuildingMap } from "./buildingLayer.js";
+import { UICanvasLayer } from "./uiCanvasLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
-import { UserInputHandler} from "./userInputHandler.js";
+import { UserInputHandler } from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
 // Set on-screen tileSize-
@@ -13,10 +14,17 @@ const terrainCtx = terrainCanvas.getContext('2d');
 const mapData = generateRandomTerrainMap(50, 50);
 const terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
 
+// Create UI canvas
+const uiCanvas = document.getElementById('uiCanvas');
+const uiCtx = uiCanvas.getContext('2d');
+const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
+
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
-const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap);
+const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
+
+
 
 // Create ticker
 const ticker = new Ticker([terrainMap, buildingMap]);
@@ -36,6 +44,10 @@ function resizeCanvas() {
     buildingCanvas.width = window.innerWidth;
     buildingCanvas.height = window.innerHeight;
     buildingCtx.imageSmoothingEnabled = false;
+
+    uiCanvas.width = window.innerWidth;
+    uiCanvas.height = window.innerHeight;
+    uiCtx.imageSmoothingEnabled = false;
 
     try { // Redraw terrain after resizing
         terrainMap.drawTiles();
