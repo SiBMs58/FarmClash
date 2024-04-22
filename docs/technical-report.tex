@@ -130,6 +130,12 @@ The registration page allows new users to create an account by providing essenti
     \item \textbf{JavaScript:} A JavaScript function loadLeaderboard() (event handling; this function is triggered when document content is fully loaded) is responsible for fetching the leaderboard data from the backend API. Upon successful fetch, it populates the leaderboard table in the HTML dynamically. Error handling is incorporated to manage and alert users in case of failures in data retrieval.
 \end{itemize}
 
+\subsubsection{Books}
+\begin{itemize}
+    \item \textbf{HTML and CSS:} The bookChat.html and bookMarket.html contain the HTML structure of the books, covers and pages (front and back), along with the content for the chat and the market respectively.
+    \item \textbf{JavaScript:} There is a JavaScript function: openBook() to open the cover of the book and a closeBook() to close the cover of the book. In addition, you have the goNextPage() function to go to the next page and the goPrevPage() function to go to the previous page. In addition to these functions, there are querySelectors for the covers, pages and buttons
+\end{itemsize}
+
 \section{Challenges and Solutions}
 Throughout the development, the team encountered and overcame numerous challenges, such as optimizing database queries and ensuring smooth synchronous player interactions. Specific issues included managing the real-time update of resource levels and implementing secure authentication mechanisms.
 
