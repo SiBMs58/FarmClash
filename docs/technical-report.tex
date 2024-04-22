@@ -107,6 +107,23 @@ The backend manages the leaderboard by fetching and calculating user scores, sor
     \item \textbf{Return Leaderboard Data:} The backend returns the leaderboard data in JSON format, including the user's rank, username, and score. This data is then displayed on the frontend for users to view and engage with.
 \end{itemize}
 
+\subsubsection{Market Feature}
+The backend manages the market by storing the current price and adjusting it based on user sales of a given crop. This process occurs in intervals of 1 minute using past and current sales data:
+route : \begin{verbatim}`@game/update-market`\end{verbatim}
+\begin{itemize}
+    \item \textbf{update\_price Function:} Calculates a new price for a crop. Adjusts the price based on the current count and a random factor. Constrains the new price within a specific range. Returns the calculated new price.
+    \item \textbf{update\_market Route:} Handles POST requests for updating market data. Retrieves current market data for a specific crop. If 1 minute has passed since the last update, calculates and updates the price using the update\_price function. Updates the market data with the current sales and price. Creates a new entry with a default price if no existing market data is found. Returns a response indicating the success or failure of the update.
+    \item \textbf{fetch\_crop\_price Route:} Handles GET requests to fetch the current price of a crop. Retrieves market data for the requested crop. Updates the price using the update\_price function if needed. Returns the current price of the crop in the response.
+\end{itemize}
+
+\subsubsection{Building Feature}
+The backend manages the buildings by storing, updating or fatching the requested building\_data:
+route : \begin{verbatim}`@game/building-map`\end{verbatim}
+\begin{itemize}
+    \item \textbf{update\_map Function:} inserts a given building json in the database. If it exists, it updates, else it creates a new entry.
+    \item \textbf{fetch\_building\_information Route:} Handles GET requests to the requested building info. if the requested building does not exist, returns an error.
+\end{itemize}
+
 \subsection{Frontend Interface}
 The frontend provides an interactive and user-friendly interface using React, allowing players to engage with the game seamlessly. It features a map view for navigating different parts of the farm and a market interface for selling produce.
 \subsubsection{Login and Authentication Feature}
@@ -238,6 +255,8 @@ For backend testing, we utilized Pytest, a powerful and flexible testing tool. O
             \item \textbf{Resources Endpoint:} Checked both general and specific resource retrieval endpoints for proper authorization checks and JSON formatting.
             \item \textbf{Terrain Map Endpoint:} Tested user-specific access to terrain maps, ensuring the integrity and format of the terrain data returned.
             \item \textbf{Friendships Endpoint:} Assured that users could reliably retrieve their list of friends, with responses properly formatted as JSON arrays.
+            \item \textbf{Market Data Access:} With \texttt{test\_market\_data\_access.py}, we insert and fetch new crop elements , to check if the database requests work.
+            \item \textbf{Building Data Access:} With \texttt{test\_building\_data\_access.py}, we check if the databse is updated correctly when inserting new elements and fetching them.
             \item \textbf{Chat Endpoint:} Confirmed functionality for retrieving chat messages between users, focusing on correct data handling and security measures.
         \end{itemize}
     These tests not only verified proper access control and data integrity but also ensured that our server effectively handled errors and returned appropriate status codes under various scenarios.
