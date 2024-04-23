@@ -39,6 +39,159 @@ This project is designed to meet the educational goals of learning to develop ex
 
 \section{Game Description}
 FarmClash allows players to build and manage their farms, defend against attacks from other players, and maximize their profits through strategic selling of farm produce influenced by dynamic market prices. Players start with a basic farm and can upgrade their facilities and defenses as they progress, interacting with other players through alliances and competitive gameplay.
+\subsection{Buildings}
+
+\subsubsection{Idle Buildings}
+
+\begin{enumerate}
+    \item \textbf{Chickencoop}: Produces eggs and allows breeding of chickens. Higher levels yield more products and increases the limit of chickens.
+    \item \textbf{Cowbarn}: Produces milk and allows breeding of cows. Higher levels yield more products and increases the limit of cows.
+    \item \textbf{Goatbarn}: Produces wool and allows breeding of goats. Higher levels yield more products and increases the limit of goats.
+    \item \textbf{Pigpen}: Produces truffles and allows breeding of pigs. Higher levels yield more products and increases the limit of pigs.
+    \item \textbf{Field}: Used for planting crops. Higher levels yield more harvest. (Passive upgrades increase farm time)
+    \item \textbf{Harvesthopper}: Harvests and replants crops in adjacent fields automatically. Higher level increases the harvest limit.
+\end{enumerate}
+
+\subsubsection{Defense Buildings}
+
+\begin{enumerate}
+    \item \textbf{Fence}:
+    Increases defense level. Higher level increases the defense level severely. Fortifying can increment the defense level slightly.
+    \item \textbf{Townhall}: Determines user level, prevents buildings from leveling beyond its level, unlocks crops, allows the user to discover more of the map, can be fortified for increased defense and researched for a higher attack level, however upgrading does more to the defense and attack level. This building will open a Townhall UI where Next unlocks can be viewed as well as the defense level and base attack level.
+\end{enumerate}
+
+\subsubsection{Storage Buildings}
+
+\begin{enumerate}
+    \item \textbf{Silo}: Stores crops. Level 10 removes storage limit. Organizing can increment the limit slightly, however upgrading does more to the limit. This building will open a Silo UI. This building will open a Barn UI where resources can be viewed and removed.
+    \item \textbf{Barn}: Stores resources besides crops and money. Level 10 removes storage limit. Organizing can increment the limit slightly, however upgrading does more to the limit. This building will open a Barn UI where resources can be viewed and removed.
+\end{enumerate}
+
+\subsubsection{Explore Buildings}
+
+\begin{enumerate}
+    \item \textbf{Bunny Bay}: Exploring is unlocked as soon as the building reaches level 1. The higher the level, the lower the risk. Investing in the building will also lower the risk slightly. This building will open an Explore UI.
+\end{enumerate}
+
+\subsubsection{Friend-placed Buildings}
+
+\begin{enumerate}
+    \item \textbf{Gift Boxes}: Friends can place gift boxes once a day with gifts for you. Gifting to others increases your defense level (depending on what and how much you gift).
+\end{enumerate}
+
+\subsection{Exploring}
+
+\subsubsection{Exploration Mechanics}
+
+The bunny of the Bay will go explore for a [user selected] time with a [set of user selected] animals with a limit of Building level. After exploring, the user can open the gathered boxes and after that a downtime will be set.
+
+The longer the exploring takes, the higher number of resources per box/the higher the rarity of resources will be. A box can be a coin, a crop, or a resource box as well as be empty. The more animals are sent to explore, the more boxes will be returned. Choosing which animal goes also has perks and downsides:
+
+\begin{itemize}
+\item \textbf{Chickens}:
+\begin{itemize}
+\item Increased chance of finding eggs.
+\item Increases the yield of crops if found during exploration.
+\item Higher rarity of animal resources.
+\item Higher chance of getting lost.
+\end{itemize}
+\item \textbf{Cows}:
+\begin{itemize}
+    \item Increased chances of milk.
+    \item Brings more resources on average.
+    \item Higher chance to bring coins.
+    \item Higher chance to bring no boxes.
+\end{itemize}
+
+\item \textbf{Pigs}:
+\begin{itemize}
+    \item Increased chances of truffles.
+    \item Higher rarity of craft resources.
+    \item Higher amount of craft resources.
+    \item Higher chance of empty boxes.
+\end{itemize}
+
+\item \textbf{Goats}:
+\begin{itemize}
+    \item Increased chances of wool.
+    \item Has a chance to bring 2 boxes.
+    \item Has a small chance to bring 3 boxes.
+    \item Brings lower resources on average.
+\end{itemize}
+\end{itemize}
+
+Keep in mind exploring carries a risk with it; long explorations will carry a higher risk. Boats can get lost, and so will the animals and boxes on those boats. There is also a risk that no boats will return; in that case, no boxes are returned, and the building will have a longer downtime. The risk decreases the higher the level of the building and the higher the investment in the building is.
+
+\subsection{Animals}
+
+Losing animals is possible in attack and during exploration; this will lower the defense level for a while until the animals are bred again.
+
+\begin{enumerate}
+    \item Chicken
+    \item Cow
+    \item Pig
+    \item Goat
+\end{enumerate}
+
+\subsection{Attacking}
+
+High stamina means more resources gathered. High damage means higher attack points.
+\begin{enumerate}
+    \item \textbf{Chicken}: Low Defense, High stamina, Low Damage.
+    \item \textbf{Cow}: High Defense, Low stamina, Medium Damage.
+    \item \textbf{Pig}: Medium Defense, Low stamina, Medium Damage.
+    \item \textbf{Goat}: Medium Defense, Medium stamina, High Damage.
+\end{enumerate}
+
+\subsection{Resources}
+
+\begin{enumerate}
+    \item \textbf{Coins}: Used for various purposes. Like upgrading, fortifying, investing…
+    \item \textbf{Crops}: Various crops with increasing unlock levels. Total amount limited by Silo capacity.
+    \begin{enumerate}
+        \item Wheat (Level 0)
+        \item Carrot (Level 1)
+        \item Corn (Level 2)
+        \item Lettuce (Level 3)
+        \item Tomato (Level 4)
+        \item Turnip (Level 5)
+        \item Zucchini (Level 6)
+        \item Parsnips (Level 7)
+        \item Cauliflower (Level 8)
+        \item Eggplant (Level 9)
+    \end{enumerate}
+    \item \textbf{From Animals}:
+    \begin{enumerate}
+        \item Egg (Common)
+        \item Rustic Egg (Uncommon)
+        \item Crimson Egg (Rare)
+        \item Emerald Egg (Epic)
+        \item Sapphire Egg (Legendary)
+        \item Milk (Common)
+        \item Chocolate Milk (Uncommon)
+        \item Strawberry Milk (Rare)
+        \item Blueberry Milk (Epic)
+        \item Soy Milk (Legendary)
+        \item Wool (Common)
+        \item Alpaca Wool (Uncommon)
+        \item Cashmere Wool (Rare)
+        \item Dolphin Wool (Epic)
+        \item Irish Wool (Legendary)
+        \item Truffle (Common)
+        \item Winter Truffle (Uncommon)
+        \item Bronze Truffle (Rare)
+        \item Gold Truffle (Epic)
+        \item Forest Truffle (Legendary)
+    \end{enumerate}
+    \item \textbf{Craft} (From exploring and attacking)
+    \begin{enumerate}
+        \item Stick (Common)
+        \item Stone (Uncommon)
+        \item Plank (Rare)
+        \item Log (Epic)
+        \item Ingot (Legendary)
+    \end{enumerate}
+\end{enumerate}
 
 \section{Technologies Used}
 \begin{itemize}
