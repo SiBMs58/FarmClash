@@ -3,7 +3,6 @@ from flask_login import login_required, current_user
 
 from models.building import Building
 from models.market import Market
-from models.crops import Crop
 from datetime import datetime, timedelta
 import random
 import json
@@ -21,7 +20,14 @@ def game():
     """
     return render_template('game/game.html', app_data=config_data)
 
-
+@game_blueprint.route('/leaderboard')
+@login_required
+def leaderboard():
+    """
+    Renders the leaderboard view.
+    :return:
+    """
+    return render_template('game/leaderboard.html', app_data=config_data)
 
 """
 Building fetch and update functions
@@ -82,7 +88,6 @@ def update_map():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-
 @game_blueprint.route('/fetch-building-information', methods=['GET'])
 def fetch_building_information():
     try:
@@ -116,14 +121,9 @@ def fetch_building_information():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-
-
-
 """
 Markt fetch and update functions
 """
-
-
 def update_price(last_count, current_count, last_price):
     if last_price == 10 or current_count == 30:
         last_price = 20
