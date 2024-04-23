@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from config import config_data
 from data_access.dbconnection import DBConnection
 from data_access.user_data_access import UserDataAccess
-from data_access.building_data_acces import BuildingDataAccess
+from data_access.building_data_access import BuildingDataAccess
 from data_access.market_data_access import MarketDataAccess
 from data_access.crops_data_access import CropsDataAccess
 from data_access.map_data_access import MapDataAccess
