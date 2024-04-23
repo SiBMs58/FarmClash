@@ -1,3 +1,6 @@
+
+// THIS CLASS IS INTENDED TO BE USED AS A VIRTUAL CLASS
+
 export class BaseMap {
     /**
      * This is the base class used by 'BuildingMap' and 'TerrainMap' to extract duplicate code.

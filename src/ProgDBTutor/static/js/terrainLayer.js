@@ -1,6 +1,8 @@
-import { BaseMap } from "./BaseMapKlasse.js";
+import { BaseMap } from "./baseMap.js";
+import { utils } from "./utils.js";
 
-function getAssetDir(assetName) {
+
+export function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
@@ -192,7 +194,7 @@ export class TerrainMap extends BaseMap {
                 let filePath;
                 if (this.tiles[i_map] && this.tiles[i_map][j_map]) {
                     const currTile = this.tiles[i_map][j_map];
-                    filePath = "/static/img/assets/terrain/" + getAssetDir(currTile) + "/" + currTile + ".png";
+                    filePath = "/static/img/assets/terrain/" + utils.getAssetDir(currTile) + "/" + currTile + ".png";
                 } else {
                     // Out-of bounds
                     filePath = "/static/img/assets/terrain/Water/Water.1.1.png";
@@ -207,6 +209,9 @@ export class TerrainMap extends BaseMap {
         }
     }
 
+    /**
+     * Animates water tiles by one frame
+     */
     waterAnimation() {
         const animationSpeed = 36;
         if (this.time >= animationSpeed){
@@ -214,9 +219,9 @@ export class TerrainMap extends BaseMap {
 
             for (let i = 0; i < this.map_height; i++) {
                 for (let j = 0; j < this.map_width; j++) {
-                    const currTileDir = getAssetDir(this.tiles[i][j]);
+                    const currTileDir = utils.getAssetDir(this.tiles[i][j]);
                     if (currTileDir === "Water") {
-                        this.tiles[i][j] = getNextAssetName(this.tiles[i][j]);
+                        this.tiles[i][j] = utils.getNextAssetName(this.tiles[i][j]);
                     }
                 }
             }
