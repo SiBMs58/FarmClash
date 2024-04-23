@@ -1,9 +1,24 @@
 server {
     listen 80;
+    listen 443 ssl;
     server_name 34.38.178.63 team3.ua-ppdb.me;
+
+    ssl_certificate /lib/ssl/cert.pem;  # Adjust if the exact file differs
+    ssl_certificate_key /lib/ssl/private/private.key;  # Adjust the key file name as needed
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers 'HIGH:!aNULL:!MD5:!RC4';
+    ssl_prefer_server_ciphers on;
 
     location / {
         include proxy_params;
         proxy_pass http://unix:/home/app/FarmClash/src/ProgDBTutor/webapp.sock;
     }
+}
+
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name 34.38.178.63 team3.ua-ppdb.me;
+    return 301 https://$host$request_uri;
 }
