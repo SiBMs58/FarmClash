@@ -26,6 +26,11 @@ def game():
 """
 Building fetch and update functions
 """
+def building_user_exists(buildings, id):
+    for building in buildings:
+        if building.building_id == id:
+            return building
+    return None
 
 @game_blueprint.route('/update-building-map', methods=['POST'])
 def update_map():
@@ -40,7 +45,11 @@ def update_map():
         json_data = request.json
         building_information = json_data["building_information"]
 
+        username_owner = current_user.username
+        buildings = building_data_access.get_buildings_by_username_owner(username_owner)
+
         for building_info in building_information.values():
+            last_building = building_info
             building_type = building_info["general_information"]
             level = building_info["level"]
             created_at = datetime.now()
@@ -48,10 +57,9 @@ def update_map():
             x_value = building_info["building_location"][0]
             y_value = building_info["building_location"][1]
             building_id = building_info["self_key"]
-            username_owner = current_user.username
 
-            # Check if the building_id exists
-            building = building_data_access.get_building(building_id)
+            building = building_user_exists(buildings, building_id)
+
             if building:
                 # Update the existing building entry
                 building.building_type = building_type
@@ -61,21 +69,15 @@ def update_map():
                 building.y = y_value
                 building.tile_rel_locations = tile_rel_locations_json
                 building_data_access.add_building(building)
+
             else:
                 # Insert a new building entry
-                new_building = Building(building_id, username_owner, None, building_type, level, x_value, y_value,
+                new_building = Building(building_id, username_owner, building_type, level, x_value, y_value,
                                         tile_rel_locations_json, created_at)
                 building_data_access.add_building(new_building)
 
-            # Retrieve the generated or updated building ID
-            building = building_data_access.get_building(building_id)
-            building_id = building.building_id
-
-            # Insert or update the building_tiles entry
-            # You need to implement this part based on your specific logic
 
         return jsonify({"status": "success", "message": "Data inserted successfully"})
-
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
@@ -90,7 +92,7 @@ def fetch_building_information():
 
         # If no buildings found, return appropriate JSON response
         if not buildings:
-            return jsonify({"status": "No buildings"})
+            return jsonify({"status": "No buildings", "user": current_user.username})
 
         # Construct the final JSON response
         building_information = {}
