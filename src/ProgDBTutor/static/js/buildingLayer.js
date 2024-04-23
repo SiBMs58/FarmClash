@@ -83,7 +83,7 @@ export const defaultMapData2 = {
         },
         fences_lv9: {
             self_key: "fences_lv9",
-            display_name: "Fence",
+            general_information: "fence",
             level: 9,
             building_location: [6, 15],
             tile_rel_locations: [
@@ -99,7 +99,7 @@ export const defaultMapData2 = {
         },
         fences_lv10: {
             self_key: "fences_lv10",
-            display_name: "Fence",
+            general_information: "fence",
             level: 10,
             building_location: [6, 19],
             tile_rel_locations: [
