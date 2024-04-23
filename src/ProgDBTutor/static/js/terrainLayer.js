@@ -209,6 +209,9 @@ export class TerrainMap extends BaseMap {
         }
     }
 
+    /**
+     * Animates water tiles by one frame
+     */
     waterAnimation() {
         const animationSpeed = 36;
         if (this.time >= animationSpeed){
