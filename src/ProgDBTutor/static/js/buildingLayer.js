@@ -33,7 +33,7 @@ const defaultMapData = {
 /**
  * Here's an example of what the buildMap json needs to look like.
  */
-const defaultMapData2 = {
+export const defaultMapData2 = {
     map_width: 58,
     map_height: 43,
 
@@ -101,7 +101,7 @@ const defaultMapData2 = {
         tree: {
             self_key: "tree",
             general_information: "tree",
-            level: "None",
+            level: -1,
             building_location: [9, 15],
             tile_rel_locations: [
                 [[0, 0], "BiomeThings.1.2"],
@@ -152,8 +152,9 @@ export class BuildingMap extends BaseMap {
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
      * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
+     * @param uiLayerInstance This instance is needed to draw the correct building UI.
      */
-    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance) {
+    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, uiLayerInstance) {
 
         super(mapData, _tileSize);
 
@@ -166,6 +167,7 @@ export class BuildingMap extends BaseMap {
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
         this.terrainMapInstance = terrainMapInstance;
+        this.uiLayerInstance = uiLayerInstance;
 
 
         // Variables to remember the click state
@@ -217,7 +219,8 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        //await this.fetchBuildingMapData();
+        await this.fetchBuildingMapData();
+        this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
         //debugger;
@@ -244,15 +247,33 @@ export class BuildingMap extends BaseMap {
      * Fetches the buildingMapData json which stores the layout and other information needed.
      */
     async fetchBuildingMapData() {
-        // Klopt totaal niet
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        const fetchLink = BASE_URL + "/game/fetch-building-information";
         try {
-            const response = await fetch('/static/JorenStaticTestFiles/testBuildingMap.json');
-            let mapData = await response.json();
-            this.map_width = mapData.map_width;
-            this.map_height = mapData.map_height;
-            this.tiles = mapData.building_tiles;
+            const response = await fetch(fetchLink);
+            const mapData = await response.json();
+
+            // Check if mapData contains building_information
+            //debugger;
+
+            if ("building_information" in mapData) {
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
+                this.buildingInformation = mapData.building_information;
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.tiles);
+            } else {
+            // No buildings found
+                await this.updateBuildingMapDB();
+                console.log("No buildings found.");
+
+            }
+
+            // Resetting view coordinates
             this.viewX = 0;
             this.viewY = 0;
+
         } catch(error) {
             console.error('fetchBuildingAssetList() failed:', error);
             throw error;
@@ -497,20 +518,27 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    hoveringOverBuilding(tileX, tileY) {
+
+    }
+
     /**
      * Gets called by the 'UserInputHandler' class every time the mouse moves.
      * @param client_x x value on-screen
      * @param client_y y value on-screen
      */
     handleMouseMove(client_x, client_y) {
+        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
+        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
+
         if (!this.movingBuilding) {
+            if (this.hoveringOverBuilding(tileX, tileY)) {
+                const buildingHoverName = this.tiles[tileY][tileX][1];
+                this.uiLayerInstance.drawHoverUI(buildingHoverName, this.viewX, this.viewY);
+            }
             return;
         }
 
-        //console.log("we zijn in de functie 2")
-
-        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
-        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
 
         if (this.prevMouseMoveBuildingLoc === null) {
             this.prevMouseMoveBuildingLoc = [tileY, tileX];
@@ -518,8 +546,6 @@ export class BuildingMap extends BaseMap {
 
         const relDistanceY = tileY - this.prevMouseMoveBuildingLoc[0];
         const relDistanceX = tileX - this.prevMouseMoveBuildingLoc[1];
-
-        //console.log(`relDistanceY ${relDistanceY}, relDistanceX ${relDistanceX}`);
 
         if (relDistanceX !== 0 || relDistanceY !== 0) {
             const buildingToMove = this.buildingInformation[this.buildingClickedName];
@@ -606,6 +632,7 @@ export class BuildingMap extends BaseMap {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         const fetchLink = BASE_URL + "/game/update-building-map";
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON
+        console.log('BuildingMap DB ', mapDataJson);
         try {
             const response = await fetch(fetchLink, {
                 method: 'POST',
@@ -614,6 +641,8 @@ export class BuildingMap extends BaseMap {
                 },
                 body: mapDataJson // Send the serialized map data as the request body
             });
+
+            //debugger;
 
             if (response.ok) {
                 const jsonResponse = await response.json();
