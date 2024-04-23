@@ -13,7 +13,6 @@ This project is developed as part of the Programming Project Databases course at
 ## Technologies Used
 - Flask for the webserver.
 - PostgreSQL for the database.
-- Redis for caching. (TODO: verify)
 - Raw JavaScipt for the front-end.
 - JSON Web Tokens for stateless authentication. (TODO: verify)
 
