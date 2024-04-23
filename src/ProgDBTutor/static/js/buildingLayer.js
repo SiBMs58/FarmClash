@@ -236,7 +236,7 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        await this.fetchBuildingMapData();
+        //await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
@@ -253,6 +253,7 @@ export class BuildingMap extends BaseMap {
             const responseJson = await response.json();
             this.buildingAssetList = responseJson.buildings;
         } catch (error) {
+            debugger;
             console.error('fetchBuildingAssetList() failed:', error);
             throw error;
         }
@@ -415,7 +416,7 @@ export class BuildingMap extends BaseMap {
                 continue;
             }
 
-            const img = this.buildingAssets["/static/img/assets/buildings/" + getAssetType(tile[1]) + "/" + tile[1] + ".png"];
+            const img = this.buildingAssets["/static/img/assets/buildings/" + getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
             if (img) {
                 this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
             } else {
