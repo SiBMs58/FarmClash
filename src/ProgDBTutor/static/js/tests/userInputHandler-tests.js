@@ -1,6 +1,6 @@
 import { UserInputHandler } from '../userInputHandler.js';
 
-describe('UserInputHandler', () => {
+describe("UserInputHandler Tests", () => {
     let userInputHandler;
     let mockClass;
 

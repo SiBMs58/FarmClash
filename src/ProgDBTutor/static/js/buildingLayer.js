@@ -1,5 +1,6 @@
-import { BaseMap } from "./BaseMapKlasse.js";
+import { BaseMap } from "./baseMap.js";
 import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
+import { utils } from "./utils.js";
 
 /**
  * Sets the string value of
@@ -416,7 +417,7 @@ export class BuildingMap extends BaseMap {
                 continue;
             }
 
-            const img = this.buildingAssets["/static/img/assets/buildings/" + getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
+            const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
             if (img) {
                 this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
             } else {
@@ -495,7 +496,7 @@ export class BuildingMap extends BaseMap {
         // Check for forbidden terrain overlap
         for (const currTile of newLocations) {
             const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
-            const terrainType = getAssetDir(correspondingTerrainTile);
+            const terrainType = utils.getAssetDir(correspondingTerrainTile);
             if (terrainType === "Water") {
                 return false;
             }
