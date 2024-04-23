@@ -137,7 +137,7 @@ export const defaultMapData2 = {
                 "market sale. Upgrade to boost production. Every egg sold brings you one " +
                 "step closer to agricultural dominance.",
             upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
-            other_stats: [["Eggs/hour", [1,2,3,4,5,6,7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]] // All other stats specific for this building. ["Stat name display", [array of all values per level]]
+            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]] // All other stats specific for this building. ["Stat name display", [array of all values per level]]
         },
         fence: {
             display_name: "Fence",
@@ -154,13 +154,13 @@ export const defaultMapData2 = {
 
 
 /** Tile coördinaten: (y,x)
-    0 1 2 3 | x
-    1
-    2
-    3
-    —
-    y
-*/
+ 0 1 2 3 | x
+ 1
+ 2
+ 3
+ —
+ y
+ */
 
 
 export class BuildingMap extends BaseMap {
