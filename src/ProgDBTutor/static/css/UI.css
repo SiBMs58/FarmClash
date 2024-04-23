@@ -1,8 +1,16 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Press Start 2P';
+    font-family: 'Press Start 2P', Arial, sans-serif;
     font-weight: bold;
+    cursor: url('../../static/img/cursor.png'), auto;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+}
+body:active {
+    cursor: url('../../static/img/click_cursor.png'), auto;
 }
 
 img {
@@ -10,6 +18,7 @@ img {
 }
 
 header {
+    cursor: url('../../static/img/cursor.png'), auto;
     position: relative;
     margin: 0;
     padding: 0;
@@ -23,16 +32,42 @@ header {
     background-color: transparent;
     z-index: 1000; /* header is above other content */
 }
+header:active {
+    cursor: url('../../static/img/click_cursor.png'), auto;
+}
 .home-btn {
     position: absolute;
     top: 10px;
-    left: 10px
+    left: 10px;
+    background: none;
+    border: none;
+    padding: 0;
 }
-
+.home-btn:hover,
+.resource-btn:hover,
+.chat-btn:hover,
+.setting-btn:hover,
+.market-btn:hover,
+.attack-btn:hover,
+img:hover {
+    cursor: url('../../static/img/hover_cursor.png'), auto;
+}
+.home-btn:focus ,
+.resource-btn:focus ,
+.chat-btn:focus ,
+.setting-btn:focus ,
+.market-btn:focus ,
+.attack-btn:focus ,
+.attack-btn:focus {
+    outline: none;
+}
 .resource-btn {
     position: absolute;
     top: 10px;
-    left: 65px
+    left: 65px;
+    background: none;
+    border: none;
+    padding: 0;
 }
 .overlay{
     position: absolute;
@@ -50,10 +85,18 @@ header {
     border-radius: 10px;
 }
 .popup p {
+    display: inline-block;
     margin: 0 10px;
+    vertical-align: middle;
     white-space: nowrap;
+    text-rendering: optimizeLegibility
 }
-
+.popup img {
+    height: 25px;
+    margin: 0 5px;
+    transform: translateY(-2px);
+    vertical-align: middle;
+}
 
 
 .money-display{
@@ -75,11 +118,17 @@ header {
     position: absolute;
     top: 10px;
     right: 65px;
+    background: none;
+    border: none;
+    padding: 0;
 }
 .setting-btn {
     position: absolute;
     top: 10px;
     right: 10px;
+    background: none;
+    border: none;
+    padding: 0;
 }
 
 
@@ -89,6 +138,7 @@ header {
 
 
 footer {
+    cursor: url('../../static/img/cursor.png'), auto;
     position: absolute; /* Positions the footer absolutely relative to its positioned ancestor */
     bottom: 0; /* Aligns to the bottom */
     left: 0; /* Aligns to the left */
@@ -109,12 +159,18 @@ footer {
     position: absolute;
     bottom: 10px;
     left: 10px;
+    background: none;
+    border: none;
+    padding: 0;
 }
 
 .attack-btn {
     position: absolute;
     bottom: 10px;
     right: 10px;
+    background: none;
+    border: none;
+    padding: 0;
 }
 
 
@@ -123,7 +179,10 @@ footer {
 .back-btn {
     position: absolute;
     top: 10px;
-    left: 10px
+    left: 10px;
+    background: none;
+    border: none;
+    padding: 0;
 }
 .welcome-user{
     position: absolute;

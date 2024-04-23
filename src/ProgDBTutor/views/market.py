@@ -15,22 +15,3 @@ def market():
         return redirect(url_for('admin'))
     return render_template('market/market.html', app_data=config_data)
 
-@market_blueprint.route('/animals')
-@login_required
-def animals():
-    """
-    Renders the market view.
-    """
-    if current_user.username == 'admin':
-        return redirect(url_for('admin'))
-    return render_template('market/animals.html', app_data=config_data)
-
-@market_blueprint.route('/crops')
-@login_required
-def crops():
-    """
-    Renders the market view.
-    """
-    if current_user.username == 'admin':
-        return redirect(url_for('admin'))
-    return render_template('market/crops.html', app_data=config_data)
