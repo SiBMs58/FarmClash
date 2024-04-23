@@ -9,19 +9,21 @@
 </head>
 <body>
 {% include 'header&footer.html' %}
-<h1 class="leaderboard-header">Leaderboard</h1>
-<table id="leaderboard-table" style="width:100%">
-    <thead>
-        <tr>
-            <th>Place</th>
-            <th>Username</th>
-            <th>Score</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Table body where scores will be populated -->
-    </tbody>
-</table>
+<div class="leaderboard">
+    <h1 class="leaderboard-header">Leaderboard</h1>
+    <table id="leaderboard-table">
+        <thead>
+            <tr>
+                <th>Place</th>
+                <th>Username</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table body where scores will be populated -->
+        </tbody>
+    </table>
+</div>
 
 <script>
     // Function to load the leaderboard from the API
