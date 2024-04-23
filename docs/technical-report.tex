@@ -108,6 +108,23 @@ The backend manages the leaderboard by fetching and calculating user scores, sor
     \item \textbf{Return Leaderboard Data:} The backend returns the leaderboard data in JSON format, including the user's rank, username, and score. This data is then displayed on the frontend for users to view and engage with.
 \end{itemize}
 
+\subsubsection{Market Feature}
+The backend manages the market by storing the current price and adjusting it based on user sales of a given crop. This process occurs in intervals of 1 minute using past and current sales data:
+route : \begin{verbatim}`@game/update-market`\end{verbatim}
+\begin{itemize}
+    \item \textbf{update\_price Function:} Calculates a new price for a crop. Adjusts the price based on the current count and a random factor. Constrains the new price within a specific range. Returns the calculated new price.
+    \item \textbf{update\_market Route:} Handles POST requests for updating market data. Retrieves current market data for a specific crop. If 1 minute has passed since the last update, calculates and updates the price using the update\_price function. Updates the market data with the current sales and price. Creates a new entry with a default price if no existing market data is found. Returns a response indicating the success or failure of the update.
+    \item \textbf{fetch\_crop\_price Route:} Handles GET requests to fetch the current price of a crop. Retrieves market data for the requested crop. Updates the price using the update\_price function if needed. Returns the current price of the crop in the response.
+\end{itemize}
+
+\subsubsection{Building Feature}
+The backend manages the buildings by storing, updating or fatching the requested building\_data:
+route : \begin{verbatim}`@game/building-map`\end{verbatim}
+\begin{itemize}
+    \item \textbf{update\_map Function:} inserts a given building json in the database. If it exists, it updates, else it creates a new entry.
+    \item \textbf{fetch\_building\_information Route:} Handles GET requests to the requested building info. if the requested building does not exist, returns an error.
+\end{itemize}
+
 \subsection{Frontend Interface}
 The frontend provides an interactive and user-friendly interface using React, allowing players to engage with the game seamlessly. It features a map view for navigating different parts of the farm and a market interface for selling produce.
 \subsubsection{Login and Authentication Feature}
@@ -124,11 +141,103 @@ The registration page allows new users to create an account by providing essenti
     \item \textbf{JavaScript:} Button Feedback: Implements the same interactive feedback for the registration button, enhancing user experience during the account creation process.
 \end{itemize}
 
+\subsubsection{MAIN GAME WORLD}
+The \textit{main game world} consists of several HTML canvases layered on top of each other, each with their own unique
+JavaScript classes to provide the right functionality. These canvases display 16x16 tiles scaled to a variable size and
+fill the entire screen. The player can click and drag the screen to look around the game world, interact with buildings,
+and use the appropriate UI to navigate different parts of the game.
+
+After logging in, the player gets redirected to \texttt{https://"baseLink"/game/} which fetches \texttt{game.html}. This
+file is the most important HTML, as it connects and fetches every other file. It includes the UI HTML, the pop-up HTML,
+sets and positions the canvases, and links \texttt{canvas.js}. All the canvases have their own set of tiles which are
+pre-fetched and stored during the initialization period. This is needed for instantaneous loading; otherwise, a fetch
+delay is noticeable during runtime.
+
+The HTML UI elements sit on top of these canvases and utilize CSS styling. The only technologies used are JavaScript,
+HTML, and CSS.
+
+
+\paragraph{canvas.js} This file is most important for initializing the game. It creates all the JavaScript classes used
+throughout the main game in the correct order (some classes depend on other classes). It is also responsible for
+correctly resizing all the layered canvases when the browser window's size is changed by the user. Additionally the
+initialize() functions of some classes are called. These async functions perform all the correct fetches for the
+asset's. Then the resize event gets linked and the ticker class gets started.
+
+\paragraph{Terrain Layer}
+The terrain layer provides functionality for correctly displaying the terrain tiles and is the lowest layered canvas,
+providing as a sort of background layer. The tiles are semi-randomly generated. (TODO Faisal als ge hier nog iets extra
+over wilt zeggen kunt ge da hier doen). The map is stored as a 2D array of strings that refer to their tile png name.
+All these assets were fetched beforehand and stored in a map with the tile name as the key. The 'drawTiles()' function
+uses the map array together with the camera location to correctly draw the tiles on the screen. This function gets
+called many times throughout the code every time there's an adjustment and the tiles need to be redrawn. When dragging
+the screen the appropriate move functions of the map get called which change the camera location and redraw the screen.
+
+After starting the game you may notice some tiles are being animated. This is accomplished by utilizing the tick()
+function and going through the terrain map array, changing specific tiles to the consequent tile in the animation and
+redrawing them.
+
+\paragraph{Building Layer} The building layer works similarly to the terrain layer in terms of rendering the tiles but
+there are some distinctions and  additional features. The way the building map is saved differs from the the terrain
+layer. The buildings and building information are saved in a json structure. (opslag methode moet geüpdate worden dus
+hier is nog geen documentatie voor).
+
+The building layer provides support for interacting with buildings. To move a building you can click (without dragging),
+after which the building is locked to the mouse. Move the mouse, then click again to place the building. When attempting
+to place a building on an invalid location the building simply doesn't get placed and stays attached to the mouse.
+Invalid locations include other buildings and water tiles. When trying to drag a building outside the window or outside
+the map bounds the building doesn't move any further in a way such that it is never in an impossible location. You can
+drag the screen while moving a building to easily move around the map without needing to let go of the building.
+
+When moving a building it gets rendered on top of all other buildings to avoid it from going underneath other structures
+around the map. This would lead to a somewhat strange visual otherwise.
+
+\paragraph{Building Pop-up} When right-clicking on a building, a HTML pop-up shows up on the right side of the screen.
+This is used to display various details about the building of interest and also allows you to upgrade the building. The
+pop-up contains a "Building Info" title, the name of the type of building, a small text with some information (namely
+the purpose of the building). On top of that there are, depending on the type of building, potentially some stats that
+include the level the building is at and other stats like upgrade cost, defense, eggs/hour, etc. Lastly there is an
+upgrade button and a close button that are both animated when clicked.
+
+When right-clicking another building while a pop-up is already open, a switch animation is displayed to make clear that
+you are switching to the information of a different building. When right-clicking the same building twice this animation
+doesn't happen. Lastly when doing almost any other action like dragging the screen and moving a building the pop-up
+automatically closes.
+
+\paragraph{Main UI} The header and footer HTML provide the user with buttons for easy access to different parts of the
+game as well as displaying some useful information such as the amount of coins and produce the player has.
+
+\paragraph{Ticker class} This JavaScript code utilizes the observer pattern. During initialization, classes can
+subscribe to this class, then when the  ticker starts it will call the tick() function on every subscribed class every
+set milliseconds (1000/24 ms to get 24 frames/second). Classes can then use this function to implement timing sensitive
+functionality, namely animations.
+
+\paragraph{User Input Handler} This is a class that has set up all the event listeners needed to detect useful user
+input in its constructor. Like the Ticker class it also uses an observer pattern approach, where all classes that
+potentially need to know about user input get added in the initialization phase of the game.
+
+In this project a click on any of the canvases only gets registered on the mouse up event. This is because we clearly
+want to differentiate between a click and a drag. To achieve this the user input handler stores the mouse down location.
+On the mouse up event it compares the current location to the mouse down location and when this distance is smaller then
+5 pixels in the x and y direction, a click is registered. This margin ensures that when the user accidentally moves the
+mouse a few pixels, the input still gets registered as a click.
+
+In order to check on what canvas the user intended to click, a trickle-down method is used. The input handler first
+checks the first class in the list and calls the 'handleClickInput(x,y)' function on this class. This function will then
+return a boolean whether the click was applicable to the class or not. If not, the handleClick function is called on the
+next layer's class and so on.
+
+
 \subsubsection{Friends and Messaging Feature}
 \subsubsection{Leaderboard Feature}
 \begin{itemize}
     \item \textbf{HTML and CSS:} The leaderboard.html contains the HTML structure, including a table where the leaderboard will be dynamically populated. The CSS file leaderboard.css styles the leaderboard page, ensuring a visually appealing and consistent design.
     \item \textbf{JavaScript:} A JavaScript function loadLeaderboard() (event handling; this function is triggered when document content is fully loaded) is responsible for fetching the leaderboard data from the backend API. Upon successful fetch, it populates the leaderboard table in the HTML dynamically. Error handling is incorporated to manage and alert users in case of failures in data retrieval.
+\end{itemize}
+
+\subsubsection{Books}
+\begin{itemize}
+    \item \textbf{HTML and CSS:} The bookChat.html and bookMarket.html contain the HTML structure of the books, covers and pages (front and back), along with the content for the chat and the market respectively.
+    \item \textbf{JavaScript:} There is a JavaScript function: openBook() to open the cover of the book and a closeBook() to close the cover of the book. In addition, you have the goNextPage() function to go to the next page and the goPrevPage() function to go to the previous page. In addition to these functions, there are querySelectors for the covers, pages and buttons
 \end{itemize}
 
 \section{Challenges and Solutions}
@@ -147,6 +256,8 @@ For backend testing, we utilized Pytest, a powerful and flexible testing tool. O
             \item \textbf{Resources Endpoint:} Checked both general and specific resource retrieval endpoints for proper authorization checks and JSON formatting.
             \item \textbf{Terrain Map Endpoint:} Tested user-specific access to terrain maps, ensuring the integrity and format of the terrain data returned.
             \item \textbf{Friendships Endpoint:} Assured that users could reliably retrieve their list of friends, with responses properly formatted as JSON arrays.
+            \item \textbf{Market Data Access:} With \texttt{test\_market\_data\_access.py}, we insert and fetch new crop elements , to check if the database requests work.
+            \item \textbf{Building Data Access:} With \texttt{test\_building\_data\_access.py}, we check if the databse is updated correctly when inserting new elements and fetching them.
             \item \textbf{Chat Endpoint:} Confirmed functionality for retrieving chat messages between users, focusing on correct data handling and security measures.
         \end{itemize}
     These tests not only verified proper access control and data integrity but also ensured that our server effectively handled errors and returned appropriate status codes under various scenarios.
