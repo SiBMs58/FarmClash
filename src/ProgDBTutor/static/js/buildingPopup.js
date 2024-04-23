@@ -32,7 +32,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
     document.getElementById('building-explanation').innerText = generalInformation.explanation;
     const buildingStats = document.getElementById('building-stats');
     const upgradeButton = document.getElementById('upgrade-button');
-    if (building.level === "None") {
+    if (building.level === -1) {
         buildingStats.style.display = "none";
         upgradeButton.style.display = "none";
     } else {

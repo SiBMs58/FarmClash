@@ -101,7 +101,7 @@ export const defaultMapData2 = {
         tree: {
             self_key: "tree",
             general_information: "tree",
-            level: 0,
+            level: -1,
             building_location: [9, 15],
             tile_rel_locations: [
                 [[0, 0], "BiomeThings.1.2"],
@@ -219,7 +219,8 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        //await this.fetchBuildingMapData();
+        await this.fetchBuildingMapData();
+        this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
         //debugger;
