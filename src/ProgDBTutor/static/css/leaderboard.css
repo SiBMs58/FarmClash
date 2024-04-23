@@ -1,13 +1,47 @@
-.leaderboard-header {
+body {
+    font-family: "Press Start 2P", Arial, sans-serif;
+    background-image: url("../img/terrain.png");
+    image-rendering: pixelated;
+    user-select: none;
+    cursor: url('../img/UI/pointer.png'), auto;
     display: flex;
     justify-content: center;
-    margin-top: 5%;
+    align-items: center;
+    font-size: 20px;
+    margin: 0;
 }
 
-.leaderboard-table thead{
+.leaderboard {
+    position: absolute;
+    background-image: url("../img/wood.background.png");
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.5);
+    border: 1px solid #886A08;
+    border-radius: 10px;
+}
+
+.leaderboard-header {
+    text-align: center;
+    margin: 2% 0;
+}
+
+#leaderboard-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 2%;
+}
+
+#leaderboard-table thead {
     text-align: center;
 }
 
-.leaderboard-table tbody tr{
-    border: 1px solid sandybrown;
+#leaderboard-table tbody tr {
+    /* border: 1px solid black; */
+    text-align: center;
 }
+
+/* Add any additional styles for table headers, rows, and cells as needed */
+

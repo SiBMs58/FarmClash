@@ -1,15 +1,11 @@
 \documentclass[12pt]{article}
-
-% Package for including images
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
 \usepackage{graphicx}
-% Package for database diagrams and other diagrams
-\usepackage{tikz}
-% Package for hyperlinks
-\usepackage{hyperref}
-% Package for figure placement
-\usepackage{float}
 
-\title{FarmClash - Software Product Technical Report}
+\geometry{a4paper}
+
+\title{Technical Report - FarmClash}
 \author{Camille De Vuyst, Joren Van der Sande, Thomas De Volder,\\ Faisal Ettarrahi, Ferhat Van Herck, Siebe Mees}
 \date{\today}
 
@@ -19,105 +15,178 @@
 \tableofcontents
 \newpage
 
+\begin{abstract}
+This technical report describes the development and implementation of FarmClash, a web-based idle game designed for the Programming Project Databases course at the University of Antwerp. The game integrates concepts of resource management and multiplayer interaction within a farm management context, drawing inspiration from popular titles like Clash of Clans and Hay Day.
+\end{abstract}
+
 \section{Introduction}
-\subsection{Purpose}
-This document serves as the comprehensive manual for FarmClash, a strategic resource management and town builder game that combines elements of classic farm management and competitive interactions among players. It details the game’s design, database schema, and functionality to assist developers, testers, and users in understanding and interacting with the system effectively.
+FarmClash is an educational project designed to apply database and web development skills in a practical scenario. Inspired by games like Clash of Clans and Hay Day, it challenges players to manage a farm, interact with other players, and strategize in real-time, balancing competitive and cooperative gameplay elements.
 
-\subsection{Scope}
-This manual is intended to articulate the functionalities of FarmClash, providing guidance on the gameplay mechanics, user interaction, architecture, and technology stack utilized in the development. It covers various components including the player interface, game economy, resource management, defensive and offensive strategies, and the multiplayer aspects of the game. The intended audience for this document includes the development team, testers for quality assurance, and end-users who seek a deeper understanding of the game’s underlying mechanics.
-
-\section{System Overview}
-FarmClash is an ambitious and intricately designed game that challenges players to build and manage a farm in a competitive environment. The overarching design incorporates modern web technologies and follows a client-server architecture to deliver a real-time gaming experience.
-\subsection{TODO: High-Level Architecture}
+\section{Project Objectives}
+The primary objectives of this project include:
 \begin{itemize}
-    \item \textbf{Client}: Utilizes React, HTML, JavaScript, and CSS to create a dynamic and responsive user interface. The client side is responsible for presenting the game world, capturing user inputs, and providing interactive feedback.
-    \item \textbf{Server}: Implements a RESTful API using Node.js and Express to handle game logic, data storage, and communication between clients. The server side processes user actions, updates the game state, and enforces the game rules.
-    \item \textbf{Database}: Utilizes a relational database (e.g., MySQL) to store user data, game state, and other essential information. The database is accessed by the server to persist game progress and maintain data consistency.
-    \item \textbf{Communication}: The client-server communication is facilitated through HTTP requests and responses, enabling real-time updates and synchronization of game state across multiple clients.
+    \item Develop a functional web-based idle game, inspired by titles such as Grepolis and Clash of Clans, focusing on the management of cities and resources.
+    \item Utilize PostgreSQL to manage a robust database that handles game states, user data, and interactive features such as guilds and direct messaging.
+    \item Implement secure and efficient server-side interactions using Flask, ensuring that the system handles real-time data exchange and multiplayer interactions seamlessly.
+    \item Create an intuitive user interface that facilitates easy navigation and management of game tasks, utilizing technologies such as React for dynamic frontend development and CSS frameworks for aesthetic design.
+    \item Design the game to support background updates and cooldowns effectively, representing idle game mechanics where actions continue to progress even when players are not actively engaged.
+    \item TODO: Ensure that the application adheres to modern web standards and security measures, including the use of JSON Web Tokens for stateless authentication and secure communication.
+    \item paragraphasize software extensibility and maintainability, preparing the system for future upgrades and scalability.
+    \item Deploy and maintain the software system on a production environment, leveraging provided Google Cloud Platform resources for hosting.
+\end{itemize}
+This project is designed to meet the educational goals of learning to develop extensive software projects within a team setting, discovering and integrating new technologies, and effectively planning and distributing tasks.
+
+
+\section{Game Description}
+FarmClash allows players to build and manage their farms, defend against attacks from other players, and maximize their profits through strategic selling of farm produce influenced by dynamic market prices. Players start with a basic farm and can upgrade their facilities and defenses as they progress, interacting with other players through alliances and competitive gameplay.
+
+\section{Technologies Used}
+\begin{itemize}
+    \item \textbf{Flask:} Serves as the web server framework.
+    \item \textbf{PostgreSQL:} Manages all data storage needs.
+    \item \textbf{Redis:} Implemented for caching purposes to enhance performance (pending verification).
+    \item \textbf{JavaScript:} Used for dynamic frontend development.
+    \item \textbf{Tools:} Includes PyCharm, DataGrip, JIRA, and Google Cloud among others.
 \end{itemize}
 
-\subsection{TODO: Main Components}
-\begin{itemize}
-    \item \textbf{User Interface}: The user interface provides players with a visual representation of the game world, including farms, buildings, crops, and other elements. It allows users to interact with the game, manage resources, and make strategic decisions.
-    \item \textbf{Game Mechanics}: The game logic governs the rules of the game, including resource management, building construction, crop growth, and player interactions. It enforces the game mechanics and ensures a fair and engaging gameplay experience.
-    \item \textbf{Defensive and Offensive Strategies}: The database management system stores and retrieves game data, including user information, farm details, building configurations, and crop statistics. It maintains data integrity and supports complex queries to drive game mechanics.
-    \item \textbf{Social Interaction}: Networking enables communication between clients and the server, allowing players to interact with each other, engage in trade, and compete in various challenges. It ensures real-time updates and synchronization of game state across all connected clients.
-    \item \textbf{Game Economy}: The game economy manages resources, currencies, and transactions within the game world. It establishes pricing mechanisms, trade systems, and reward structures to incentivize player engagement and progression.
-    \item \textbf{Progression and Expansion}: Multiplayer functionality enables players to form alliances, compete in challenges, and engage in player-versus-player interactions. It fosters a sense of community and competition among players, enhancing the overall gaming experience.
-\end{itemize}
-
-\section{Database Design}
+\section{Implementation Details}
 \subsection{Database Schema}
-The database schema is designed to support a farming simulation game, featuring users, farms, buildings, crops, and other elements essential for gameplay. The schema consists of several interconnected tables, each serving a specific purpose within the game's ecosystem. Key relationships between tables are established through foreign keys, ensuring data integrity and facilitating complex queries that drive game mechanics.
+The database schema is designed to efficiently handle game data and user interactions. It includes tables for users, game states, transactions, and market prices, reflecting the dynamic nature of the game's economy.
+\\ $\ast$ TODO: Add more details here. e.g. image of the final db schama
 
-% Including an image (Your diagram)
-\begin{figure}[H]
- \centering
- \includegraphics[width=0.8\textwidth]{img/db-diagram.png}
- \caption{Database schema diagram}
-\end{figure}
+\subsection{Backend Logic}
+The backend handles requests from the client, processes game logic, and interacts with the database. It ensures that all player actions are reflected in real-time and manages the continuous accumulation of resources even when the player is offline.
+\subsubsection{Login and Authentication Feature}
+\paragraph{Login Feature}
+The login functionality is critical for user authentication, allowing users to securely access their accounts.
+\begin{itemize}
+    \item \textbf{Endpoint} The route `/auth/login`(methods=['GET', 'POST']) handles the login requests.
+    \item \textbf{Form Processing} When a POST request is received, the server retrieves the username and password from the form data.
+    \item \textbf{User Validation} The user details are fetched from the database using user\_data\_access.get\_user(username). The password is verified using werkzeug\_check\_password\_hash.
+    \item \textbf{Session Management}  If the credentials are valid, login\_user(user\_record) is called to log the user in, using Flask-Login to handle the session.
+    \item \textbf{Response} After successful login, users are redirected to the game interface or admin panel based on their role
+    \item \textbf{Error Handling} If login fails, an error message is displayed.
+\end{itemize}
+\paragraph{Registration Feature}
+Registration allows new users to create accounts by providing their username, password, and email.
+\begin{itemize}
+    \item \textbf{Endpoint} The route `/auth/register`(methods=['GET', 'POST']) handles the registration requests.
+    \item \textbf{User Creation} On receiving a POST request, it attempts to create a new user record with the provided details. The password should ideally be hashed before storage (though hashing is not explicitly mentioned in the provided code).
+    \item \textbf{Account initialization} If the user is successfully added to the database, the system initializes the user's game environment, including creating a default map and initializing resources using GameServices.
+    \item \textbf{Response} Successful registration redirects the user to the login page. If registration fails (e.g., if the username is already taken), an error message is provided.
+\end{itemize}
+\paragraph{Logout Feature}
+The logout functionality securely ends a user's session.
+\begin{itemize}
+    \item \textbf{Endpoint} The route `/auth/logout` logs the user out by calling logout\_user() from Flask-Login.
+\end{itemize}
+\subsubsection{Friends and Messaging Feature}
+The friends and messaging features are central to fostering a community environment and enabling social interactions within the game.
+\paragraph{Friends Feature:}
+The backend supports functionalities related to the management of friendships between users. Users can add new friends, and view their list of friends. The implementation involves:
+\begin{itemize}
+    \item \textbf{Friend Request Management:} Users add friends using a specific API endpoint that updates the database to include a new friendship. This is implemented in the endpoint defined in \texttt{api.py} (see line 96). The endpoint is:
+    \begin{verbatim}
+    .../add_friend/<string:friend_name>
+    \end{verbatim}
+    By utilizing the User Data Access, we retrieve data for both the current user and the prospective friend, converting this information into user objects through the get\_user function. Once we have the user data, we create a new friendship by employing the add\_friendship method from the Friendship Data Access class.
+    \item \textbf{List of Friends:} Users can retrieve their list of friends through an API call, which fetches the data from the database and returns it in a formatted JSON array. This feature ensures that users can easily access and interact with their friends list. The relevant API call is implemented in \texttt{views/friends.py} (see line 43). The endpoint is:
+    \begin{verbatim}
+    .../api/friends
+    \end{verbatim}
+    \item \textbf{Visit Friends World:} The system allows users to visit their friends' farms, fostering engagement and interaction between players. This feature is implemented in the frontend, where users can navigate to their friends' maps and view their progress.
+\end{itemize}
+\paragraph{Messaging Feature:}
+\\ $\ast$ TODO
+These features not only enhance user engagement but also contribute to the game's social dynamics, making the gaming experience more interactive and enjoyable for users.
+\subsubsection{Leaderboard Feature}
+The backend manages the leaderboard by fetching and calculating user scores, sorting them, and handling specific leaderboard queries. Here's how it is structured:
+\begin{itemize}
+    \item \textbf{Fetch and Calculate Scores:} The route \begin{verbatim}`@api/leaderboard`\end{verbatim} is used for handling GET requests for the leaderboard. It retrieves all users from the database via user\_data\_access.get\_all\_users(). For each user, it calculates the total score by summing up the resources associated with each user, fetched by resource\_data\_access.get\_resources(user.username).
+    \item \textbf{Sort and Rank Users:} Users are sorted by their calculated scores in descending order. The backend extracts the top three users to represent the leading positions on the leaderboard. Additionally, it retrieves two friends of the current user to include in the leaderboard for more personalized competition.
+    \item \textbf{Ensure Inclusion of Current User:} The system checks if the current user is among the top users or friends listed. If not, the current user is also added to the leaderboard. It then removes duplicates and finalizes a ranked list of unique users.
+    \item \textbf{Return Leaderboard Data:} The backend returns the leaderboard data in JSON format, including the user's rank, username, and score. This data is then displayed on the frontend for users to view and engage with.
+\end{itemize}
 
+\subsection{Frontend Interface}
+The frontend provides an interactive and user-friendly interface using React, allowing players to engage with the game seamlessly. It features a map view for navigating different parts of the farm and a market interface for selling produce.
+\subsubsection{Login and Authentication Feature}
+\paragraph{Login Page}
+The login page offers a straightforward interface for existing users to access their accounts.
+\begin{itemize}
+    \item \textbf{HTML and CSS:} Structure: The login form is embedded within a div element styled with a form-container class. It includes input fields for username and password. Styling: Stylesheets for authentication (auth.css) and footer (footer.css) are linked to maintain consistency in appearance with the rest of the application. The Press Start 2P font from Google Fonts enhances the retro aesthetic of the app.
+    \item \textbf{JavaScript:} Dynamic Visual Feedback: JavaScript is used to provide visual feedback on the login button. It changes the button's image when pressed and released, helping confirm user interaction. Form Submission: The form posts data to the /auth/login endpoint, handling user authentication in the backend.
+\end{itemize}
+\paragraph{Registration Page}
+The registration page allows new users to create an account by providing essential information such as username, password, and email.
+\begin{itemize}
+    \item \textbf{HTML and CSS:} Extended Form: Similar to the login form but includes an additional field for email to accommodate the registration process. Consistent Styling: Utilizes the same CSS files as the login page for a uniform look and feel.
+    \item \textbf{JavaScript:} Button Feedback: Implements the same interactive feedback for the registration button, enhancing user experience during the account creation process.
+\end{itemize}
 
-\subsection{Table Descriptions}
+\subsubsection{Friends and Messaging Feature}
+\subsubsection{Leaderboard Feature}
+\begin{itemize}
+    \item \textbf{HTML and CSS:} The leaderboard.html contains the HTML structure, including a table where the leaderboard will be dynamically populated. The CSS file leaderboard.css styles the leaderboard page, ensuring a visually appealing and consistent design.
+    \item \textbf{JavaScript:} A JavaScript function loadLeaderboard() (event handling; this function is triggered when document content is fully loaded) is responsible for fetching the leaderboard data from the backend API. Upon successful fetch, it populates the leaderboard table in the HTML dynamically. Error handling is incorporated to manage and alert users in case of failures in data retrieval.
+\end{itemize}
 
-\subsubsection{Users Table}
-The users table stores information about players, including their username, password, email, and account creation date. Each user is uniquely identified by their username.
+\section{Challenges and Solutions}
+Throughout the development, the team encountered and overcame numerous challenges, such as optimizing database queries and ensuring smooth synchronous player interactions. Specific issues included managing the real-time update of resource levels and implementing secure authentication mechanisms.
 
-\subsubsection{Farms Table}
-This table represents the farms owned by users. It includes a unique ID for each farm, the username of its owner (linked to the users table), the farm's name, its level, and the creation date.
+\section{Results and Testing}
+The game was rigorously tested to ensure functionality across different systems and scenarios. Our testing approach was comprehensive, incorporating automated unit tests, integration tests, and user acceptance testing to cover both the backend and frontend components of our application.
+\subsection{Backend Testing}
+For backend testing, we utilized Pytest, a powerful and flexible testing tool. Our tests included:
+\begin{itemize}
+    \item \textbf{Database Connection Tests:} Using \texttt{test\_dbconnection.py}, we verified the stability and reliability of our database connections, ensuring that all interactions with the database handled data correctly and maintained integrity under various conditions.
+    \item \textbf{API Functionality Tests:} We conducted extensive testing on our RESTful API endpoints to ensure accurate response statuses and proper data formatting. This included testing:
+        \begin{itemize}
+            \item \textbf{User Endpoint:} Verified that only administrators could retrieve user data, and that the data was correctly formatted as JSON.
+            \item \textbf{Maps Endpoint:} Ensured that map data could only be accessed by administrators, testing for correct map attributes and response format.
+            \item \textbf{Resources Endpoint:} Checked both general and specific resource retrieval endpoints for proper authorization checks and JSON formatting.
+            \item \textbf{Terrain Map Endpoint:} Tested user-specific access to terrain maps, ensuring the integrity and format of the terrain data returned.
+            \item \textbf{Friendships Endpoint:} Assured that users could reliably retrieve their list of friends, with responses properly formatted as JSON arrays.
+            \item \textbf{Chat Endpoint:} Confirmed functionality for retrieving chat messages between users, focusing on correct data handling and security measures.
+        \end{itemize}
+    These tests not only verified proper access control and data integrity but also ensured that our server effectively handled errors and returned appropriate status codes under various scenarios.
+    \item \textbf{Data Access Layer Tests:}
+    \begin{itemize}
+        \item \textbf{User Data Access:} Using \texttt{test\_user\_data\_access.py}, we tested CRUD operations for user data to ensure accurate storage, retrieval, updating, and deletion of user information.
+        \item \textbf{Map Data Access:} In \texttt{test\_map\_data\_access.py}, we verified the functionality of our map management system, ensuring that map data manipulations were handled correctly.
+        \item \textbf{Tile Data Access:} The \texttt{test\_tile\_data\_access.py} allowed us to ensure that tile-based operations, crucial for the game's map functionality, were accurate and efficient.
+        \item \textbf{Resource Data Access:} Through \texttt{test\_resource\_data\_access.py}, we tested the handling of game resources, confirming the correct implementation of resource accumulation and usage.
+        \item \textbf{Friendship Data Access:} With \texttt{test\_friendship\_data\_access.py}, we assessed the systems managing player interactions and relationships within the game.
+        \item \textbf{Chat Message Data Access:} Using \texttt{test\_chatmessage\_data\_access.py}, we evaluated the functionality of in-game chat systems, ensuring reliable and secure message delivery and storage.
+    \end{itemize}
+    \item \textbf{Integration Tests:} We conducted extensive tests to ensure that these individual components functioned together seamlessly, simulating real-world usage to detect any integration issues.
+\end{itemize}
+These targeted tests helped us to systematically validate each aspect of our backend, ensuring robustness and reliability throughout the game's infrastructure.
 
-\subsubsection{Buildings Table}
-The buildings table tracks buildings on each farm, identified by a unique building ID. It stores the farm ID (linked to the farms table), the type of building, its level, and the creation date.
+\subsection{Frontend Testing}
+Frontend testing was conducted using Jasmine, focusing on the interactive aspects of our application:
+\begin{itemize}
+    \item \textbf{UI Component Tests:} Using \texttt{canvas-tests.js}, we tested the rendering and behavior of graphical components, such as the game map and resource widgets, to ensure they behaved consistently across different browsers and resolutions.
+    \item \textbf{User Interaction Tests:} We simulated user interactions such as clicking, dragging, and keyboard inputs to ensure the UI responded correctly and efficiently without errors or unexpected behavior.
+    \item \textbf{Performance Tests:} To assess the application’s performance, particularly during peak load times, we measured response times and resource usage to identify and mitigate any potential bottlenecks.
+\end{itemize}
+\subsection{User Acceptance Testing}
+User acceptance testing was carried out with a group of target users who provided valuable feedback on the usability and overall experience of the game. This feedback was crucial in refining the gameplay mechanics and interface, leading to several iterations that enhanced user engagement and satisfaction.
+\subsection{Continuous Integration}
+We integrated continuous integration tools into our development process, allowing us to automatically run tests upon every commit to our version control system. This helped us quickly identify and rectify issues early in the development cycle, improving product quality and reducing time to deployment.
+Overall, our structured and thorough approach to testing ensured that 'FarmClash' was robust, user-friendly, and scalable, ready to handle the demands of real-world usage by players across the globe.
 
-\subsubsection{Crops Table}
-This table lists all available crop types in the game, including their name, growth time, and sell price. Each crop type is uniquely identified by a crop ID.
+\section{User Manual}
+\subsection{Installation}
+Details the steps required to install and run the game locally, as outlined in the README document.
 
-\subsubsection{Planted Crops Table}
-The planted\textunderscore crops table keeps track of crops planted on farms, including a unique ID for each planted crop, the crop ID (linked to the crops table), the farm ID (linked to the farms table), and the harvest time.
-
-\subsubsection{Market Table}
-(Optional) The market table is designed for dynamic pricing of crops. It includes a market ID, crop ID (linked to the crops table), the current price of the crop, and the last update time.
-
-\subsubsection{Resources Table}
-This table tracks various resources owned by users, such as money or inventory items. It includes a resource ID, the owner's username (linked to the users table), the type of resource, and the quantity.
-
-\subsubsection{Attacks Table}
-(If implementing the attack feature) The attacks table records attacks between farms, including the attack ID, attacker and defender farm IDs (linked to the farms table), the result of the attack, the loot stolen, and the attack time.
-
-\subsubsection{Friendships Table}
-The friendships table tracks friendships between users, including a friendship ID, the usernames of the friends (linked to the users table), and the creation date of the friendship.
-
-\subsubsection{Chat Messages Table}
-This table stores chat messages sent between users, with a message ID, sender and receiver usernames (linked to the users table), the message text, and the time sent.
-
-\subsubsection{Game Maps Table}
-The game\textunderscore maps table stores information about game maps owned by users, including a map ID, the owner's username (linked to the users table), the map's width and height, and the creation date.
-
-\subsubsection{Map Tiles Table}
-This table tracks individual tiles within game maps, including a tile ID, the map ID (linked to the game\textunderscore maps table), the x and y coordinates of the tile, the terrain type, an optional occupant ID, and the creation date.
-
-\section{Functionality Description}
-\subsection{Login Feature}
-Detail the implementation of the Login feature, including any relevant code snippets, algorithms, or flowcharts.
-\subsubsection{Code Snippets}
-\subsubsection{Flowchart}
-\begin{figure}[H]
- \centering
- \includegraphics[width=0.8\textwidth]{img/login-flowchart.png}
- \caption{Login flowchart}
-\end{figure}
-% Example for including a code snippet
-% \begin{verbatim}
-%   Code snippet here
-% \end{verbatim}
-
-\subsection{Other Features}
-Describe other features of the software, following the same format as the Login feature section. Include diagrams or flowcharts if applicable.
-
-\section{Development and Implementation}
-Discuss how the project was developed and implemented, emphasizing the involvement of each team member in various phases such as coding, testing, and documentation.
+\subsection{Gameplay}
+Explains basic gameplay mechanics, how to interact within the game, and strategies for new players. It covers logging in, starting a farm, upgrading buildings, and interacting with other players.
 
 \section{Conclusion}
-Summarize the key points of the manual and the software product's capabilities.
+The project successfully demonstrates the application of database and web development skills in creating a functional and engaging multiplayer game. Future enhancements could include more complex defense strategies and a broader range of market dynamics.
+
+\section{References}
+List all references and resources used during the development of the project.
 
 \end{document}
