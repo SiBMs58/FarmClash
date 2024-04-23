@@ -162,3 +162,73 @@ def get_leaderboard():
     ranked_users = [{'place': i + 1, 'username': user.username, 'score': scores[user.username]}
                     for i, user in enumerate(unique_users)]
     return jsonify(ranked_users)
+
+@api_blueprint.route('/fetch-building-information', methods=['GET'])
+def fetch_building_information():
+    try:
+        building_data_access = current_app.config.get('building_data_access')
+        # Fetch building information based on username
+        buildings = building_data_access.get_buildings_by_username_owner(current_user.username)
+
+        # If no buildings found, return appropriate JSON response
+        if not buildings:
+            return jsonify({"status": "No buildings", "user": current_user.username})
+
+        # Construct the final JSON response
+        building_information = {}
+        for building in buildings:
+            building_info = {
+                "self_key": building.building_id,
+                "general_information": building.building_type,
+                "level": building.level,
+                "building_location": [building.x, building.y],
+                "tile_rel_locations": building.tile_rel_locations
+            }
+            building_information[building.building_id] = building_info
+
+        json_response = {
+            "building_information": building_information
+        }
+
+        return jsonify(json_response)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@api_blueprint.route('/fetch-building-information/<string:username>', methods=['GET'])
+@login_required
+def fetch_building_information_for_user(username):
+    """
+    Handles GET requests for fetching building information for a specific user.
+    :param username: The username of the user whose building information is being fetched.
+    :return: A JSON response containing the building information for the specified user.
+    """
+    try:
+        building_data_access = current_app.config.get('building_data_access')
+        # Fetch building information based on the username passed in the URL
+        buildings = building_data_access.get_buildings_by_username_owner(username)
+
+        # If no buildings found, return appropriate JSON response
+        if not buildings:
+            return jsonify({"status": "No buildings", "user": username}), 404
+
+        # Construct the final JSON response
+        building_information = {}
+        for building in buildings:
+            building_info = {
+                "self_key": building.building_id,
+                "general_information": building.building_type,
+                "level": building.level,
+                "building_location": [building.x, building.y],
+                "tile_rel_locations": building.tile_rel_locations
+            }
+            building_information[building.building_id] = building_info
+
+        json_response = {
+            "building_information": building_information
+        }
+
+        return jsonify(json_response)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500

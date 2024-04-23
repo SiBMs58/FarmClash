@@ -31,8 +31,15 @@ const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
-const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
-
+let buildingMap;
+if (window.friend) {
+    // If friendData is available, use it in the constructor
+    console.log("Friend data is available", window.friend);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer, window.friend);
+} else {
+    // If friendData is not available, omit it from the constructor
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
+}
 
 
 // Create ticker

@@ -170,10 +170,11 @@ export class BuildingMap extends BaseMap {
      * @param _ctx context needed for drawing on-screen.
      * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
      * @param uiLayerInstance This instance is needed to draw the correct building UI.
+     * @param username The username of the player. Used to fetch the right map data.
      */
-    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, uiLayerInstance) {
+    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, uiLayerInstance, username) {
 
-        super(mapData, _tileSize);
+        super(mapData, _tileSize, username);
 
         this.buildingInformation = mapData.building_information;
         this.buildingGeneralInformation = mapData.building_general_information
@@ -266,8 +267,12 @@ export class BuildingMap extends BaseMap {
      */
     async fetchBuildingMapData() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-        const fetchLink = BASE_URL + "/game/fetch-building-information";
         try {
+            let fetchLink = BASE_URL + "/api/fetch-building-information";
+            if (this.username) {
+                fetchLink += `/${this.username}`;
+            }
+            console.log("fetchBuildingMapData() fetchLink: ", fetchLink);
             const response = await fetch(fetchLink);
             const mapData = await response.json();
 
