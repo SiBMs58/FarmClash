@@ -17,16 +17,18 @@ CREATE TABLE farms (
 
 -- Buildings Table
 CREATE TABLE buildings (
-    building_id VARCHAR(255) PRIMARY KEY,
-    username_owner VARCHAR(255) REFERENCES users(username),
-    farm_id INT REFERENCES farms(farm_id),
+    building_id VARCHAR(255),
+    username_owner VARCHAR(255),
     building_type VARCHAR(255) NOT NULL,
     level INT DEFAULT 1,
     x INT NOT NULL,
     y INT NOT NULL,
     tile_rel_locations JSONB,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (username_owner, building_id),  -- Adding a primary key constraint
+    CONSTRAINT unique_building_username_building_id UNIQUE (username_owner, building_id) -- Adding a unique constraint
 );
+
 
 -- Crops Table
 CREATE TABLE crops (
