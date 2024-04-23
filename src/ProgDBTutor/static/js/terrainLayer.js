@@ -9,11 +9,8 @@ function startsWith(name, prefix) {
 }
 
 
-function getNextAssetName(assetName, cycle) {
-    let parts = assetName.split('.');
-    let lastPart = parts.pop();
-    //let num = parseInt(lastPart) || 0;
-    return parts.join('.') + '.' + cycle.toString() + '.png';
+function getNextAssetName(assetName) {
+    return assetName.replace(/([12])$/, match => match === '1' ? '2' : '1');
 }
 
 
@@ -49,8 +46,6 @@ export class TerrainMap extends BaseMap {
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
      * @param username The username of the player, used to fetch the right map data.
-     * @param time amount of frames passed
-     * @param cycle animation part
      */
     constructor(mapData, _tileSize, _ctx, username) {
 
@@ -61,8 +56,9 @@ export class TerrainMap extends BaseMap {
 
         this.terrainAssetList = AssetList.terrain; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.terrainAssets = {}; // Bevat {"pad_naar_asset": imageObject}
-        this.time = 0;
-        this.cycle = 1;
+
+        this.time = 0; // amount of frames passed
+        this.cycle = 2; // animation part
 
     }
 
@@ -212,29 +208,27 @@ export class TerrainMap extends BaseMap {
     }
 
     waterAnimation() {
-        const animationSpeed = 48;
-        if (this.time > animationSpeed){
+        const animationSpeed = 36;
+        if (this.time >= animationSpeed){
             this.time -= animationSpeed;
 
             for (let i = 0; i < this.map_height; i++) {
                 for (let j = 0; j < this.map_width; j++) {
                     const currTileDir = getAssetDir(this.tiles[i][j]);
                     if (currTileDir === "Water") {
-                        this.tiles[i][j] = getNextAssetName(this.tiles[i][j], this.cycle);
-                        //debugger;
+                        this.tiles[i][j] = getNextAssetName(this.tiles[i][j]);
                     }
                 }
             }
 
             this.drawTiles();
-
-            this.cycle = 3 - this.cycle;
         }
         else{
-            this.time +=1;
+            this.time += 1;
         }
     }
 
+    /*
     waterAnimation2() {
         if (this.time > 48){
             this.time -= 48;
@@ -262,13 +256,14 @@ export class TerrainMap extends BaseMap {
             this.time +=1;
         }
     }
+     */
 
     /**
      * Gets called by the Tick class with regular time intervals.
      */
     tick() {
         //console.log("Terrain layer tick");
-        this.waterAnimation2();
+        this.waterAnimation();
 
     }
 

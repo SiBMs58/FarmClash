@@ -12,6 +12,11 @@ body {
 body:active {
     cursor: url('../img/UI/pointer_click.png'), auto;
 }
+
+img {
+    image-rendering: pixelated; /* Zet anti-aliasing uit */
+}
+
 header {
     cursor: url('../img/UI/pointer.png'), auto;
     position: relative;
