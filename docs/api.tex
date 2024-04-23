@@ -222,4 +222,23 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \end{verbatim}
 \end{itemize}
 
+
+\section{Market}
+\begin{itemize}
+    \item endpoint: /update-building-map
+        \item{Method:} POST
+        \item{Description:} Handles POST requests to insert JSON data into the database. Expects JSON data in the request body.
+        \item {Access:} Requires \texttt{logged in} user privileges.
+        \item {Response:} A JSON object with status and message indicating success or failure.
+    \end{itemize}
+
+\section{Building}
+\begin{itemize}
+    \item endpoint: /fetch-building-information
+        \item {Method:} GET
+        \item {Description:} Handles GET requests to fetch building information for the current user.
+        \item {Access:} Requires \texttt{logged in} user privileges.
+        \item {Response:} A JSON object containing building information.
+    \end{itemize}
+
 \end{document}
