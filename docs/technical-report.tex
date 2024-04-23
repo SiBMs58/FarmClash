@@ -278,6 +278,7 @@ route : \begin{verbatim}`@game/building-map`\end{verbatim}
     \item \textbf{fetch\_building\_information Route:} Handles GET requests to the requested building info. if the requested building does not exist, returns an error.
 \end{itemize}
 
+
 \subsection{Frontend Interface}
 The frontend provides an interactive and user-friendly interface using React, allowing players to engage with the game seamlessly. It features a map view for navigating different parts of the farm and a market interface for selling produce.
 \subsubsection{Login and Authentication Feature}
@@ -318,8 +319,15 @@ asset's. Then the resize event gets linked and the ticker class gets started.
 
 \paragraph{Terrain Layer}
 The terrain layer provides functionality for correctly displaying the terrain tiles and is the lowest layered canvas,
-providing as a sort of background layer. The tiles are semi-randomly generated. (TODO Faisal als ge hier nog iets extra
-over wilt zeggen kunt ge da hier doen). The map is stored as a 2D array of strings that refer to their tile png name.
+providing as a sort of background layer.
+The map is procedurally generated with a map size with width 58 and height 43
+with the usable part of the map being the middle 50x35 as 4 tiles are used as border/padding around the map. This padding
+consists of 3 water tiles and a grass water border. As for the map itself it is generated using a generate_water_positions()
+function which takes parameters the actual width (50) and height (35), number of lakes (default = 8), minimum lake size
+(default = 3 tiles) and the maximum lake size (default = 10 tiles) and returns the positions where water should be generated.
+The actual variation of the tile is then randomly chosen out of a set of assets. There are default assets and special assets
+which contain special things (stone, logs, bushes etc.).
+The map is stored as a 2D array of strings that refer to their tile png name.
 All these assets were fetched beforehand and stored in a map with the tile name as the key. The 'drawTiles()' function
 uses the map array together with the camera location to correctly draw the tiles on the screen. This function gets
 called many times throughout the code every time there's an adjustment and the tiles need to be redrawn. When dragging
