@@ -60,6 +60,24 @@ function soundUp(){
 
 }
 
+
+//const zoomDownButton = document.getElementById("zoomDownButton");
+
+// Add a click event listener
+zoomDownButton.addEventListener("click", function() {
+    zoomDownButton.src = "../static/img/UI/minus_pbtn.png";
+
+    setTimeout(function() {
+        zoomDownButton.src = "../static/img/UI/minus_btn.png";
+    }, 100);
+});
+
+
+
+
+
+
+
 //import {buildingMap, terrainMap} from "./canvas";
 //import {tileSize} from "./canvas";
 
