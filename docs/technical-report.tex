@@ -325,7 +325,7 @@ The terrain layer provides functionality for correctly displaying the terrain ti
 providing as a sort of background layer.
 The map is procedurally generated with a map size with width 58 and height 43
 with the usable part of the map being the middle 50x35 as 4 tiles are used as border/padding around the map. This padding
-consists of 3 water tiles and a grass water border. As for the map itself it is generated using a generate_water_positions()
+consists of 3 water tiles and a grass water border. As for the map itself it is generated using a generate\_water\_positions()
 function which takes parameters the actual width (50) and height (35), number of lakes (default = 8), minimum lake size
 (default = 3 tiles) and the maximum lake size (default = 10 tiles) and returns the positions where water should be generated.
 The actual variation of the tile is then randomly chosen out of a set of assets. There are default assets and special assets
