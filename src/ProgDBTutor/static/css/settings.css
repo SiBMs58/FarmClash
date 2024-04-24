@@ -53,6 +53,10 @@ h1 {
 
 
 }
-
+.toggle-on {
+    /* Add your styles for the on state here */
+    /* For example, change the image source to the 'toggle_on.png' */
+    background-image: url('../img/UI/slider_on.png');
+}
 
 

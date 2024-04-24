@@ -13,20 +13,20 @@ class GameSoundManager {
     }
 
     addSoundButton(imageElement, soundSrc, volume = 1) {
-       //const sound = new Audio(soundSrc);
-       soundSrc.volume = volume;
+       const sound = new Audio(soundSrc);
+       sound.volume = volume;
        // sound.crossOrigin = "anonymous";
 
         const soundButton = {
             imageElement: imageElement,
-            sound: soundSrc,
+            sound: sound,
             volume: volume
         };
         this.soundButtons.push(soundButton);
 
         imageElement.addEventListener('click', () => {
             if (!this.muted) {
-                soundSrc.play();
+                sound.play();
             }
         });
     }
