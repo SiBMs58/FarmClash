@@ -1,5 +1,6 @@
-import { BaseMap } from "./BaseMapKlasse.js";
+import { BaseMap } from "./baseMap.js";
 import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
+import { utils } from "./utils.js";
 
 /**
  * Sets the string value of
@@ -421,7 +422,7 @@ export class BuildingMap extends BaseMap {
                 continue;
             }
 
-            const img = this.buildingAssets["/static/img/assets/buildings/" + getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
+            const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
             if (img) {
                 this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
             } else {
@@ -500,7 +501,7 @@ export class BuildingMap extends BaseMap {
         // Check for forbidden terrain overlap
         for (const currTile of newLocations) {
             const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
-            const terrainType = getAssetDir(correspondingTerrainTile);
+            const terrainType = utils.getAssetDir(correspondingTerrainTile);
             if (terrainType === "Water") {
                 return false;
             }
@@ -509,6 +510,13 @@ export class BuildingMap extends BaseMap {
         return true;
     }
 
+    /**
+     * Check whether a building to move is attempted to be moved in-bound or out of bounds
+     * @param rel_y
+     * @param rel_x
+     * @param buildingToMove object from 'this.buildingInformation'
+     * @returns {boolean} returns true if the move is correctly in bounds
+     */
     inBounds(rel_y, rel_x, buildingToMove) {
         // Finding all new tile locations
         let newLocations = [];
@@ -650,6 +658,13 @@ export class BuildingMap extends BaseMap {
         return true;
     }
 
+
+    /**
+     * Handles the right-click input of the user. When right-clicking a building a pop-up needs to be opened.
+     * @param client_x the x screen pixel
+     * @param client_y the y screen pixel
+     * @returns {boolean} returns true if the click is used, false if not
+     */
     handleRightClick(client_x, client_y) {
         let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
         let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
@@ -664,7 +679,10 @@ export class BuildingMap extends BaseMap {
 
     }
 
-
+    /**
+     * converts js object to json
+     * @returns {string} the json
+     */
     toJSON() {
         return JSON.stringify({
             map_width: this.map_width,
@@ -673,6 +691,10 @@ export class BuildingMap extends BaseMap {
         });
     }
 
+    /**
+     * Sends the building map to the database to be updated.
+     * @returns {Promise<void>}
+     */
     async updateBuildingMapDB() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         const fetchLink = BASE_URL + "/game/update-building-map";
@@ -697,17 +719,4 @@ export class BuildingMap extends BaseMap {
             console.error('Failed to update map in database:', error);
         }
     }
-
-    /*
-    getTile(y, x) {
-        try {
-            this.isValidTilePosition(y,x)
-        } catch (error) {
-            console.error(error.message)
-        }
-
-        return this.tiles[y][x];
-    }
-
-    */
 }

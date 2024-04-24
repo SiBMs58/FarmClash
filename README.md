@@ -72,6 +72,8 @@ Specify the license under which the project is released.
 ## Additional Documentation
 - [Technical Report](docs/technical-report.pdf)
 - [API Documentation](docs/api.pdf)
+- [Manual-test-documentation-main-game.pdf](docs/Manual-test-documentation-main-game.pdf)
+- [Manual](docs/manual.pdf)
 
 ## Contact
 - Project Supervisor: Prof. Bart Goethals, Joey De Pauw and Marco Favier

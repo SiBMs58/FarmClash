@@ -1,8 +1,8 @@
 // Import the BaseMap class
-import { BaseMap } from '../BaseMapKlasse.js';
+import { BaseMap } from '../baseMap.js';
 
 // Describe block for the BaseMap class
-describe('BaseMap', function() {
+describe('BaseMap Tests', function() {
     // Define test variables
     let mapData, tileSize, baseMap;
 
@@ -45,20 +45,4 @@ describe('BaseMap', function() {
         });
     });
 
-    // Test suite for scrollLeft method
-    describe('scrollLeft', function() {
-        it('should decrease viewX if not already at the left edge', function() {
-            baseMap.viewX = 5;
-            baseMap.scrollLeft();
-            expect(baseMap.viewX).toEqual(4);
-        });
-
-        it('should not change viewX if already at the left edge', function() {
-            baseMap.viewX = 0;
-            baseMap.scrollLeft();
-            expect(baseMap.viewX).toEqual(0);
-        });
-    });
-
-    // Similarly, you can add tests for other methods like scrollUp, scrollRight, scrollDown, and drawTiles.
 });

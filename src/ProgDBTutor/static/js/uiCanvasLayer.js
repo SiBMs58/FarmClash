@@ -1,4 +1,4 @@
-import { BaseMap } from "./BaseMapKlasse.js";
+import { BaseMap } from "./baseMap.js";
 import { defaultMapData2 } from "./buildingLayer.js";
 
 const IDLE = "IDLE";

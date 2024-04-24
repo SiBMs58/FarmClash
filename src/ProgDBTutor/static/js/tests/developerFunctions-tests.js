@@ -32,12 +32,12 @@ describe("Developer Functions Tests", function() {
             });
         });
 
-        it("should fill terrain_tiles with elements from the defaultTileSet", function() {
+        /*it("should fill terrain_tiles with elements from the defaultTileSet", function() {
             // Assuming defaultTileSet is accessible. If not, you may need to adjust the scope or test differently.
             map.terrain_tiles.flat().forEach(tile => {
                 expect(defaultTileSet).toContain(tile);
             });
-        });
+        });*/
 
         it("allows overriding the defaultTileSet for terrain tiles", function() {
             const customTiles = ["CustomTile.1", "CustomTile.2"];

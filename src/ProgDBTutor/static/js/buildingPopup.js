@@ -1,5 +1,8 @@
 // todo mss er voor zorgen dat de popup ook echt verdwijnt
-// Toggle popup
+
+/**
+ * Toggles the pop-up. When pop-up is showing this function will hide it and vice-versa.
+ */
 export function togglePopup() {
     const popup = document.querySelector('.test-popup');
     popup.classList.toggle('show');
@@ -8,6 +11,14 @@ export function togglePopup() {
 export let isPopupOpen = false;
 let prevBuildingName = "";
 
+
+/**
+ * Opens the pop-up. When another pop-up is already open it initialises a switch animation and delays the actual opening
+ * of the pop-up.
+ * @param buildingInformation building information json found in buildingLayer.
+ * @param buildingGeneralInformation building general information json found in buildingLayer.
+ * @param buildingName The unique name of the building.
+ */
 export function openPopup(buildingInformation, buildingGeneralInformation, buildingName) {
     if (isPopupOpen && prevBuildingName !== buildingName) {
         closePopup();
@@ -21,6 +32,12 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
     prevBuildingName = buildingName
 }
 
+/**
+ * This is the function that actually opens the pop-up.
+ * @param buildingInformation building information json found in buildingLayer.
+ * @param buildingGeneralInformation building general information json found in buildingLayer.
+ * @param buildingName The unique name of the building.
+ */
 export function actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName) {
     const popup = document.querySelector('.test-popup');
 
@@ -60,6 +77,9 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
     isPopupOpen = true;
 }
 
+/**
+ * Closes the pop-up
+ */
 export function closePopup() {
     const popup = document.querySelector('.test-popup');
     popup.classList.remove('show');
@@ -68,6 +88,8 @@ export function closePopup() {
 
 // ————————————
 // CLOSE BUTTON
+
+// This code is responsible for correctly applying the functionality of the close button of the pop-up
 
 const closeButton = document.getElementById('close-button');
 const closeButtonPressed = document.getElementById('close-button-pressed');
@@ -92,6 +114,8 @@ closeButtonPressed.addEventListener('mouseleave', softReleaseCloseButton);
 // ——————————————
 // UPGRADE BUTTON
 
+// This code is responsible for correctly applying the functionality of the upgrade button of the pop-up
+
 const upgradeButton = document.getElementById('upgrade-button');
 const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
 
@@ -111,6 +135,9 @@ upgradeButtonPressed.addEventListener('mouseleave', releaseUpgradeButton);
 // ——————————————————
 // SET POPUP POSITION (min gap of 70px for the top)
 
+/**
+ * Correctly adjusts the position of the pop-up relative to the screen size.
+ */
 function adjustPopupPosition() {
   const popup = document.querySelector('.test-popup');
   if (!popup) return;
