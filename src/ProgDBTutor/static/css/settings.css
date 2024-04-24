@@ -3,10 +3,7 @@ body{
       cursor: url('../../static/img/cursor.png'), auto;
 }
 
-h1{
-    text-align: center;
-    padding-top: 20px;
-}
+
 
 .container{
 
@@ -15,7 +12,7 @@ h1{
     /*border-image: url('../../static/img/wood.background.png') 10 round;*/
     border-radius: 10px;
     background-color: #e8cfa6;
-    height: 650px;
+    height: 600px;
     margin-top: 45px;
     width: 600px;
 
@@ -48,3 +45,14 @@ h1 {
         background-size: cover; /* Adjust this as needed */
 
     }
+
+.center-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+
+
+}
+
+
+
