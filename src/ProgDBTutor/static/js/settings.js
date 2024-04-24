@@ -1,11 +1,8 @@
-//TODO: buttons plays without debug
-//TODO: fix the premission for zoomen
-//TODO: buttons aanpassen
-
-//import { zoomIn, zoomOut } from './zoomFunctions.js';
-
 const zoomUpButton = document.getElementById("zoomUpButton");
 const zoomDownButton = document.getElementById("zoomDownButton");
+const mutebutton = document.getElementById('muteButton');
+const backsoundButton = document.getElementById('playBackgroundMusicButton');
+
 
 zoomUpButton.addEventListener("click", zoomUpPrecent);
 zoomDownButton.addEventListener("click", zoomDownPrecent);
@@ -19,7 +16,7 @@ function zoomUpPrecent(){
          countZoom += 20;
          zoomNumber.innerText = countZoom;
          localStorage.setItem('zoomSetting', countZoom);
-         zoomIn();
+         button(zoomUpButton,"../static/img/UI/plus_pbtn.png","../static/img/UI/plus_btn.png" );
 
      }
 }
@@ -28,7 +25,7 @@ function zoomDownPrecent(){
           countZoom -= 20;
           zoomNumber.innerText = countZoom;
           localStorage.setItem('zoomSetting', countZoom);
-          zoomOut();
+          button(zoomDownButton,"../static/img/UI/minus_pbtn.png","../static/img/UI/minus_btn.png" );
       }
 }
 
@@ -48,6 +45,7 @@ function soundDown(){
         countSound -= 10
         soundNumber.innerText = countSound;
         localStorage.setItem('soundSetting', countSound);
+        button(soundDownButton,"../static/img/UI/sounddown_pbtn.png","../static/img/UI/sounddown_btn.png" );
     }
 }
 
@@ -56,25 +54,67 @@ function soundUp(){
         countSound += 10;
         soundNumber.innerText = countSound;
         localStorage.setItem('soundSetting', countSound);
+        button(soundUpButton,"../static/img/UI/soundu_pbtn.png","../static/img/UI/soundup_btn.png" );
     }
 
 }
 
+function button(buttonType, img1, img2) {
+        buttonType.src = img1;
+        setTimeout(function () {
+            buttonType.src = img2;
+        }, 100);
+}
 
-//const zoomDownButton = document.getElementById("zoomDownButton");
 
-// Add a click event listener
-zoomDownButton.addEventListener("click", function() {
-    zoomDownButton.src = "../static/img/UI/minus_pbtn.png";
+let muteState = localStorage.getItem('muteButtonState');
+let backsoundState = localStorage.getItem('backsoundButtonState');
 
-    setTimeout(function() {
-        zoomDownButton.src = "../static/img/UI/minus_btn.png";
-    }, 100);
+mutebutton.src = (muteState === "sound_pbtn.png") ? "../static/img/UI/sound_pbtn.png" : "../static/img/UI/sound_btn.png";
+backsoundButton.src = (backsoundState === "slider_on.png") ? "../static/img/UI/slider_on.png" : "../static/img/UI/slider_off.png";
+
+
+
+mutebutton.addEventListener("click", function() {
+    if (mutebutton.src.endsWith("sound_btn.png") && muteState === "sound_btn.png") {
+        mutebutton.src = "../static/img/UI/sound_pbtn.png";
+        muteState = "sound_pbtn.png";
+    } else {
+        mutebutton.src = "../static/img/UI/sound_btn.png";
+        muteState = "sound_btn.png";
+    }
+    localStorage.setItem('muteButtonState', muteState);
 });
 
+backsoundButton.addEventListener("click", function() {
+    if (backsoundButton.src.endsWith("slider_off.png") && backsoundState === "slider_off.png") {
+        backsoundButton.src = "../static/img/UI/slider_on.png";
+        backsoundState = "slider_on.png";
+    } else {
+        backsoundButton.src = "../static/img/UI/slider_off.png";
+        backsoundState = "slider_off.png";
+    }
+    localStorage.setItem('backsoundButtonState', backsoundState);
+});
 
+/*
+window.onload = function() {
+    const muteButtonState = localStorage.getItem('muteButtonState');
+    if (muteButtonState === 'clicked') {
+        mutebutton.src = "../static/img/UI/sound_pbtn.png";
+    } else {
+        mutebutton.src = "../static/img/UI/sound_btn.png";
+    }
 
+    const backsoundButtonState = localStorage.getItem('backsoundButtonState');
+    if (backsoundButtonState === 'clicked') {
+        backsoundButton.src = "../static/img/UI/slider_on.png";
+    } else {
+        backsoundButton.src = "../static/img/UI/slider_off.png";
+    }
+};
 
+*/
 
 
 
@@ -112,5 +152,3 @@ function updateZoom() {
 
 
 */
-zoomUpButton.addEventListener("click", zoomIn);
-zoomDownButton.addEventListener("click", zoomOut);
