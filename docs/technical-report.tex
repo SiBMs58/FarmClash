@@ -146,7 +146,7 @@ High stamina means more resources gathered. High damage means higher attack poin
 \subsection{Resources}
 
 \begin{enumerate}
-    \item \textbf{Coins}: Used for various purposes. Like upgrading, fortifying, investing…
+    \item \textbf{Coins}: Used for various purposes. Like upgrading, fortifying, investing...
     \item \textbf{Crops}: Various crops with increasing unlock levels. Total amount limited by Silo capacity.
     \begin{enumerate}
         \item Wheat (Level 0)
@@ -339,7 +339,7 @@ redrawing them.
 
 \paragraph{Building Layer} The building layer works similarly to the terrain layer in terms of rendering the tiles but
 there are some distinctions and  additional features. The way the building map is saved differs from the the terrain
-layer. The buildings and building information are saved in a json structure. (opslag methode moet geüpdate worden dus
+layer. The buildings and building information are saved in a json structure. (opslag methode moet ge\"update worden dus
 hier is nog geen documentatie voor).
 
 The building layer provides support for interacting with buildings. To move a building you can click (without dragging),
@@ -445,11 +445,10 @@ For backend testing, we utilized Pytest, a powerful and flexible testing tool. O
 These targeted tests helped us to systematically validate each aspect of our backend, ensuring robustness and reliability throughout the game's infrastructure.
 
 \subsection{Frontend Testing}
-Frontend testing was conducted using Jasmine, focusing on the interactive aspects of our application:
+Frontend testing was conducted using a combination of Jasmine and manual testing, focusing on the interactive aspects of our application:
 \begin{itemize}
-    \item \textbf{UI Component Tests:} Using \texttt{canvas-tests.js}, we tested the rendering and behavior of graphical components, such as the game map and resource widgets, to ensure they behaved consistently across different browsers and resolutions.
-    \item \textbf{User Interaction Tests:} We simulated user interactions such as clicking, dragging, and keyboard inputs to ensure the UI responded correctly and efficiently without errors or unexpected behavior.
-    \item \textbf{Performance Tests:} To assess the application’s performance, particularly during peak load times, we measured response times and resource usage to identify and mitigate any potential bottlenecks.
+    \item \textbf{UI Component Tests:} We tested the rendering and behavior of graphical components, such as the game map and resource widgets, to ensure they behaved consistently across different browsers and resolutions.
+    \item \textbf{User Interaction Tests:} We simulated user interactions such as clicking, dragging, clicking button and resizing the browser window to ensure the UI responded correctly and efficiently without errors or unexpected behavior.
 \end{itemize}
 \subsection{User Acceptance Testing}
 User acceptance testing was carried out with a group of target users who provided valuable feedback on the usability and overall experience of the game. This feedback was crucial in refining the gameplay mechanics and interface, leading to several iterations that enhanced user engagement and satisfaction.
