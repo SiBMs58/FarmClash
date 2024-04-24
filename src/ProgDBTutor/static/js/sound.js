@@ -12,21 +12,21 @@ class GameSoundManager {
         this.muted = false;
     }
 
-    addSoundButton(imageElement, sound, volume = 1) {
-       //const sound = new Audio( soundSrc);
-       sound.volume = volume;
+    addSoundButton(imageElement, soundSrc, volume = 1) {
+       //const sound = new Audio(soundSrc);
+       soundSrc.volume = volume;
        // sound.crossOrigin = "anonymous";
 
         const soundButton = {
             imageElement: imageElement,
-            sound: sound,
+            sound: soundSrc,
             volume: volume
         };
         this.soundButtons.push(soundButton);
 
         imageElement.addEventListener('click', () => {
             if (!this.muted) {
-                sound.play();
+                soundSrc.play();
             }
         });
     }
@@ -90,6 +90,7 @@ class GameSoundManager {
 document.addEventListener('DOMContentLoaded', function() {
     const soundManager = new GameSoundManager();
 
+/*
     const soundButton1 = document.querySelector('.sound-image-button1');
     var audio = new Audio();
     var scripts = document.getElementsByTagName('script');
@@ -97,11 +98,14 @@ document.addEventListener('DOMContentLoaded', function() {
     var scriptSource = currentScript.src;
     var scriptDir = scriptSource.substring(0, scriptSource.lastIndexOf('/'));
     audio.src = scriptDir + '/discord-notification.mp3';
+    soundManager.addSoundButton(soundButton1, audio , 0.7);
+    soundManager.setVolume(0.1);
+    console.log("Audio source:", audio); // Log the audio source for debugging
 
-    console.log("Audio source:", audio.src); // Log the audio source for debugging
+     */
 
-    soundManager.addSoundButton(soundButton1, audio, 0.7);
-
+    const soundButton1 = document.querySelector('.sound-image-button1');
+    soundManager.addSoundButton(soundButton1, 'discord-notification.mp3', 0.7);
 
     const soundButton2 = document.querySelector('.sound-image-button2');
     soundManager.addSoundButton(soundButton2, 'discord-notification.mp3', 0.7);

@@ -90,8 +90,9 @@ function updateZoom() {
     buildingMap.drawTiles();
 }
 
-//zoomUpButton.addEventListener("click", zoomIn);
-//zoomDownButton.addEventListener("click", zoomOut);
+
 
 
 */
+zoomUpButton.addEventListener("click", zoomIn);
+zoomDownButton.addEventListener("click", zoomOut);
