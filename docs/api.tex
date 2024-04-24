@@ -225,7 +225,7 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
 
 \section{Market}
 \begin{itemize}
-    \item endpoint: /update-building-map
+    \item endpoint: {@game\_blueprint.route('/update-building-map', methods=['POST'])}
         \item{Method:} POST
         \item{Description:} Handles POST requests to insert JSON data into the database. Expects JSON data in the request body.
         \item {Access:} Requires \texttt{logged in} user privileges.
@@ -234,7 +234,7 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
 
 \section{Building}
 \begin{itemize}
-    \item endpoint: /fetch-building-information
+    \item endpoint {@game\_blueprint.route('/fetch-building-information', methods=['GET'])}
         \item {Method:} GET
         \item {Description:} Handles GET requests to fetch building information for the current user.
         \item {Access:} Requires \texttt{logged in} user privileges.
