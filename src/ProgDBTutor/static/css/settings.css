@@ -1,5 +1,5 @@
 body{
-     background-image: url('../../static/img/backround_dashboard.png'); /* or different image: ../../static/img/backround_dashboard.png  */
+     background-image: url('../../static/img/wood.background.png'); /* or different image: ../../static/img/backround_dashboard.png  */
       cursor: url('../../static/img/cursor.png'), auto;
 }
 
@@ -11,8 +11,8 @@ h1{
 .container{
 
 
-    border: 25px solid #aa7959;
-    border-image: url('../../static/img/backround-wood.png') 10 round;
+    border: 8px solid #aa7959;
+    /*border-image: url('../../static/img/wood.background.png') 10 round;*/
     border-radius: 10px;
     background-color: #e8cfa6;
     height: 650px;
@@ -20,6 +20,13 @@ h1{
     width: 600px;
 
 
+}
+
+
+h1 {
+    color: #e8cfa6;
+    font-size: 24px; /* Adjust the font size as needed */
+   /*font-family: Arial, sans-serif;  Change the font family as needed */
 }
 
 
