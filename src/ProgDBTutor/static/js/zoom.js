@@ -1,4 +1,4 @@
-import { buildingMap, terrainMap, tileSize } from "./canvas";
+//import { buildingMap, terrainMap, tileSize } from "./canvas";
 
 
 
@@ -16,7 +16,7 @@ export function zoomOut() {
 
 function updateZoom() {
     // Adjust tileSize based on zoom level
-    tileSize = 50 * zoomLevel;
+    //tileSize = 50 * zoomLevel;
 
     // Update terrain map
     terrainMap.tileSize = tileSize;

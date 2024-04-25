@@ -5,7 +5,7 @@
 
 //const baseURL = 'http://192.168.0.224:5000/src/ProgDBTutor/static/js';
 
-class GameSoundManager {
+ class GameSoundManager {
     constructor() {
         this.soundButtons = [];
         this.backgroundMusic = null;
@@ -52,6 +52,15 @@ class GameSoundManager {
             this.backgroundMusic.play();
         }
     }
+    /*
+    stopBackgroundMusic() {
+        if (this.backgroundMusic) {
+            this.backgroundMusic.pause();
+            this.backgroundMusic.currentTime = 0; // Reset the playback position to the beginning
+        }
+    }
+
+    */
 
 
     soundUP() {
@@ -74,7 +83,7 @@ class GameSoundManager {
 
 
     mute() {
-    const muteSound = new Audio('discord-notification.mp3');
+    const muteSound = new Audio('./sound/discord-notification.mp3');
     muteSound.play();
 
     if (!this.muted) {
@@ -105,22 +114,22 @@ document.addEventListener('DOMContentLoaded', function() {
      */
 
     const soundButton1 = document.querySelector('.sound-image-button1');
-    soundManager.addSoundButton(soundButton1, 'discord-notification.mp3', 0.7);
+    soundManager.addSoundButton(soundButton1, "{{ url_for('static', filename='sounds/sound1.mp3') }}", 0.7);
 
     const soundButton2 = document.querySelector('.sound-image-button2');
-    soundManager.addSoundButton(soundButton2, 'discord-notification.mp3', 0.7);
+    soundManager.addSoundButton(soundButton2, './sound/discord-notification.mp3', 0.7);
 
     const soundButton3 = document.querySelector('.sound-image-button3');
-    soundManager.addSoundButton(soundButton3, 'discord-notification.mp3', 0.7);
+    soundManager.addSoundButton(soundButton3, './sound/discord-notification.mp3', 0.7);
 
     const soundButton4 = document.querySelector('.sound-image-button4');
-    soundManager.addSoundButton(soundButton4, 'discord-notification.mp3', 0.7);
+    soundManager.addSoundButton(soundButton4, './sound/discord-notification.mp3', 0.7);
 
     const soundButton5 = document.querySelector('.sound-image-button5');
-    soundManager.addSoundButton(soundButton5, 'discord-notification.mp3', 0.7);
+    soundManager.addSoundButton(soundButton5, './sound/discord-notification.mp3', 0.7);
 
      const soundButton6 = document.querySelector('.sound-image-button6');
-    soundManager.addSoundButton(soundButton6, 'discord-notification.mp3', 0.7);
+    soundManager.addSoundButton(soundButton6, './sound/discord-notification.mp3', 0.7);
 
     // Adjust volume for buttons algemeen
     //soundManager.setVolume(0.1);
@@ -129,10 +138,13 @@ document.addEventListener('DOMContentLoaded', function() {
     soundManager.setBackgroundMusic('sound1.mp3');
 
     const playBackgroundMusicButton = document.getElementById('playBackgroundMusicButton');
+    //const stopBackgroundMusicButton = document.getElementById('playBackgroundMusicButton');
 
     playBackgroundMusicButton.addEventListener('click', () => {
         soundManager.playBackgroundMusic();
     });
+
+
 
 
     // Mute sounds
