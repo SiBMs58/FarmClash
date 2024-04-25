@@ -3,6 +3,7 @@
     <title>{{ app_data['app_name'] }}</title>
     {% include 'head.html' %}
     <link rel="stylesheet" href="../static/css/settings.css"> <!--or different image -->
+
 </head>
 <html lang="en">
 <body>
@@ -82,9 +83,12 @@
     </div>
 
 
-    <script src="{{ url_for('static', filename='js/sound.js') }}" controls></script>
-    <script src="{{ url_for('static', filename='js/zoom.js') }}"></script>
-    <script  src="../static/js/settings.js"></script>
+
+
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/zoom.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 
 
