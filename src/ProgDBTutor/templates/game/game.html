@@ -45,12 +45,12 @@
             <!--border: solid black;-->
         }
     </style>
-
-
 </head>
 <body>
+    <!-- Laadscherm wordt opgenomen -->
+    {% include 'game/loadingScreen.html' %}
 
-	{% include 'game/game_UI.html' %}
+    {% include 'game/game_UI.html' %}
 
     {% include 'game/pop-up.html' %}
 
@@ -62,3 +62,4 @@
 
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
 </body>
+</html>

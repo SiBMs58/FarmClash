@@ -76,7 +76,7 @@ function resizeCanvas() {
 /**
  * Initialises the game step by step in correct order.
  */
-async function initializeGame() {
+async function initializeGame(callback) {
     try {
         await terrainMap.initialize();
         await buildingMap.initialize();
@@ -86,6 +86,10 @@ async function initializeGame() {
 
         ticker.start();
 
+        if (typeof callback === 'function') {
+            callback(); // Call the callback function if provided
+        }
+
     } catch (error) {
         console.error('Initialization failed:', error);
         // Handle initialization error
@@ -93,25 +97,10 @@ async function initializeGame() {
 }
 
 
-initializeGame().then(
+initializeGame(hideLoadingScreen).then(
     // Add code that is dependent on initialisation
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function hideLoadingScreen() {
+    document.getElementById('loading-screen').style.display = 'none';
+}

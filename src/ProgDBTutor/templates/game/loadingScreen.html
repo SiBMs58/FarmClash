@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Screen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loadingScreen.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+</head>
+<body>
+    <div id="loading-screen">
+        <p>Loading...</p>
+    </div>
+    <script src="../../static/js/loadingScreen.js"></script>
+    <footer style="display: flex; justify-content: space-between; align-items: end;">
+        <div class="copyright" style="left: auto; right: 10px; transform: none; margin: 10px;">
+            &copy; Team3 – Universiteit Antwerpen - PPDB
+        </div>
+    </footer>
+</body>
+</html>
