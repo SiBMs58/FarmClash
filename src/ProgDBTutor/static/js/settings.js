@@ -1,9 +1,10 @@
-const zoomUpButton = document.getElementById("zoomUpButton");
-const zoomDownButton = document.getElementById("zoomDownButton");
+//const zoomUpButton = document.getElementById("zoomUpButton");
+//const zoomDownButton = document.getElementById("zoomDownButton");
 const mutebutton = document.getElementById('muteButton');
 const backsoundButton = document.getElementById('playBackgroundMusicButton');
 
 
+/*
 zoomUpButton.addEventListener("click", zoomUpPrecent);
 zoomDownButton.addEventListener("click", zoomDownPrecent);
 
@@ -14,6 +15,8 @@ zoomNumber.innerText = countZoom;
 /**
  * De zoompercentage word met 20% verhoogd.
  */
+
+/*
 function zoomUpPrecent(){
      if(countZoom < 100) {
          countZoom += 20;
@@ -27,6 +30,8 @@ function zoomUpPrecent(){
 /**
  * e zoompercentage word met 20% verlaagd
  */
+
+/*
 function zoomDownPrecent(){
       if(countZoom > 0) {
           countZoom -= 20;
@@ -36,6 +41,7 @@ function zoomDownPrecent(){
       }
 }
 
+*/
 const soundUpButton = document.getElementById("soundup");
 const soundDownButton = document.getElementById("sounddown");
 
@@ -126,11 +132,10 @@ backsoundButton.addEventListener("click", function() {
 
 
 
-
-//import {buildingMap, terrainMap} from "./canvas";
-//import {tileSize} from "./canvas";
-
 /*
+import {buildingMap, terrainMap} from "./canvas";
+import {tileSize} from "./canvas";
+
 
 let zoomLevel = 1; // Initial zoom level
 
@@ -156,7 +161,6 @@ function updateZoom() {
     buildingMap.tileSize = tileSize;
     buildingMap.drawTiles();
 }
-
 
 
 

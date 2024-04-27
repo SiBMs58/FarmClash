@@ -74,16 +74,14 @@
                 <div class="zoom-btn"></div>
                 <img src="../static/img/buttons/minus_btn.png" class="sound-image-button4" id="zoomDownButton" >
                 <span>&nbsp;</span>
-                <p id="zoomNumber"> 0 </p>
+                <p id="zoomNumber"> 50 </p>
                 <p>% </p>
                 <span>&nbsp;</span>
                 <img src="../static/img/buttons/plus_btn.png" class="sound-image-button5" id="zoomUpButton">
             </div>
         </div>
     </div>
-
-
-
+    <canvas id="terrainCanvas" width="800" height="600"></canvas>
 
     <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/zoom.js') }}"></script>

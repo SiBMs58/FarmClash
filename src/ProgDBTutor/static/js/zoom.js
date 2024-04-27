@@ -1,4 +1,5 @@
-//import { buildingMap, terrainMap, tileSize } from "./canvas";
+/*
+import { buildingMap, terrainMap, tileSize } from "./canvas";
 
 
 
@@ -31,3 +32,4 @@ zoomUpButton.addEventListener("click", zoomIn);
 zoomDownButton.addEventListener("click", zoomOut);
 
 
+*/

@@ -3,7 +3,6 @@
 //TODO zoom functie
 //TODO: Howler gebruiken ???
 
-//const baseURL = 'http://192.168.0.224:5000/src/ProgDBTutor/static/js';
 
  class GameSoundManager {
     constructor() {
@@ -13,23 +12,31 @@
     }
 
     addSoundButton(imageElement, soundSrc, volume = 1) {
-       const sound = new Audio(soundSrc);
-       sound.volume = volume;
-       // music.crossOrigin = "anonymous";
 
-        const soundButton = {
-            imageElement: imageElement,
-            sound: sound,
-            volume: volume
-        };
-        this.soundButtons.push(soundButton);
+        fetch(soundSrc)
+        .then(response => response.blob()) // Haal het geluidsbestand op als een blob
+        .then(blob => {
+            const sound = new Audio(URL.createObjectURL(blob)); // Maak een URL van de blob en gebruik dit als bron voor de Audio
+            sound.volume = volume;
+            sound.crossOrigin = "anonymous";
 
-        imageElement.addEventListener('click', () => {
-            if (!this.muted) {
-                sound.play();
-            }
+            const soundButton = {
+                imageElement: imageElement,
+                sound: sound,
+                volume: volume
+            };
+            this.soundButtons.push(soundButton);
+
+            imageElement.addEventListener('click', () => {
+                if (!this.muted) {
+                    sound.play();
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Er is een fout opgetreden bij het laden van het geluidsbestand:', error);
         });
-    }
+}
 
     setVolume(volume) {
         this.soundButtons.forEach(soundButton => {
@@ -52,7 +59,7 @@
             this.backgroundMusic.play();
         }
     }
-    /*
+
     stopBackgroundMusic() {
         if (this.backgroundMusic) {
             this.backgroundMusic.pause();
@@ -60,7 +67,7 @@
         }
     }
 
-    */
+
 
 
     soundUP() {
@@ -81,9 +88,14 @@
         }
     }
 
+    buttonplay(){
+        const but = new Audio("/static/music/discord-notification.mp3");
+        but.play();
+
+    }
 
     mute() {
-    const muteSound = new Audio('./music/discord-notification.mp3');
+    const muteSound = new Audio("/static/music/discord-notification.mp3");
     muteSound.play();
 
     if (!this.muted) {
@@ -99,51 +111,37 @@
 document.addEventListener('DOMContentLoaded', function() {
     const soundManager = new GameSoundManager();
 
-/*
-    const soundButton1 = document.querySelector('.music-image-button1');
-    var audio = new Audio();
-    var scripts = document.getElementsByTagName('script');
-    var currentScript = scripts[scripts.length - 1];
-    var scriptSource = currentScript.src;
-    var scriptDir = scriptSource.substring(0, scriptSource.lastIndexOf('/'));
-    audio.src = scriptDir + '/discord-notification.mp3';
-    soundManager.addSoundButton(soundButton1, audio , 0.7);
-    soundManager.setVolume(0.1);
-    console.log("Audio source:", audio); // Log the audio source for debugging
 
-     */
+    const soundButton1 = document.querySelector('.sound-image-button1');
+    soundManager.addSoundButton(soundButton1, "/static/music/discord-notification.mp3", 0.7);
 
-    const soundButton1 = document.querySelector('.music-image-button1');
-    soundManager.addSoundButton(soundButton1, "{{ url_for('static', filename='/music/discord-notification.mp3') }}", 0.7);
+    const soundButton2 = document.querySelector('.sound-image-button2');
+    soundManager.addSoundButton(soundButton2, "/static/music/discord-notification.mp3", 0.7);
 
-    const soundButton2 = document.querySelector('.music-image-button2');
-    soundManager.addSoundButton(soundButton2, "{{ url_for('static', filename='/music/discord-notification.mp3') }}", 0.7);
+    const soundButton3 = document.querySelector('.sound-image-button3');
+    soundManager.addSoundButton(soundButton3, "/static/music/discord-notification.mp3", 0.7);
 
-    const soundButton3 = document.querySelector('.music-image-button3');
-    soundManager.addSoundButton(soundButton3, "{{ url_for('static', filename='/music/discord-notification.mp3') }}", 0.7);
+    const soundButton4 = document.querySelector('.sound-image-button4');
+    soundManager.addSoundButton(soundButton4, "/static/music/discord-notification.mp3", 0.7);
 
-    const soundButton4 = document.querySelector('.music-image-button4');
-    soundManager.addSoundButton(soundButton4, "{{ url_for('static', filename='/music/discord-notification.mp3') }}", 0.7);
+    const soundButton5 = document.querySelector('.sound-image-button5');
+    soundManager.addSoundButton(soundButton5, "/static/music/discord-notification.mp3", 0.7);
 
-    const soundButton5 = document.querySelector('.music-image-button5');
-    soundManager.addSoundButton(soundButton5, "{{ url_for('static', filename='/music/sound1.mp3') }}", 0.7);
-
-     const soundButton6 = document.querySelector('.music-image-button6');
-    soundManager.addSoundButton(soundButton6, "{{ url_for('static', filename='/music/sound1.mp3') }}", 0.7);
+     const soundButton6 = document.querySelector('.sound-image-button6');
+    soundManager.addSoundButton(soundButton6, "/static/music/discord-notification.mp3", 0.7);
 
     // Adjust volume for buttons algemeen
     //soundManager.setVolume(0.1);
 
 
-    soundManager.setBackgroundMusic('sound1.mp3');
+    soundManager.setBackgroundMusic("/static/music/sound1.mp3");
 
     const playBackgroundMusicButton = document.getElementById('playBackgroundMusicButton');
-    //const stopBackgroundMusicButton = document.getElementById('playBackgroundMusicButton');
+   // const stopBackgroundMusicButton = document.getElementById('playBackgroundMusicButton');
 
     playBackgroundMusicButton.addEventListener('click', () => {
         soundManager.playBackgroundMusic();
     });
-
 
 
 
@@ -159,7 +157,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('sounddown').addEventListener('click', () => {
         soundManager.sounddown();
     });
+
+    document.getElementById('sounddown').addEventListener('click', () => {
+        soundManager.buttonplay();
+    });
+
+    //document.querySelector('.sound-image-button1').addEventListener('click', () => {
+        //soundManager.buttonplay();
+   // });
 });
+
 
 
 

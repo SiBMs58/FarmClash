@@ -81,8 +81,59 @@ initializeGame().then(
 
 
 
+document.addEventListener('DOMContentLoaded', function() {
+const zoomUpButton = document.getElementById("zoomUpButton");
+const zoomDownButton = document.getElementById("zoomDownButton");
+let zoomLevel = parseInt(localStorage.getItem('zoomSetting')) / 100 || 1; // Set initial zoom from local storage
+let countZoom = parseInt(localStorage.getItem('zoomSetting')) || 0; // Set countzoom into storage
+let zoomNumber = document.getElementById("zoomNumber");
+zoomNumber.innerText = countZoom;
+
+zoomUpButton.addEventListener("click", zoomIn);
+zoomDownButton.addEventListener("click", zoomOut);
 
 
 
+/**
+ * Zooms the game board in.
+ */
+function zoomIn() {
+    if (countZoom < 100) {
+        countZoom += 20;
+        zoomNumber.innerText = countZoom;
+        localStorage.setItem('zoomSetting', countZoom);
+        updateZoom();
+    }
+}
 
+/**
+ * Zooms the game board out.
+ */
+function zoomOut() {
+    if (countZoom > 0) {
+        countZoom -= 20;
+        zoomNumber.innerText = countZoom;
+        localStorage.setItem('zoomSetting', countZoom);
+        updateZoom();
+    }
+}
+
+/**
+ * Updates the zoom level and redraws the game board.
+ */
+function updateZoom() {
+    zoomLevel = countZoom / 100; // Convert percentage to zoom level
+    tileSize = 50 * zoomLevel; // Adjust tileSize based on zoom level
+
+    // Redraw terrain and building maps with updated tileSize
+    terrainMap.tileSize = tileSize;
+    buildingMap.tileSize = tileSize;
+
+    // Redraw terrain and building maps after updating zoom
+    terrainMap.drawTiles();
+    buildingMap.drawTiles();
+}
+});
+
+// Event listeners for zooming
 
