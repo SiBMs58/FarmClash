@@ -5,6 +5,7 @@ from services.game_services import GameServices
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
+
 @api_blueprint.route('/users')
 @login_required
 def get_users():
@@ -17,6 +18,7 @@ def get_users():
     user_data_access = current_app.config.get('user_data_access')
     users = user_data_access.get_all_users()  # Assuming this is a method you have
     return jsonify([user.to_dict() for user in users])  # Convert users to dicts
+
 
 @api_blueprint.route('/maps')
 @login_required
@@ -31,6 +33,7 @@ def get_maps():
     maps = map_data_access.get_all_maps()  # Assuming this method exists
     return jsonify([map.to_dict() for map in maps])
 
+
 @api_blueprint.route('/resources')
 @login_required
 def get_all_resources():
@@ -42,6 +45,7 @@ def get_all_resources():
     # Fetch resources for the specified username instead of the current user
     resources = resource_data_access.get_resources(current_user.username)
     return jsonify([resource.to_dict() for resource in resources])
+
 
 @api_blueprint.route('/resources/<string:username>')
 @login_required
@@ -57,6 +61,7 @@ def get_resources(username):
 
     return jsonify([resource.to_dict() for resource in resources])
 
+
 @api_blueprint.route('/terrain-map')
 @login_required
 def get_terrain_map():
@@ -65,15 +70,18 @@ def get_terrain_map():
     :return: The terrain map, in json format
     """
     map_data_access = current_app.config.get('map_data_access')
-    map = map_data_access.get_map_by_username_owner(current_user.username) # TODO: Handle more maps than one
+    map = map_data_access.get_map_by_username_owner(current_user.username)  # TODO: Handle more maps than one
     if map is None:
         return "No maps found", 404
     # for map in maps:
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'))
+    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'),
+                                 current_app.config.get('tile_data_access'),
+                                 current_app.config.get('resource_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
+
 
 @api_blueprint.route('/terrain-map/<string:friend_username>')
 @login_required
@@ -88,7 +96,9 @@ def get_friend_terrain_map(friend_username):
         return "No maps found", 404
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'))
+    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'),
+                                 current_app.config.get('tile_data_access'),
+                                 current_app.config.get('resource_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
@@ -111,6 +121,7 @@ def get_friends():
             list_of_friends.append(friend.user1)
     return jsonify(list_of_friends)
 
+
 @api_blueprint.route('/messages/<string:friend_name>')
 @login_required
 def get_messages(friend_name):
@@ -126,6 +137,7 @@ def get_messages(friend_name):
         return jsonify([message.to_dict() for message in messages])
     else:
         return jsonify({"message": "No messages found"}), 200  # Consider returning an empty list with a 200 OK
+
 
 @api_blueprint.route('/leaderboard')
 @login_required
@@ -163,6 +175,7 @@ def get_leaderboard():
                     for i, user in enumerate(unique_users)]
     return jsonify(ranked_users)
 
+
 @api_blueprint.route('/fetch-building-information', methods=['GET'])
 def fetch_building_information():
     try:
@@ -194,6 +207,7 @@ def fetch_building_information():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @api_blueprint.route('/fetch-building-information/<string:username>', methods=['GET'])
 @login_required
@@ -232,3 +246,20 @@ def fetch_building_information_for_user(username):
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/exploration')
+@login_required
+def get_explorations():
+    """
+    Handles GET requests for explorations. This will return a list of all explorations, for the current user
+    :return: explorations, in json format
+    """
+    exploration_data_access = current_app.config.get('exploration_data_access')
+    exploration = exploration_data_access.get_exploration(current_user.username)
+    if exploration:
+        exploration_dict = exploration.to_dict()
+        exploration_dict["ongoing"] = True
+        return jsonify(exploration_dict)
+    else:
+        return jsonify({"ongoing": False})

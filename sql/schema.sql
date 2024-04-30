@@ -117,3 +117,16 @@ CREATE TABLE map_tiles (
     occupant_id INT, -- Optional, to link to whatever occupies the tile (a building, resource, etc.)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- explorations Table to track user ongoing explorations.
+CREATE TABLE explorations (
+    owner VARCHAR(255) PRIMARY KEY REFERENCES users(username),
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    duration TIME NOT NULL,
+    chickens INT NOT NULL,
+    goats INT NOT NULL,
+    pigs INT NOT NULL,
+    cows INT NOT NULL,
+    exploration_level INT NOT NULL,
+    augment_level INT Not NULL
+);
