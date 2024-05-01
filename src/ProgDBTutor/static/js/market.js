@@ -127,3 +127,7 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField, i
         }
     });
 });
+
+function goToBook(){
+window.location.href = '../../templates/books/bookMarket.html'; // Navigeer naar de bookMarket.html pagina wanneer de knop wordt geklikt
+}
