@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template, request, jsonif
 from flask_login import login_required, current_user
 
 from config import config_data
-from models.explorations import Exploration
+from models.exploration import Exploration
 
 exploration_blueprint = Blueprint('exploration', __name__, template_folder='templates')
 
