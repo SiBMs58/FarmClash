@@ -4,10 +4,10 @@ from flask_login import login_required, current_user
 from config import config_data
 from models.explorations import Exploration
 
-exploration_blueprint = Blueprint('explorations', __name__, template_folder='templates')
+exploration_blueprint = Blueprint('exploration', __name__, template_folder='templates')
 
 
-@exploration_blueprint.route('/start_exploration', methods=['POST'])
+@exploration_blueprint.route('/start-exploration', methods=['POST'])
 @login_required
 def start_exploration():
     """
@@ -19,8 +19,8 @@ def start_exploration():
     goats = data['goats']
     pigs = data['pigs']
     cows = data['cows']
-    level = data['level']  ##TODO fetch exploration building level from DATABASE
-    augment = data['augment']  ##TODO fetch augment building level from DATABASE
+    level = 1  ##TODO fetch exploration building level from DATABASE
+    augment = 0  ##TODO fetch augment building level from DATABASE
     duration = data['duration']
 
     if exploration_data_access.start_exploration(
@@ -30,9 +30,9 @@ def start_exploration():
         return jsonify({'status': 'error', 'message': 'Failed to start exploration.'}), 500
 
 
-@exploration_blueprint.route('/stop_exploration', methods=['POST'])
+@exploration_blueprint.route('/stop-exploration', methods=['POST'])
 @login_required
-def remove_exploration():
+def stop_exploration():
     """
     Handles POST requests for stopping an exploration
     """

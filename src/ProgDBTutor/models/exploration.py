@@ -26,6 +26,7 @@ class Exploration:
             "cows": self.cows,
             "exploration_level": self.level,
             "augment_level": self.augment,
-            "started_at": self.started_at,
-            "duration": self.duration
+            "started_at": self.started_at.isoformat(),
+            "duration": str(self.duration)
         }
+

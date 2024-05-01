@@ -255,11 +255,15 @@ def get_explorations():
     Handles GET requests for explorations. This will return a list of all explorations, for the current user
     :return: explorations, in json format
     """
-    exploration_data_access = current_app.config.get('exploration_data_access')
-    exploration = exploration_data_access.get_exploration(current_user.username)
-    if exploration:
-        exploration_dict = exploration.to_dict()
-        exploration_dict["ongoing"] = True
-        return jsonify(exploration_dict)
-    else:
-        return jsonify({"ongoing": False})
+    try:
+        exploration_data_access = current_app.config.get('exploration_data_access')
+        exploration = exploration_data_access.get_exploration(current_user.username)
+        if exploration:
+            exploration_dict = exploration.to_dict()
+            exploration_dict["ongoing"] = True
+            return jsonify(exploration_dict)
+        else:
+            return jsonify({"ongoing": False})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500

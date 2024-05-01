@@ -1,5 +1,5 @@
 const Barn = {};
-Barn.quantities = [5, 6, 7, 8];
+Barn.quantities = [0, 0, 0, 0];
 Barn.intervals = new Array(4).fill(null);
 Barn.animals = ["Chicken", "Cow", "Pig", "Goat"];
 let animalLimit = 10;
@@ -13,13 +13,27 @@ handleExplorationStatus();
  * checking if there's an ongoing exploration, and displaying it if available,
  * otherwise fetches animal quantities from the API.
  */
-function handleExplorationStatus(){
+function handleExplorationStatus() {
     fetchExplorationFromAPI()
-    if (exploration === null){
-        fetchAnimalQuantityFromAPI()
-        return;
-    }
-    displayExploration(exploration.time)
+        .then(() => {
+            if (exploration === null) {
+                fetchAnimalQuantityFromAPI();
+            } else {
+                const startTime = new Date(exploration.started_at);
+                const currentTime = new Date();
+                const duration = parseInt(exploration.duration);
+                const elapsedTime = currentTime - startTime;
+                let remainingTime = Math.max(duration - elapsedTime, 0);
+
+                // Convert remaining time to minutes
+                remainingTime = Math.ceil(remainingTime / (1000 * 60));
+
+                displayExploration(remainingTime);
+            }
+        })
+        .catch(error => {
+            console.error('Error handling exploration status:', error);
+        });
 }
 
 
@@ -124,24 +138,27 @@ function displayExploration(remainingTime){
     let postExplorationDiv = document.getElementById('after-exploration');
 
     preExplorationDiv.style.display = "none";
-    if (remainingTime > 0) {
+    if (remainingTime === 0) {
+        intraExplorationDiv.style.display = "none";
+        postExplorationDiv.style.display  = "block";
+    } else {
+
         postExplorationDiv.style.display = "none";
 
-        intraExplorationDiv.style.display = "flex"; // Set display to flex
-        intraExplorationDiv.style.alignItems = "center"; // Center vertically
-        intraExplorationDiv.style.justifyContent = "center"; // Center horizontally
-        intraExplorationDiv.style.flexDirection = "column"; // Align items in a column
-        intraExplorationDiv.style.height = "254px"; // Set the height property to 500px
-        intraExplorationDiv.style.fontSize = "50px"; // Set the font size property to 20px
-        intraExplorationDiv.style.fontWeight = "bold"; // Set the font weight property to bold
-        intraExplorationDiv.innerText = formatTime(remainingTime) + " left"; // Set the inner text
-    } else {
-        intraExplorationDiv.style.display = "none";
-
-        postExplorationDiv.style.display  = "block";
+        intraExplorationDiv.style.display = "flex";
+        intraExplorationDiv.style.alignItems = "center";
+        intraExplorationDiv.style.justifyContent = "center";
+        intraExplorationDiv.style.flexDirection = "column";
+        intraExplorationDiv.style.height = "254px";
+        intraExplorationDiv.style.fontSize = "50px";
+        intraExplorationDiv.style.fontWeight = "bold";
+        intraExplorationDiv.innerText = formatTime(remainingTime) + " left";
     }
+}
 
 
+
+function exploration_rewards(){
 
 }
 
@@ -152,8 +169,7 @@ function displayExploration(remainingTime){
 
 
 
-
-document.getElementById('explore-btn').addEventListener('click', function() {
+document.getElementById('explore-btn').addEventListener('click', async function () {
     let selectedTimeElement = document.getElementById('exploration-time');
     let selectedOption = selectedTimeElement.options[selectedTimeElement.selectedIndex];
     let exploreTime = selectedOption.value;
@@ -166,10 +182,36 @@ document.getElementById('explore-btn').addEventListener('click', function() {
     let numGoats = document.getElementById('Goat').value;
     let numChickens = document.getElementById('Chicken').value;
 
-    // notify database
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = BASE_URL + "/exploration/start-exploration";
+    let exploration_data = {
+        'chickens': numChickens,
+        'goats': numGoats,
+        'pigs': numPigs,
+        'cows': numCows,
+        'duration': exploreTime
+    };
+    try {
+        const response = await fetch(fetchLink, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(exploration_data)
+        });
+
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('Exploration started successfully:', jsonResponse);
+        } else {
+            console.error('Failed to start exploration:', response.status);
+        }
+    } catch (error) {
+        console.error('Error occurred while starting exploration:', error);
+    }
+
 
     displayExploration(exploreTime)
-
 });
 document.querySelectorAll('input[type="number"]').forEach(function(inputField) {
     inputField.addEventListener('input', function(event) {
@@ -258,9 +300,15 @@ function fetchAnimalQuantityFromAPI() {
     */
 }
 
-function fetchExplorationFromAPI() {
-    //TODO read explore from database if user is currently exploring
-    /* still need to make api/explore probably
-    if user has a exploration going on than put information in exploration variable
-    */
+async function fetchExplorationFromAPI() {
+    try {
+        const response = await fetch('/api/exploration');
+        if (!response.ok) {
+            throw new Error('Failed to fetch exploration data');
+        }
+        const data = await response.json();
+        exploration = data.ongoing ? data : null;
+    } catch (error) {
+        console.error('Error fetching exploration:', error);
+    }
 }
