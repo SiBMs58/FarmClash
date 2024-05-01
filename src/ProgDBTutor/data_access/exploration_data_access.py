@@ -1,4 +1,4 @@
-from models.explorations import Exploration
+from models.exploration import Exploration
 
 
 class ExplorationDataAccess:
@@ -13,7 +13,7 @@ class ExplorationDataAccess:
         """
         cursor = self.db_connection.get_cursor()
         cursor.execute(
-            'INSERT INTO explorations (started_at, duration, chickens, goats, pigs, cows, exploration_level, augment_level, owner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+            'INSERT INTO explorations (started_at, duration, chickens, goats, pigs, cows, exploration_level, augment_level, owner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)',
             (exploration.started_at, exploration.duration, exploration.chickens, exploration.goats, exploration.pigs,
              exploration.cows, exploration.level, exploration.augment, exploration.owner))
         self.db_connection.conn.commit()

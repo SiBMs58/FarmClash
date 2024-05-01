@@ -248,7 +248,7 @@ def fetch_building_information_for_user(username):
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-@api_blueprint.route('/exploration')
+@api_blueprint.route('/fetch-exploration')
 @login_required
 def get_explorations():
     """

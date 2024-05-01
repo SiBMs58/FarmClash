@@ -7,7 +7,7 @@ from models.explorations import Exploration
 exploration_blueprint = Blueprint('exploration', __name__, template_folder='templates')
 
 
-@exploration_blueprint.route('/')
+@exploration_blueprint.route('/exploration')
 @login_required
 def exploration():
     """
@@ -15,7 +15,7 @@ def exploration():
     """
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
-    return render_template('explore.html', app_data=config_data)
+    return render_template('exploration.html', app_data=config_data)
 
 
 @exploration_blueprint.route('/start-exploration', methods=['POST'])
