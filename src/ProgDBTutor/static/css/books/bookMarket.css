@@ -135,6 +135,16 @@ button {
     height: 100px; /* Height of the buttons */
 }
 
+#back-btn {
+    position: absolute; /* Absolute positioning for precise placement */
+    top: 10px; /* Afstand vanaf de bovenkant van de pagina */
+    left: 10px; /* Afstand vanaf de linkerkant van de pagina */
+    background-image: url('../../img/buttons/back_btn.png'); /* Background image for the back button */
+    width: 44px; /* Width of the back button */
+    height: 48px; /* Height of the back button */
+    background-size: cover; /* Cover background image */
+    border: none; /* No border around the back button */
+}
 
 /* Styles for the previous button image */
 #prev-btn {

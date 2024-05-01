@@ -117,3 +117,7 @@ function goPrevPage() {
         currentLocation--; // Decrement current location
     }
 }
+
+function goBack() {
+    window.location.href = '../../../templates/friends.html'; // Navigeer naar de market.html pagina wanneer de knop wordt geklikt
+}

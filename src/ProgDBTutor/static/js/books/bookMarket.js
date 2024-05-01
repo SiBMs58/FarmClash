@@ -1,7 +1,7 @@
 // DOM elements
 const prevB = document.querySelector('#prev-btn'); // Previous button element
 const nextB = document.querySelector('#next-btn'); // Next button element
-
+const backB = document.querySelector('#back-btn'); // Back button element
 const book = document.querySelector("#book"); // Book element
 const paper1 = document.querySelector('#p1'); // Paper 1 element
 const paper2 = document.querySelector('#p2'); // Paper 2 element
@@ -107,4 +107,8 @@ function goPrevPage() {
         }
         currentLocation--; // Decrement current location
     }
+}
+
+function goBack() {
+    window.location.href = '../../../templates/market/market.html'; // Navigeer naar de market.html pagina wanneer de knop wordt geklikt
 }
