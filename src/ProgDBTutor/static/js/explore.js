@@ -315,7 +315,7 @@ function fetchAnimalQuantityFromAPI() {
  */
 async function fetchExplorationFromAPI() {
     try {
-        const response = await fetch('/api/get-exploration');
+        const response = await fetch('/exploration/get-exploration');
         if (!response.ok) {
             throw new Error('Failed to fetch exploration data');
         }

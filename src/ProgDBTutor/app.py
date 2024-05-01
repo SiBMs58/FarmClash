@@ -13,7 +13,7 @@ from data_access.friendship_data_access import FriendshipDataAccess
 from data_access.chatmessage_data_access import ChatMessageDataAccess
 from data_access.exploration_data_access import ExplorationDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
-from src.ProgDBTutor.views.exploration import exploration_blueprint
+from views.exploration import exploration_blueprint
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
@@ -21,7 +21,6 @@ from views.friends import friends_blueprint
 from views.market import market_blueprint
 from models.user import User
 from models.building import Building
-from extensions import login_manager
 
 # Initialize the Flask application
 app = Flask('FarmClash')
