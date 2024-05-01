@@ -129,5 +129,5 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField, i
 });
 
 function goToBook(){
-window.location.href = '../../templates/books/bookMarket.html'; // Navigeer naar de bookMarket.html pagina wanneer de knop wordt geklikt
+window.location.href = '/templates/books/book_market.html'; // Navigeer naar de book_market.html pagina wanneer de knop wordt geklikt
 }

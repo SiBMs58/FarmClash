@@ -110,5 +110,5 @@ function goPrevPage() {
 }
 
 function goBack() {
-    window.location.href = '../../../templates/market/market.html'; // Navigeer naar de market.html pagina wanneer de knop wordt geklikt
+    window.location.href = '/templates/market/market.html'; // Navigeer naar de market.html pagina wanneer de knop wordt geklikt
 }
