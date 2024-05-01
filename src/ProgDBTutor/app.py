@@ -13,6 +13,7 @@ from data_access.friendship_data_access import FriendshipDataAccess
 from data_access.chatmessage_data_access import ChatMessageDataAccess
 from data_access.exploration_data_access import ExplorationDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
+from src.ProgDBTutor.views.exploration import exploration_blueprint
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
@@ -65,6 +66,7 @@ app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
+app.register_blueprint(exploration_blueprint, url_prefix='/exploration')
 
 DEBUG = True
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
