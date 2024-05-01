@@ -7,6 +7,17 @@ from models.explorations import Exploration
 exploration_blueprint = Blueprint('exploration', __name__, template_folder='templates')
 
 
+@exploration_blueprint.route('/')
+@login_required
+def exploration():
+    """
+    Renders the market view.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('explore.html', app_data=config_data)
+
+
 @exploration_blueprint.route('/start-exploration', methods=['POST'])
 @login_required
 def start_exploration():
