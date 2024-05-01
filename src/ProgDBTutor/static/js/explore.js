@@ -300,6 +300,19 @@ function fetchAnimalQuantityFromAPI() {
     */
 }
 
+
+/**
+ * Asynchronously fetches exploration data from the API.
+ *
+ * This function sends a GET request to the '/api/exploration' endpoint and processes the response.
+ * If the response is successful and there is an ongoing exploration, the global 'exploration' variable is set to the received data.
+ * If there is no ongoing exploration, 'exploration' is set to null.
+ * If the request fails for any reason, an error is logged to the console.
+ *
+ * @async
+ * @function
+ * @throws Will throw an error if the response from the API is not ok.
+ */
 async function fetchExplorationFromAPI() {
     try {
         const response = await fetch('/api/exploration');
