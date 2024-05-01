@@ -125,9 +125,9 @@ function reset(button) {
     clearInterval(Barn.intervals[getIndex(button.id.split('-')[1])]);
 
     if (button.id.startsWith('Decrease')) {
-        button.querySelector('img').src = "../img/UI/minus_btn.png";
+        button.querySelector('img').src = "../static/img/UI/minus_btn.png";
     } else if (button.id.startsWith('Increase')) {
-        button.querySelector('img').src = "../img/UI/plus_btn.png";
+        button.querySelector('img').src = "../static/img/UI/plus_btn.png";
     }
 }
 
@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 Barn.intervals[getIndex(animalType)] = setInterval(function () {
                     decrementAnimalInput(animalType);
                 }, 100);
-                button.querySelector('img').src = "../img/UI/minus_pbtn.png";
+                button.querySelector('img').src = "../static/img/UI/minus_pbtn.png";
 
             } else if (button.id.startsWith('Increase')) {
                 clearInterval(Barn.intervals[getIndex(animalType)]);
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 Barn.intervals[getIndex(animalType)] = setInterval(function () {
                     incrementAnimalInput(animalType);
                 }, 100);
-                button.querySelector('img').src = "../img/UI/plus_pbtn.png";
+                button.querySelector('img').src = "../static/img/UI/plus_pbtn.png";
             }
         });
 
