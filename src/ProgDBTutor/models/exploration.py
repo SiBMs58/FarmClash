@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 
 class Exploration:
-    def __init__(self, owner, chickens, goats, pigs, cows, level, augment, duration=None, started_at=None):
+    def __init__(self, owner, chickens, goats, pigs, cows, level, augment, duration=None, started_at=None, rewards=None):
         self.owner = owner
         self.chickens = chickens
         self.goats = goats
@@ -16,6 +16,11 @@ class Exploration:
         if duration is None:
             duration = 1  # Default duration of 1 minute
         self.duration = duration
+        if rewards is None:
+            rewards = chickens + goats + pigs + cows + 1
+        self.rewards = rewards
+
+
 
     def to_dict(self):
         return {

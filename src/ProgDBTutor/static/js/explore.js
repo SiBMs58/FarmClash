@@ -22,13 +22,10 @@ function handleExplorationStatus() {
                 const startTime = new Date(exploration.started_at);
                 const currentTime = new Date();
                 const duration = parseInt(exploration.duration);
-                const elapsedTime = currentTime - startTime;
-                let remainingTime = Math.max(duration - elapsedTime, 0);
-
-                // Convert remaining time to minutes
-                remainingTime = Math.ceil(remainingTime / (1000 * 60));
-
-                displayExploration(remainingTime);
+                const elapsedMS = currentTime - startTime;
+                const elapsedMinutes = elapsedMS / (1000 * 60);
+                let remainingMinutes = Math.max(duration - elapsedMinutes, 0);
+                displayExploration(remainingMinutes);
             }
         })
         .catch(error => {
@@ -105,14 +102,17 @@ function getIndex(animal) {
 function formatTime(minutes) {
     let days = Math.floor(minutes / (60 * 24));
     let hours = Math.floor((minutes % (60 * 24)) / 60);
-    let remainingMinutes = minutes % 60;
+    let minutess = Math.floor(minutes % 60);
+    let seconds = Math.floor(minutes % 1 * 60); // Calculate total seconds
 
     if (days > 0) {
-        return days + "d " + hours + "h " + remainingMinutes + "m";
+        return days + "d " + hours + "h " + minutess + "m";
     } else if (hours > 0) {
-        return hours + "h " + remainingMinutes + "m";
+        return hours + "h " + minutess + "m";
+    } else if (minutess > 0) {
+        return minutess + "m";
     } else {
-        return remainingMinutes + "m";
+        return seconds + "s";
     }
 }
 
@@ -315,7 +315,7 @@ function fetchAnimalQuantityFromAPI() {
  */
 async function fetchExplorationFromAPI() {
     try {
-        const response = await fetch('/exploration/get-exploration');
+        const response = await fetch('/api/exploration');
         if (!response.ok) {
             throw new Error('Failed to fetch exploration data');
         }

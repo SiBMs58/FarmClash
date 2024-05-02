@@ -1,15 +1,35 @@
-/* Style for the outer container */
+
 
 body, html {
+    top: 0;
+    color: #bc8a56;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     font-family: 'Press Start 2P', Arial, sans-serif;
-    color: #bc8a56;
-    font-size: 10px;
     cursor: url('../img/UI/cursor.png'), auto;
     user-select: none; /* Disable text selection for images */
     -webkit-user-drag: none; /* Disable dragging for images on webkit browsers */
+    position: relative; /* Ensure proper positioning of pseudo-element */
+    z-index: 1; /* Ensure the container is above the pseudo-element */
+}
+
+html::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/background/explore.gif");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    z-index: 0; /* Ensure the pseudo-element is behind the container */
 }
 
 .logo-tab {
@@ -23,8 +43,7 @@ body, html {
 
 .exploration {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 35%;
     width: 800px; /* Adjust the max-width as needed */
 
     border: 8px solid #aa7959;

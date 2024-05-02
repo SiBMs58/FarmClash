@@ -13,9 +13,9 @@ class ExplorationDataAccess:
         """
         cursor = self.db_connection.get_cursor()
         cursor.execute(
-            "INSERT INTO explorations (started_at, duration, chickens, goats, pigs, cows, exploration_level, augment_level, owner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            "INSERT INTO explorations (started_at, duration, chickens, goats, pigs, cows, exploration_level, augment_level, owner, rewards) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)",
             (exploration.started_at, exploration.duration, exploration.chickens, exploration.goats, exploration.pigs,
-             exploration.cows, exploration.level, exploration.augment, exploration.owner))
+             exploration.cows, exploration.level, exploration.augment, exploration.owner, exploration.rewards))
         self.db_connection.conn.commit()
         return True
 
@@ -31,7 +31,7 @@ class ExplorationDataAccess:
         if result:
            return Exploration(username, result['chickens'], result['goats'], result['pigs'], result['cows'],
                               result['exploration_level'], result['augment_level'], result['duration'],
-                              result['started_at'])
+                              result['started_at'], result['rewards'])
         else:
            return None
 

@@ -128,5 +128,10 @@ CREATE TABLE explorations (
     pigs INT NOT NULL,
     cows INT NOT NULL,
     exploration_level INT NOT NULL,
-    augment_level INT Not NULL
+    augment_level INT Not NULL,
+    surviving_goats INT NOT NULL, -- refetching the exploration from database can regenerate the rewards but the amount of crates should be constant
+    rewards_goats INT NOT NULL,
+    surviving_chickens INT NOT NULL,
+    surviving_pigs INT NOT NULL,
+    surviving_cows INT NOT NULL
 );
