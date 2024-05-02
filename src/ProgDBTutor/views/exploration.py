@@ -47,10 +47,10 @@ def start_exploration():
     """
     exploration_data_access = current_app.config.get('exploration_data_access')
     data = request.get_json()
-    chickens = data['chickens']
-    goats = data['goats']
-    pigs = data['pigs']
-    cows = data['cows']
+    chickens = int(data['chickens'])
+    goats = int(data['goats'])
+    pigs = int(data['pigs'])
+    cows = int(data['cows'])
     level = 1  ##TODO fetch exploration building level from DATABASE
     augment = 0  ##TODO fetch augment building level from DATABASE
     duration = data['duration']

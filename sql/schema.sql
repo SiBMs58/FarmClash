@@ -122,7 +122,7 @@ CREATE TABLE map_tiles (
 CREATE TABLE explorations (
     owner VARCHAR(255) PRIMARY KEY REFERENCES users(username),
     started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    duration TIME NOT NULL,
+    duration INT NOT NULL, -- in minutes
     chickens INT NOT NULL,
     goats INT NOT NULL,
     pigs INT NOT NULL,
