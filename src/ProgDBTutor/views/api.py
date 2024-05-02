@@ -248,3 +248,22 @@ def fetch_building_information_for_user(username):
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
+@api_blueprint.route('/exploration')
+@login_required
+def get_exploration():
+    """
+    Handles GET requests for explorations. This will return a list of all explorations, for the current user
+    :return: explorations, in json format
+    """
+    try:
+        exploration_data_access = current_app.config.get('exploration_data_access')
+        exploration = exploration_data_access.get_exploration(current_user.username)
+        if exploration:
+            exploration_dict = exploration.to_dict()
+            exploration_dict["ongoing"] = True
+            return jsonify(exploration_dict)
+        else:
+            return jsonify({"ongoing": False})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
