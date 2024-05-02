@@ -14,7 +14,7 @@ class Exploration:
             started_at = datetime.now()
         self.started_at = started_at
         if duration is None:
-            duration = timedelta(minutes=1)  # Default duration of 1 minute
+            duration = 1  # Default duration of 1 minute
         self.duration = duration
 
     def to_dict(self):
