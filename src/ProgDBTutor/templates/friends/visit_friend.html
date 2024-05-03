@@ -41,7 +41,10 @@
 
     {% include 'game/visit_friend_UI.html' %} <!-- This would be a new include for the UI when visiting -->
 
+    {% include 'game/pop-up.html' %}
+
     <div id="canvasContainer">
+        <canvas id="uiCanvas"></canvas>
         <canvas id="buildingCanvas"></canvas>
         <canvas id="terrainCanvas"></canvas>
     </div>

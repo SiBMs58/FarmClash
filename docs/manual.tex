@@ -29,8 +29,7 @@ Describe the overall design of the program, including a high-level architecture 
 
 \section{Database Design}
 \subsection{Database Schema}
-Provide a detailed database diagram showing the tables, relationships, and keys. Describe each element briefly.
-% Example for including an image (Your diagram)
+% Add your database diagram here
 % \begin{figure}[h]
 %   \centering
 %   \includegraphics[width=0.8\textwidth]{path/to/your/database/diagram.png}
@@ -38,18 +37,35 @@ Provide a detailed database diagram showing the tables, relationships, and keys.
 % \end{figure}
 
 \subsection{Table Descriptions}
-For each table in the database, provide a detailed description, including the purpose of the table, a description of each field, and the relationships to other tables.
+\subsubsection{Buildings Table}
+The Buildings table stores information about buildings in the game.
+\begin{itemize}
+    \item \textbf{building\_id}: Primary key identifying the building.
+    \item \textbf{username\_owner}: Username of the owner of the building.
+    \item \textbf{farm\_id}: Foreign key referencing the farm where the building is located.
+    \item \textbf{building\_type}: Type of the building.
+    \item \textbf{level}: Level of the building (default is 1).
+    \item \textbf{x, y}: Coordinates of the building on the map.
+    \item \textbf{tile\_rel\_locations}: JSONB field storing relative tile locations of the building.
+    \item \textbf{created\_at}: Timestamp indicating when the building was created.
+\end{itemize}
+
+\subsubsection{Market Table}
+The Market table stores dynamic pricing information for crops in the game.
+\begin{itemize}
+    \item \textbf{crop\_name}: Primary key representing the name of the crop.
+    \item \textbf{current\_price}: Current price of the crop.
+    \item \textbf{current\_quantity\_crop}: Current quantity of the crop in the market.
+    \item \textbf{prev\_quantity\_crop}: Previous quantity of the crop in the market.
+    \item \textbf{last\_update}: Timestamp indicating when the market data was last updated.
+\end{itemize}
 
 \section{Functionality Description}
-\subsection{Login Feature}
-Detail the implementation of the Login feature, including any relevant code snippets, algorithms, or flowcharts.
-% Example for including a code snippet
-% \begin{verbatim}
-%   Code snippet here
-% \end{verbatim}
+\subsection{Update Market Functionality}
+This functionality handles POST requests to insert market count data into the database. The server updates the market data for the specified crop based on the received JSON data.
 
-\subsection{Other Features}
-Describe other features of the software, following the same format as the Login feature section. Include diagrams or flowcharts if applicable.
+\subsection{Fetch Crop Price Functionality}
+This functionality handles GET requests to fetch the price of a crop from the market. The server queries the database to retrieve the price of the specified crop from the market.
 
 \section{Development and Implementation}
 Discuss how the project was developed and implemented, emphasizing the involvement of each team member in various phases such as coding, testing, and documentation.

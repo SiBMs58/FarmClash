@@ -7,7 +7,7 @@
 <body>
     <header>
         <button id="resource-btn" class="resource-btn" onclick="clickResources()" style="left: 10px">
-            <img src="../../static/img/buttons/resource_btn.png" alt="🌱">
+            <img src="../../static/img/UI/resource_btn.png" alt="🌱">
         </button>
         <div class="overlay" id="resource-overlay">
             <div class="popup">
@@ -16,7 +16,7 @@
         </div>
         <button id="attack-btn" class="attack-btn" style="bottom: auto; top: 10px;">
             <a href="{{ url_for('attack') }}">
-                <img src="../../static/img/buttons/attack_btn.png" alt="⚔️">
+                <img src="../../static/img/UI/attack_btn.png" alt="⚔️">
             </a>
         </button>
 
@@ -29,7 +29,7 @@
             const overlay = document.getElementById('resource-overlay');
 
             overlay.style.display = clickedResourceButton ? 'none' : 'flex';
-           resourceButton.querySelector('img').src = clickedResourceButton ? "../../static/img/buttons/resource_btn.png" : "../../static/img/buttons/resource_pbtn.png";
+            resourceButton.querySelector('img').src = clickedResourceButton ? "../../static/img/UI/resource_btn.png" : "../../static/img/UI/resource_pbtn.png";
             clickedResourceButton = !clickedResourceButton;
 
             fetch('/api/resources/{{ friend.username }}')
@@ -60,17 +60,17 @@
 
         function getImage(resourceType) {
             switch(resourceType) {
-                case 'Corn': return '<img src="../../static/img/resources/Corn.png" alt="🌽">';
-                case 'Carrot': return '<img src="../../static/img/resources/Carrot.png" alt="🥕">';
-                case 'Cauliflower': return '<img src="../../static/img/resources/Cauliflower.png" alt="⚪🥦">';
-                case 'Tomato': return '<img src="../../static/img/resources/Tomato.png" alt="🍅">';
-                case 'Eggplant': return '<img src="../../static/img/resources/Eggplant.png" alt="🍆">';
-                case 'Lettuce': return '<img src="../../static/img/resources/Lettuce.png" alt="🥬">';
-                case 'Wheat': return '<img src="../../static/img/resources/Wheat.png" alt="🌾">';
-                case 'Turnip': return '<img src="../../static/img/resources/Turnip.png" alt="🟣🌱">';
-                case 'Parsnip': return '<img src="../../static/img/resources/Parsnip.png" alt="⚪🌱">';
-                case 'Zucchini': return '<img src="../../static/img/resources/Zucchini.png" alt="🥒">';
-                case 'Money': return '<img src="../../static/img/resources/Coin.png" alt="🪙">';
+                case 'Corn': return '<img src="../../static/img/UI/display.corn.png" alt="🌽">';
+                case 'Carrot': return '<img src="../../static/img/UI/display.carrot.png" alt="🥕">';
+                case 'Cauliflower': return '<img src="../../static/img/UI/display.cauliflower.png" alt="⚪🥦">';
+                case 'Tomato': return '<img src="../../static/img/UI/display.tomato.png" alt="🍅">';
+                case 'Eggplant': return '<img src="../../static/img/UI/display.eggplant.png" alt="🍆">';
+                case 'Lettuce': return '<img src="../../static/img/UI/display.lettuce.png" alt="🥬">';
+                case 'Wheat': return '<img src="../../static/img/UI/display.wheat.png" alt="🌾">';
+                case 'Turnip': return '<img src="../../static/img/UI/display.turnip.png" alt="🟣🌱">';
+                case 'Parsnip': return '<img src="../../static/img/UI/display.parsnip.png" alt="⚪🌱">';
+                case 'Zucchini': return '<img src="../../static/img/UI/display.zucchini.png" alt="🥒">';
+                case 'Money': return '<img src="../../static/img/UI/display.money.png" alt="🪙">';
                 // Add more as needed
                 default: return ''; // Default case if no symbol is matched
             }
@@ -78,13 +78,11 @@
 
     </script>
 
-    <footer>
-        <button id="back-btn" class="back-btn" style="top: auto; bottom: 10px">
-            <a href="{{ url_for('friends.dashboard') }}">
-                <img src="../../static/img/buttons/back_btn.png" alt="🏡">
-            </a>
-        </button>
-        <div class="copyright" style="left: auto; right: 10px; transform: none;">
+    <footer style="display: flex; justify-content: space-between; align-items: end;">
+         <a href="{{ url_for('friends.dashboard') }}" style="margin: 10px">
+                <img src="../../static/img/UI/back_btn.png" alt="🏡">
+        </a>
+        <div class="copyright" style="left: auto; right: 10px; transform: none; margin: 10px;">
             &copy; Team3 – Universiteit Antwerpen - PPDB
         </div>
     </footer>
