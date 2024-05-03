@@ -3,17 +3,22 @@ body {
     padding: 0;
     font-family: 'Press Start 2P', Arial, sans-serif;
     font-weight: bold;
-    cursor: url('../../static/img/cursor.png'), auto;
+    cursor: url('../img/UI/pointer.png'), auto;
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE 10+ */
     user-select: none; /* Standard syntax */
 }
 body:active {
-    cursor: url('../../static/img/click_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_click.png'), auto;
 }
+
+img {
+    image-rendering: pixelated; /* Zet anti-aliasing uit */
+}
+
 header {
-    cursor: url('../../static/img/cursor.png'), auto;
+    cursor: url('../img/UI/pointer.png'), auto;
     position: relative;
     margin: 0;
     padding: 0;
@@ -28,26 +33,18 @@ header {
     z-index: 1000; /* header is above other content */
 }
 header:active {
-    cursor: url('../../static/img/click_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_click.png'), auto;
 }
-.home-btn {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: none;
-    border: none;
-    padding: 0;
-}
-.home-btn:hover,
+.leaderboard-btn:hover,
 .resource-btn:hover,
 .chat-btn:hover,
 .setting-btn:hover,
 .market-btn:hover,
 .attack-btn:hover,
 img:hover {
-    cursor: url('../../static/img/hover_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_hover.png'), auto;
 }
-.home-btn:focus ,
+.leaderboard-btn:focus ,
 .resource-btn:focus ,
 .chat-btn:focus ,
 .setting-btn:focus ,
@@ -56,6 +53,14 @@ img:hover {
 .attack-btn:focus {
     outline: none;
 }
+.leaderboard-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+}
 .resource-btn {
     position: absolute;
     top: 10px;
@@ -63,51 +68,6 @@ img:hover {
     background: none;
     border: none;
     padding: 0;
-}
-.overlay{
-    position: absolute;
-    top: 0; /* Position at the top of the viewport */
-    left: 120px; /* Position at the left of the viewport */
-    display: none;
-    justify-content: center;
-    align-items: center;
-}
-.popup {
-    display: flex;
-    flex-wrap: nowrap;
-    margin-top: 20px;
-    background-color: transparent;
-    border-radius: 10px;
-}
-.popup p {
-    display: inline-block;
-    margin: 0 10px;
-    vertical-align: middle;
-    white-space: nowrap;
-    text-rendering: optimizeLegibility
-}
-.popup img {
-    height: 25px;
-    margin: 0 5px;
-    transform: translateY(-2px);
-    vertical-align: middle;
-}
-
-
-.money-display{
-    position: absolute;
-    top: 0;
-    transform: translateY(+90%);
-    right: 120px;
-    display: flex;
-    align-items: center;
-}
-.money-display p {
-    margin: 0;
-    padding-right: 5px;
-}
-.money-display img {
-    height: 20px;
 }
 .chat-btn{
     position: absolute;
@@ -125,31 +85,6 @@ img:hover {
     border: none;
     padding: 0;
 }
-
-
-
-
-
-
-
-footer {
-    cursor: url('../../static/img/cursor.png'), auto;
-    position: absolute; /* Positions the footer absolutely relative to its positioned ancestor */
-    bottom: 0; /* Aligns to the bottom */
-    left: 0; /* Aligns to the left */
-    width: 100%; /* Ensures the footer spans the full width */
-    background-color: transparent;
-    z-index: 1000; /* Ensures the footer is above other content */
-}
-
-.copyright{
-    font-size: 8px;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 .market-btn {
     position: absolute;
     bottom: 10px;
@@ -158,7 +93,6 @@ footer {
     border: none;
     padding: 0;
 }
-
 .attack-btn {
     position: absolute;
     bottom: 10px;
@@ -171,18 +105,60 @@ footer {
 
 
 
-.back-btn {
+.overlay{
+    position: absolute;
+    top: -10px;
+    left: 120px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.popup {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: 20px;
+    background-color: transparent;
+    border-radius: 10px;
+}
+.popup img {
+    height: 48px;
+    vertical-align: middle;
+    image-rendering: pixelated;
+}
+
+
+
+.money-display {
     position: absolute;
     top: 10px;
-    left: 10px;
-    background: none;
-    border: none;
-    padding: 0;
+    right: 120px;
+    display: flex;
+    align-items: center;
 }
-.welcome-user{
-    position: absolute;
-    top: 10px;
-    right: 10px
+.money-display img {
+    margin-right: 0; /* Remove margin between images */
+    height: 48px;
+    image-rendering: pixelated;
 }
+
+
+
+footer {
+    cursor: url('../img/UI/pointer.png'), auto;
+    position: absolute; /* Positions the footer absolutely relative to its positioned ancestor */
+    bottom: 0; /* Aligns to the bottom */
+    left: 0; /* Aligns to the left */
+    width: 100%; /* Ensures the footer spans the full width */
+    background-color: transparent;
+    z-index: 1000; /* Ensures the footer is above other content */
+    font-size: 8px;
+    justify-content: center;
+}
+
+
+
+
+
+
 
 
