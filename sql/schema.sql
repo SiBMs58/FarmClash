@@ -122,16 +122,18 @@ CREATE TABLE map_tiles (
 CREATE TABLE explorations (
     owner VARCHAR(255) PRIMARY KEY REFERENCES users(username),
     started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    duration INT NOT NULL, -- in minutes
-    chickens INT NOT NULL,
-    goats INT NOT NULL,
-    pigs INT NOT NULL,
-    cows INT NOT NULL,
-    exploration_level INT NOT NULL,
-    augment_level INT Not NULL,
-    surviving_goats INT NOT NULL, -- refetching the exploration from database can regenerate the rewards but the amount of crates should be constant
-    rewards_goats INT NOT NULL,
-    surviving_chickens INT NOT NULL,
-    surviving_pigs INT NOT NULL,
-    surviving_cows INT NOT NULL
+    duration INT NOT NULL  , -- in minutes
+    chickens INT,
+    goats INT,
+    pigs INT,
+    cows INT,
+    exploration_level INT,
+    augment_level INT,
+    surviving_goats INT,
+    rewards_of_goats INT,
+    surviving_chickens INT,
+    surviving_pigs INT,
+    surviving_cows INT,
+    rewards_of_cows INT
+    -- refetching the exploration from database can regenerate the rewards but the amount of surviving animals and crates should be constant
 );

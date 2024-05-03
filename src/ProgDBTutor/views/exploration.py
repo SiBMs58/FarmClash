@@ -18,7 +18,6 @@ def exploration():
     return render_template('exploration/exploration.html', app_data=config_data)
 
 
-
 @exploration_blueprint.route('/start-exploration', methods=['POST'])
 @login_required
 def start_exploration():
@@ -31,8 +30,8 @@ def start_exploration():
     goats = int(data['goats'])
     pigs = int(data['pigs'])
     cows = int(data['cows'])
-    level = 1  ##TODO fetch exploration building level from DATABASE
-    augment = 0  ##TODO fetch augment building level from DATABASE
+    level = 1  #int(data['level']) TODO
+    augment = 0  #int(data['augment']) TODO
     duration = data['duration']
 
     if exploration_data_access.start_exploration(

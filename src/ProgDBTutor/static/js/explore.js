@@ -2,12 +2,44 @@ const Barn = {};
 Barn.quantities = [0, 0, 0, 0];
 Barn.intervals = new Array(4).fill(null);
 Barn.animals = ["Chicken", "Cow", "Pig", "Goat"];
-let animalLimit = 10;
+const animalPerks = {
+    Chicken: [
+        ["Increased chance of finding eggs.", 10],
+        ["Increased yield of crops if found during exploration.", 25],
+        ["chance of higher rarity of animal resources.", 5],
+        ["chance of getting home (Kip zonder kop).", -5]
+    ],
+    Cow: [
+        ["Increased chances of milk.", 10],
+        ["Brings more resources on average.", 25],
+        ["chance to bring coins.", 5],
+        ["chance to bring a box.", -10]
+    ],
+    Pig: [
+        ["Increased chances of truffles.", 10],
+        ["Higher rarity of craft resources.", 15],
+        ["Higher amount of craft resources.", 15],
+        ["Higher chance of empty boxes.", -15]
+    ],
+    Goat: [
+        ["Increased chances of wool.", 10],
+        ["Has a chance to bring 2 boxes.", 10],
+        ["Has a small chance to bring 3 boxes.", 5],
+        ["Brings lower resources on average.", -5]
+    ]
+};
+
+// TODO fetch these from the database
+let buildingLevel = 10;
+let buildingAugmentLevel = 0;
 let exploration = null;
 
+
+
+
+
+// ____________________ PAGE INITIALIZATION ________________//
 handleExplorationStatus();
-
-
 /**
  * Handles the exploration status by fetching exploration data from the API,
  * checking if there's an ongoing exploration, and displaying it if available,
@@ -49,6 +81,7 @@ function decrementAnimalInput(animal) {
         currentValue--;
         inputField.value = currentValue;
     }
+    updatePerkList();
 }
 
 
@@ -73,7 +106,7 @@ function incrementAnimalInput(animal) {
     let currentValue = parseInt(inputField.value);
 
     // Check if the total number of animals selected has reached the limit
-    if (animalLimit === totalAnimals) {
+    if (buildingLevel === totalAnimals) {
         return;
     }
 
@@ -82,6 +115,7 @@ function incrementAnimalInput(animal) {
         currentValue++;
         inputField.value = currentValue;
     }
+    updatePerkList();
 }
 
 
@@ -228,17 +262,23 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField) {
 
         if (isNaN(currentInputValue) || currentInputValue < 0) {
             event.target.value = 0;
+            updatePerkList();
             return;
         }
-        if (animalLimit < totalAnimals) {
-            event.target.value = animalLimit-totalAnimals+currentInputValue;
+        if (buildingLevel < totalAnimals) {
+            event.target.value = buildingLevel-totalAnimals+currentInputValue;
+            updatePerkList();
             return;
         }
         if (currentInputValue > maxLimit) {
             event.target.value = maxLimit; // Set value to the maximum limit
+            updatePerkList();
         }
     });
 })
+document.getElementById('exploration-time').addEventListener('change', function() {
+    updatePerkList();
+});
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -324,4 +364,59 @@ async function fetchExplorationFromAPI() {
     } catch (error) {
         console.error('Error fetching exploration:', error);
     }
+}
+
+
+function updatePerkList() {
+    let perkList = document.getElementById('perk-list');
+    let Animals = {
+        Chicken: parseInt(document.getElementById('Chicken').value),
+        Cow: parseInt(document.getElementById('Cow').value),
+        Pig: parseInt(document.getElementById('Pig').value),
+        Goat: parseInt(document.getElementById('Goat').value)
+    };
+
+    let explorationTime = parseInt(document.getElementById('exploration-time').value);
+    let riskChance = getRiskChance(explorationTime);
+
+    perkList.innerHTML = "Perks:";
+
+    for (let animal of Barn.animals) {
+        let quantity = Animals[animal];
+        if (quantity > 0) {
+            let perks = animalPerks[animal];
+            if (perks) {
+                // Sort the perks by chance in descending order
+                perks.sort((a, b) => b[1] - a[1]);
+
+                // Loop through each perk and display it
+                perks.forEach(perk => {
+                    let totalChance = perk[1] * quantity;
+                    // Adjust perk chance based on risk chance
+                    let perkItem = document.createElement("div");
+                    perkItem.innerText = `${totalChance}% - ${perk[0]}`;
+                    perkList.appendChild(perkItem);
+                });
+            }
+        }
+    }
+    // Display the risk chance
+    perkList.innerHTML += "<br>Risk: " + riskChance + "%";
+}
+function getRiskChance(explorationTime) {
+    // Define risk chances for different exploration times
+    const riskChances = {
+        1: 0,
+        20: 5,
+        60: 10,
+        180: 30,
+        720: 50,
+        1440: 70
+    };
+
+    // Adjust risk chance based on animal limit
+    let riskChance = riskChances[explorationTime];
+    riskChance /= buildingLevel;
+
+    return Math.max(0, riskChance);
 }
