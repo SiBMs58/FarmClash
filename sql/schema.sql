@@ -40,10 +40,11 @@ CREATE TABLE crops (
 
 -- Animal Table
 CREATE TABLE animals (
-    crop_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    growth_time INT NOT NULL, -- Time in hours
-    sell_price INT NOT NULL -- base sell price
+    owner VARCHAR(255) REFERENCES users(username),
+    species VARCHAR(255) NOT NULL,
+    amount INT NOT NULL,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (owner,species)
 );
 
 -- Planted Crops Table to track crops planted on a farm

@@ -12,6 +12,7 @@ from data_access.resource_data_access import ResourceDataAccess
 from data_access.friendship_data_access import FriendshipDataAccess
 from data_access.chatmessage_data_access import ChatMessageDataAccess
 from data_access.exploration_data_access import ExplorationDataAccess
+from data_access.animal_data_access import AnimalDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
 from views.exploration import exploration_blueprint
 from views.auth import auth_blueprint
@@ -49,6 +50,8 @@ crops_data_access = CropsDataAccess(connection)
 app.config['crops_data_access'] = crops_data_access
 exploration_data_access = ExplorationDataAccess(connection)
 app.config['exploration_data_access'] = exploration_data_access
+animal_data_access = AnimalDataAccess(connection)
+app.config['animal_data_access'] = animal_data_access
 
 
 # Insert the admin user

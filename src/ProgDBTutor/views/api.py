@@ -78,7 +78,7 @@ def get_terrain_map():
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
     game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'),
                                  current_app.config.get('tile_data_access'),
-                                 current_app.config.get('resource_data_access'))
+                                 current_app.config.get('resource_data_access'), current_app.config.get('animal_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
@@ -98,7 +98,7 @@ def get_friend_terrain_map(friend_username):
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
     game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'),
                                  current_app.config.get('tile_data_access'),
-                                 current_app.config.get('resource_data_access'))
+                                 current_app.config.get('resource_data_access'), current_app.config.get('animal_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
@@ -267,3 +267,16 @@ def get_exploration():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/animals')
+@login_required
+def get_animals():
+    """
+    Handles GET requests for all animals. This will return a list of all animals, for the current user
+    :return: A list of all animals, in json format
+    """
+    animal_data_access = current_app.config.get('animal_data_access')
+    animals = animal_data_access.get_animals_by_username_owner(current_user.username)
+    return jsonify([animal.to_dict() for animal in animals])
+

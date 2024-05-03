@@ -1,18 +1,21 @@
 from data_access.user_data_access import UserDataAccess
 from data_access.map_data_access import MapDataAccess
 from data_access.resource_data_access import ResourceDataAccess
+from data_access.animal_data_access import AnimalDataAccess
 from models.map import Map
+from models.animal import Animal
 from models.tile import Tile
 from models.resource import Resource
 from services.map_creator import generate_map
 
 
 class GameServices:
-    def __init__(self, user_data_access, map_data_access, tile_data_access, resource_data_access):
+    def __init__(self, user_data_access, map_data_access, tile_data_access, resource_data_access, animal_data_access):
         self.user_data_access = user_data_access
         self.map_data_access = map_data_access
         self.tile_data_access = tile_data_access
         self.resource_data_access = resource_data_access
+        self.animal_data_access = animal_data_access
 
     def create_default_map(self, username):
         """
@@ -84,6 +87,19 @@ class GameServices:
         self.resource_data_access.add_resource(Resource(None, username, "Plank", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Log", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Ingot", 0))
+
+    def initialize_animals(self, username):
+        """
+        Initialize default, starting animals when a user registers
+        :param username:  The username object of the user
+        """
+        self.animal_data_access.add_animal(Animal("Chicken", username, 0, None))
+        self.animal_data_access.add_animal(Animal("Cow", username, 0, None))
+        self.animal_data_access.add_animal(Animal("Pig", username, 0, None))
+        self.animal_data_access.add_animal(Animal("Goat", username, 0, None))
+
+
+
 
     def reformat_terrain_map(self, tile_data, map_width, map_height):
         """
