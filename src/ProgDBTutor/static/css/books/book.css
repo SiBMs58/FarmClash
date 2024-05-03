@@ -6,19 +6,6 @@ body {
     align-items: center; /* Center content vertically */
     font-family: bold, serif; /* Set font */
     background-image: url('../../img/backround_dashboard.png'); /* Add background image */
-    cursor: url('../../img/cursor.png'), auto;/*picture for cursor */
-}
-
-body.clicking {
-    cursor: url('../../img/click_cursor.png'), auto;/*picture for cursor when clicking */
-}
-
-.click-area {
-  width: 200px;
-  height: 100px;
-  text-align: center;
-  line-height: 100px;
-  cursor: pointer;
 }
 
 /* Styles for the .book element */
@@ -87,8 +74,6 @@ body.clicking {
     background-color: saddlebrown; /* Background color for the .front-cover and .back-cover elements */
     color: gold; /* Text color for the .front-cover and .back-cover elements */
     position: absolute; /* Absolute positioning within the .cover */
-    align-items: center; /* Center the book*/
-    justify-content: center; /* Center the book*/
     width: 100%; /* Full width of the .cover */
     height: 100%; /* Full height of the .cover */
     top: 0; /* Distance from the top of the .cover */
@@ -133,17 +118,6 @@ button {
     padding: 0; /* No padding inside the buttons */
     width: 100px; /* Width of the buttons */
     height: 100px; /* Height of the buttons */
-}
-/* Styles for the back button image */
-.back-btn {
-    position: absolute; /* Verander 'fixed' naar 'absolute' */
-    top: 2vh; /* Afstand vanaf de bovenkant van de pagina */
-    left: 2vw; /* Afstand vanaf de linkerkant van de pagina */
-    background-image: url('../../img/buttons/back_btn.png'); /* Background image for the back button */
-    width: 44px; /* Width of the back button */
-    height: 48px; /* Height of the back button */
-    background-size: cover; /* Cover background image */
-    border: none; /* No border around the back button */
 }
 
 

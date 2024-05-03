@@ -1,6 +1,7 @@
 // DOM elements
 const prevB = document.querySelector('#prev-btn'); // Previous button element
 const nextB = document.querySelector('#next-btn'); // Next button element
+const backB = document.querySelector('#back-btn'); // Back button element
 const book = document.querySelector("#book"); // Book element
 const paper1 = document.querySelector('#p1'); // Paper 1 element
 const paper2 = document.querySelector('#p2'); // Paper 2 element
@@ -107,13 +108,3 @@ function goPrevPage() {
         currentLocation--; // Decrement current location
     }
 }
-
-// change image cursor to the image if the cursor is down
-document.addEventListener('mousedown', function() {
-  document.body.classList.add('clicking');// mouse is down
-});
-
-// change image cursor to the image if the cursor is down
-document.addEventListener('mouseup', function() {
-  document.body.classList.remove('clicking');
-});
