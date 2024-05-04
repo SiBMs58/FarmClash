@@ -41,6 +41,7 @@ export class Ticker {
     stop() {
         this.isRunning = false;
     }
+
 }
 
 

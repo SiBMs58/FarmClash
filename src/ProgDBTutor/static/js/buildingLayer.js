@@ -1,4 +1,6 @@
-import { BaseMap } from "./BaseMapKlasse.js";
+import { BaseMap } from "./baseMap.js";
+import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
+import { utils } from "./utils.js";
 
 /**
  * Sets the string value of
@@ -32,98 +34,134 @@ const defaultMapData = {
 /**
  * Here's an example of what the buildMap json needs to look like.
  */
-const defaultMapData2 = {
+export const defaultMapData2 = {
     map_width: 58,
     map_height: 43,
 
     building_information: {
         fence1: {
             self_key: "fence1", // Must be the exact key of this sub-object
-            display_name: "Fence", // Name displayed to the user
-            level: 1, // Building level
-            // ... More information to come
+            general_information: "fence", // Link to the general information of this building type
+            level: 4, // Building level (set "None" if not relevant)
             building_location: [5, 4], // --> [y (height), x (width)], it's best practice to take the top-left corner of the building
             tile_rel_locations: [ // location relative to 'building_location'
-                [[0, 0], "Fences.4.1"], // [ rel_location ([y, x]), "Tile asset"]
+                [[0, 0], "Fence.L4"], // [ rel_location ([y, x]), "Tile asset"]
             ]
-
         },
         fence2: {
             self_key: "fence2",
-            display_name: "Fence",
-            level: 1,
+            general_information: "fence",
+            level: 3,
             building_location: [5, 7],
             tile_rel_locations: [
-                [[0, 0], "Fences.4.1"],
+                [[0, 0], "Fence.L5"],
             ]
         },
         fence3: {
             self_key: "fence3",
-            display_name: "Fence",
-            level: 1,
+            general_information: "fence",
+            level: 2,
             building_location: [8, 8],
             tile_rel_locations: [
-                [[0, 0], "Fences.4.1"],
+                [[0, 0], "Fence.L3"],
             ]
-
         },
-        fence_square: {
-            self_key: "fence_square",
-            display_name: "Fence",
+        fences_lv1: {
+            self_key: "fences_lv1",
+            general_information: "fence",
             level: 1,
             building_location: [6, 11],
             tile_rel_locations: [
-                [[0, 0], "Fences.1.2"],
-                [[0, 1], "Fences.4.3"],
-                [[0, 2], "Fences.1.4"],
-                [[1, 2], "Fences.2.1"],
-                [[2, 2], "Fences.3.4"],
-                [[2, 1], "Fences.4.3"],
-                [[2, 0], "Fences.3.2"],
-                [[1, 0], "Fences.2.1"],
+                [[0, 0], "Fence.L1.OZ"],
+                [[0, 1], "Fence.L1.OW"],
+                [[0, 2], "Fence.L1.ZW"],
+                [[1, 2], "Fence.L1.NZ"],
+                [[2, 2], "Fence.L1.NW"],
+                [[2, 1], "Fence.L1.OW"],
+                [[2, 0], "Fence.L1.NO"],
+                [[1, 0], "Fence.L1.NZ"],
             ]
         },
-        chicken_house: {
-            self_key: "chicken_house",
-            display_name: "Chicken House",
-            level: 1,
+        fences_lv9: {
+            self_key: "fences_lv9",
+            general_information: "fence",
+            level: 9,
+            building_location: [6, 15],
+            tile_rel_locations: [
+                [[0, 0], "Fence.L9.OZ"],
+                [[0, 1], "Fence.L9.OW"],
+                [[0, 2], "Fence.L9.ZW"],
+                [[1, 2], "Fence.L9.NZ"],
+                [[2, 2], "Fence.L9.NW"],
+                [[2, 1], "Fence.L9.OW"],
+                [[2, 0], "Fence.L9.NO"],
+                [[1, 0], "Fence.L9.NZ"],
+            ]
+        },
+        fences_lv10: {
+            self_key: "fences_lv10",
+            general_information: "fence",
+            level: 10,
+            building_location: [6, 19],
+            tile_rel_locations: [
+                [[0, 0], "Fence.L10.OZ"],
+                [[0, 1], "Fence.L10.OW"],
+                [[0, 2], "Fence.L10.ZW"],
+                [[1, 2], "Fence.L10.NZ"],
+                [[2, 2], "Fence.L10.NW"],
+                [[2, 1], "Fence.L10.OW"],
+                [[2, 0], "Fence.L10.NO"],
+                [[1, 0], "Fence.L10.NZ"],
+            ]
+        },
+        chicken_coop: {
+            self_key: "chicken_coop",
+            general_information: "chicken_house",
+            level: 5,
             building_location: [12, 11],
             tile_rel_locations: [
-                [[0, 0], "ChickenHouse.1.1"],
-                [[0, 1], "ChickenHouse.1.2"],
-                [[0, 2], "ChickenHouse.1.3"],
-                [[1, 0], "ChickenHouse.2.1"],
-                [[1, 1], "ChickenHouse.2.2"],
-                [[1, 2], "ChickenHouse.2.3"],
-                [[2, 0], "ChickenHouse.3.1"],
-                [[2, 1], "ChickenHouse.3.2"],
-                [[2, 2], "ChickenHouse.3.3"],
-            ]
-        },
-        tree: {
-            self_key: "tree",
-            display_name: "Tree",
-            level: 1,
-            building_location: [12, 4],
-            tile_rel_locations: [
-                [[0, 0], "BiomeThings.1.2"],
-                [[0, 1], "BiomeThings.1.3"],
-                [[1, 0], "BiomeThings.2.2"],
-                [[1, 1], "BiomeThings.2.3"],
+                [[0, 0], "Chickencoop.L1.1.1"],
+                [[0, 1], "Chickencoop.L1.1.2"],
+                [[1, 0], "Chickencoop.L1.2.1"],
+                [[1, 1], "Chickencoop.L1.2.2"],
+                [[2, 0], "Chickencoop.3.1"],
+                [[2, 1], "Chickencoop.3.2"],
             ]
         }
     },
+
+    building_general_information: {
+        chicken_house: {
+            display_name: "Chicken House", // Name to be displayed in the popup
+            explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
+                "This vital building is where your feathered friends lay eggs, ready for " +
+                "market sale. Upgrade to boost production. Every egg sold brings you one " +
+                "step closer to agricultural dominance.",
+            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
+            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]] // All other stats specific for this building. ["Stat name display", [array of all values per level]]
+        },
+        fence: {
+            display_name: "Fence",
+            explanation: "Strategically place your fences in order to defend you farm from intruders as effectively as possible.",
+            upgrade_costs: [500, 1000, 2000, 3500],
+            other_stats: [["Defence", [50, 100, 150, 200, 400]]]
+        },
+        tree: {
+            display_name: "Tree",
+            explanation: "This is just a tree."
+        }
+    }
 }
 
 
 /** Tile coördinaten: (y,x)
-    0 1 2 3 | x
-    1
-    2
-    3
-    —
-    y
-*/
+ 0 1 2 3 | x
+ 1
+ 2
+ 3
+ —
+ y
+ */
 
 
 export class BuildingMap extends BaseMap {
@@ -132,12 +170,15 @@ export class BuildingMap extends BaseMap {
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
      * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
+     * @param uiLayerInstance This instance is needed to draw the correct building UI.
+     * @param username The username of the player. Used to fetch the right map data.
      */
-    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance) {
+    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, uiLayerInstance, username) {
 
-        super(mapData, _tileSize);
+        super(mapData, _tileSize, username);
 
         this.buildingInformation = mapData.building_information;
+        this.buildingGeneralInformation = mapData.building_general_information
         this.tiles = this.generateBuildingTileMap();
         this.ctx = _ctx;
 
@@ -145,6 +186,7 @@ export class BuildingMap extends BaseMap {
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
         this.terrainMapInstance = terrainMapInstance;
+        this.uiLayerInstance = uiLayerInstance;
 
 
         // Variables to remember the click state
@@ -196,7 +238,8 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        //await this.fetchBuildingMapData();
+        await this.fetchBuildingMapData();
+        this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
         //debugger;
@@ -212,6 +255,7 @@ export class BuildingMap extends BaseMap {
             const responseJson = await response.json();
             this.buildingAssetList = responseJson.buildings;
         } catch (error) {
+            debugger;
             console.error('fetchBuildingAssetList() failed:', error);
             throw error;
         }
@@ -223,14 +267,37 @@ export class BuildingMap extends BaseMap {
      * Fetches the buildingMapData json which stores the layout and other information needed.
      */
     async fetchBuildingMapData() {
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         try {
-            const response = await fetch('/static/JorenStaticTestFiles/testBuildingMap.json');
-            let mapData = await response.json();
-            this.map_width = mapData.map_width;
-            this.map_height = mapData.map_height;
-            this.tiles = mapData.building_tiles;
+            let fetchLink = BASE_URL + "/api/fetch-building-information";
+            if (this.username) {
+                fetchLink += `/${this.username}`;
+            }
+            console.log("fetchBuildingMapData() fetchLink: ", fetchLink);
+            const response = await fetch(fetchLink);
+            const mapData = await response.json();
+
+            // Check if mapData contains building_information
+            //debugger;
+
+            if ("building_information" in mapData) {
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
+                this.buildingInformation = mapData.building_information;
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
+                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.tiles);
+            } else {
+            // No buildings found
+                await this.updateBuildingMapDB();
+                console.log("No buildings found.");
+
+            }
+
+            // Resetting view coordinates
             this.viewX = 0;
             this.viewY = 0;
+
         } catch(error) {
             console.error('fetchBuildingAssetList() failed:', error);
             throw error;
@@ -332,11 +399,30 @@ export class BuildingMap extends BaseMap {
         for (const tile of building.tile_rel_locations) {
             const screen_currTileLocY = screen_buildLocationY + tile[0][0];
             const screen_currTileLocX = screen_buildLocationX + tile[0][1];
+
+            /* This works but very buggy, also doesnt take in to account water and buildings beneath
+            const grassImg = new Image();
+            grassImg.src = "/static/img/assets/terrain/Grass/Grass.1.png";
+            grassImg.onload = () => {
+                this.ctx.drawImage(grassImg, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
+                 if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
+                continue;
+            }
+
+            const img = this.buildingAssets["/static/img/assets/buildings/" + getAssetType(tile[1]) + "/" + tile[1] + ".png"];
+            if (img) {
+                this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
+            } else {
+                console.error("BuildingMap.drawTiles(): image does not exist")
+            }
+            };
+             */
+
             if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
                 continue;
             }
-            const filePath = "/static/img/assets/buildings/" + getAssetDir(tile[1]) + "/" + tile[1] + ".png";
-            const img = this.buildingAssets[filePath];
+
+            const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
             if (img) {
                 this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
             } else {
@@ -356,6 +442,7 @@ export class BuildingMap extends BaseMap {
                 continue;
             }
             const currBuilding = this.buildingInformation[buildingKey];
+
             this.drawBuilding(currBuilding);
         }
         // Draw top again
@@ -414,7 +501,7 @@ export class BuildingMap extends BaseMap {
         // Check for forbidden terrain overlap
         for (const currTile of newLocations) {
             const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
-            const terrainType = getAssetDir(correspondingTerrainTile);
+            const terrainType = utils.getAssetDir(correspondingTerrainTile);
             if (terrainType === "Water") {
                 return false;
             }
@@ -423,6 +510,13 @@ export class BuildingMap extends BaseMap {
         return true;
     }
 
+    /**
+     * Check whether a building to move is attempted to be moved in-bound or out of bounds
+     * @param rel_y
+     * @param rel_x
+     * @param buildingToMove object from 'this.buildingInformation'
+     * @returns {boolean} returns true if the move is correctly in bounds
+     */
     inBounds(rel_y, rel_x, buildingToMove) {
         // Finding all new tile locations
         let newLocations = [];
@@ -460,6 +554,9 @@ export class BuildingMap extends BaseMap {
             buildingToMove.building_location[0] += rel_y;
             buildingToMove.building_location[1] += rel_x;
             this.tiles = this.generateBuildingTileMap();
+            if (isPopupOpen) {
+                closePopup();
+            }
 
             if (setToTop) {
                 this.drawTiles(buildingToMove);
@@ -472,20 +569,27 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    hoveringOverBuilding(tileX, tileY) {
+
+    }
+
     /**
      * Gets called by the 'UserInputHandler' class every time the mouse moves.
      * @param client_x x value on-screen
      * @param client_y y value on-screen
      */
     handleMouseMove(client_x, client_y) {
+        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
+        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
+
         if (!this.movingBuilding) {
+            if (this.hoveringOverBuilding(tileX, tileY)) {
+                const buildingHoverName = this.tiles[tileY][tileX][1];
+                this.uiLayerInstance.drawHoverUI(buildingHoverName, this.viewX, this.viewY);
+            }
             return;
         }
 
-        //console.log("we zijn in de functie 2")
-
-        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
-        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
 
         if (this.prevMouseMoveBuildingLoc === null) {
             this.prevMouseMoveBuildingLoc = [tileY, tileX];
@@ -510,7 +614,7 @@ export class BuildingMap extends BaseMap {
      * @param client_y y click on screen
      * @returns {boolean} Returns true when click is used by this class.
      */
-    handleClick(client_x,client_y) {
+    handleClick(client_x, client_y) {
         //debugger;
         let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
         let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
@@ -540,7 +644,7 @@ export class BuildingMap extends BaseMap {
                 this.ownNextClick = false;
                 this.prevMouseMoveBuildingLoc = null;
                 console.log("Op een juiste plek geplaatst");
-                this.updateBuildingMapDB();
+                this.updateBuildingMapDB().then(/* If something needs to happen after the update */);
             } else {
                 //const revertRelY = this.currBuildingOrgLocation[0] - buildingToMove.building_location[0];
                 //const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
@@ -555,6 +659,30 @@ export class BuildingMap extends BaseMap {
     }
 
 
+    /**
+     * Handles the right-click input of the user. When right-clicking a building a pop-up needs to be opened.
+     * @param client_x the x screen pixel
+     * @param client_y the y screen pixel
+     * @returns {boolean} returns true if the click is used, false if not
+     */
+    handleRightClick(client_x, client_y) {
+        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
+        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
+
+        if (this.tiles[tileY][tileX] !== EMPTY_TILE) {
+            console.log(`Right click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
+            const buildingName = this.tiles[tileY][tileX][1];
+            openPopup(this.buildingInformation, this.buildingGeneralInformation, buildingName);
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * converts js object to json
+     * @returns {string} the json
+     */
     toJSON() {
         return JSON.stringify({
             map_width: this.map_width,
@@ -563,10 +691,15 @@ export class BuildingMap extends BaseMap {
         });
     }
 
+    /**
+     * Sends the building map to the database to be updated.
+     * @returns {Promise<void>}
+     */
     async updateBuildingMapDB() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         const fetchLink = BASE_URL + "/game/update-building-map";
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON
+        console.log('BuildingMap DB ', mapDataJson);
         try {
             const response = await fetch(fetchLink, {
                 method: 'POST',
@@ -586,17 +719,4 @@ export class BuildingMap extends BaseMap {
             console.error('Failed to update map in database:', error);
         }
     }
-
-    /*
-    getTile(y, x) {
-        try {
-            this.isValidTilePosition(y,x)
-        } catch (error) {
-            console.error(error.message)
-        }
-
-        return this.tiles[y][x];
-    }
-
-    */
 }

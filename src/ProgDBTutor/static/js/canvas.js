@@ -1,7 +1,8 @@
 import { TerrainMap } from './terrainLayer.js'
-import { BuildingMap} from "./buildingLayer.js";
+import { BuildingMap } from "./buildingLayer.js";
+import { UICanvasLayer } from "./uiCanvasLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
-import { UserInputHandler} from "./userInputHandler.js";
+import { UserInputHandler } from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
 // Set on-screen tileSize-
@@ -22,10 +23,24 @@ if (window.friend) {
 }
 console.log(terrainMap);
 
+// Create UI canvas
+const uiCanvas = document.getElementById('uiCanvas');
+const uiCtx = uiCanvas.getContext('2d');
+const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
+
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
-const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap);
+let buildingMap;
+if (window.friend) {
+    // If friendData is available, use it in the constructor
+    console.log("Friend data is available", window.friend);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer, window.friend);
+} else {
+    // If friendData is not available, omit it from the constructor
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
+}
+
 
 // Create ticker
 const ticker = new Ticker([terrainMap, buildingMap]);
@@ -46,6 +61,10 @@ function resizeCanvas() {
     buildingCanvas.height = window.innerHeight;
     buildingCtx.imageSmoothingEnabled = false;
 
+    uiCanvas.width = window.innerWidth;
+    uiCanvas.height = window.innerHeight;
+    uiCtx.imageSmoothingEnabled = false;
+
     try { // Redraw terrain after resizing
         terrainMap.drawTiles();
         buildingMap.drawTiles();
@@ -57,7 +76,7 @@ function resizeCanvas() {
 /**
  * Initialises the game step by step in correct order.
  */
-async function initializeGame() {
+async function initializeGame(callback) {
     try {
         await terrainMap.initialize();
         await buildingMap.initialize();
@@ -67,6 +86,10 @@ async function initializeGame() {
 
         ticker.start();
 
+        if (typeof callback === 'function') {
+            callback(); // Call the callback function if provided
+        }
+
     } catch (error) {
         console.error('Initialization failed:', error);
         // Handle initialization error
@@ -74,25 +97,10 @@ async function initializeGame() {
 }
 
 
-initializeGame().then(
+initializeGame(hideLoadingScreen).then(
     // Add code that is dependent on initialisation
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function hideLoadingScreen() {
+    document.getElementById('loading-screen').style.display = 'none';
+}

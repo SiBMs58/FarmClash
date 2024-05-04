@@ -1,0 +1,244 @@
+\documentclass[12pt]{article}
+
+\title{FarmClash - API Blueprint for Web-based Idle Game}
+\author{Camille De Vuyst, Joren Van der Sande, Thomas De Volder,\\ Faisal Ettarrahi, Ferhat Van Herck, Siebe Mees}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+This document outlines the API endpoints for a web-based idle game. Each endpoint requires user authentication and certain routes are restricted to admin users only.
+
+\subsection{Base URL}
+The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
+
+\section{Users}
+\begin{itemize}
+    \item Endpoint: \texttt{/users}
+    \item Method: GET
+    \item Description: Get a look at all the users.
+    \item Access: Requires \texttt{admin} user privileges.
+    \item Response: A JSON array of user objects, each containing:
+    \begin{verbatim}
+[
+  {
+    "created_at": "Date",
+    "email": "email@example.com",
+    "password": "pbkdf2:sha256:hasedpassword",
+    "username": "username"
+  },
+  {
+    "created_at": "Another date",
+    "email": "anotheremail@example.com",
+    "password": "pbkdf2:sha256:anotherhashedpassword",
+    "username": "anotherusername"
+  }
+  // Additional user objects as needed
+]
+    \end{verbatim}
+\end{itemize}
+
+
+\section{Maps}
+\begin{itemize}
+    \item Endpoint: \texttt{/maps}
+    \item Method: GET
+    \item Description: Get a look at all the maps.
+    \item Access: Requires \texttt{admin} user privileges.
+    \item Response: A JSON array of map objects, each containing:
+    \begin{verbatim}
+[
+  {
+    "map_id": 1,
+    "username_owner": "ownerUsername",
+    "width": 100,
+    "height": 100,
+    "created_at": "Tue, 26 Mar 2024 13:55:30 GMT"
+  },
+  {
+    "map_id": 2,
+    "username_owner": "anotherOwnerUsername",
+    "width": 150,
+    "height": 150,
+    "created_at": "Wed, 27 Mar 2024 14:00:00 GMT"
+  }
+  // Additional map objects as needed
+]
+    \end{verbatim}
+\end{itemize}
+
+\section{Resources}
+\subsection{General Resource Information}
+\begin{itemize}
+    \item Endpoint: \texttt{/resources}
+    \item Method: GET
+    \item Description: Retrieves a comprehensive list of resources across all users. Designed for administrative use to monitor and manage resources system-wide.
+    \item Access: Admin privileges required.
+    \item Response: A JSON array of objects, each representing a resource. Each object includes the resource type, amount, owner's username, and a unique resource identifier. Example of a generalized response:
+    \begin{verbatim}
+[
+  {
+    "resource_id": "unique_identifier",
+    "resource_type": "type_of_resource",
+    "amount": "quantity_of_resource",
+    "owner": "username_of_owner"
+  },
+  ... // Additional resource objects
+]
+    \end{verbatim}
+\end{itemize}
+\subsection{Specific Resource Information}
+\begin{itemize}
+    \item Endpoint: \texttt{/resources/<string:username>}
+    \item Method: GET
+    \item Description: Retrieves a list of resources owned by a specific user.
+    \item Access: Admin privileges required.
+    \item Response: A JSON array of objects, each representing a resource owned by the specified user. Each object includes the resource type, amount, and a unique resource identifier. Example of a generalized response:
+    \begin{verbatim}
+[
+  {
+    "resource_id": "unique_identifier",
+    "resource_type": "type_of_resource",
+    "amount": "quantity_of_resource"
+  },
+  ... // Additional resource objects
+]
+    \end{verbatim}
+\end{itemize}
+
+\section{Terrain Map}
+
+\subsection{General Terrain Map Information}
+\begin{itemize}
+    \item Endpoint: \texttt{/terrain-map}
+    \item Method: GET
+    \item Description: Get a look at all the terrain tiles in the map.
+    \item Access: Requires \texttt{logged in} user privileges.
+    \item Response: A JSON array of tile objects, each containing:
+    \begin{verbatim}
+    [
+      {
+        "map_height": 2,
+        "map_width": 2,
+        "terrain_tiles": [
+          [Water1.1, Water1.2],
+          [Water2.1, Water2.2]
+        ]
+      }
+    ]
+    \end{verbatim}
+\end{itemize}
+
+\subsection{Specific Terrain Tile Information}
+\begin{itemize}
+    \item Endpoint: \texttt{/terrain-map/<string:friend\_username>}
+    \item Method: GET
+    \item Description: Get a look at a user specific terrain tile in the map.
+    \item Access: Requires \texttt{logged in} user privileges.
+    \item Response: A JSON object containing the terrain tile information:
+    \begin{verbatim}
+    [
+      {
+        "map_height": 2,
+        "map_width": 2,
+        "terrain_tiles": [
+          [Water1.1, Water1.2],
+          [Water2.1, Water2.2]
+        ]
+      }
+    ]
+    \end{verbatim}
+\end{itemize}
+
+\section{Friendships}
+\begin{itemize}
+    \item Endpoint: \texttt{/friends}
+    \item Method: GET
+    \item Description: Get a list of all friends for the current user.
+    \item Access: Requires \texttt{logged in} user privileges.
+    \item Response: A JSON array of relationship objects, each containing:
+    \begin{verbatim}
+[
+  "friend1",
+  "friend2",
+  "friend3"
+]
+    \end{verbatim}
+\end{itemize}
+
+\section{Chat}
+\begin{itemize}
+    \item Endpoint: \texttt{/messages/<string:friend\_name>}
+    \item Method: GET
+    \item Description: Get a list of all chat messages for the current user.
+    \item Access: Requires \texttt{logged in} user privileges.
+    \item Response: A JSON array of chat message objects, each containing:
+    \begin{verbatim}
+[
+  {
+    message_id: 1,
+    "sender": "senderUsername",
+    "receiver": "receiverUsername",
+    "message": "Hello, how are you?",
+    "created_at": "Tue, 26 Mar 2024 13:55:30 GMT"
+  },
+  {
+    message_id: 2,
+    "sender": "receiverUsername",
+    "receiver": "senderUsername",
+    "message": "I'm good, thanks!",
+    "created_at": "Tue, 26 Mar 2024 13:56:30 GMT"
+  }
+  // Additional chat message objects as needed
+]
+    \end{verbatim}
+\end{itemize}
+
+\section{Leaderboard}
+\begin{itemize}
+    \item Endpoint: \texttt{/leaderboard}
+    \item Method: GET
+    \item Description: Get a list of top 3 users, 2 friends and yourself sorted by their score.
+    \item Access: Requires \texttt{logged in} user privileges.
+    \item Response: A JSON array of user objects, each containing:
+    \begin{verbatim}
+[
+  {
+    "place": 1,
+    "username": "username",
+    "score": 100
+  },
+  {
+    "place": 2,
+    "username": "anotherUsername",
+    "score": 200
+  }
+  // Additional user objects as needed
+]
+    \end{verbatim}
+\end{itemize}
+
+
+\section{Market}
+\begin{itemize}
+    \item endpoint: {@game\_blueprint.route('/update-building-map', methods=['POST'])}
+        \item{Method:} POST
+        \item{Description:} Handles POST requests to insert JSON data into the database. Expects JSON data in the request body.
+        \item {Access:} Requires \texttt{logged in} user privileges.
+        \item {Response:} A JSON object with status and message indicating success or failure.
+    \end{itemize}
+
+\section{Building}
+\begin{itemize}
+    \item endpoint {@game\_blueprint.route('/fetch-building-information', methods=['GET'])}
+        \item {Method:} GET
+        \item {Description:} Handles GET requests to fetch building information for the current user.
+        \item {Access:} Requires \texttt{logged in} user privileges.
+        \item {Response:} A JSON object containing building information.
+    \end{itemize}
+
+\end{document}
