@@ -306,8 +306,8 @@ def update_animals():
 
         for specie in data['species']:
             update_success = True
-            if specie[0] or Idle:
-                updated_animal = Animal(specie, current_user.username, specie[1] if len(specie) == 2 else None, None if Idle else False)
+            if data['species'][specie][0] or Idle:
+                updated_animal = Animal(specie, current_user.username, data[specie][1] if len(data[specie]) == 2 else None, None if Idle else False)
                 update_success = animal_data_access.update_animal(updated_animal)
 
             if not update_success:

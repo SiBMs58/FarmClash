@@ -18,7 +18,7 @@ class AnimalDataAccess:
         self.db_connection.conn.commit()
         return True
 
-    def get_animal(self, username: str):
+    def get_animals(self, username: str):
         """
         Get animals for the current owner
         :param username: The user that owns the animals

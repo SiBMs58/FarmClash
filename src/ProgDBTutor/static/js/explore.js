@@ -32,7 +32,7 @@ const animalPerks = {
 let exploration = {
     remaining_time: -1,
     ongoing: false,
-    owner: self.owner,
+    owner: '',
     chickens: 0,
     goats: 0,
     pigs: 0,
@@ -58,7 +58,6 @@ let buildingAugmentLevel = 0; // TODO fetch from the database
 
 //______________________ PAGE INITIALIZATION ______________________//
 initialize();
-display();
 /**
  * Handles the exploration status by fetching exploration data from the API,
  * checking if there's an ongoing exploration, and displaying it if available,
@@ -75,6 +74,7 @@ function initialize() {
                 const elapsed = (currentTime - startTime) / (1000 * 60);
                 exploration.remaining_time = Math.max(parseInt(exploration.duration) - elapsed, 0);
             }
+            display();
         })
         .catch(error => {
             console.error('Error handling exploration status:', error);
@@ -218,18 +218,22 @@ function fetchAnimalQuantity() {
  * @throws Will throw an error if the response from the API is not ok.
  */
 async function sendAnimalQuantity() {
-    let numCows = document.getElementById('Cow').value;
-    let numPigs = document.getElementById('Pig').value;
-    let numGoats = document.getElementById('Goat').value;
-    let numChickens = document.getElementById('Chicken').value;
+    let numCows = parseInt(document.getElementById('Cow').value);
+    let numPigs = parseInt(document.getElementById('Pig').value);
+    let numGoats = parseInt(document.getElementById('Goat').value);
+    let numChickens = parseInt(document.getElementById('Chicken').value);
+    let diffCows = Barn.quantities[getIndex('Cow')] - numCows;
+    let diffPigs = Barn.quantities[getIndex('Pig')] - numPigs;
+    let diffGoats = Barn.quantities[getIndex('Goat')] - numGoats;
+    let diffChickens = Barn.quantities[getIndex('Chicken')] - numChickens;
 
     let animal_data = {
-        'update-type': 'explore',
+        'update_type': 'explore',
         'species':{
-            'Chicken': numChickens === 0 ? [false] : [true, Barn.quantities[getIndex('Chicken')] - numChickens],
-            'Goat': numGoats === 0 ? [false] : [true, Barn.quantities[getIndex('Goat')] - numGoats],
-            'Pig': numPigs === 0 ? [false] : [true, Barn.quantities[getIndex('Pig')] - numPigs],
-            'Cow': numCows === 0 ? [false] : [true, Barn.quantities[getIndex('Cow')] - numCows],
+            'Chicken': numChickens === 0 ? [false] : [true, diffChickens],
+            'Goat': numGoats === 0 ? [false] : [true, diffGoats],
+            'Pig': numPigs === 0 ? [false] : [true, diffPigs],
+            'Cow': numCows === 0 ? [false] : [true, diffCows],
         }
     };
     try {
@@ -318,13 +322,14 @@ document.getElementById('explore-btn').addEventListener('click', async function 
         exploreTime = 20;
     }
     exploration = {
-        'chickens': document.getElementById('Chicken').value,
-        'goats': document.getElementById('Goat').value,
-        'pigs': document.getElementById('Pig').value,
-        'cows': document.getElementById('Cow').value,
+        'chickens': parseInt(document.getElementById('Chicken').value),
+        'goats': parseInt(document.getElementById('Goat').value),
+        'pigs': parseInt(document.getElementById('Pig').value),
+        'cows': parseInt(document.getElementById('Cow').value),
         'duration': exploreTime,
         'augment_level': buildingAugmentLevel,
-        'exploration_level': buildingLevel
+        'exploration_level': buildingLevel,
+        'remaining_time': exploreTime
     };
     await sendExploration();
     await sendAnimalQuantity();
@@ -348,10 +353,7 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField) {
         let currentInputValue = parseInt(event.target.value);
         let animalType = event.target.id;
 
-        let totalAnimals = 0;
-        document.querySelectorAll('input[type="number"]').forEach(function(input) {
-            totalAnimals += parseInt(input.value);
-        });
+
 
         let index = Barn.animals.indexOf(animalType);
         let maxLimit = Barn.quantities[index];
@@ -361,8 +363,25 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField) {
             updatePerkList();
             return;
         }
+        if (currentInputValue > buildingLevel) {
+            event.target.value = buildingLevel
+            currentInputValue = parseInt(event.target.value);
+        }
+        if (currentInputValue > maxLimit) {
+            event.target.value = maxLimit; // Set value to the maximum limit
+        }
+        let totalAnimals = 0;
+        document.querySelectorAll('input[type="number"]').forEach(function(input) {
+            totalAnimals += parseInt(input.value);
+        });
+        if(totalAnimals > buildingLevel){
+            let difference = totalAnimals - buildingLevel;
+            event.target.value = currentInputValue - difference;
+        }
+        updatePerkList();
+        /**
         if (buildingLevel < totalAnimals) {
-            event.target.value = buildingLevel-totalAnimals+currentInputValue;
+            event.target.value = buildingLevel-totalAnimals+currentInputValue-1;
             updatePerkList();
             return;
         }
@@ -370,6 +389,7 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField) {
             event.target.value = maxLimit; // Set value to the maximum limit
             updatePerkList();
         }
+            */
     });
 })
 /**
@@ -402,18 +422,20 @@ document.addEventListener('DOMContentLoaded', function() {
             if (button.id.startsWith('Decrease')) {
                 clearInterval(Barn.intervals[getIndex(animalType)]);
                 decrementAnimalInput(animalType);
+                button.querySelector('img').src = "../static/img/UI/minus_pbtn.png";
                 Barn.intervals[getIndex(animalType)] = setInterval(function () {
                     decrementAnimalInput(animalType);
                 }, 100);
-                button.querySelector('img').src = "../static/img/UI/minus_pbtn.png";
+
 
             } else if (button.id.startsWith('Increase')) {
                 clearInterval(Barn.intervals[getIndex(animalType)]);
                 incrementAnimalInput(animalType);
+                button.querySelector('img').src = "../static/img/UI/plus_pbtn.png";
                 Barn.intervals[getIndex(animalType)] = setInterval(function () {
                     incrementAnimalInput(animalType);
                 }, 100);
-                button.querySelector('img').src = "../static/img/UI/plus_pbtn.png";
+
             }
         });
 
@@ -583,7 +605,7 @@ function getRiskChance(explorationTime) {
         720: 50,
         1440: 70
     };
-    if (buildingLevel >= 0){
+    if (buildingLevel <= 0){
         return 100
     }
 
