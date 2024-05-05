@@ -162,7 +162,6 @@ function display(){
         preExplorationDiv.style.display = "block";
         postExplorationDiv.style.display = "none";
         intraExplorationDiv.style.display = "none";
-        //TODO display the post exploration screen
     }
 }
 
@@ -326,11 +325,21 @@ async function sendExploration() {
 
 // ____________________ EVENT LISTENERS ____________________//
 document.getElementById('continue-btn').addEventListener('click', function() {
-    console.log('Continue button clicked!');
+    exploration.remaining_time = -1;
+    display();
+    console.log('Continue!');
 });
 
 document.getElementById('open-btn').addEventListener('click', function() {
-    console.log('Open button clicked!');
+    this.style.display = 'none';
+    const continueBtn = document.getElementById('continue-btn');
+    continueBtn.style.display = 'block';
+
+    //TODO show the opened crates
+    // show the reward items
+    // Notify database with surviving animals and received rewards
+
+    console.log('Open crates');
 });
 /**
  * Event listener for the 'click' event on the 'explore-btn' element.
