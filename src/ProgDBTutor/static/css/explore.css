@@ -144,9 +144,19 @@ html::after {
 
 
 #before-exploration{
-    display: block;
+    display: none;
 }
-#during-exploration,
+#during-exploration{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 254px;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+
 #after-exploration{
     display: none;
 }
