@@ -129,7 +129,7 @@ function display(){
         for (let i = 0; i < numCrates; i++) {
             // Create an img element
             const img = document.createElement('img');
-            img.src = '../img/exploring/rewards/'+crateImage[i]+'.png'; // Set the image source
+            img.src = '../static/img/exploring/rewards/'+crateImage[i]+'.png'; // Set the image source
 
             // Calculate grid position
             const row = Math.floor(i / cols); // Calculate the row index
