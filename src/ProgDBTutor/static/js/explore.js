@@ -734,24 +734,52 @@ function Log(n, base) {
     return Math.log(n)/(base ? Math.log(base) : 10);
 }
 function generateRewards() {
+    const boxes = ['coins', 'crops', 'animal', 'raw', 'empty'];
+    const probabilities = [0.25, 0.25, 0.25, 0.15, 0.10];
+    const means = [100*buildingLevel, 100*buildingLevel, 10*buildingLevel, 5*buildingLevel, 0]
+    const stdevs = [10*buildingLevel, 10*buildingLevel, 5*buildingLevel, 2*buildingLevel, 0]
+
     for (let i = 0; i < exploration.base_rewards; i++) {
+        let rindex = getRandomIndex(probabilities);
+        let type = boxes[rindex];
 
     }
     for (let i = 0; i < exploration.surviving_pigs; i++) {
+
 
     }
     for (let i = 0; i < exploration.rewards_of_goats; i++) {
 
     }
     for (let i = 0; i < exploration.surviving_chickens; i++) {
+        let chickenMeans = [100*buildingLevel, 100*buildingLevel * i * 1.25, 10*buildingLevel * i * 1.25, 5*buildingLevel * i * 1.25, 0]
+        let rindex = getRandomIndex(probabilities);
+        let type = boxes[rindex];
+        //TODO increased yield of milk if found
+        //TODO increased yield of crops if found
 
     }
-    for (let i = 0; i < exploration.rewards_of_cows; i++) {
-
+    for (let i = 1; i <= exploration.rewards_of_cows; i++) {
+        let cowProbabilities = [0.25+0.5*i, 0.25, 0.25, 0.15, 0.10];
+        let cowMeans = [100*buildingLevel * i * 1.25, 100*buildingLevel * i * 1.25, 10*buildingLevel * i * 1.25, 5*buildingLevel * i * 1.25, 0]
+        //TODO increased yield of milk if found
+        let rindex = getRandomIndex(probabilities);
+        let type = boxes[rindex];
     }
     //crateImage...
     //rewards...
 
+}
+function getRandomIndex(weights) {
+    const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
+    let randomNum = Math.random() * totalWeight;
+
+    for (let i = 0; i < weights.length; i++) {
+        randomNum -= weights[i];
+        if (randomNum < 0) {
+            return i;
+        }
+    }
 }
 function gaussianRandom(mean=0, stdev=1) {
     const u = 1 - Math.random();
