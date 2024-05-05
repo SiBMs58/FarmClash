@@ -171,7 +171,11 @@ html::after {
     height: 87%;
     width: 78%;
 
-    background: yellow;
+    padding: 1% 0.6%; /* Use 1% of the container's width as padding */
+    box-sizing: border-box; /* Include padding in the total width and height */
+    border-radius: 4px;
+    background: #f0e0bc;
+
     display: flex;
 }
 .rewards img {
@@ -187,11 +191,19 @@ html::after {
     top: 10px;
     right: 10px;
 
-    height: 80%;
+    height: 79%;
     width: 20%;
 
-    background: red;
+    border-radius: 4px;
+    background: #f0e0bc;
     display: flex;
+}
+
+.reward-items img {
+    height: 10%;
+    width: auto;
+
+    image-rendering: pixelated;
 }
 
 .buttons {
@@ -203,7 +215,6 @@ html::after {
     height: 10%;
     width: 25%;
 
-    background: blue;
 }
 
 
@@ -258,6 +269,22 @@ html::after {
     height: 17%;
     width: 20%;
 
-    background: green;
+    border-radius: 4px;
+    background: #f0e0bc;
     display: flex;
+
+    flex-direction: column;
+    font-size: 40px;
+    padding: 1% 0.6%; /* Use 1% of the container's width as padding */
+    box-sizing: border-box; /* Include padding in the total width and height */
+}
+
+
+
+.animals img {
+    height: 40px;
+    width: auto;
+
+
+    image-rendering: pixelated;
 }

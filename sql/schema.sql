@@ -135,6 +135,7 @@ CREATE TABLE explorations (
     surviving_chickens INT,
     surviving_pigs INT,
     surviving_cows INT,
-    rewards_of_cows INT
+    rewards_of_cows INT,
+    base_rewards INT
     -- refetching the exploration from database can regenerate the rewards but the amount of surviving animals and crates should be constant
 );

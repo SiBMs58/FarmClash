@@ -13,11 +13,13 @@ class ExplorationDataAccess:
         """
         cursor = self.db_connection.get_cursor()
         cursor.execute(
-            "INSERT INTO explorations (started_at, duration, chickens, goats, pigs, cows, exploration_level, augment_level, owner, "
-            "surviving_goats, rewards_of_goats, surviving_cows, rewards_of_cows, surviving_pigs, surviving_chickens) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s)",
+            "INSERT INTO explorations (started_at, duration, chickens, goats, pigs, cows, exploration_level, "
+            "augment_level, owner, surviving_goats, rewards_of_goats, surviving_cows, rewards_of_cows, surviving_pigs, "
+            "surviving_chickens, base_rewards) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, $s)",
             (exploration.started_at, exploration.duration, exploration.chickens, exploration.goats, exploration.pigs,
              exploration.cows, exploration.level, exploration.augment, exploration.owner, exploration.surviving_goats,
-             exploration.rewards_of_goats, exploration.surviving_cows, exploration.rewards_of_cows, exploration.surviving_pigs, exploration.surviving_chickens))
+             exploration.rewards_of_goats, exploration.surviving_cows, exploration.rewards_of_cows,
+             exploration.surviving_pigs, exploration.surviving_chickens, exploration.base_rewards))
         self.db_connection.conn.commit()
         return True
 
@@ -35,7 +37,7 @@ class ExplorationDataAccess:
                               result['exploration_level'], result['augment_level'], result['duration'],
                               result['started_at'], result['surviving_goats'], result['rewards_of_goats'],
                               result['surviving_cows'], result['rewards_of_cows'], result['surviving_pigs'],
-                              result['surviving_chickens'])
+                              result['surviving_chickens'], result['base_rewards'])
         else:
            return None
 

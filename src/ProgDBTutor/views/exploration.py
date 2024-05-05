@@ -30,9 +30,9 @@ def start_exploration():
     goats = int(data['goats'])
     pigs = int(data['pigs'])
     cows = int(data['cows'])
-    level = 1  #int(data['level']) TODO
-    augment = 0  #int(data['augment']) TODO
-    duration = data['duration']
+    level = int(data['exploration_level'])
+    augment = int(data['augment_level'])
+    duration = int(data['remaining_time'])
 
     if exploration_data_access.start_exploration(
             Exploration(current_user.username, chickens, goats, pigs, cows, level, augment, duration)):

@@ -6,7 +6,7 @@ import random
 class Exploration:
     def __init__(self, owner, chickens, goats, pigs, cows, level, augment, duration=None, started_at=None,
                  surviving_goats=None, rewards_goats=None, surviving_cows=None, rewards_cows=None, surviving_pigs=None,
-                 surviving_chickens=None):
+                 surviving_chickens=None, base_rewards=None):
         self.owner = owner
         self.chickens = chickens
         self.goats = goats
@@ -28,13 +28,18 @@ class Exploration:
         self.surviving_cows = surviving_cows
         self.rewards_of_cows = rewards_cows
         self.surviving_chickens = surviving_chickens
+        self.base_rewards = base_rewards
 
-        if surviving_goats is None or rewards_goats is None or surviving_pigs is None or surviving_cows is None or surviving_chickens is None or rewards_cows is None:
+        if surviving_goats is None or rewards_goats is None or surviving_pigs is None or surviving_cows is None or surviving_chickens is None or rewards_cows is None or base_rewards is None:
             risk_chance = self.get_risk_chance()
             self.set_surviving_goats_and_rewards(risk_chance)
             self.set_surviving_cows_and_rewards(risk_chance)
             self.set_surviving_pigs(risk_chance)
             self.set_surviving_chickens(risk_chance)
+
+            self.base_rewards = 1 if random.uniform(0, 100) > risk_chance else 0
+            self.base_rewards = 2 if self.base_rewards == 1 and random.uniform(0, 100) > risk_chance * 4 else 1
+            self.base_rewards = 3 if self.base_rewards == 2 and random.uniform(0, 100) > risk_chance * 8 else 2
 
     def to_dict(self):
         return {
@@ -52,7 +57,8 @@ class Exploration:
             "surviving_pigs": self.surviving_pigs,
             "surviving_cows": self.surviving_cows,
             "rewards_of_cows": self.rewards_of_cows,
-            "surviving_chickens": self.surviving_chickens
+            "surviving_chickens": self.surviving_chickens,
+            "base_rewards": self.base_rewards
         }
 
     def set_surviving_goats_and_rewards(self, risk_chance):

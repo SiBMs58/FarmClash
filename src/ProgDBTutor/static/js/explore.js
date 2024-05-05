@@ -5,13 +5,13 @@ Barn.intervals = new Array(4).fill(null);
 Barn.animals = ["Chicken", "Cow", "Pig", "Goat"];
 const animalPerks = {
     Chicken: [
-        ["Increased chance of finding eggs.", 10],
-        ["Increased yield of crops if found during exploration.", 25],
-        ["chance of higher rarity of animal resources.", 5],
-        ["chance of getting home (Kip zonder kop).", -5]
+        ["Increased yield of eggs if found.", 10],
+        ["Increased yield of crops if found.", 25],
+        ["Chance of higher rarity of animal product.", 5],
+        ["chance of getting home safe.", -5]
     ],
     Cow: [
-        ["Increased chances of milk.", 10],
+        ["Increased yield of milk if found.", 10],
         ["Brings more resources on average.", 25],
         ["chance to bring coins.", 5],
         ["chance to bring a box.", -10]
@@ -46,7 +46,8 @@ let exploration = {
     surviving_pigs: 0,
     surviving_cows: 0,
     rewards_of_cows: 0,
-    surviving_chickens: 0
+    surviving_chickens: 0,
+    base_rewards: 0,
 };
 const buildingLevel = 1; // TODO fetch from the database
 const buildingAugmentLevel = 0; // TODO fetch from the database
@@ -81,7 +82,7 @@ function initialize() {
                 exploration.remaining_time = Math.max(parseInt(exploration.duration) - elapsed, 0);
             }
             if(exploration.remaining_time === 0){
-                numCrates = exploration.surviving_chickens + exploration.rewards_of_goats + exploration.surviving_pigs + exploration.rewards_of_cows +1;
+                numCrates = exploration.surviving_chickens + exploration.rewards_of_goats + exploration.surviving_pigs + exploration.rewards_of_cows + exploration.base_rewards;
                 crateImage = Array.from({ length: numCrates }, () => 'Closedcrate');
             }
             displayStatus();
@@ -188,9 +189,22 @@ function displaySurvivors() {
         { type: 'Cow', quantity: exploration.surviving_cows }
     ];
 
-    animals.forEach(animal => {
-        survivorDiv.innerHTML += `${animal.quantity} x <img src="../../static/img/assets/animals/${animal.type}/${animal.type}.1.png" alt="${animal.type}" title="${animal.type}" draggable="false"><br>`;
-    });
+    for (let i = 0; i < animals.length; i += 2) {
+        const animalPairDiv = document.createElement('div'); // Create a div element for each pair of animals
+        const animal1 = animals[i];
+        const animal2 = animals[i + 1];
+
+        let html = '';
+        if (animal1) {
+            html += `${animal1.quantity} x <img src="../../static/img/assets/animals/${animal1.type}/${animal1.type}.1.png" alt="${animal1.type}" title="${animal1.type}" draggable="false">`;
+        }
+        if (animal2) {
+            html += `${animal2.quantity} x <img src="../../static/img/assets/animals/${animal2.type}/${animal2.type}.1.png" alt="${animal2.type}" title="${animal2.type}" draggable="false">`;
+        }
+
+        animalPairDiv.innerHTML = html;
+        survivorDiv.appendChild(animalPairDiv); // Append the animalPairDiv to the survivorDiv
+    }
 }
 function displayRewardItems(){
      const rewardsItemDiv = document.getElementById('reward-items');
@@ -348,11 +362,13 @@ async function sendExploration() {
         console.error('Error occurred while starting exploration:', error);
     }
 }
-async function sendStopExploration(){
+async function sendStopExploration() {
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/exploration/stop-exploration";
     try {
-        const response = await fetch(fetchLink)
+        const response = await fetch(fetchLink, {
+            method: 'POST'
+        });
 
         if (response.ok) {
             const jsonResponse = await response.json();
@@ -426,10 +442,9 @@ document.getElementById('explore-btn').addEventListener('click', async function 
         'goats': parseInt(document.getElementById('Goat').value),
         'pigs': parseInt(document.getElementById('Pig').value),
         'cows': parseInt(document.getElementById('Cow').value),
-        'duration': exploreTime,
         'augment_level': buildingAugmentLevel,
         'exploration_level': buildingLevel,
-        'remaining_time': exploreTime
+        'remaining_time': parseInt(exploreTime)
     };
     await sendExploration();
     await sendAnimalQuantity(-exploration['chickens'], -exploration['goats'], -exploration['pigs'], -exploration['cows']);
@@ -719,6 +734,21 @@ function Log(n, base) {
     return Math.log(n)/(base ? Math.log(base) : 10);
 }
 function generateRewards() {
+    for (let i = 0; i < exploration.base_rewards; i++) {
+
+    }
+    for (let i = 0; i < exploration.surviving_pigs; i++) {
+
+    }
+    for (let i = 0; i < exploration.rewards_of_goats; i++) {
+
+    }
+    for (let i = 0; i < exploration.surviving_chickens; i++) {
+
+    }
+    for (let i = 0; i < exploration.rewards_of_cows; i++) {
+
+    }
     //crateImage...
     //rewards...
 
