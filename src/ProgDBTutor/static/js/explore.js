@@ -48,8 +48,15 @@ let exploration = {
     rewards_of_cows: 0,
     surviving_chickens: 0
 };
-let buildingLevel = 1; // TODO fetch from the database
-let buildingAugmentLevel = 0; // TODO fetch from the database
+const buildingLevel = 1; // TODO fetch from the database
+const buildingAugmentLevel = 0; // TODO fetch from the database
+let numCrates = 0;
+let crateImage = []
+let rewards = {};
+
+
+
+
 
 
 
@@ -73,12 +80,20 @@ function initialize() {
                 const elapsed = (currentTime - startTime) / (1000 * 60);
                 exploration.remaining_time = Math.max(parseInt(exploration.duration) - elapsed, 0);
             }
-            display();
+            if(exploration.remaining_time === 0){
+                numCrates = exploration.surviving_chickens + exploration.rewards_of_goats + exploration.surviving_pigs + exploration.rewards_of_cows +1;
+                crateImage = Array.from({ length: numCrates }, () => 'Closedcrate');
+            }
+            displayStatus();
         })
         .catch(error => {
             console.error('Error handling exploration status:', error);
         });
 }
+
+
+
+
 
 
 
@@ -111,7 +126,7 @@ function reset(button) {
  *
  * @function
  */
-function display(){
+function displayStatus(){
     let preExplorationDiv = document.getElementById('before-exploration');
     let intraExplorationDiv = document.getElementById('during-exploration');
     let postExplorationDiv = document.getElementById('after-exploration');
@@ -120,35 +135,8 @@ function display(){
         preExplorationDiv.style.display = "none";
         intraExplorationDiv.style.display = "none";
         postExplorationDiv.style.display  = "block";
-
-        const rewardsDiv = document.getElementById('rewards');
-        const rows = 5; // Change as needed
-        const cols = Math.ceil(numCrates / rows);
-
-        for (let i = 0; i < numCrates; i++) {
-            // Create an img element
-            const img = document.createElement('img');
-            img.src = '../static/img/exploring/rewards/'+crateImage[i]+'.png'; // Set the image source
-
-            // Calculate grid position
-            const row = Math.floor(i / cols); // Calculate the row index
-            const col = i % cols; // Calculate the column index
-
-            // Apply grid styles
-            img.style.gridColumn = `${col + 1} / span 1`;
-            img.style.gridRow = `${row + 1} / span 1`;
-
-            // Append the image to the rewards div
-            rewardsDiv.appendChild(img);
-        }
-
-        rewardsDiv.style.display = 'grid';
-        rewardsDiv.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-        rewardsDiv.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-        rewardsDiv.style.display = 'grid';
-        rewardsDiv.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-        rewardsDiv.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-
+        displayCrates(numCrates, crateImage)
+        displaySurvivors();
 
     }else if(exploration.remaining_time > 0){
         preExplorationDiv.style.display = "none";
@@ -163,8 +151,57 @@ function display(){
         intraExplorationDiv.style.display = "none";
     }
 }
+function displayCrates(numCrates, crateImage) {
+    const rewardsDiv = document.getElementById('rewards');
+    const rows = 5; // Change as needed
+    const cols = Math.ceil(numCrates / rows);
 
+    for (let i = 0; i < numCrates; i++) {
+        // Create an img element
+        const img = document.createElement('img');
+        img.src = '../static/img/exploring/rewards/'+crateImage[i]+'.png'; // Set the image source
 
+        // Calculate grid position
+        const row = Math.floor(i / cols); // Calculate the row index
+        const col = i % cols; // Calculate the column index
+
+        // Apply grid styles
+        img.style.gridColumn = `${col + 1} / span 1`;
+        img.style.gridRow = `${row + 1} / span 1`;
+
+        // Append the image to the rewards div
+        rewardsDiv.appendChild(img);
+    }
+    rewardsDiv.style.display = 'grid';
+    rewardsDiv.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    rewardsDiv.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+    rewardsDiv.style.display = 'grid';
+    rewardsDiv.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    rewardsDiv.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+}
+function displaySurvivors() {
+    const survivorDiv = document.getElementById('animals');
+    const animals = [
+        { type: 'Chicken', quantity: exploration.surviving_chickens },
+        { type: 'Goat', quantity: exploration.surviving_goats },
+        { type: 'Pig', quantity: exploration.surviving_pigs },
+        { type: 'Cow', quantity: exploration.surviving_cows }
+    ];
+
+    animals.forEach(animal => {
+        survivorDiv.innerHTML += `${animal.quantity} x <img src="../../static/img/assets/animals/${animal.type}/${animal.type}.1.png" alt="${animal.type}" title="${animal.type}" draggable="false"><br>`;
+    });
+}
+function displayRewardItems(){
+     const rewardsItemDiv = document.getElementById('reward-items');
+
+    for (const key in rewards) {
+        if (rewards.hasOwnProperty(key)) {
+            const reward = rewards[key];
+
+        }
+    }
+}
 
 
 
@@ -334,10 +371,13 @@ async function sendStopExploration(){
 
 
 
+
+
+
 // ____________________ EVENT LISTENERS ____________________//
 document.getElementById('continue-btn').addEventListener('click', function() {
     exploration.remaining_time = -1;
-    display();
+    displayStatus();
     console.log('Continue!');
 });
 
@@ -348,11 +388,12 @@ document.getElementById('open-btn').addEventListener('click', function() {
             this.style.display = 'none';
             const continueBtn = document.getElementById('continue-btn');
             continueBtn.style.display = 'block';
+            generateRewards();
+            displayRewardItems();
+            displayCrates(numCrates, crateImage);
 
 
-            //TODO show the opened crates
-            // show the reward items
-            // Notify database with surviving animals and received rewards
+            //TODO Notify database with received rewards
 
 
             console.log('Open crates');
@@ -392,7 +433,7 @@ document.getElementById('explore-btn').addEventListener('click', async function 
     };
     await sendExploration();
     await sendAnimalQuantity(-exploration['chickens'], -exploration['goats'], -exploration['pigs'], -exploration['cows']);
-    display(exploreTime)
+    displayStatus(exploreTime)
 });
 /**
  * Adds 'input' event listeners to all input fields of type 'number'.
@@ -495,6 +536,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
 
 
 
@@ -676,6 +719,13 @@ function Log(n, base) {
     return Math.log(n)/(base ? Math.log(base) : 10);
 }
 function generateRewards() {
+    //crateImage...
+    //rewards...
 
-
+}
+function gaussianRandom(mean=0, stdev=1) {
+    const u = 1 - Math.random();
+    const v = Math.random();
+    const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+    return z * stdev + mean;
 }
