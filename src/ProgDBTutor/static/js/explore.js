@@ -311,6 +311,22 @@ async function sendExploration() {
         console.error('Error occurred while starting exploration:', error);
     }
 }
+async function sendStopExploration(){
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = BASE_URL + "/exploration/stop-exploration";
+    try {
+        const response = await fetch(fetchLink)
+
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('Exploration stopped successfully:', jsonResponse);
+        } else {
+            console.error('Failed to stop exploration:', response.status);
+        }
+    } catch (error) {
+        console.error('Error occurred while stopping exploration:', error);
+    }
+}
 
 
 
@@ -326,16 +342,21 @@ document.getElementById('continue-btn').addEventListener('click', function() {
 });
 
 document.getElementById('open-btn').addEventListener('click', function() {
-    this.style.display = 'none';
-    const continueBtn = document.getElementById('continue-btn');
-    continueBtn.style.display = 'block';
-    sendAnimalQuantity(exploration.surviving_chickens, exploration.surviving_goats, exploration.surviving_pigs, exploration.surviving_cows);
+    sendStopExploration().then(() => {
+        sendAnimalQuantity(exploration.surviving_chickens, exploration.surviving_goats, exploration.surviving_pigs, exploration.surviving_cows)
+    }).then(() => {
+            this.style.display = 'none';
+            const continueBtn = document.getElementById('continue-btn');
+            continueBtn.style.display = 'block';
 
-    //TODO show the opened crates
-    // show the reward items
-    // Notify database with surviving animals and received rewards
 
-    console.log('Open crates');
+            //TODO show the opened crates
+            // show the reward items
+            // Notify database with surviving animals and received rewards
+
+
+            console.log('Open crates');
+        });
 });
 /**
  * Event listener for the 'click' event on the 'explore-btn' element.

@@ -157,7 +157,8 @@ html::after {
 }
 #after-exploration{
     padding: 10px;
-    top: 20%;
+    top: 50%;
+    transform: translateY(-45%);
     display: none;
     width: 1280px;
     height: 720px;
