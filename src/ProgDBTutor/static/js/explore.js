@@ -66,9 +66,8 @@ initialize();
 function initialize() {
     fetchExplorationFromAPI()
         .then(() => {
-            if (exploration.ongoing === false) {
-                fetchAnimalQuantity();
-            } else {
+            fetchAnimalQuantity();
+            if (exploration.ongoing){
                 const startTime = new Date(exploration.started_at);
                 const currentTime = new Date();
                 const elapsed = (currentTime - startTime) / (1000 * 60);
@@ -242,15 +241,11 @@ function fetchAnimalQuantity() {
  * @function
  * @throws Will throw an error if the response from the API is not ok.
  */
-async function sendAnimalQuantity() {
-    let numCows = parseInt(document.getElementById('Cow').value);
-    let numPigs = parseInt(document.getElementById('Pig').value);
-    let numGoats = parseInt(document.getElementById('Goat').value);
-    let numChickens = parseInt(document.getElementById('Chicken').value);
-    let diffCows = Barn.quantities[getIndex('Cow')] - numCows;
-    let diffPigs = Barn.quantities[getIndex('Pig')] - numPigs;
-    let diffGoats = Barn.quantities[getIndex('Goat')] - numGoats;
-    let diffChickens = Barn.quantities[getIndex('Chicken')] - numChickens;
+async function sendAnimalQuantity(numChickens, numGoats, numPigs, numCows) {
+    let diffCows = Barn.quantities[getIndex('Cow')] + numCows;
+    let diffPigs = Barn.quantities[getIndex('Pig')] + numPigs;
+    let diffGoats = Barn.quantities[getIndex('Goat')] + numGoats;
+    let diffChickens = Barn.quantities[getIndex('Chicken')] + numChickens;
 
     let animal_data = {
         'update_type': 'explore',
@@ -334,6 +329,7 @@ document.getElementById('open-btn').addEventListener('click', function() {
     this.style.display = 'none';
     const continueBtn = document.getElementById('continue-btn');
     continueBtn.style.display = 'block';
+    sendAnimalQuantity(exploration.surviving_chickens, exploration.surviving_goats, exploration.surviving_pigs, exploration.surviving_cows);
 
     //TODO show the opened crates
     // show the reward items
@@ -374,7 +370,7 @@ document.getElementById('explore-btn').addEventListener('click', async function 
         'remaining_time': exploreTime
     };
     await sendExploration();
-    await sendAnimalQuantity();
+    await sendAnimalQuantity(-exploration['chickens'], -exploration['goats'], -exploration['pigs'], -exploration['cows']);
     display(exploreTime)
 });
 /**
@@ -421,17 +417,6 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField) {
             event.target.value = currentInputValue - difference;
         }
         updatePerkList();
-        /**
-        if (buildingLevel < totalAnimals) {
-            event.target.value = buildingLevel-totalAnimals+currentInputValue-1;
-            updatePerkList();
-            return;
-        }
-        if (currentInputValue > maxLimit) {
-            event.target.value = maxLimit; // Set value to the maximum limit
-            updatePerkList();
-        }
-            */
     });
 })
 /**
