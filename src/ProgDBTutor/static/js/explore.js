@@ -29,7 +29,25 @@ const animalPerks = {
         ["Brings lower resources on average.", -5]
     ]
 };
-let exploration = null;
+let exploration = {
+    remaining_time: -1,
+    ongoing: false,
+    owner: self.owner,
+    chickens: 0,
+    goats: 0,
+    pigs: 0,
+    cows: self.cows,
+    exploration_level: 1,
+    augment_level: 0,
+    started_at: null,
+    duration: 1,
+    surviving_goats: 0,
+    rewards_of_goats: 0,
+    surviving_pigs: 0,
+    surviving_cows: 0,
+    rewards_of_cows: 0,
+    surviving_chickens: 0
+};
 let buildingLevel = 1; // TODO fetch from the database
 let buildingAugmentLevel = 0; // TODO fetch from the database
 
@@ -153,7 +171,7 @@ async function fetchExplorationFromAPI() {
             throw new Error('Failed to fetch exploration data');
         }
         const data = await response.json();
-        exploration = data.ongoing ? data : {remaining_time: -1, ongoing: false};
+        exploration = data.ongoing ? data : exploration;
     } catch (error) {
         console.error('Error fetching exploration:', error);
     }
@@ -482,15 +500,16 @@ function getIndex(animal) {
 function formatTime(minutes) {
     let days = Math.floor(minutes / (60 * 24));
     let hours = Math.floor((minutes % (60 * 24)) / 60);
-    let minutess = Math.floor(minutes % 60);
     let seconds = Math.floor(minutes % 1 * 60); // Calculate total seconds
+    minutes = Math.floor(minutes % 60);
+
 
     if (days > 0) {
-        return days + "d " + hours + "h " + minutess + "m";
+        return days + "d " + hours + "h " + minutes + "m";
     } else if (hours > 0) {
-        return hours + "h " + minutess + "m";
-    } else if (minutess > 0) {
-        return minutess + "m";
+        return hours + "h " + minutes + "m";
+    } else if (minutes > 0) {
+        return minutes + "m";
     } else {
         return seconds + "s";
     }
@@ -564,10 +583,25 @@ function getRiskChance(explorationTime) {
         720: 50,
         1440: 70
     };
+    if (buildingLevel >= 0){
+        return 100
+    }
 
-    //TODO Adjust risk like in python
-    let riskChance = riskChances[explorationTime];
-    riskChance /= buildingLevel;
+    let riskChance = riskChances[explorationTime] / buildingLevel;
+    if (buildingAugmentLevel === 0){
+        riskChance += 1
+    }
+    riskChance -= 1 - Log(buildingAugmentLevel + 1,6) * 3 / (2 * (buildingAugmentLevel + 1))
 
     return Math.max(0, riskChance);
+}
+/**
+   * Calculates the logarithm of a number `n` with a given base.
+   *
+   * @param {number} n - The number to calculate the logarithm of.
+   * @param {number} [base=10] - The base of the logarithm. Defaults to `10` if not provided.
+   * @returns {number} The calculated logarithm.
+   */
+function Log(n, base) {
+    return Math.log(n)/(base ? Math.log(base) : 10);
 }
