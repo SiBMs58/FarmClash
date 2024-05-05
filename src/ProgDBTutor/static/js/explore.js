@@ -122,6 +122,34 @@ function display(){
         intraExplorationDiv.style.display = "none";
         postExplorationDiv.style.display  = "block";
 
+        const rewardsDiv = document.getElementById('rewards');
+        const rows = 5; // Change as needed
+        const cols = Math.ceil(numCrates / rows);
+
+        for (let i = 0; i < numCrates; i++) {
+            // Create an img element
+            const img = document.createElement('img');
+            img.src = '../img/exploring/rewards/'+crateImage[i]+'.png'; // Set the image source
+
+            // Calculate grid position
+            const row = Math.floor(i / cols); // Calculate the row index
+            const col = i % cols; // Calculate the column index
+
+            // Apply grid styles
+            img.style.gridColumn = `${col + 1} / span 1`;
+            img.style.gridRow = `${row + 1} / span 1`;
+
+            // Append the image to the rewards div
+            rewardsDiv.appendChild(img);
+        }
+
+        rewardsDiv.style.display = 'grid';
+        rewardsDiv.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        rewardsDiv.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+        rewardsDiv.style.display = 'grid';
+        rewardsDiv.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        rewardsDiv.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
 
     }else if(exploration.remaining_time > 0){
         preExplorationDiv.style.display = "none";
@@ -137,8 +165,6 @@ function display(){
         //TODO display the post exploration screen
     }
 }
-
-
 
 
 
@@ -299,6 +325,13 @@ async function sendExploration() {
 
 
 // ____________________ EVENT LISTENERS ____________________//
+document.getElementById('continue-btn').addEventListener('click', function() {
+    console.log('Continue button clicked!');
+});
+
+document.getElementById('open-btn').addEventListener('click', function() {
+    console.log('Open button clicked!');
+});
 /**
  * Event listener for the 'click' event on the 'explore-btn' element.
  *
@@ -626,4 +659,8 @@ function getRiskChance(explorationTime) {
    */
 function Log(n, base) {
     return Math.log(n)/(base ? Math.log(base) : 10);
+}
+function generateRewards() {
+
+
 }

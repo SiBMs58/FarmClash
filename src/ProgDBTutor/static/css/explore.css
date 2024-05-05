@@ -155,8 +155,108 @@ html::after {
     font-size: 50px;
     font-weight: bold;
 }
-
-
 #after-exploration{
+    padding: 10px;
+    top: 20%;
     display: none;
+    width: 1280px;
+    height: 720px;
+}
+.rewards {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    height: 87%;
+    width: 78%;
+
+    background: yellow;
+    display: flex;
+}
+.rewards img {
+    /* Scale button to the height of the div*/
+    height: 90%;
+    width: auto;
+
+    image-rendering: pixelated;
+}
+
+.reward-items {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    height: 80%;
+    width: 20%;
+
+    background: red;
+    display: flex;
+}
+
+.buttons {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-80%);
+
+    height: 10%;
+    width: 25%;
+
+    background: blue;
+}
+
+
+.open-btn{
+    /* center the button horizontally in the div*/
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Makes button only the img*/
+    padding: 0;
+    background: none;
+    border: none;
+
+    /* Scale button to the height of the div*/
+    height: 100%;
+    width: auto;
+
+    display: block;
+}
+.continue-btn {
+    /* center the button horizontally in the div*/
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Makes button only the img*/
+    padding: 0;
+    background: none;
+    border: none;
+
+    /* Scale button to the height of the div*/
+    height: 100%;
+    width: auto;
+
+    display: none;
+}
+.open-btn img,
+.continue-btn img {
+    /* Scale button to the height of the div*/
+    height: 100%;
+    width: auto;
+
+    image-rendering: pixelated;
+}
+
+.animals {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+
+    height: 17%;
+    width: 20%;
+
+    background: green;
+    display: flex;
 }
