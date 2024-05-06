@@ -6,7 +6,7 @@ Barn.animals = ["Chicken", "Cow", "Pig", "Goat"];
 const animalPerks = {
     Chicken: [
         ["Increased yield of eggs if found.", 10],
-        ["Increased yield of crops if found.", 25],
+        ["Increased yield of crops if found.", 35],
         ["Chance of higher rarity of animal product.", 5],
         ["chance of getting home safe.", -5]
     ],
@@ -19,7 +19,7 @@ const animalPerks = {
     Pig: [
         ["Increased chances of truffles.", 10],
         ["Higher rarity of craft resources.", 15],
-        ["Higher amount of craft resources.", 15],
+        ["Higher amount of craft resources.", 30],
         ["Higher chance of empty boxes.", -15]
     ],
     Goat: [
