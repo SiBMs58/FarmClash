@@ -101,7 +101,7 @@ function initialize() {
 
 
 
-//______________________ UI FUNCTIONS ______________________//
+//______________________ Display FUNCTIONS ______________________//
 /**
  * Resets the button images and clears any ongoing incrementation intervals.
  * @param {HTMLButtonElement} button - The button element to reset.
@@ -208,10 +208,10 @@ function displaySurvivors() {
 }
 function displayRewardItems(){
      const rewardsItemDiv = document.getElementById('reward-items');
-
     for (const key in rewards) {
         if (rewards.hasOwnProperty(key)) {
             const reward = rewards[key];
+            // TODO: Add the reward item to the rewardsItemDiv
 
         }
     }
@@ -380,9 +380,9 @@ async function sendStopExploration() {
         console.error('Error occurred while stopping exploration:', error);
     }
 }
-
-
-
+async function sendResourceQuanity(){
+     //TODO Notify database with received rewards
+}
 
 
 
@@ -407,11 +407,7 @@ document.getElementById('open-btn').addEventListener('click', function() {
             generateRewards();
             displayRewardItems();
             displayCrates(numCrates, crateImage);
-
-
-            //TODO Notify database with received rewards
-
-
+            sendResourceQuanity();
             console.log('Open crates');
         });
 });
@@ -734,41 +730,72 @@ function Log(n, base) {
     return Math.log(n)/(base ? Math.log(base) : 10);
 }
 function generateRewards() {
-    const boxes = ['coins', 'crops', 'animal', 'raw', 'empty'];
+    const boxes = ['coinCrate', 'cropCrate', 'animalCrate', 'rawCrate', 'emptyCrate'];
     const probabilities = [0.25, 0.25, 0.25, 0.15, 0.10];
     const means = [100*buildingLevel, 100*buildingLevel, 10*buildingLevel, 5*buildingLevel, 0]
     const stdevs = [10*buildingLevel, 10*buildingLevel, 5*buildingLevel, 2*buildingLevel, 0]
+    let rindex = 0;
+    let amount = 0;
+    crateImage = [];
+
 
     for (let i = 0; i < exploration.base_rewards; i++) {
-        let rindex = getRandomIndex(probabilities);
-        let type = boxes[rindex];
-
+        rindex = getRandomIndex(probabilities);
+        addRewards(boxes[rindex], gaussianRandom(means[rindex], stdevs[rindex]), '');
+        crateImage.push(boxes[rindex]);
     }
-    for (let i = 0; i < exploration.surviving_pigs; i++) {
 
-
-    }
-    for (let i = 0; i < exploration.rewards_of_goats; i++) {
-
-    }
+    let chickenMeans = probabilities
+    let chickenStdevs = stdevs
     for (let i = 0; i < exploration.surviving_chickens; i++) {
-        let chickenMeans = [100*buildingLevel, 100*buildingLevel * i * 1.25, 10*buildingLevel * i * 1.25, 5*buildingLevel * i * 1.25, 0]
-        let rindex = getRandomIndex(probabilities);
-        let type = boxes[rindex];
-        //TODO increased yield of milk if found
-        //TODO increased yield of crops if found
+        chickenMeans[1]*=  1.35 // yield of crops?
+        chickenStdevs[1]*= 1.15
 
+        rindex = getRandomIndex(probabilities);
+        addRewards(boxes[rindex], gaussianRandom(chickenMeans[rindex], chickenStdevs[rindex]), 'Chicken')
+        //TODO increased yield of eggs if found
+        //TODO increased rarity of animal product
+        crateImage.push(boxes[rindex]);
     }
+
+    let cowProbabilities = probabilities
+    let cowMeans = means
     for (let i = 1; i <= exploration.rewards_of_cows; i++) {
-        let cowProbabilities = [0.25+0.5*i, 0.25, 0.25, 0.15, 0.10];
-        let cowMeans = [100*buildingLevel * i * 1.25, 100*buildingLevel * i * 1.25, 10*buildingLevel * i * 1.25, 5*buildingLevel * i * 1.25, 0]
-        //TODO increased yield of milk if found
-        let rindex = getRandomIndex(probabilities);
-        let type = boxes[rindex];
-    }
-    //crateImage...
-    //rewards...
+        cowProbabilities[0] += 0.05; // Higher chance of getting coins
+        for (let j = 0; j < cowMeans.length; j++) {
+            cowMeans[j] *= 1.25; // Higher resources on average
+        }
 
+        rindex = getRandomIndex(cowProbabilities);
+        addRewards(boxes[rindex], gaussianRandom(cowMeans[rindex], stdevs[rindex]), 'Cow')
+        //TODO increased yield of milk if found
+        crateImage.push(boxes[rindex]);
+    }
+
+    let pigProbabilities = probabilities
+    let pigMeans = means
+    for (let i = 0; i < exploration.surviving_pigs; i++) {
+        pigProbabilities[4] += 0.15; // Higher chance of getting an empty box
+        pigMeans[3] *= 1.35; // Higher amount of craft resources
+
+        rindex = getRandomIndex(pigProbabilities);
+        addRewards(boxes[rindex], gaussianRandom(pigMeans[rindex], stdevs[rindex]), 'Pig');
+        //TODO increased yield of truffle if found
+        // TODO higher rarity of craft resources
+        crateImage.push(boxes[rindex]);
+    }
+
+    let goatMeans = means
+    for (let i = 0; i < exploration.rewards_of_goats; i++) {
+        for (let j = 0; j < goatMeans.length; j++) {
+            goatMeans[j] *= 0.95; // Lower resources on average
+        }
+
+        rindex = getRandomIndex(probabilities);
+        addRewards(boxes[rindex], gaussianRandom(goatMeans[rindex], stdevs[rindex]), 'Goat');
+        //TODO increased yield of wool if found
+        crateImage.push(boxes[rindex]);
+    }
 }
 function getRandomIndex(weights) {
     const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
@@ -786,4 +813,7 @@ function gaussianRandom(mean=0, stdev=1) {
     const v = Math.random();
     const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
     return z * stdev + mean;
+}
+function addRewards(type, amount, animal){
+    //TODO
 }
