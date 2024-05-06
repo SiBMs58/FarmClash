@@ -6,7 +6,8 @@ Barn.animals = ["Chicken", "Cow", "Pig", "Goat"];
 const animalPerks = {
     Chicken: [
         ["Increased yield of eggs if found.", 10],
-        ["Increased yield of crops if found.", 35],
+        ["Increased amount of crops if found.", 35],
+        ["Increased spread of amount of crops if found.", 15],
         ["Chance of higher rarity of animal product.", 5],
         ["chance of getting home safe.", -5]
     ],
@@ -19,7 +20,7 @@ const animalPerks = {
     Pig: [
         ["Increased chances of truffles.", 10],
         ["Higher rarity of craft resources.", 15],
-        ["Higher amount of craft resources.", 30],
+        ["Higher amount of craft resources.", 35],
         ["Higher chance of empty boxes.", -15]
     ],
     Goat: [
@@ -75,6 +76,7 @@ function initialize() {
     fetchExplorationFromAPI()
         .then(() => {
             fetchAnimalQuantity();
+            fetchBuildingBayStats();
             if (exploration.ongoing){
                 const startTime = new Date(exploration.started_at);
                 const currentTime = new Date();
@@ -275,6 +277,9 @@ function fetchAnimalQuantity() {
         console.error('Error fetching animals:', error);
     });
 }
+function fetchBuildingBayStats() {
+    //TODO fetch building level and augment level from the database
+}
 /**
  * Asynchronously sends the quantity of each animal to the server.
  *
@@ -407,9 +412,12 @@ document.getElementById('open-btn').addEventListener('click', function() {
             generateRewards();
             displayRewardItems();
             displayCrates(numCrates, crateImage);
-            sendResourceQuanity();
-            console.log('Open crates');
-        });
+           console.log('Open crates');
+
+    }).then(() => {
+        sendResourceQuanity();
+        console.log('sent rewards to database');
+    });
 });
 /**
  * Event listener for the 'click' event on the 'explore-btn' element.
@@ -748,8 +756,8 @@ function generateRewards() {
     let chickenMeans = probabilities
     let chickenStdevs = stdevs
     for (let i = 0; i < exploration.surviving_chickens; i++) {
-        chickenMeans[1]*=  1.35 // yield of crops?
-        chickenStdevs[1]*= 1.15
+        chickenMeans[1]*=  1.35; // amount of crops
+        chickenStdevs[1]*= 1.15; //spread of crops
 
         rindex = getRandomIndex(probabilities);
         addRewards(boxes[rindex], gaussianRandom(chickenMeans[rindex], chickenStdevs[rindex]), 'Chicken')
