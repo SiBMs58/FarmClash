@@ -43,10 +43,11 @@ def register():
         success = user_data_access.add_user(User(username, password, email))
 
         if success:
-            # TODO: Send confiration e-mail
+            # TODO: Send confirmation e-mail
             gameservices = GameServices(user_data_access, current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'),current_app.config.get('resource_data_access'))
             gameservices.create_default_map(username)
             gameservices.initialize_resources(username)
+            gameservices.initialize_animals(username)
             return redirect(url_for('auth.login'))
         else:
             error_message = 'Failed to register user, try a different username.'

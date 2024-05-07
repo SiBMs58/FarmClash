@@ -1,7 +1,9 @@
-from flask import Blueprint, current_app, jsonify, abort
+from flask import Blueprint, current_app, jsonify, abort, request
 from flask_login import login_required, current_user
 
 from services.game_services import GameServices
+
+from src.ProgDBTutor.models.animal import Animal
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
@@ -229,6 +231,52 @@ def fetch_building_information_for_user(username):
         }
 
         return jsonify(json_response)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/animals', methods=['GET'])
+@login_required
+def get_animals():
+    """
+    Handles GET requests for all animals. This will return a list of all animals, for the current user
+    :return: A list of all animals, in json format
+    """
+    try:
+        animal_data_access = current_app.config.get('animal_data_access')
+        animals = animal_data_access.get_animals(current_user.username)
+        return jsonify([animal.to_dict() for animal in animals])
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/update-animals', methods=['POST'])
+@login_required
+def update_animals():
+    """
+    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
+    use this for
+    :return: Status of the update operation, in json format
+    """
+    try:
+        # TODO for FERHAT: add logica to limit the animal specie to the sum of levels of the appropiate buildings
+        #  i.e if the user has 3 unlocked pigpens one of level 2, one of level 6, and one level 10, pigs are limited to 18
+
+        data = request.get_json()
+        Idle = data['update_type'] == 'idle'
+        animal_data_access = current_app.config.get('animal_data_access')
+
+        for specie in data['species']:
+            update_success = True
+            if data['species'][specie][0] or Idle:
+                updated_animal = Animal(specie, current_user.username, data[specie][1] if len(data[specie]) == 2 else None, None if Idle else False)
+                update_success = animal_data_access.update_animal(updated_animal)
+
+            if not update_success:
+                return jsonify({"status": "error", "message": f"Failed to update animal {specie}"}), 500
+
+        return jsonify({"status": "success", "message": "Animal updated successfully"}), 200
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

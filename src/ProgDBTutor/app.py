@@ -11,6 +11,7 @@ from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
 from data_access.friendship_data_access import FriendshipDataAccess
 from data_access.chatmessage_data_access import ChatMessageDataAccess
+from data_access.animal_data_access import AnimalDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
 from views.auth import auth_blueprint
 from views.game import game_blueprint
@@ -46,7 +47,8 @@ market_data_access = MarketDataAccess(connection)
 app.config['market_data_access'] = market_data_access
 crops_data_access = CropsDataAccess(connection)
 app.config['crops_data_access'] = crops_data_access
-
+animal_data_access = AnimalDataAccess(connection)
+app.config['animal_data_access'] = animal_data_access
 
 # Insert the admin user
 user_data_access.add_user(
