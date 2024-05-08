@@ -64,8 +64,9 @@ class GameServices:
         self.resource_data_access.add_resource(Resource(None, username, "Milk", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Chocolate Milk", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Strawberry Milk", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Blueberry Milk", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Soy Milk", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Blueberry Milk", 0))
+
 
         # From Goats
         self.resource_data_access.add_resource(Resource(None, username, "Wool", 0))
@@ -76,10 +77,10 @@ class GameServices:
 
         # From Pigs
         self.resource_data_access.add_resource(Resource(None, username, "Truffle", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Winter Truffle", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Bronze Truffle", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Gold Truffle", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Forest Truffle", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Winter Truffle", 0))
 
         # From exploring (can also be stolen in an attack)
         self.resource_data_access.add_resource(Resource(None, username, "Stick", 0))

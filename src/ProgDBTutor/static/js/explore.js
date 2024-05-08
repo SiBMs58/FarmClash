@@ -209,16 +209,83 @@ function displaySurvivors() {
     }
 }
 function displayRewardItems(){
-     const rewardsItemDiv = document.getElementById('reward-items');
-    for (const key in rewards) {
-        if (rewards.hasOwnProperty(key)) {
-            const reward = rewards[key];
-            // TODO: Add the reward item to the rewardsItemDiv
+    const rewardsItemDiv = document.getElementById('reward-items');
+    let reward;
+    const imgLocation = '../../static/img/resources/';
+    let typeLoc = {
+        '': ['Money'],
+        'crops/': ["Wheat", "Carrot", "Corn", "Lettuce", "Tomato", "Turnip", "Zucchini", "Parsnip", "Cauliflower", "Eggplant"],
+        'raws/': ["Stick", "Plank", "Stone", "Ingot", "Log"],
+        'animals/': ['Egg', 'Rustic Egg', 'Crimson Egg', 'Emerald Egg', 'Sapphire Egg',
+                    'Milk', 'Chocolate Milk','Strawberry Milk', 'Soy Milk', 'Blueberry Milk',
+                    'Truffle', 'Bronze Truffle', 'Gold Truffle', 'Forest Truffle', 'Winter Truffle',
+                    'Wool', 'Alpaca Wool', 'Cashmere Wool', 'Irish Wool', 'Dolphin Wool']
+    }
 
+    let img;
+    let map;
+    for (const key in rewards) {
+        for (const [key, value] of Object.entries(typeLoc)) {
+            if (value.includes(key)) {
+                map = key;
+                break;
+            }
         }
+        img = (key === 'Money') ? 'Coin' : spaceTo_(key);
+        const div = document.createElement('div');
+        div.innerHTML = `${rewards[key]} x <img src=" ${imgLocation + map + img}.png" alt="${key}" title="${key}" draggable="false">`;
+        rewardsItemDiv.appendChild(div);
     }
 }
+/**
+ * Updates the list of perks based on the current selection of animals and exploration time.
+ *
+ * This function retrieves the current quantity of each animal and the selected exploration time from the HTML document.
+ * It then calculates the risk chance based on the exploration time and updates the inner HTML of the perk list element.
+ *
+ * For each type of animal, if the quantity is greater than zero, it retrieves the perks for that animal and sorts them by chance in descending order.
+ * It then creates a new div element for each perk, sets its inner text to the total chance and description of the perk, and appends it to the perk list element.
+ *
+ * Finally, it appends the risk chance to the perk list element.
+ *
+ * @function
+ */
+function updatePerkList() {
+    let perkList = document.getElementById('perk-list');
+    let Animals = {
+        Chicken: parseInt(document.getElementById('Chicken').value),
+        Cow: parseInt(document.getElementById('Cow').value),
+        Pig: parseInt(document.getElementById('Pig').value),
+        Goat: parseInt(document.getElementById('Goat').value)
+    };
 
+    let explorationTime = parseInt(document.getElementById('exploration-time').value);
+    let riskChance = getRiskChance(explorationTime);
+
+    perkList.innerHTML = "Perks:";
+
+    for (let animal of Barn.animals) {
+        let quantity = Animals[animal];
+        if (quantity > 0) {
+            let perks = animalPerks[animal];
+            if (perks) {
+                // Sort the perks by chance in descending order
+                perks.sort((a, b) => b[1] - a[1]);
+
+                // Loop through each perk and display it
+                perks.forEach(perk => {
+                    let totalChance = perk[1] * quantity;
+                    // Adjust perk chance based on risk chance
+                    let perkItem = document.createElement("div");
+                    perkItem.innerText = `${totalChance}% - ${perk[0]}`;
+                    perkList.appendChild(perkItem);
+                });
+            }
+        }
+    }
+    // Display the risk chance
+    perkList.innerHTML += "<br>Risk: " + riskChance + "%";
+}
 
 
 
@@ -647,55 +714,6 @@ function formatTime(minutes) {
     }
 }
 /**
- * Updates the list of perks based on the current selection of animals and exploration time.
- *
- * This function retrieves the current quantity of each animal and the selected exploration time from the HTML document.
- * It then calculates the risk chance based on the exploration time and updates the inner HTML of the perk list element.
- *
- * For each type of animal, if the quantity is greater than zero, it retrieves the perks for that animal and sorts them by chance in descending order.
- * It then creates a new div element for each perk, sets its inner text to the total chance and description of the perk, and appends it to the perk list element.
- *
- * Finally, it appends the risk chance to the perk list element.
- *
- * @function
- */
-function updatePerkList() {
-    let perkList = document.getElementById('perk-list');
-    let Animals = {
-        Chicken: parseInt(document.getElementById('Chicken').value),
-        Cow: parseInt(document.getElementById('Cow').value),
-        Pig: parseInt(document.getElementById('Pig').value),
-        Goat: parseInt(document.getElementById('Goat').value)
-    };
-
-    let explorationTime = parseInt(document.getElementById('exploration-time').value);
-    let riskChance = getRiskChance(explorationTime);
-
-    perkList.innerHTML = "Perks:";
-
-    for (let animal of Barn.animals) {
-        let quantity = Animals[animal];
-        if (quantity > 0) {
-            let perks = animalPerks[animal];
-            if (perks) {
-                // Sort the perks by chance in descending order
-                perks.sort((a, b) => b[1] - a[1]);
-
-                // Loop through each perk and display it
-                perks.forEach(perk => {
-                    let totalChance = perk[1] * quantity;
-                    // Adjust perk chance based on risk chance
-                    let perkItem = document.createElement("div");
-                    perkItem.innerText = `${totalChance}% - ${perk[0]}`;
-                    perkList.appendChild(perkItem);
-                });
-            }
-        }
-    }
-    // Display the risk chance
-    perkList.innerHTML += "<br>Risk: " + riskChance + "%";
-}
-/**
  * Calculates the risk chance based on the exploration time and building level.
  *
  * This function uses a predefined mapping of exploration times to base risk chances.
@@ -734,77 +752,20 @@ function getRiskChance(explorationTime) {
    * @param {number} [base=10] - The base of the logarithm. Defaults to `10` if not provided.
    * @returns {number} The calculated logarithm.
    */
-function Log(n, base) {
+let Log =  function (n, base) {
     return Math.log(n)/(base ? Math.log(base) : 10);
 }
-function generateRewards() {
-    const boxes = ['coinCrate', 'cropCrate', 'animalCrate', 'rawCrate', 'emptyCrate'];
-    const probabilities = [0.25, 0.25, 0.25, 0.15, 0.10];
-    const means = [100*buildingLevel, 100*buildingLevel, 10*buildingLevel, 5*buildingLevel, 0]
-    const stdevs = [10*buildingLevel, 10*buildingLevel, 5*buildingLevel, 2*buildingLevel, 0]
-    let rindex = 0;
-    let amount = 0;
-    crateImage = [];
 
 
-    for (let i = 0; i < exploration.base_rewards; i++) {
-        rindex = getRandomIndex(probabilities);
-        addRewards(boxes[rindex], gaussianRandom(means[rindex], stdevs[rindex]), '');
-        crateImage.push(boxes[rindex]);
-    }
 
-    let chickenMeans = probabilities
-    let chickenStdevs = stdevs
-    for (let i = 0; i < exploration.surviving_chickens; i++) {
-        chickenMeans[1]*=  1.35; // amount of crops
-        chickenStdevs[1]*= 1.15; //spread of crops
 
-        rindex = getRandomIndex(probabilities);
-        addRewards(boxes[rindex], gaussianRandom(chickenMeans[rindex], chickenStdevs[rindex]), 'Chicken')
-        //TODO increased yield of eggs if found
-        //TODO increased rarity of animal product
-        crateImage.push(boxes[rindex]);
-    }
 
-    let cowProbabilities = probabilities
-    let cowMeans = means
-    for (let i = 1; i <= exploration.rewards_of_cows; i++) {
-        cowProbabilities[0] += 0.05; // Higher chance of getting coins
-        for (let j = 0; j < cowMeans.length; j++) {
-            cowMeans[j] *= 1.25; // Higher resources on average
-        }
 
-        rindex = getRandomIndex(cowProbabilities);
-        addRewards(boxes[rindex], gaussianRandom(cowMeans[rindex], stdevs[rindex]), 'Cow')
-        //TODO increased yield of milk if found
-        crateImage.push(boxes[rindex]);
-    }
 
-    let pigProbabilities = probabilities
-    let pigMeans = means
-    for (let i = 0; i < exploration.surviving_pigs; i++) {
-        pigProbabilities[4] += 0.15; // Higher chance of getting an empty box
-        pigMeans[3] *= 1.35; // Higher amount of craft resources
 
-        rindex = getRandomIndex(pigProbabilities);
-        addRewards(boxes[rindex], gaussianRandom(pigMeans[rindex], stdevs[rindex]), 'Pig');
-        //TODO increased yield of truffle if found
-        // TODO higher rarity of craft resources
-        crateImage.push(boxes[rindex]);
-    }
 
-    let goatMeans = means
-    for (let i = 0; i < exploration.rewards_of_goats; i++) {
-        for (let j = 0; j < goatMeans.length; j++) {
-            goatMeans[j] *= 0.95; // Lower resources on average
-        }
 
-        rindex = getRandomIndex(probabilities);
-        addRewards(boxes[rindex], gaussianRandom(goatMeans[rindex], stdevs[rindex]), 'Goat');
-        //TODO increased yield of wool if found
-        crateImage.push(boxes[rindex]);
-    }
-}
+//______________________ RANDOM FUNCTIONS ______________________//
 function getRandomIndex(weights) {
     const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
     let randomNum = Math.random() * totalWeight;
@@ -822,6 +783,211 @@ function gaussianRandom(mean=0, stdev=1) {
     const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
     return z * stdev + mean;
 }
-function addRewards(type, amount, animal){
-    //TODO
+function generateRandomProbabilities() {
+    const total = 1 + Math.random() * 0.1; // Add a slight randomness
+    const probabilities = [];
+    let remaining = total;
+
+    // Assign random values with bias
+    for (let i = 0; i < 4; i++) {
+        let value;
+        if (i === 0) {
+            value = 0.6 + Math.random() * 0.2; // Give favored animal product higher probability
+        } else {
+            value = Math.random() * 0.1; // Random for other products
+        }
+        probabilities.push(value);
+        remaining -= value;
+    }
+    probabilities.push(remaining); // Ensure total sum is 1
+    return probabilities;
 }
+function spaceTo_(input) {
+    return input.replace(/ /g, '_');
+}
+
+
+
+
+
+
+
+
+
+
+//______________________ REWARDS FUNCTIONS ______________________//
+function generateRewards() {
+    const rewardBoxes = ['coinCrate', 'cropCrate', 'animalCrate', 'rawCrate', 'emptyCrate'];
+    const probabilities = [0.25, 0.25, 0.25, 0.15, 0.10];
+    const multiplier = Math.sqrt(exploration.duration / 60);
+    const means = [100*buildingLevel * multiplier, 100*buildingLevel * multiplier, 10*buildingLevel * multiplier, 5*buildingLevel * multiplier, 0];
+    const stdevs = [10*buildingLevel, 10*buildingLevel, 5*buildingLevel, 2*buildingLevel, 0]
+    let rindex = 0;
+    crateImage = [];
+
+    // Base rewards
+    for (let i = 0; i < exploration.base_rewards; i++) {
+        rindex = getRandomIndex(probabilities);
+        addRewardTypes(rewardBoxes[rindex], gaussianRandom(means[rindex], stdevs[rindex]), '');
+        crateImage.push(rewardBoxes[rindex]);
+    }
+
+    // Chickens rewards
+    let chickenMeans = probabilities
+    let chickenStdevs = stdevs
+    for (let i = 0; i < exploration.surviving_chickens; i++) {
+        chickenMeans[1]*=  1.35; // amount of crops
+        chickenStdevs[1]*= 1.15; //spread of crops
+
+        rindex = getRandomIndex(probabilities);
+        addRewardTypes(rewardBoxes[rindex], gaussianRandom(chickenMeans[rindex], chickenStdevs[rindex]), 'Chicken')
+        crateImage.push(rewardBoxes[rindex]);
+    }
+
+    // Cow rewards
+    let cowProbabilities = probabilities
+    let cowMeans = means
+    for (let i = 1; i <= exploration.rewards_of_cows; i++) {
+        cowProbabilities[0] += 0.05; // Higher chance of getting coins
+        for (let j = 0; j < cowMeans.length; j++) {
+            cowMeans[j] *= 1.25; // Higher resources on average
+        }
+
+        rindex = getRandomIndex(cowProbabilities);
+        addRewardTypes(rewardBoxes[rindex], gaussianRandom(cowMeans[rindex], stdevs[rindex]), 'Cow')
+        crateImage.push(rewardBoxes[rindex]);
+    }
+
+    // Pig rewards
+    let pigProbabilities = probabilities
+    let pigMeans = means
+    for (let i = 0; i < exploration.surviving_pigs; i++) {
+        pigProbabilities[4] += 0.15; // Higher chance of getting an empty box
+        pigMeans[3] *= 1.35; // Higher amount of craft resources
+
+        rindex = getRandomIndex(pigProbabilities);
+        addRewardTypes(rewardBoxes[rindex], gaussianRandom(pigMeans[rindex], stdevs[rindex]), 'Pig');
+        crateImage.push(rewardBoxes[rindex]);
+    }
+
+    // Goat rewards
+    let goatMeans = means
+    for (let i = 0; i < exploration.rewards_of_goats; i++) {
+        for (let j = 0; j < goatMeans.length; j++) {
+            goatMeans[j] *= 0.95; // Lower resources on average
+        }
+
+        rindex = getRandomIndex(probabilities);
+        addRewardTypes(rewardBoxes[rindex], gaussianRandom(goatMeans[rindex], stdevs[rindex]), 'Goat');
+        crateImage.push(rewardBoxes[rindex]);
+    }
+}
+
+function addRewardTypes(type, amount, animal){
+    let division = 20;
+
+    switch (type) {
+        case 'coinCrate':
+            addRewards(amount, 'Money');
+            break;
+
+        case 'cropCrate':
+            distributeCrops(amount,division);
+            break;
+
+        case 'animalCrate':
+            distributeAnimalProducts(amount, animal, division)
+            break;
+
+        case 'rawCrate':
+            distributeRawMaterials(amount, animal, division);
+            break;
+
+        case 'emptyCrate':
+            break;
+    }
+}
+function distributeRawMaterials(amount, animal, division){
+    // TODO
+
+    for (let i = 0; i < division; i++) {
+        addRewards(Math.round(amount / division), products[getRandomIndex(probabilities)]);
+    }
+}
+function distributeCrops(amount, division){
+    // TODO
+
+    for (let i = 0; i < division; i++) {
+        addRewards(Math.round(amount / division), products[getRandomIndex(probabilities)]);
+    }
+}
+/**
+ * Distributes a given amount of animal products among specified divisions.
+ * The distribution is based on the rarity of the products and the type of animal.
+ *
+ * @param {number} amount - The total amount of animal products to distribute.
+ * @param {string} animal - The type of animal producing the products (e.g., 'Chicken', 'Cow', 'Pig', 'Goat').
+ * @param {number} division - The number of divisions to distribute the products into.
+ */
+function distributeAnimalProducts(amount, animal, division){
+    const productTypes = ['Egg', 'Milk', 'Truffle', 'Wool'];
+    const animalTypeProbability = {
+        'Chicken': [0.5, 0.2, 0.1, 0.2],   // Chickens favor eggs
+        'Cow': [0.2, 0.5, 0.2, 0.1],       // Cows favor milk
+        'Pig': [0.1, 0.2, 0.5, 0.2],       // Pigs favor truffles
+        'Goat': [0.2, 0.1, 0.2, 0.5]       // Goats favor wool
+    };
+    let typeProbability;
+    if (animal in animalTypeProbability) {
+        typeProbability = animalTypeProbability[animal];
+    } else {
+        typeProbability = generateRandomProbabilities();
+    }
+
+    let products;
+    let probabilities;
+    let partition = 0;
+    for (let i = 0; i < productTypes.length; i++) {
+        partition = Math.round(amount * typeProbability[i])
+        if (partition === 0) break;
+        probabilities = (animal === 'Chicken') ? [0.175, 0.35, 0.25, 0.15, 0.075] : [0.375, 0.3, 0.2, 0.1, 0.025];
+        switch (productTypes[i]) {
+            case 'Egg':
+                products = ['Egg', 'Rustic Egg', 'Crimson Egg', 'Emerald Egg', 'Sapphire Egg'];
+                break;
+            case 'Milk':
+                products = ['Milk', 'Chocolate Milk', 'Strawberry Milk', 'Soy Milk', 'Blueberry Milk'];
+                break;
+            case 'Truffle':
+                products = ['Truffle', 'Bronze Truffle', 'Gold Truffle', 'Forest Truffle', 'Winter Truffle'];
+                break;
+            case 'Wool':
+                products = ['Wool', 'Alpaca Wool', 'Cashmere Wool', 'Irish Wool', 'Dolphin Wool'];
+                break;
+            default:
+                return null; // Unknown animal product
+        }
+        for (let i = 0; i < division; i++) {
+            addRewards(Math.round(partition / division), products[getRandomIndex(probabilities)]);
+        }
+    }
+}
+/**
+ * Adds a specified amount of a reward to the rewards collection.
+ * If the reward already exists, the amount is added to the existing value.
+ * If the reward does not exist, it is added to the rewards collection with the specified amount.
+ *
+ * @param {number} amount - The amount of the reward to add.
+ * @param {string} reward - The name of the reward to add.
+ */
+function addRewards(amount, reward){
+    if (reward in rewards){
+        rewards[reward] += amount;
+    } else {
+        rewards[reward] = amount;
+    }
+}
+
+
+
+
