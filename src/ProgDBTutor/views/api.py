@@ -254,7 +254,7 @@ def fetch_building_information():
 
 
 @api_blueprint.route('/fetch-building-information-by-type/<string:building_type>', methods=['GET'])
-def fetch_building_information(building_type):
+def fetch_building_information_by_type(building_type):
     try:
         building_data_access = current_app.config.get('building_data_access')
         # Fetch building information based on username and building type

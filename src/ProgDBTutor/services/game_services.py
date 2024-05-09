@@ -4,7 +4,7 @@ from data_access.resource_data_access import ResourceDataAccess
 from data_access.animal_data_access import AnimalDataAccess
 from data_access.building_data_access import BuildingDataAccess
 from models.map import Map
-from models.buildings import Building
+from models.building import Building
 from models.animal import Animal
 from models.tile import Tile
 from models.resource import Resource
@@ -40,17 +40,26 @@ class GameServices:
         self.create_building_map(username, terrain_tiles)
 
     def create_building_map(self, username, terrain_map):
-        self.building_data_access.add_building(Building(None, username, "Bay", x=0, y=15))
-        self.building_data_access.add_building(Building(None, username, "Townhall", x=6, y=0))
+        self.building_data_access.add_building(Building("bay", username, "Bay", x=0, y=15, level=0))
+        self.building_data_access.add_building(Building("townhall", username, "Townhall", x=6, y=15, level=0))
+        self.building_data_access.add_building(Building("barn", username, "Barn", x=4, y=10, level=1)) #TODO position
+        self.building_data_access.add_building(Building("silo", username, "Silo", x=21, y=6, level=1)) #TODO position
 
-        # 1 Barn, 1 Silo, 1 Townhall, 1 Bay Bunny unlocked from start
+        # concatenate name with counter for building_id
+        fenceCounter = 0
+        fieldCounter = 0
+        pigCounter = 0
+        cowCounter = 0
+        goatCounter = 0
+        chickenCounter = 0
+        harvestHopperCounter = 0
 
-        ## 3 fences per cloudarea
+        ## 3 fences per cloud area
 
-        ## 6 farm fields per cloudarea or one of 3 Pigpens, 3 Chicken Coops, 3 Cow Barns, 3 Goat Barns in total
+        ## 6 farm fields per cloud area or one of 3 Pigpens, 3 Chicken Coops, 3 Cow Barns, 3 Goat Barns in total
 
         ## 3 harvesthoppers in total
-        pass
+        return True
 
     def initialize_resources(self, username):
         """
