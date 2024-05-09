@@ -14,6 +14,8 @@ const paper8 = document.querySelector('#p8'); // Paper 8 element
 const paper9 = document.querySelector('#p9'); // Paper 9 element
 const paper10 = document.querySelector('#p10'); // Paper 10 element
 const paper11 = document.querySelector('#p11'); // Paper 11 element
+const paper12 = document.querySelector('#p12'); // Paper 12 element
+const paper13 = document.querySelector('#p13'); // Paper 13 element
 const cover1 = document.querySelector('#c1'); // Cover 1 element
 const cover2 = document.querySelector('#c2'); // Cover 2 element
 const fronts = document.querySelectorAll(".front"); // Front pages elements
@@ -21,7 +23,7 @@ const backs = document.querySelectorAll(".back"); // Back pages elements
 const frontCovers = document.querySelectorAll(".front-cover"); // Front covers elements
 const backCovers = document.querySelectorAll(".back-cover"); // Back covers elements
 let currentLocation = 1; // Current page location
-let numberOfPapers = 13; // Total number of papers
+let numberOfPapers = 15; // Total number of papers
 let maxLocation = numberOfPapers + 1; // Maximum location for the bookChat
 
 /* Event listeners */
@@ -100,8 +102,16 @@ function goNextPage() {
                 paper11.style.zIndex = 12; // Update z-index for paper 11
                 break;
             case 13:
+                paper12.classList.add("flipped"); // Flip paper 12
+                paper12.style.zIndex = 13; // Update z-index for paper 12
+                break;
+            case 14:
+                paper13.classList.add("flipped"); // Flip paper 13
+                paper13.style.zIndex = 14; // Update z-index for paper 13
+                break;
+            case 15:
                 cover2.classList.add("flipped"); // Flip cover 2
-                cover2.style.zIndex = 13; // Update z-index for cover 2
+                cover2.style.zIndex = 15; // Update z-index for cover 2
                 closeBook(false); // Close the bookChat
                 break;
         }
@@ -116,53 +126,61 @@ function goPrevPage() {
             case 2:
                 closeBook(true); // Close the bookChat
                 cover1.classList.remove("flipped"); // Unflip cover 1
-                cover1.style.zIndex = 13; // Update z-index for cover 1
+                cover1.style.zIndex = 15; // Update z-index for cover 1
                 break;
             case 3:
                 paper1.classList.remove("flipped"); // Unflip paper 1
-                paper1.style.zIndex = 12; // Update z-index for paper 1
+                paper1.style.zIndex = 14; // Update z-index for paper 1
                 break;
             case 4:
                 paper2.classList.remove("flipped"); // Unflip paper 2
-                paper2.style.zIndex = 11; // Update z-index for paper 2
+                paper2.style.zIndex = 13; // Update z-index for paper 2
                 break;
             case 5:
                 paper3.classList.remove("flipped"); // Unflip paper 3
-                paper3.style.zIndex = 10; // Update z-index for paper 3
+                paper3.style.zIndex = 12; // Update z-index for paper 3
                 break;
             case 6:
                 paper4.classList.remove("flipped"); // Unflip paper 4
-                paper4.style.zIndex = 9; // Update z-index for paper 4
+                paper4.style.zIndex = 11; // Update z-index for paper 4
                 break;
             case 7:
                 paper5.classList.remove("flipped"); // Unflip paper 5
-                paper5.style.zIndex = 8; // Update z-index for paper 5
+                paper5.style.zIndex = 10; // Update z-index for paper 5
                 break;
             case 8:
                 paper6.classList.remove("flipped"); // Unflip paper 6
-                paper6.style.zIndex = 7; // Update z-index for paper 6
+                paper6.style.zIndex = 9; // Update z-index for paper 6
                 break;
             case 9:
                 paper7.classList.remove("flipped"); // Unflip paper 7
-                paper7.style.zIndex = 6; // Update z-index for paper 7
+                paper7.style.zIndex = 8; // Update z-index for paper 7
                 break;
             case 10:
                 paper8.classList.remove("flipped"); // Unflip paper 8
-                paper8.style.zIndex = 5; // Update z-index for paper 8
+                paper8.style.zIndex = 7; // Update z-index for paper 8
                 break;
             case 11:
                 paper9.classList.remove("flipped"); // Unflip paper 9
-                paper9.style.zIndex = 4; // Update z-index for paper 9
+                paper9.style.zIndex = 6; // Update z-index for paper 9
                 break;
             case 12:
                 paper10.classList.remove("flipped"); // Unflip paper 10
-                paper10.style.zIndex = 3; // Update z-index for paper 10
+                paper10.style.zIndex = 5; // Update z-index for paper 10
                 break;
             case 13:
                 paper11.classList.remove("flipped"); // Unflip paper 11
-                paper11.style.zIndex = 2; // Update z-index for paper 11
+                paper11.style.zIndex = 4; // Update z-index for paper 11
                 break;
             case 14:
+                paper12.classList.remove("flipped"); // Unflip paper 12
+                paper12.style.zIndex = 3; // Update z-index for paper 12
+                break;
+            case 15:
+                paper13.classList.remove("flipped"); // Unflip paper 13
+                paper13.style.zIndex = 2; // Update z-index for paper 13
+                break;
+            case 16:
                 openBook(); // Open the book
                 cover2.classList.remove("flipped"); // Unflip cover 2
                 cover2.style.zIndex = 1; // Update z-index for cover 2
