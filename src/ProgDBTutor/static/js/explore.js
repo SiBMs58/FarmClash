@@ -50,8 +50,8 @@ let exploration = {
     surviving_chickens: 0,
     base_rewards: 0,
 };
-const buildingLevel = 1; // TODO fetch from the database
-const buildingAugmentLevel = 0; // TODO fetch from the database
+let buildingLevel = 1;
+let buildingAugmentLevel = 0;
 let numCrates = 0;
 let crateImage = []
 let rewards = {};
@@ -345,7 +345,20 @@ function fetchAnimalQuantity() {
     });
 }
 function fetchBuildingBayStats() {
-    //TODO fetch building level and augment level from the database
+    fetch('/api/fetch-building-information-by-type/Bay')
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            const buildings = data.building_information;
+            const id = Object.keys(buildings)[0];
+            const bay = buildings[id];
+            buildingAugmentLevel = bay.augment_level;
+            buildingLevel = bay.level;
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching building information:', error);
+    });
 }
 /**
  * Asynchronously sends the quantity of each animal to the server.
@@ -453,7 +466,26 @@ async function sendStopExploration() {
     }
 }
 async function sendResourceQuanity(){
-     //TODO Notify database with received rewards
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = BASE_URL + "/api/add-resources";
+    try {
+        const response = await fetch(fetchLink, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(rewards)
+        });
+
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('Resources updated successfully:', jsonResponse);
+        } else {
+            console.error('Failed to update resources:', response.status);
+        }
+    } catch (error) {
+        console.error('Error occurred while updating resources:', error);
+    }
 }
 
 
@@ -892,33 +924,34 @@ function addRewardTypes(type, amount, animal){
             break;
 
         case 'cropCrate':
-            distributeCrops(amount,division);
+            distributeInCrops(amount,division);
             break;
 
         case 'animalCrate':
-            distributeAnimalProducts(amount, animal, division)
+            distributeInAnimalProducts(amount, animal, division)
             break;
 
         case 'rawCrate':
-            distributeRawMaterials(amount, animal, division);
+            distributeInRawMaterials(amount, animal, division);
             break;
 
         case 'emptyCrate':
             break;
     }
 }
-function distributeRawMaterials(amount, animal, division){
-    // TODO
+function distributeInRawMaterials(amount, animal, division){
+    const raws = ['Stick', 'Stone', 'Plank', 'Log', 'Ingot'];
+    let probabilities = (animal === 'Pig') ? [0.22375, 0.244375, 0.244375, 0.14375, 0.14375] : [0.325, 0.2125, 0.2125, 0.125, 0.125];
 
     for (let i = 0; i < division; i++) {
-        addRewards(Math.round(amount / division), products[getRandomIndex(probabilities)]);
+        addRewards(Math.round(amount / division), raws[getRandomIndex(probabilities)]);
     }
 }
-function distributeCrops(amount, division){
-    // TODO
-
+function distributeInCrops(amount, division){
+const crops = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant'].slice(0, Math.min(9, buildingLevel));
+const probabilities = Array(crops.length).fill(1 / crops.length);
     for (let i = 0; i < division; i++) {
-        addRewards(Math.round(amount / division), products[getRandomIndex(probabilities)]);
+        addRewards(Math.round(amount / division), crops[getRandomIndex(probabilities)]);
     }
 }
 /**
@@ -929,7 +962,7 @@ function distributeCrops(amount, division){
  * @param {string} animal - The type of animal producing the products (e.g., 'Chicken', 'Cow', 'Pig', 'Goat').
  * @param {number} division - The number of divisions to distribute the products into.
  */
-function distributeAnimalProducts(amount, animal, division){
+function distributeInAnimalProducts(amount, animal, division){
     const productTypes = ['Egg', 'Milk', 'Truffle', 'Wool'];
     const animalTypeProbability = {
         'Chicken': [0.5, 0.2, 0.1, 0.2],   // Chickens favor eggs
@@ -945,12 +978,11 @@ function distributeAnimalProducts(amount, animal, division){
     }
 
     let products;
-    let probabilities;
+    let probabilities = (animal === 'Chicken') ? [0.175, 0.35, 0.25, 0.15, 0.075] : [0.375, 0.3, 0.2, 0.1, 0.025];
     let partition = 0;
     for (let i = 0; i < productTypes.length; i++) {
         partition = Math.round(amount * typeProbability[i])
         if (partition === 0) break;
-        probabilities = (animal === 'Chicken') ? [0.175, 0.35, 0.25, 0.15, 0.075] : [0.375, 0.3, 0.2, 0.1, 0.025];
         switch (productTypes[i]) {
             case 'Egg':
                 products = ['Egg', 'Rustic Egg', 'Crimson Egg', 'Emerald Egg', 'Sapphire Egg'];

@@ -13,7 +13,7 @@ class AnimalDataAccess:
             """
         cursor = self.db_connection.get_cursor()
         cursor.execute(
-            "INSERT INTO animals (owner, species, amount, last_updated) VALUES (%s, %s, %s, %s)",
+            "INSERT INTO animals (owner, species, amount, last_idle_updated) VALUES (%s, %s, %s, %s)",
             (animal.owner, animal.species, animal.amount, animal.last_updated))
         self.db_connection.conn.commit()
         return True
@@ -29,7 +29,7 @@ class AnimalDataAccess:
         results = cursor.fetchall()
         animals = []
         for result in results:
-            animals.append(Animal(username, result['species'], result['amount'], result['last_updated']))
+            animals.append(Animal(username, result['species'], result['amount'], result['last_idle_updated']))
         return animals
 
     def update_animal(self, animal: Animal):
@@ -45,10 +45,10 @@ class AnimalDataAccess:
             cursor.execute("UPDATE animals SET amount = %s WHERE owner = %s AND species = %s",
                            (animal.amount, animal.owner, animal.species))
         elif animal.amount is None:
-            cursor.execute("UPDATE animals SET  last_updated = %s WHERE owner = %s AND species = %s",
+            cursor.execute("UPDATE animals SET  last_idle_updated = %s WHERE owner = %s AND species = %s",
                            ( animal.last_updated, animal.owner, animal.species))
         else:
-            cursor.execute("UPDATE animals SET amount = %s, last_updated = %s WHERE owner = %s AND species = %s",
+            cursor.execute("UPDATE animals SET amount = %s, last_idle_updated = %s WHERE owner = %s AND species = %s",
                            (animal.amount, animal.last_updated, animal.owner, animal.species))
         self.db_connection.conn.commit()
         if cursor.rowcount > 0:

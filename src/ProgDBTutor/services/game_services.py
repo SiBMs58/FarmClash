@@ -2,7 +2,9 @@ from data_access.user_data_access import UserDataAccess
 from data_access.map_data_access import MapDataAccess
 from data_access.resource_data_access import ResourceDataAccess
 from data_access.animal_data_access import AnimalDataAccess
+from data_access.building_data_access import BuildingDataAccess
 from models.map import Map
+from models.buildings import Building
 from models.animal import Animal
 from models.tile import Tile
 from models.resource import Resource
@@ -10,12 +12,14 @@ from services.map_creator import generate_map
 
 
 class GameServices:
-    def __init__(self, user_data_access, map_data_access, tile_data_access, resource_data_access, animal_data_access):
+    def __init__(self, user_data_access, map_data_access, tile_data_access, resource_data_access, animal_data_access,
+                 building_data_access):
         self.user_data_access = user_data_access
         self.map_data_access = map_data_access
         self.tile_data_access = tile_data_access
         self.resource_data_access = resource_data_access
         self.animal_data_access = animal_data_access
+        self.building_data_access = building_data_access
 
     def create_default_map(self, username):
         """
@@ -28,10 +32,25 @@ class GameServices:
         terrain_tiles = generate_map()
 
         self.map_data_access.add_map(Map(None, username, len(terrain_tiles[0]), len(terrain_tiles)))
-        map = self.map_data_access.get_map_by_username_owner(username)  # TODO: Currently we just get the first map
+        map = self.map_data_access.get_map_by_username_owner(username)
         for row in range(len(terrain_tiles)):
             for col in range(len(terrain_tiles[row])):
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
+
+        self.create_building_map(username, terrain_tiles)
+
+    def create_building_map(self, username, terrain_map):
+        self.building_data_access.add_building(Building(None, username, "Bay", x=0, y=15))
+        self.building_data_access.add_building(Building(None, username, "Townhall", x=6, y=0))
+
+        # 1 Barn, 1 Silo, 1 Townhall, 1 Bay Bunny unlocked from start
+
+        ## 3 fences per cloudarea
+
+        ## 6 farm fields per cloudarea or one of 3 Pigpens, 3 Chicken Coops, 3 Cow Barns, 3 Goat Barns in total
+
+        ## 3 harvesthoppers in total
+        pass
 
     def initialize_resources(self, username):
         """
@@ -67,7 +86,6 @@ class GameServices:
         self.resource_data_access.add_resource(Resource(None, username, "Soy Milk", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Blueberry Milk", 0))
 
-
         # From Goats
         self.resource_data_access.add_resource(Resource(None, username, "Wool", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Alpaca Wool", 0))
@@ -98,9 +116,6 @@ class GameServices:
         self.animal_data_access.add_animal(Animal("Cow", username, 0, None))
         self.animal_data_access.add_animal(Animal("Pig", username, 0, None))
         self.animal_data_access.add_animal(Animal("Goat", username, 0, None))
-
-
-
 
     def reformat_terrain_map(self, tile_data, map_width, map_height):
         """

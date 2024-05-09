@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from services.game_services import GameServices
 
 from src.ProgDBTutor.models.animal import Animal
+from src.ProgDBTutor.models.resource import Resource
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
@@ -49,6 +50,40 @@ def get_all_resources():
     return jsonify([resource.to_dict() for resource in resources])
 
 
+@api_blueprint.route('/add-resources', methods=['POST'])
+@login_required
+def add_resources():
+    """
+    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
+    use this for
+    :return: Status of the update operation, in json format
+    """
+    try:
+        ## TODO add logic so resources are limited to their appropirate buildings
+
+        data = request.get_json()
+        resource_data_access = current_app.config.get('resource_data_access')
+        update_status = [True, 'Resources updated successfully']
+        already_updated = []
+
+        for resource_type, amount in data.items():
+
+            updated_resource = Resource(None, current_user.username, resource_type, amount)
+            update_status = resource_data_access.update_by_adding_resource(updated_resource)
+
+            if not update_status[0]:
+                for rollback_resource in already_updated:
+                    rollback_resource.amount = -rollback_resource.amount
+                    resource_data_access.update_by_adding_resource(rollback_resource)
+                    return jsonify({"status": "error", "message": update_status[1]}), 500
+            already_updated.append(updated_resource)
+
+        return jsonify({"status": "success", "message": update_status[1]}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
 @api_blueprint.route('/resources/<string:username>')
 @login_required
 def get_resources(username):
@@ -78,10 +113,12 @@ def get_terrain_map():
     # for map in maps:
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'),
+    game_services = GameServices(current_app.config.get('user_data_access'),
+                                 current_app.config.get('map_data_access'),
                                  current_app.config.get('tile_data_access'),
                                  current_app.config.get('resource_data_access'),
-                                 current_app.config.get('animal_data_access'))
+                                 current_app.config.get('animal_data_access'),
+                                 current_app.config.get('building_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
@@ -99,10 +136,12 @@ def get_friend_terrain_map(friend_username):
         return "No maps found", 404
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'),
+    game_services = GameServices(current_app.config.get('user_data_access'),
+                                 current_app.config.get('map_data_access'),
                                  current_app.config.get('tile_data_access'),
                                  current_app.config.get('resource_data_access'),
-                                 current_app.config.get('animal_data_access'))
+                                 current_app.config.get('animal_data_access'),
+                                 current_app.config.get('building_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
@@ -198,12 +237,50 @@ def fetch_building_information():
                 "self_key": building.building_id,
                 "general_information": building.building_type,
                 "level": building.level,
+                "augment_level": building.augment_level,
                 "building_location": [building.x, building.y],
                 "tile_rel_locations": building.tile_rel_locations
             }
             building_information[building.building_id] = building_info
 
         json_response = {
+            "building_information": building_information
+        }
+
+        return jsonify(json_response)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/fetch-building-information-by-type/<string:building_type>', methods=['GET'])
+def fetch_building_information(building_type):
+    try:
+        building_data_access = current_app.config.get('building_data_access')
+        # Fetch building information based on username and building type
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, building_type)
+
+        # If no buildings found, return appropriate JSON response
+        if not buildings:
+            return jsonify({"status": "No buildings", "type": building_type, "user": current_user.username})
+
+        # Construct the final JSON response
+        building_information = {}
+        for building in buildings:
+            building_info = {
+                "self_key": building.building_id,
+                "general_information": building.building_type,
+                "level": building.level,
+                "augment_level": building.augment_level,
+                "building_location": [building.x, building.y],
+                "tile_rel_locations": building.tile_rel_locations
+            }
+            building_information[building.building_id] = building_info
+
+        json_response = {
+            "status": "success",
+            "user": current_user.username,
+            "type": building_type,
             "building_information": building_information
         }
 
@@ -237,6 +314,7 @@ def fetch_building_information_for_user(username):
                 "self_key": building.building_id,
                 "general_information": building.building_type,
                 "level": building.level,
+                "augment_level": building.augment_level,
                 "building_location": [building.x, building.y],
                 "tile_rel_locations": building.tile_rel_locations
             }
@@ -307,7 +385,8 @@ def update_animals():
         for specie in data['species']:
             update_success = True
             if data['species'][specie][0] or Idle:
-                updated_animal = Animal(specie, current_user.username, data[specie][1] if len(data[specie]) == 2 else None, None if Idle else False)
+                updated_animal = Animal(specie, current_user.username,
+                                        data[specie][1] if len(data[specie]) == 2 else None, None if Idle else False)
                 update_success = animal_data_access.update_animal(updated_animal)
 
             if not update_success:
@@ -317,5 +396,3 @@ def update_animals():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
-
-
