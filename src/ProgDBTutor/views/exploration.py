@@ -26,16 +26,9 @@ def start_exploration():
     """
     exploration_data_access = current_app.config.get('exploration_data_access')
     data = request.get_json()
-    chickens = int(data['chickens'])
-    goats = int(data['goats'])
-    pigs = int(data['pigs'])
-    cows = int(data['cows'])
-    level = int(data['exploration_level'])
-    augment = int(data['augment_level'])
-    duration = int(data['remaining_time'])
 
     if exploration_data_access.start_exploration(
-            Exploration(current_user.username, chickens, goats, pigs, cows, level, augment, duration)):
+            Exploration(current_user.username, data['chickens'], data['goats'], data['pigs'], data['cows'], data['exploration_level'], data['augment_level'], data['remaining_time'])):
         return jsonify({'status': 'success', 'message': 'Exploration started successfully.'})
     else:
         return jsonify({'status': 'error', 'message': 'Failed to start exploration.'}), 500

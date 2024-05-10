@@ -205,11 +205,13 @@ html::after {
 
     border-radius: 4px;
     background: #f0e0bc;
+
     display: flex;
+    flex-direction: column;
 }
 
 .reward-items img {
-    height: 10%;
+    height: 20px;
     width: auto;
 
     image-rendering: pixelated;
@@ -281,9 +283,10 @@ html::after {
 
     border-radius: 4px;
     background: #f0e0bc;
-    display: flex;
 
+    display: flex;
     flex-direction: column;
+
     font-size: 40px;
     padding: 1% 0.6%; /* Use 1% of the container's width as padding */
     box-sizing: border-box; /* Include padding in the total width and height */
