@@ -1,6 +1,8 @@
-import { BaseMap } from "./BaseMapKlasse.js";
+import { BaseMap } from "./baseMap.js";
+import { utils } from "./utils.js";
 
-function getAssetDir(assetName) {
+
+export function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
@@ -9,11 +11,8 @@ function startsWith(name, prefix) {
 }
 
 
-function getNextAssetName(assetName, cycle) {
-    let parts = assetName.split('.');
-    let lastPart = parts.pop();
-    //let num = parseInt(lastPart) || 0;
-    return parts.join('.') + '.' + cycle.toString() + '.png';
+function getNextAssetName(assetName) {
+    return assetName.replace(/([12])$/, match => match === '1' ? '2' : '1');
 }
 
 
@@ -48,20 +47,20 @@ export class TerrainMap extends BaseMap {
      * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
-     * @param time amount of frames passed
-     * @param cycle animation part
+     * @param username The username of the player, used to fetch the right map data.
      */
-    constructor(mapData, _tileSize, _ctx) {
+    constructor(mapData, _tileSize, _ctx, username) {
 
-        super(mapData, _tileSize);
+        super(mapData, _tileSize, username);
 
         this.tiles = mapData.terrain_tiles;
         this.ctx = _ctx;
 
         this.terrainAssetList = AssetList.terrain; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.terrainAssets = {}; // Bevat {"pad_naar_asset": imageObject}
-        this.time = 0;
-        this.cycle = 1;
+
+        this.time = 0; // amount of frames passed
+        this.cycle = 2; // animation part
 
     }
 
@@ -101,8 +100,11 @@ export class TerrainMap extends BaseMap {
         //debugger;
         try {
             // Basic test of de fetch is gelukt of niet
-            const fetchLink = BASE_URL + "/api/terrain-map";
-            //debugger;
+            let fetchLink = BASE_URL + "/api/terrain-map";
+            if (this.username) {
+                 fetchLink += `/${this.username}`;
+            }
+            console.log("fetchLink:", fetchLink);
             const response = await fetch(fetchLink);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -192,7 +194,7 @@ export class TerrainMap extends BaseMap {
                 let filePath;
                 if (this.tiles[i_map] && this.tiles[i_map][j_map]) {
                     const currTile = this.tiles[i_map][j_map];
-                    filePath = "/static/img/assets/terrain/" + getAssetDir(currTile) + "/" + currTile + ".png";
+                    filePath = "/static/img/assets/terrain/" + utils.getAssetDir(currTile) + "/" + currTile + ".png";
                 } else {
                     // Out-of bounds
                     filePath = "/static/img/assets/terrain/Water/Water.1.1.png";
@@ -207,30 +209,31 @@ export class TerrainMap extends BaseMap {
         }
     }
 
+    /**
+     * Animates water tiles by one frame
+     */
     waterAnimation() {
-        const animationSpeed = 48;
-        if (this.time > animationSpeed){
+        const animationSpeed = 36;
+        if (this.time >= animationSpeed){
             this.time -= animationSpeed;
 
             for (let i = 0; i < this.map_height; i++) {
                 for (let j = 0; j < this.map_width; j++) {
-                    const currTileDir = getAssetDir(this.tiles[i][j]);
+                    const currTileDir = utils.getAssetDir(this.tiles[i][j]);
                     if (currTileDir === "Water") {
-                        this.tiles[i][j] = getNextAssetName(this.tiles[i][j], this.cycle);
-                        //debugger;
+                        this.tiles[i][j] = utils.getNextAssetName(this.tiles[i][j]);
                     }
                 }
             }
 
             this.drawTiles();
-
-            this.cycle = 3 - this.cycle;
         }
         else{
-            this.time +=1;
+            this.time += 1;
         }
     }
 
+    /*
     waterAnimation2() {
         if (this.time > 48){
             this.time -= 48;
@@ -258,13 +261,14 @@ export class TerrainMap extends BaseMap {
             this.time +=1;
         }
     }
+     */
 
     /**
      * Gets called by the Tick class with regular time intervals.
      */
     tick() {
         //console.log("Terrain layer tick");
-        this.waterAnimation2();
+        this.waterAnimation();
 
     }
 

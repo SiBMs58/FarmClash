@@ -89,7 +89,42 @@
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1>Settings</h1>
+                <div class="logout-btn">
+                    <div class="my-3">
+                        <img src="../static/img/UI/logout_btn.png" alt="Logout" usemap="#logoutMap" id="logout-btn">
+                        <map name="logoutMap">
+                            <area shape="rect" coords="0,0,150,150" alt="Logout" href="{{ url_for('auth.logout') }}">
+                        </map>
+                    </div>
+                </div>
+                <div class="book-btn" onclick="changeImage()" onmouseup="resetImage()">
+                    <div class="book">
+                        <img src="../static/img/buttons/question_mark_up.png" alt="Book" usemap="#bookMap" id="book-btn" style="width: 60px; height: 60px;">
+                        <map name="bookMap">
+                            <area shape="rect" coords="0,0,150,150" alt="Book" href="{{ url_for('books.book') }}">
+                        </map>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function changeImage() {
+            var img = document.getElementById('book-img');
+            img.src = "../static/img/buttons/question_mark_down.png"; // Verander de afbeelding wanneer geklikt
+        }
 
+        function resetImage() {
+            var img = document.getElementById('book-img');
+            img.src = "../static/img/buttons/question_mark_up.png"; // Terug naar de originele afbeelding wanneer de klik losgelaten wordt
+        }
+    </script>
+    
     <!--{% include 'footer.html' %}-->
+    {% include 'header&footer.html' %}
 </body>
 </html>

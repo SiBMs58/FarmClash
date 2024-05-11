@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ app_data['app_name'] }}</title>
+  {% include 'head.html' %}
+  <link rel="stylesheet" href="../../static/css/books/book_market.css">
+</head>
+
+<body>
+  {% include 'logged_in_header.html' %}
+  <!--button to go back to the market-->
+  <button id="back-btn" onclick="goBack()">
+
+  </button>
+
+  <!--prev button-->
+  <!--button to go back in the book-->
+  <button id="prev-btn">
+    <i class="fas fa-arrow-circle-left"></i>
+  </button>
+  <!--the book from which one reads-->
+  <div id="book" class="book">
+    <!--cover-->
+    <div id="c1" class="cover">
+        <!--front side of the cover-->
+      <div class="front-cover">
+          <div id="fC" class="front-content">
+              <!--title of the book-->
+              <h1>Market</h1>
+          </div>
+      </div>
+        <!--backside of the cover-->
+      <div class="back-cover">
+          <div id="fB" class="back-content">
+          </div>
+      </div>
+    </div>
+      <!--the first paper in the book-->
+    <div id="p1" class="paper">
+        <!--front side of the first paper-->
+      <div class="front">
+          <!--content of the front side of the first paper-->
+        <div id="f1" class="front-content">
+            <p>
+                Your farm is the most important place<br>
+                in the game. this is where you plant crops,<br>
+                buildings upgradeand much more<br>
+            </p>
+        </div>
+      </div>
+        <!--back side of the first page-->
+      <div class="back">
+          <!--content of the back side of the first paper-->
+        <div id="b1" class="back-content">
+            <div class="image-container">
+                <img src="../../static/img/bookImages/buttonsFarm.png" alt="Beschrijving van de afbeelding">
+            </div>
+        </div>
+      </div>
+    </div>
+    <!--second paper of the book-->
+    <div id="p2" class="paper">
+        <!--front side of the second page-->
+      <div class="front">
+          <!--content of the front side of the second paper-->
+        <div id="f2" class="front-content">
+            <p>
+                1. ranking: here you can compare yourself with your friends<br>
+                   and the best players in the world<br>
+                2. this button makes your resources visible<br>
+                3. The number of coins you have<br>
+                4. button to go to the chat<br>
+                5. button to go to the settings<br>
+                6. button to go to the market<br>
+                7. button to go to the attack menu<br>
+                <br>
+            </p>
+        </div>
+      </div>
+        <!--back side of the second page-->
+      <div class="back">
+          <!--content of the back side of the second paper-->
+        <div id="b2" class="back-content">
+            <div class="image-container">
+                <img src="../../static/img/bookImages/buildingInfo.png" alt="Beschrijving van de afbeelding">
+            </div>
+        </div>
+      </div>
+    </div>
+    <!--third paper of the book-->
+    <div id="p3" class="paper">
+         <!--front side of the third page-->
+      <div class="front">
+          <!--content of the front side of the third paper-->
+        <div id="f3" class="front-content">
+            <p>
+                - With a click with the left mouse button on a building,<br>
+                  you can move it, and then with another click on the left mouse button,<br>
+                  you can place the building.<br>
+
+                - Clicking on a building with the right mouse button takes you to the building's<br>
+                  information menu where you will find information about the building, the level<br>
+                  of the building and much more.<br>
+
+                - To see other parts of your farm you can drag the mouse<br>
+            </p>
+        </div>
+      </div>
+        <!--back side of the third page-->
+      <div class="back">
+          <!--content of the back side of the third paper-->
+        <div id="b3" class="back-content">
+        </div>
+      </div>
+    </div>
+    <!--back cover-->
+    <div id="c2" class="cover">
+        <!--front side of the back cover-->
+        <div class="front-cover">
+            <!--content of the front side of the back cover-->
+            <div id="FBC" class="front-content">
+            </div>
+        </div>
+        <!--back side of the back cover-->
+        <div class="back-cover">
+            <!--content of the back side of the back cover-->
+            <div id="BBC" class="back-content">
+            </div>
+        </div>
+    </div>
+  </div>
+  <!--next button-->
+  <!--button to continue in the book-->
+  <button id="next-btn">
+    <i class="fas fa-arrow-circle-right"></i>
+  </button>
+<script src="../../static/js/books/book_market.js"></script>
+{% include 'footer.html' %}
+</body>
+</html>

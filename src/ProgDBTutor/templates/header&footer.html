@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="../static/css/footer.css">
+    <title>header & footer when logged in</title>
+</head>
+<body>
+<header>
+    <button id="back-btn" class="back-btn">
+        <a href="{{ url_for('main') }}">
+            <img src="../static/img/UI/back_btn.png" alt="Back">
+        </a>
+    </button>
+    <button id="back-btn" class="farmclash-btn">
+        <a href="{{ request.path }}">
+            <img src="../static/img/UI/FarmClash_btn.png" alt="{{ app_data['app_name'] }}">
+        </a>
+    </button>
+</header>
+</body>
+</html>

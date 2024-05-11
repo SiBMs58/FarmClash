@@ -1,0 +1,27 @@
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('../img/background/wood.panel.png');
+    image-rendering: pixelated;
+    display: flex;
+    justify-content: center;
+    z-index: 9999;
+}
+
+
+#loading-image {
+    position: absolute; /* Set the image to absolute position within the #loading screen */
+    top: 20vh; /* Position the image 50px above the center of the screen */
+    left: 37.5vw; /* Place the image centered horizontally */
+    width: 25vw; /* Adjust the width of the image */
+    height: 25vh; /* Adjust the height of the image */
+}
+
+#loading-screen p {
+    margin-top: 20vh; /* Pas deze waarde aan om de positie van de tekst "Loading..." aan te passen */
+}

@@ -1,7 +1,8 @@
 import { TerrainMap } from './terrainLayer.js'
-import { BuildingMap} from "./buildingLayer.js";
+import { BuildingMap } from "./buildingLayer.js";
+import { UICanvasLayer } from "./uiCanvasLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
-import { UserInputHandler} from "./userInputHandler.js";
+import { UserInputHandler } from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
 // Set on-screen tileSize-
@@ -11,12 +12,17 @@ export let tileSize = 50;
 const terrainCanvas = document.getElementById('terrainCanvas');
 const terrainCtx = terrainCanvas.getContext('2d');
 const mapData = generateRandomTerrainMap(50, 50);
+
 export let terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
+
+
 
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
+
 export let buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap);
+
 
 // Create ticker
 const ticker = new Ticker([terrainMap, buildingMap]);
@@ -37,6 +43,10 @@ function resizeCanvas() {
     buildingCanvas.height = window.innerHeight;
     buildingCtx.imageSmoothingEnabled = false;
 
+    uiCanvas.width = window.innerWidth;
+    uiCanvas.height = window.innerHeight;
+    uiCtx.imageSmoothingEnabled = false;
+
     try { // Redraw terrain after resizing
         terrainMap.drawTiles();
         buildingMap.drawTiles();
@@ -48,7 +58,7 @@ function resizeCanvas() {
 /**
  * Initialises the game step by step in correct order.
  */
-async function initializeGame() {
+async function initializeGame(callback) {
     try {
         await terrainMap.initialize();
         await buildingMap.initialize();
@@ -58,6 +68,10 @@ async function initializeGame() {
 
         ticker.start();
 
+        if (typeof callback === 'function') {
+            callback(); // Call the callback function if provided
+        }
+
     } catch (error) {
         console.error('Initialization failed:', error);
         // Handle initialization error
@@ -65,9 +79,10 @@ async function initializeGame() {
 }
 
 
-initializeGame().then(
+initializeGame(hideLoadingScreen).then(
     // Add code that is dependent on initialisation
 );
+
 
 
 
@@ -136,4 +151,8 @@ function updateZoom() {
 });
 
 // Event listeners for zooming
+
+function hideLoadingScreen() {
+    document.getElementById('loading-screen').style.display = 'none';
+}
 
