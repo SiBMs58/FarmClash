@@ -2,10 +2,92 @@
 <head>
     <title>{{ app_data['app_name'] }}</title>
     {% include 'head.html' %}
+    <link rel="stylesheet" href="../static/css/settings.css"> <!--or different image -->
+
 </head>
 <html lang="en">
 <body>
-    {% include 'header&footer.html' %}
+    {% include 'logged_in_header.html' %} <!-- moet nog naar   'header&footer.html' worden veranderld -->
+
+<div class="center-wrapper">
+    <img src="../static/img/UI/Settings_tab.png">
+</div>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col">
+                LOG-OUT
+            </div>
+            <div class="col-auto">
+                <div class="logout-btn"></div>
+                <img src="../static/img/buttons/logout_btn.png" alt="Logout" usemap="#logoutMap" id= "image-button">
+                <map name="logoutMap">
+                    <area shape="rect" coords="0,0,150,150" alt="Logout" href="{{ url_for('auth.logout') }}">
+                </map>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                SOUND
+            </div>
+            <div class="col-auto">
+                <div class="sound-btn"></div>
+                <img src="../static/img/UI/sounddown_btn.png"  class="sound-image-button1"  id="sounddown">
+                <span>&nbsp;</span>
+                <p id="soundNumber"> 50 </p>
+                <p> % </p>
+                <span>&nbsp;</span>
+                <img src="../static/img/UI/soundup_btn.png" class="sound-image-button2"   id="soundup">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                MUTE
+            </div>
+            <div class="col-auto">
+               <div class="mute-btn"></div>
+                <img src="../static/img/UI/sound_btn.png" class="sound-image-button3" onclick="muten()" id="muteButton" >
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                BACKROUND SOUND
+            </div>
+            <div class="col-auto">
+               <div class="mute-btn"></div>
+                <img src="../static/img/UI/slider_off.png" class="sound-image-button6" id="playBackgroundMusicButton" >
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                ZOOM
+            </div>
+            <div class="col-auto">
+                <div class="zoom-btn"></div>
+                <img src="../static/img/buttons/minus_btn.png" class="sound-image-button4" id="zoomDownButton" >
+                <span>&nbsp;</span>
+                <p id="zoomNumber"> 50 </p>
+                <p>% </p>
+                <span>&nbsp;</span>
+                <img src="../static/img/buttons/plus_btn.png" class="sound-image-button5" id="zoomUpButton">
+            </div>
+        </div>
+    </div>
+    <canvas id="terrainCanvas" width="800" height="600"></canvas>
+
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/zoom.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 
     <div class="container-fluid mt-5">
         <div class="row justify-content-center">
@@ -41,6 +123,8 @@
             img.src = "../static/img/buttons/question_mark_up.png"; // Terug naar de originele afbeelding wanneer de klik losgelaten wordt
         }
     </script>
-    {% include 'footer.html' %}
+    
+    <!--{% include 'footer.html' %}-->
+    {% include 'header&footer.html' %}
 </body>
 </html>

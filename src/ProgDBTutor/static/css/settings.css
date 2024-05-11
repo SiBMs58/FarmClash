@@ -1,0 +1,62 @@
+body{
+     background-image: url('../../static/img/wood.background.png'); /* or different image: ../../static/img/backround_dashboard.png  */
+      cursor: url('../../static/img/cursor.png'), auto;
+}
+
+
+
+.container{
+
+
+    border: 8px solid #aa7959;
+    /*border-image: url('../../static/img/wood.background.png') 10 round;*/
+    border-radius: 10px;
+    background-color: #e8cfa6;
+    height: 600px;
+    margin-top: 45px;
+    width: 600px;
+
+
+}
+
+
+h1 {
+    color: #e8cfa6;
+    font-size: 24px; /* Adjust the font size as needed */
+   /*font-family: Arial, sans-serif;  Change the font family as needed */
+}
+
+
+
+.row{
+    margin-bottom: 40px;
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.col-auto {
+    display: flex;
+    align-items: center;
+}
+
+.image-button {
+        background-image: url('../img/buttons/plus_btn.png');
+        background-size: cover; /* Adjust this as needed */
+
+    }
+
+.center-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+
+
+}
+.toggle-on {
+    /* Add your styles for the on state here */
+    /* For example, change the image source to the 'toggle_on.png' */
+    background-image: url('../img/UI/slider_on.png');
+}
+
+
