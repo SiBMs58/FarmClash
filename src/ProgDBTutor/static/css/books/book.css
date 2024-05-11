@@ -153,8 +153,8 @@ button {
 /* Styles for the back button */
 #back-btn {
     position: absolute; /* Absolute positioning for precise placement */
-    top: 10vh; /* Distance from the top of the parent container */
-    left: 10vw; /* Distance from the left of the parent container */
+    top: 5.6vh; /* Distance from the top of the parent container */
+    left: 2.65vw; /* Distance from the left of the parent container */
     transform: translate(-50%, -50%); /* Translate button to center of top left corner */
     z-index: 999; /* Set a high z-index to ensure it's on top of other elements */
 }
