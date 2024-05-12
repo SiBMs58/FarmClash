@@ -12,6 +12,7 @@ from data_access.resource_data_access import ResourceDataAccess
 from data_access.friendship_data_access import FriendshipDataAccess
 from data_access.chatmessage_data_access import ChatMessageDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
+from views.books import book_blueprint
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
@@ -62,6 +63,7 @@ app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
+app.register_blueprint(book_blueprint, url_prefix='/book')
 
 DEBUG = True
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -98,6 +100,17 @@ def settings():
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
     return render_template('settings.html', app_data=app_data)
+
+
+@app.route('/book')
+@login_required
+def book():
+    """
+    Renders the settings view, for a user.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('book.html', app_data=app_data)
 
 
 @app.route('/attack')

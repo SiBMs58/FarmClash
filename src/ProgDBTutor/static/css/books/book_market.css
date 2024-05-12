@@ -1,0 +1,212 @@
+/* General settings for the body element */
+/* General settings for the body element */
+body {
+    height: 100vh; /* Body height set to full viewport height */
+    display: flex; /* Flexbox layout for centering content */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    font-family: bold, serif; /* Set font */
+    background-image: url('../../img/backround_dashboard.png');
+    background-size: cover;/*The image is completely covered*/
+    background-position: center; /* Place centered */
+    cursor: url('../../img/cursor.png'), auto;
+}
+body:active {
+    cursor: url('../../../static/img/click_cursor.png'), auto;
+}
+
+button:hover {
+    cursor: url('../../../static/img/hover_cursor.png'), auto;
+}
+
+button:active {
+    cursor: url('../../../static/img/click_cursor.png'), auto;
+}
+
+/* Styles for the .book element */
+.book {
+    position: relative; /* Relative positioning for positional control */
+    width: 350px; /* Width of the book */
+    height: 450px; /* Height of the book */
+    transition: transform 1s; /* Transition for transform effect */
+}
+
+/* Styles for the .cover elements */
+.cover {
+    position: absolute; /* Absolute positioning within the .book container */
+    width: 100%; /* Full width of the .book container */
+    height: 100%; /* Full height of the .book container */
+    top: 0; /* Distance from the top of the .book container */
+    left: 0; /* Distance from the left of the .book container */
+    perspective: 1500px; /* Perspective for 3D effect */
+    border-radius: 0 10px 10px 0; /* Rounding the corners of the .cover elements */
+    display: flex; /* Flexbox layout for content*/
+    align-items: center; /* Center content vertically */
+    align-content: center; /* Align content vertically */
+    transform-origin: center left; /* Set transformation origin */
+    transition-duration: 0.5s; /* Transition duration for animation effects */
+}
+
+/* Styles for the .paper element */
+.paper {
+    position: absolute; /* Absolute positioning within the .book container */
+    width: 97%; /* Width of the paper within the .cover */
+    height: 97%; /* Height of the paper within the .cover */
+    margin-top: 1.5%; /* Top margin of the paper within the .cover */
+    top: 0; /* Distance from the top of the .cover */
+    left: 0; /* Distance from the left side of the .cover */
+    perspective: 1500px; /* Perspective for 3D effect */
+    transition-duration: 0.5s; /* Transition duration for animation effects */
+}
+
+/* Styles for the .front and .back elements */
+.front, .back {
+    background-color: white; /* Background color for the .front and .back elements */
+    position: absolute; /* Absolute positioning within the .cover */
+    width: 100%; /* Full width of the .cover */
+    height: 100%; /* Full height of the .cover */
+    top: 0; /* Distance from the top of the .cover */
+    left: 0; /* Distance from the left side of the .cover */
+    transform-origin: left; /* Set transformation origin */
+    transition: transform 1s; /* Transition for transform effect */
+    border-radius: 0 20px 20px 0; /* Rounding the corners of the .front and .back elements */
+}
+
+/* Styles for the .front elements */
+.front {
+    z-index: 1; /* Z-index for stacking */
+    backface-visibility: hidden; /* Hide the back of the element */
+    border-left: 1px solid black; /* Left border for .front elements */
+}
+
+/* Styles for the .back elements */
+.back {
+    z-index: 0; /* Z-index for stacking */
+}
+
+/* Styles for the .front-cover and .back-cover elements */
+.front-cover, .back-cover {
+    background-color: saddlebrown; /* Background color for the .front-cover and .back-cover elements */
+    color: gold; /* Text color for the .front-cover and .back-cover elements */
+    position: absolute; /* Absolute positioning within the .cover */
+    width: 100%; /* Full width of the .cover */
+    height: 100%; /* Full height of the .cover */
+    top: 0; /* Distance from the top of the .cover */
+    left: 0; /* Distance from the left side of the .cover */
+    transform-origin: left; /* Set transformation origin */
+    transition: transform 1s; /* Transition for transform effect */
+    border-radius: 0 20px 20px 0; /* Rounding the corners of the .front-cover and .back-cover elements */
+}
+
+/* Styles for the .front-cover elements */
+.front-cover {
+    z-index: 1; /* Z-index for stacking */
+    backface-visibility: hidden; /* Hide the back of the element */
+}
+
+/* Styles for the .back cover elements */
+.back-cover {
+    z-index: 0; /* Z-index for stacking */
+}
+
+/* Styles for the .back content elements */
+.back-content {
+    transform: rotateY(180deg); /* 180 degree rotation for .back content elements */
+}
+
+/* Styles for the .front-content and .back-content elements */
+.front-content, .back-content {
+    width: 100%; /* Full width of content */
+    height: 100%; /* Full height of contents */
+    display: flex; /* Flexbox layout for content */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+/* Styles for the buttons */
+button {
+    border: none; /* No border around the buttons */
+    background-color: transparent; /* Transparent background for the buttons */
+    cursor: pointer; /* Change cursor to pointer */
+    margin: 10px; /* margins of the buttons */
+    transition: transform 1s; /* Transition for transform effect */
+    padding: 0; /* No padding inside the buttons */
+    width: 100px; /* Width of the buttons */
+    height: 100px; /* Height of the buttons */
+}
+
+#back-btn {
+    position: absolute; /* Absolute positioning for precise placement */
+    top: 10px; /* Afstand vanaf de bovenkant van de pagina */
+    left: 10px; /* Afstand vanaf de linkerkant van de pagina */
+    background-image: url('../../img/buttons/back_btn.png'); /* Background image for the back button */
+    width: 44px; /* Width of the back button */
+    height: 48px; /* Height of the back button */
+    background-size: cover; /* Cover background image */
+    border: none; /* No border around the back button */
+}
+
+/* Styles for the previous button image */
+#prev-btn {
+    background-image: url('../../img/buttons/back_btn.png'); /* Background image for the previous button */
+    width: 44px; /* Width of the previous button */
+    height: 48px; /* Height of the previous button */
+    background-size: cover; /* Cover background image */
+    border: none; /* No border around the previous button */
+}
+
+/* Styles for the image next button */
+#next-btn {
+    background-image: url('../../../static/img/water_map.gif'); /* Background image for the next button */
+    width: 44px; /* Width of the next button */
+    height: 48px; /* Height of the next button */
+    background-size: cover; /* Cover background image */
+    border: none; /* No border around the next button */
+}
+
+
+/* Stacking order for the .cover and .paper elements */
+#c1 {
+    z-index: 6; /* Z index for .cover 1 */
+}
+#p1 {
+    z-index: 5; /* Z index for .paper 1 */
+}
+#p2 {
+    z-index: 4; /* Z-index for .paper 2 */
+}
+#p3 {
+    z-index: 3; /* Z-index for .paper 3 */
+}
+#p4 {
+    z-index: 2; /* Z-index for .paper 4 */
+}
+#c2 {
+    z-index: 1; /* Z-index for .cover 2 */
+}
+
+/* Stylized elements for the 'flipped' state */
+.flipped .front,
+.flipped .back,
+.flipped .back-cover,
+.flipped .front-cover {
+    transform: rotateY(-180deg); /* 180 degree rotation for reverse viewing */
+}
+
+/* Shadows for .front-cover and .back-cover elements */
+.cover .front-cover,
+.cover .back-cover {
+    box-shadow: 0 0 10px saddlebrown; /* Add shadows to the .front-cover and .back-cover elements */
+}
+
+.image-container {
+    width: 100%; /* Width of the container */
+    height: 100%; /* Height of the container */
+    overflow: hidden; /* Hidden overflow to prevent images from displaying outside the container */
+}
+
+.image-container img {
+    width: 100%; /* Width of the image within the container */
+    height: 100%; /* Height of the image within the container */
+    object-fit: contain; /* The image is scaled to be fully visible without cutting off parts */
+}
