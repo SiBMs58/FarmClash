@@ -153,9 +153,6 @@ function sell() {
 
 
 
-
-
-
 // used for displaying things on the screen
 function displayPrices(){
     for (let i = 1; i <= market.crops.length; i++) {
@@ -179,4 +176,8 @@ function getAmountDisplay(amount){
 function displayUnpressedButton(index){
     document.getElementById(`plusImage${index + 1}`).src = "../../static/img/UI/plus_btn.png";
     document.getElementById(`minusImage${index + 1}`).src = "../../static/img/UI/minus_btn.png";
+}
+
+function goToBook(){
+window.location.href = '/templates/books/book_market.html'; // Navigeer naar de book_market.html pagina wanneer de knop wordt geklikt
 }
