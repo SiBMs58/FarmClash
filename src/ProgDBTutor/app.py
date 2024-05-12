@@ -79,15 +79,7 @@ def main():
         return redirect(url_for('game.game'))  # Assuming 'game' is the function name for the game view
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view
 
-@app.route('/book')
-@login_required
-def book():
-    """
-    Renders the settings view, for a user.
-    """
-    if current_user.username == 'admin':
-        return redirect(url_for('admin'))
-    return render_template('book.html', app_data=app_data)
+
 
 @app.route('/friends')
 @login_required
