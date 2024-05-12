@@ -1,6 +1,10 @@
+
+//TODO: img => img button maken + music werkr met dat!!
+//TODO buttons moeten juist werken met aan en uit juiste click  !!
 //TODO zoom functie
-//TODO buttons moeten juist werken met aan en uit
-//TODO global music aanmaken
+
+
+
 
 
 
@@ -100,6 +104,7 @@
 
 
 const soundManager = new GameSoundManager();
+soundManager.playBackgroundMusic();
 document.addEventListener('DOMContentLoaded', function() {
     //const soundManager = new GameSoundManager();
 
@@ -119,11 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error(`Button with class ${soundButtonClass} not found.`);
         }
     }
-
-
-    // Adjust volume for buttons algemeen
-    //soundManager.setVolume(0.1);
-
 
     soundManager.setBackgroundMusic("/static/music/Peach.mp3");
     soundManager.playBackgroundMusic();
