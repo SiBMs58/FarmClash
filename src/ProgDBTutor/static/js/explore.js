@@ -210,30 +210,30 @@ function displaySurvivors() {
 }
 function displayRewardItems(){
     const rewardsItemDiv = document.getElementById('reward-items');
-    let reward;
     const imgLocation = '../../static/img/resources/';
     let typeLoc = {
         '': ['Money'],
         'crops/': ["Wheat", "Carrot", "Corn", "Lettuce", "Tomato", "Turnip", "Zucchini", "Parsnip", "Cauliflower", "Eggplant"],
         'raws/': ["Stick", "Plank", "Stone", "Ingot", "Log"],
-        'animals/': ['Egg', 'Rustic Egg', 'Crimson Egg', 'Emerald Egg', 'Sapphire Egg',
+        'animalproduct/': ['Egg', 'Rustic Egg', 'Crimson Egg', 'Emerald Egg', 'Sapphire Egg',
                     'Milk', 'Chocolate Milk','Strawberry Milk', 'Soy Milk', 'Blueberry Milk',
                     'Truffle', 'Bronze Truffle', 'Gold Truffle', 'Forest Truffle', 'Winter Truffle',
                     'Wool', 'Alpaca Wool', 'Cashmere Wool', 'Irish Wool', 'Dolphin Wool']
     }
 
-    let img;
-    let map;
-    for (const key in rewards) {
+    let img = '';
+    let map = '';
+    for (const reward in rewards) {
         for (const [key, value] of Object.entries(typeLoc)) {
-            if (value.includes(key)) {
+            console.log(value)
+            if (value.includes(reward)) {
                 map = key;
                 break;
             }
         }
-        img = (key === 'Money') ? 'Coin' : spaceTo_(key);
+        img = (reward === 'Money') ? 'Coin' : spaceTo_(reward);
         const div = document.createElement('div');
-        div.innerHTML = `${rewards[key]} x <img src=" ${imgLocation + map + img}.png" alt="${key}" title="${key}" draggable="false">`;
+        div.innerHTML = `${rewards[reward]} x <img src=" ${imgLocation + map + img}.png" alt="${reward}" title="${reward}" draggable="false">`;
         rewardsItemDiv.appendChild(div);
     }
 }
@@ -354,6 +354,7 @@ function fetchBuildingBayStats() {
             const bay = buildings[id];
             buildingAugmentLevel = bay.augment_level;
             buildingLevel = bay.level;
+            buildingLevel = 1; //TODO this is for debugging
         }
     })
     .catch(error => {
@@ -498,7 +499,6 @@ async function sendResourceQuanity(){
 document.getElementById('continue-btn').addEventListener('click', function() {
     exploration.remaining_time = -1;
     displayStatus();
-    console.log('Continue!');
 });
 
 document.getElementById('open-btn').addEventListener('click', function() {
@@ -511,11 +511,8 @@ document.getElementById('open-btn').addEventListener('click', function() {
             generateRewards();
             displayRewardItems();
             displayCrates(numCrates, crateImage);
-           console.log('Open crates');
-
     }).then(() => {
         sendResourceQuanity();
-        console.log('sent rewards to database');
     });
 });
 /**
@@ -810,10 +807,21 @@ function getRandomIndex(weights) {
     }
 }
 function gaussianRandom(mean=0, stdev=1) {
-    const u = 1 - Math.random();
-    const v = Math.random();
-    const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
-    return z * stdev + mean;
+    let u, v, z;
+    let isValid = false;
+
+    while (!isValid) {
+        u = 2 * Math.random() - 1; // Generate two random numbers between -1 and 1
+        v = 2 * Math.random() - 1;
+        let s = u * u + v * v;
+
+        if (s < 1 && s !== 0) {
+            isValid = true; // Ensure that (u, v) is within the unit circle
+            z = Math.sqrt(-2.0 * Math.log(s) / s) * u; // Box-Muller transform
+        }
+    }
+
+    return Math.min(1,z * stdev + mean);
 }
 function generateRandomProbabilities() {
     const total = 1 + Math.random() * 0.1; // Add a slight randomness
@@ -852,7 +860,7 @@ function generateRewards() {
     const rewardBoxes = ['coinCrate', 'cropCrate', 'animalCrate', 'rawCrate', 'emptyCrate'];
     const probabilities = [0.25, 0.25, 0.25, 0.15, 0.10];
     const multiplier = Math.sqrt(exploration.duration / 60);
-    const means = [100*buildingLevel * multiplier, 100*buildingLevel * multiplier, 10*buildingLevel * multiplier, 5*buildingLevel * multiplier, 0];
+    const means = [100*buildingLevel * multiplier, 100*buildingLevel * multiplier, 50*buildingLevel * multiplier, 25*buildingLevel * multiplier, 0];
     const stdevs = [10*buildingLevel, 10*buildingLevel, 5*buildingLevel, 2*buildingLevel, 0]
     let rindex = 0;
     crateImage = [];
@@ -920,19 +928,19 @@ function addRewardTypes(type, amount, animal){
 
     switch (type) {
         case 'coinCrate':
-            addRewards(amount, 'Money');
+            addRewards(Math.round(amount), 'Money');
             break;
 
         case 'cropCrate':
-            distributeInCrops(amount,division);
+            distributeInCrops(Math.round(amount),division);
             break;
 
         case 'animalCrate':
-            distributeInAnimalProducts(amount, animal, division)
+            distributeInAnimalProducts(Math.round(amount), animal, division)
             break;
 
         case 'rawCrate':
-            distributeInRawMaterials(amount, animal, division);
+            distributeInRawMaterials(Math.round(amount), animal, division);
             break;
 
         case 'emptyCrate':
@@ -942,16 +950,23 @@ function addRewardTypes(type, amount, animal){
 function distributeInRawMaterials(amount, animal, division){
     const raws = ['Stick', 'Stone', 'Plank', 'Log', 'Ingot'];
     let probabilities = (animal === 'Pig') ? [0.22375, 0.244375, 0.244375, 0.14375, 0.14375] : [0.325, 0.2125, 0.2125, 0.125, 0.125];
-
+    if (amount > division){
+        addRewards(amount, raws[getRandomIndex(probabilities)]);
+        return;
+    }
     for (let i = 0; i < division; i++) {
-        addRewards(Math.round(amount / division), raws[getRandomIndex(probabilities)]);
+        addRewards(Math.ceil(amount / division), raws[getRandomIndex(probabilities)]);
     }
 }
 function distributeInCrops(amount, division){
-const crops = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant'].slice(0, Math.min(9, buildingLevel));
-const probabilities = Array(crops.length).fill(1 / crops.length);
+    const crops = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant'].slice(0, Math.min(9, buildingLevel));
+    const probabilities = Array(crops.length).fill(1 / crops.length);
+    if (amount > division){
+        addRewards(amount, crops[getRandomIndex(probabilities)]);
+        return;
+    }
     for (let i = 0; i < division; i++) {
-        addRewards(Math.round(amount / division), crops[getRandomIndex(probabilities)]);
+        addRewards(Math.ceil(amount / division), crops[getRandomIndex(probabilities)]);
     }
 }
 /**
@@ -970,20 +985,12 @@ function distributeInAnimalProducts(amount, animal, division){
         'Pig': [0.1, 0.2, 0.5, 0.2],       // Pigs favor truffles
         'Goat': [0.2, 0.1, 0.2, 0.5]       // Goats favor wool
     };
-    let typeProbability;
-    if (animal in animalTypeProbability) {
-        typeProbability = animalTypeProbability[animal];
-    } else {
-        typeProbability = generateRandomProbabilities();
-    }
+    const typeProbability = animal in animalTypeProbability ? animalTypeProbability[animal] : generateRandomProbabilities();
+    const productType = productTypes[getRandomIndex(typeProbability)];
+    const probabilities = (animal === 'Chicken') ? [0.175, 0.35, 0.25, 0.15, 0.075] : [0.375, 0.3, 0.2, 0.1, 0.025];
 
     let products;
-    let probabilities = (animal === 'Chicken') ? [0.175, 0.35, 0.25, 0.15, 0.075] : [0.375, 0.3, 0.2, 0.1, 0.025];
-    let partition = 0;
-    for (let i = 0; i < productTypes.length; i++) {
-        partition = Math.round(amount * typeProbability[i])
-        if (partition === 0) break;
-        switch (productTypes[i]) {
+    switch (productType) {
             case 'Egg':
                 products = ['Egg', 'Rustic Egg', 'Crimson Egg', 'Emerald Egg', 'Sapphire Egg'];
                 break;
@@ -999,10 +1006,13 @@ function distributeInAnimalProducts(amount, animal, division){
             default:
                 return null; // Unknown animal product
         }
-        for (let i = 0; i < division; i++) {
-            addRewards(Math.round(partition / division), products[getRandomIndex(probabilities)]);
+        if (amount > division){
+            addRewards(amount, products[getRandomIndex(probabilities)]);
+        }else{
+            for (let i = 0; i < division; i++) {
+                addRewards(Math.ceil(amount / division), products[getRandomIndex(probabilities)]);
+            }
         }
-    }
 }
 /**
  * Adds a specified amount of a reward to the rewards collection.
@@ -1013,6 +1023,9 @@ function distributeInAnimalProducts(amount, animal, division){
  * @param {string} reward - The name of the reward to add.
  */
 function addRewards(amount, reward){
+    if (amount === 0){
+        return;
+    }
     if (reward in rewards){
         rewards[reward] += amount;
     } else {

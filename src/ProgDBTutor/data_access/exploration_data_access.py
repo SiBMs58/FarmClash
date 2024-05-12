@@ -15,7 +15,7 @@ class ExplorationDataAccess:
         cursor.execute(
             "INSERT INTO explorations (started_at, duration, chickens, goats, pigs, cows, exploration_level, "
             "augment_level, owner, surviving_goats, rewards_of_goats, surviving_cows, rewards_of_cows, surviving_pigs, "
-            "surviving_chickens, base_rewards) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, $s)",
+            "surviving_chickens, base_rewards) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s, %s)",
             (exploration.started_at, exploration.duration, exploration.chickens, exploration.goats, exploration.pigs,
              exploration.cows, exploration.level, exploration.augment, exploration.owner, exploration.surviving_goats,
              exploration.rewards_of_goats, exploration.surviving_cows, exploration.rewards_of_cows,

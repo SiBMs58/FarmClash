@@ -63,7 +63,6 @@ class Exploration:
 
     def set_surviving_goats_and_rewards(self, risk_chance):
         self.surviving_goats = sum(1 for _ in range(self.goats) if random.uniform(0, 100) > risk_chance)
-        print(self.surviving_goats)
 
         self.rewards_of_goats = 0
         for _ in range(self.surviving_goats):
@@ -78,14 +77,11 @@ class Exploration:
             else:
                 self.rewards_of_goats += 1
 
-        print("goat rewards: ", self.rewards_of_goats)
-
     def set_surviving_chickens(self, risk_chance):
         self.surviving_chickens = self.chickens
         for i in range(self.chickens):
             if random.uniform(0, 100) <= (risk_chance + 0.5 * i * 5):
                 self.surviving_chickens -= 1
-        print(self.surviving_chickens)
 
     def set_surviving_cows_and_rewards(self, risk_chance):
         self.surviving_cows = self.cows
@@ -96,12 +92,8 @@ class Exploration:
             elif random.uniform(0, 100) <= 10 * i:
                 self.rewards_of_cows += 1
 
-        print(self.surviving_cows)
-        print("cow rewards: ", self.rewards_of_cows)
-
     def set_surviving_pigs(self, risk_chance):
         self.surviving_pigs = sum(1 for _ in range(self.pigs) if random.uniform(0, 100) > risk_chance)
-        print(self.surviving_pigs)
 
     def get_risk_chance(self):
         risk_chances = {
