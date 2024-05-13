@@ -62,12 +62,15 @@ soundNumber.innerText = countSound;
  * Sound is increased with 10
  */
 function soundDown(){
-    if(countSound > 0) {
+    if(countSound >= 0) {
         document.getElementById("sounddownimg").src = "../static/img/UI/sounddown_pbtn.png";
         countSound -= 10
         soundNumber.innerText = countSound;
         localStorage.setItem('soundSetting', countSound);
         button("sounddownimg","../static/img/UI/sounddown_btn.png" );
+
+        const volume = countSound / 100;
+        soundManager.setVolume(volume);
     }
 }
 
@@ -81,6 +84,9 @@ function soundUp(){
         soundNumber.innerText = countSound;
         localStorage.setItem('soundSetting', countSound);
         button("soundupimg","../static/img/UI/soundup_btn.png" );
+
+        const volume = countSound / 100;
+        soundManager.setVolume(volume);
     }
 
 }

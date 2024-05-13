@@ -8,8 +8,9 @@
  class GameSoundManager {
     constructor() {
         this.soundButtons = [];
-        this.backgroundMusic = null;
-        this.muted = false;
+        this.backgroundMusic = false;
+        this.muted = false
+        this.volume = parseFloat(localStorage.getItem('volumesetting')) || 0.5;
     }
 
     addSoundButton(buttonElement, soundSrc, volume = 1) {
@@ -49,10 +50,10 @@
         }
     }
 
-    setBackgroundMusic(soundSrc, volume = 0.5) {
+    setBackgroundMusic(soundSrc, volume) {
         this.backgroundMusic = new Audio(soundSrc);
         this.backgroundMusic.loop = true;
-        this.backgroundMusic.volume = volume;
+        this.backgroundMusic.volume = this.volume;
     }
 
     playBackgroundMusic(bool) {
@@ -73,6 +74,7 @@
         if (this.backgroundMusic.volume < 1.0) {
             const newVolume = Math.min(1, this.backgroundMusic.volume + 0.1);
             this.backgroundMusic.volume = newVolume;
+             localStorage.setItem('volumesetting', newVolume);
         }
     }
 }
@@ -82,6 +84,7 @@
             if (this.backgroundMusic.volume > 0.1) {
                 const newVolume = Math.min(1, this.backgroundMusic.volume - 0.1);
                 this.backgroundMusic.volume = newVolume;
+              localStorage.setItem('volumesetting', newVolume);
             }
         }
     }
@@ -99,6 +102,9 @@
     }
     //this.muted = !this.muted;
     }
+
+
+
 }
 
 
@@ -121,6 +127,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     soundManager.setBackgroundMusic("/static/music/Peach.mp3");
 
+        soundManager.playBackgroundMusic();
+
+
+
 
     //const playBackgroundMusicButton = document.getElementById('playBackgroundMusicButton');
 
@@ -132,5 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('sounddown').addEventListener('click', () => {
         soundManager.sounddown();
     });
+
+
 
 });
