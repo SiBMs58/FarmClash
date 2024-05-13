@@ -1,10 +1,7 @@
-
-//TODO: img => img button maken + music werkr met dat!!
-//TODO buttons moeten juist werken met aan en uit juiste click  !!
+//TODO:storage first
+//TODO buttons moeten juist werken met aan en uit juiste click  => enkel de mute een kleien fout
+//TODO: implemtn all buttons
 //TODO zoom functie
-
-
-
 
 
 
@@ -15,7 +12,7 @@
         this.muted = false;
     }
 
-    addSoundButton(imageElement, soundSrc, volume = 1) {
+    addSoundButton(buttonElement, soundSrc, volume = 1) {
 
         fetch(soundSrc)
         .then(response => response.blob())
@@ -25,13 +22,13 @@
             sound.crossOrigin = "anonymous";
 
             const soundButton = {
-                imageElement: imageElement,
+                buttonElement: buttonElement,
                 sound: sound,
                 volume: volume
             };
             this.soundButtons.push(soundButton);
 
-            imageElement.addEventListener('click', () => {
+            buttonElement.addEventListener('click', () => {
                 if (!this.muted) {
                     sound.play();
                 }
@@ -58,7 +55,7 @@
         this.backgroundMusic.volume = volume;
     }
 
-    playBackgroundMusic() {
+    playBackgroundMusic(bool) {
         if (!this.muted && this.backgroundMusic) {
             this.backgroundMusic.play();
         }
@@ -89,63 +86,44 @@
         }
     }
 
-    mute() {
+    mute(muted) {
     const muteSound = new Audio("/static/music/discord-notification.mp3");
     muteSound.play();
 
-    if (!this.muted) {
+    this.muted = muted;
+    if (this.muted) {
         this.setVolume(0);
     } else {
         this.setVolume(1);
+
     }
-    this.muted = !this.muted;
+    //this.muted = !this.muted;
     }
 }
 
 
-const soundManager = new GameSoundManager();
-soundManager.playBackgroundMusic();
+export const soundManager = new GameSoundManager();
+//soundManager.playBackgroundMusic();
 document.addEventListener('DOMContentLoaded', function() {
     //const soundManager = new GameSoundManager();
 
+
     const baseSoundSrc = "/static/music/discord-notification.mp3";
-    const volume = 0.7;
+    const volume = 0.5; //volume van the buttons
 
-    // Define the number of sound buttons
-    const numButtons = 6;
 
-    // Iterate over the range of buttons and add each one
-    for (let i = 1; i <= numButtons; i++) {
-        const soundButtonClass = `.sound-image-button${i}`;
-        const soundButton = document.querySelector(soundButtonClass);
-        if (soundButton) {
-            soundManager.addSoundButton(soundButton, baseSoundSrc, volume);
-        } else {
-            console.error(`Button with class ${soundButtonClass} not found.`);
-        }
-    }
+    const soundButtons = document.querySelectorAll('.sound-image-button');
+
+    // Loop through each button and add the sound
+    soundButtons.forEach((button) => {
+        soundManager.addSoundButton(button, baseSoundSrc, volume);
+    });
 
     soundManager.setBackgroundMusic("/static/music/Peach.mp3");
-    soundManager.playBackgroundMusic();
-
-    const playBackgroundMusicButton = document.getElementById('playBackgroundMusicButton');
-    let isBackgroundMusicPlaying = false;
-
-    playBackgroundMusicButton.addEventListener('click', () => {
-        if (!isBackgroundMusicPlaying) {
-            soundManager.playBackgroundMusic();
-            isBackgroundMusicPlaying = true;
-        } else {
-            soundManager.stopBackgroundMusic();
-            isBackgroundMusicPlaying = false;
-        }
-    });
 
 
-    // Mute sounds
-    document.getElementById('muteButton').addEventListener('click', () => {
-        soundManager.mute();
-    });
+    //const playBackgroundMusicButton = document.getElementById('playBackgroundMusicButton');
+
 
     document.getElementById('soundup').addEventListener('click', () => {
         soundManager.soundUP();

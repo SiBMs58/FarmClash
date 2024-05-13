@@ -1,10 +1,12 @@
-//const zoomUpButton = document.getElementById("zoomUpButton");
-//const zoomDownButton = document.getElementById("zoomDownButton");
-const mutebutton = document.getElementById('muteButton');
-const backsoundButton = document.getElementById('playBackgroundMusicButton');
+import  {soundManager} from './sound.js'
+
+const zoomUpButton = document.getElementById("zoomUpButton");
+const zoomDownButton = document.getElementById("zoomDownButton");
+
+const mutebutton = document.getElementById('mutebuttonimg');
+const backsoundButton = document.getElementById('backsoundimg');
 
 
-/*
 zoomUpButton.addEventListener("click", zoomUpPrecent);
 zoomDownButton.addEventListener("click", zoomDownPrecent);
 
@@ -16,13 +18,14 @@ zoomNumber.innerText = countZoom;
  * De zoompercentage word met 20% verhoogd.
  */
 
-/*
+
 function zoomUpPrecent(){
      if(countZoom < 100) {
+         document.getElementById("zoomupimg").src="../static/img/UI/plus_pbtn.png";
          countZoom += 20;
          zoomNumber.innerText = countZoom;
          localStorage.setItem('zoomSetting', countZoom);
-         button(zoomUpButton,"../static/img/UI/plus_pbtn.png","../static/img/UI/plus_btn.png" );
+         button("zoomupimg","../static/img/UI/plus_btn.png");
 
      }
 }
@@ -31,17 +34,18 @@ function zoomUpPrecent(){
  * e zoompercentage word met 20% verlaagd
  */
 
-/*
+
 function zoomDownPrecent(){
       if(countZoom > 0) {
+           document.getElementById("zoomdownimg").src="../static/img/UI/minus_pbtn.png";
           countZoom -= 20;
           zoomNumber.innerText = countZoom;
           localStorage.setItem('zoomSetting', countZoom);
-          button(zoomDownButton,"../static/img/UI/minus_pbtn.png","../static/img/UI/minus_btn.png" );
+          button("zoomdownimg","../static/img/UI/minus_btn.png" );
       }
 }
 
-*/
+
 const soundUpButton = document.getElementById("soundup");
 const soundDownButton = document.getElementById("sounddown");
 
@@ -59,10 +63,11 @@ soundNumber.innerText = countSound;
  */
 function soundDown(){
     if(countSound > 0) {
+        document.getElementById("sounddownimg").src = "../static/img/UI/sounddown_pbtn.png";
         countSound -= 10
         soundNumber.innerText = countSound;
         localStorage.setItem('soundSetting', countSound);
-        button(soundDownButton,"../static/img/UI/sounddown_pbtn.png","../static/img/UI/sounddown_btn.png" );
+        button("sounddownimg","../static/img/UI/sounddown_btn.png" );
     }
 }
 
@@ -71,10 +76,11 @@ function soundDown(){
  */
 function soundUp(){
     if(countSound < 100) {
+        document.getElementById("soundupimg").src = "../static/img/UI/soundup_pbtn.png";
         countSound += 10;
         soundNumber.innerText = countSound;
         localStorage.setItem('soundSetting', countSound);
-        button(soundUpButton,"../static/img/UI/soundu_pbtn.png","../static/img/UI/soundup_btn.png" );
+        button("soundupimg","../static/img/UI/soundup_btn.png" );
     }
 
 }
@@ -83,12 +89,10 @@ function soundUp(){
  * This function acts for the buttons to see a virtual click
  * @param buttonType
  * @param img1
- * @param img2
  */
-function button(buttonType, img1, img2) {
-        buttonType.src = img1;
-        setTimeout(function () {
-            buttonType.src = img2;
+function button(buttonType, img1) {
+       setTimeout(function () {
+            document.getElementById(buttonType).src = img1;
         }, 100);
 }
 
@@ -107,9 +111,12 @@ mutebutton.addEventListener("click", function() {
     if (mutebutton.src.endsWith("sound_btn.png") && muteState === "sound_btn.png") {
         mutebutton.src = "../static/img/UI/sound_pbtn.png";
         muteState = "sound_pbtn.png";
+        soundManager.mute(true);
+
     } else {
         mutebutton.src = "../static/img/UI/sound_btn.png";
         muteState = "sound_btn.png";
+        soundManager.mute(false);
     }
     localStorage.setItem('muteButtonState', muteState);
 });
@@ -117,14 +124,20 @@ mutebutton.addEventListener("click", function() {
 /**
  * chnages the button with a click
  */
+ let isBackgroundMusicPlaying = false;
 backsoundButton.addEventListener("click", function() {
     if (backsoundButton.src.endsWith("slider_off.png") && backsoundState === "slider_off.png") {
         backsoundButton.src = "../static/img/UI/slider_on.png";
         backsoundState = "slider_on.png";
+        soundManager.playBackgroundMusic(true);
+
+
 
     } else {
         backsoundButton.src = "../static/img/UI/slider_off.png";
         backsoundState = "slider_off.png";
+        soundManager.stopBackgroundMusic(false);
+        isBackgroundMusicPlaying = false;
 
     }
     localStorage.setItem('backsoundButtonState', backsoundState);

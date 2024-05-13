@@ -59,4 +59,24 @@ h1 {
     background-image: url('../img/UI/slider_on.png');
 }
 
+.sound-image-button {
+    background: none;
+    border: none;
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    margin: 0;
+}
+.sound-image-button img {
+    image-rendering: pixelated;
+    width: 100%;
+    height: 100%;
+}
 
+button:hover {
+    cursor: url('../../static/img/hover_cursor.png'), auto;
+}
+
+button:active {
+    cursor: url('../../static/img/click_cursor.png'), auto;
+}
