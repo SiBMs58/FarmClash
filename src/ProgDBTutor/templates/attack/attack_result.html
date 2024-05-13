@@ -5,32 +5,35 @@
     <title>Attack Results - {{ app_data['app_name'] }}</title>
     <link rel="stylesheet" type="text/css" href="../static/css/UI.css">
     <link rel="stylesheet" type="text/css" href="../static/css/leaderboard.css">
-    <!-- Include other necessary CSS or JS files -->
+    {% include 'head.html' %}
+     <style>
+        .table-hover tbody tr td {
+            border-top: 0px solid transparent !important;
+        }
+    </style>
 </head>
 <body>
-<!-- Include any common header or footer if applicable -->
+{% include 'header&footer.html' %}
 <div class="leaderboard">
-    <h1 class="leaderboard-header">Attack Results</h1>
-    <table id="results-table">
-        <thead>
-            <tr>
-                <th>Resource Type</th>
-                <th>Amount Taken</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Table body where results will be populated -->
-            <tr>
-                <td>Gold</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td>Wood</td>
-                <td>3000</td>
-            </tr>
-            <!-- Additional rows can be added dynamically if needed -->
-        </tbody>
-    </table>
+    <h1 class="leaderboard-header">Attack Result: {{ result }}</h1>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-custom-header">
+                <tr>
+                    <th>Resource Type</th>
+                    <th>Amount Taken</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resource, amount in resources.items() %}
+                <tr>
+                    <td>{{ resource }}</td>
+                    <td>{{ amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script>

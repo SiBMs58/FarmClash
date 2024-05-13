@@ -41,3 +41,24 @@ class ResourceDataAccess:
                        (resource.resource_type, resource.amount, resource.username_owner))
         self.db_connection.conn.commit()
         return True
+
+    def update_resource(self, username_owner, resource_type, amount):
+        """
+        Update the resource for the user by adding the specified amount to the existing quantity.
+        :param username_owner: The username of the resource owner.
+        :param resource_type: The type of the resource to update.
+        :param amount: The amount to add to or subtract from the existing resource quantity.
+        :return: True if the operation was successful, otherwise False.
+        """
+        cursor = self.db_connection.get_cursor()
+        # SQL query to increment the resource quantity by the given amount only if it does not go below zero
+        cursor.execute(
+            'UPDATE resources SET quantity = GREATEST(0, quantity + %s) WHERE owner = %s AND type = %s',
+            (amount, username_owner, resource_type)
+        )
+        # Check if the update was successful
+        if cursor.rowcount == 0:
+            # No rows updated, possibly because the resource doesn't exist for the user or no change was necessary
+            return False
+        self.db_connection.conn.commit()
+        return True
