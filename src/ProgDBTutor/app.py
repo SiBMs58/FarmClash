@@ -17,6 +17,7 @@ from views.game import game_blueprint
 from views.api import api_blueprint
 from views.friends import friends_blueprint
 from views.market import market_blueprint
+from views.attack import attack_blueprint
 from models.user import User
 from models.building import Building
 from extensions import login_manager
@@ -62,6 +63,7 @@ app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
+app.register_blueprint(attack_blueprint, url_prefix='/attack')
 
 DEBUG = True
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -83,6 +85,7 @@ def main():
 def friends():
     """
     Renders the dashboard view, for a user.
+    TODO: Verify if this along with the friends.html template is used, i don't think so
     """
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
@@ -98,18 +101,6 @@ def settings():
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
     return render_template('settings.html', app_data=app_data)
-
-
-@app.route('/attack')
-@login_required
-def attack():
-    """
-    Renders the attack dashboard view.
-    """
-    if current_user.username == 'admin':
-        return redirect(url_for('admin'))
-    return render_template('attack.html', app_data=app_data)
-
 
 @app.route('/admin')
 @login_required
