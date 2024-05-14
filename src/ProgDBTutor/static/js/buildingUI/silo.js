@@ -259,6 +259,7 @@ document.getElementById('scrap-btn').addEventListener('click', () => {
                 sendCropChange(quantity).then(r => {
                     crops[selectedCrop] -= quantity;
                     displayCrops();
+                    displayLimit();
                     selectedCrop = '';
                     document.getElementById(`scrap-quantity`).value = 0;
                 });

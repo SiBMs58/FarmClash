@@ -30,6 +30,30 @@ class GameServices:
             for col in range(len(terrain_tiles[row])):
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
 
+        create_building_map(username, terrain_tiles)
+
+    def create_building_map(self, username, terrain_map):
+        self.building_data_access.add_building(Building("bay", username, "Bay", x=0, y=15, level=0))
+        self.building_data_access.add_building(Building("townhall", username, "Townhall", x=6, y=15, level=0))
+        self.building_data_access.add_building(Building("barn", username, "Barn", x=4, y=10, level=1)) #TODO position
+        self.building_data_access.add_building(Building("silo", username, "Silo", x=21, y=6, level=1)) #TODO position
+
+        # concatenate name with counter for building_id
+        fenceCounter = 0
+        fieldCounter = 0
+        pigCounter = 0
+        cowCounter = 0
+        goatCounter = 0
+        chickenCounter = 0
+        harvestHopperCounter = 0
+
+        ## 3 fences per cloud area
+
+        ## 6 farm fields per cloud area or one of 3 Pigpens, 3 Chicken Coops, 3 Cow Barns, 3 Goat Barns in total
+
+        ## 3 harvesthoppers in total
+        return True
+
     def initialize_resources(self, username):
         """
         Initialize default, starting resources when a user registers
@@ -61,8 +85,8 @@ class GameServices:
         self.resource_data_access.add_resource(Resource(None, username, "Milk", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Chocolate Milk", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Strawberry Milk", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Blueberry Milk", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Soy Milk", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Blueberry Milk", 0))
 
         # From Goats
         self.resource_data_access.add_resource(Resource(None, username, "Wool", 0))
@@ -73,10 +97,10 @@ class GameServices:
 
         # From Pigs
         self.resource_data_access.add_resource(Resource(None, username, "Truffle", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Winter Truffle", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Bronze Truffle", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Gold Truffle", 0))
         self.resource_data_access.add_resource(Resource(None, username, "Forest Truffle", 0))
+        self.resource_data_access.add_resource(Resource(None, username, "Winter Truffle", 0))
 
         # From exploring (can also be stolen in an attack)
         self.resource_data_access.add_resource(Resource(None, username, "Stick", 0))
