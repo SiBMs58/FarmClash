@@ -4,8 +4,10 @@ from data_access.resource_data_access import ResourceDataAccess
 from data_access.animal_data_access import AnimalDataAccess
 from data_access.building_data_access import BuildingDataAccess
 from flask import current_app
+from data_access.animal_data_access import AnimalDataAccess
 from models.map import Map
 from models.building import Building
+from models.animal import Animal
 from models.animal import Animal
 from models.tile import Tile
 from models.resource import Resource
@@ -23,6 +25,7 @@ class GameServices:
         self.resource_data_access = resource_data_access
         self.animal_data_access = animal_data_access
         self.building_data_access = building_data_access
+        self.animal_data_access = animal_data_access
 
     def create_default_map(self, username):
         """

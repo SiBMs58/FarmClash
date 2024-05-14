@@ -44,16 +44,16 @@ CREATE TABLE animals (
     owner VARCHAR(255) REFERENCES users(username),
     species VARCHAR(255) NOT NULL,
     amount INT NOT NULL,
-    last_idle_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (owner,species)
 );
 
 -- Planted Crops Table to track crops planted on a farm
 CREATE TABLE planted_crops (
-    planted_crop_id SERIAL PRIMARY KEY,    -- TODO can be changed to string which if type of of resource crop ( e.g Carrot, Wheat ...)
-    crop_id INT REFERENCES crops(crop_id), -- TODO can be removed as we have infinite seeds
-    farm_id INT REFERENCES farms(farm_id), -- TODO have a building id and username that refer to which field it is planted on MAYBE
-    harvest_time TIMESTAMP NOT NULL --TODO change to start_time, duration can be derived from type of crop
+    planted_crop_id SERIAL PRIMARY KEY,
+    crop_id INT REFERENCES crops(crop_id),
+    farm_id INT REFERENCES farms(farm_id),
+    harvest_time TIMESTAMP NOT NULL
 );
 
 -- Market Table for dynamic pricing (Optional, depends on game mechanics)
@@ -75,7 +75,7 @@ CREATE TABLE resources (
 );
 
 -- Attacks Table (If implementing the attack feature)
-CREATE TABLE attacks ( -- TODO dont really need this table as Attack is just a function and doesnt require idleness and doesnt need to be stored unless we want to show the history of attacks
+CREATE TABLE attacks (
     attack_id SERIAL PRIMARY KEY,
     attacker_farm_id INT REFERENCES farms(farm_id),
     defender_farm_id INT REFERENCES farms(farm_id),

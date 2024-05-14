@@ -55,6 +55,8 @@ app.config['exploration_data_access'] = exploration_data_access
 animal_data_access = AnimalDataAccess(connection)
 app.config['animal_data_access'] = animal_data_access
 
+animal_data_access = AnimalDataAccess(connection)
+app.config['animal_data_access'] = animal_data_access
 
 # Insert the admin user
 user_data_access.add_user(
@@ -109,6 +111,18 @@ def settings():
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
     return render_template('settings.html', app_data=app_data)
+
+
+@app.route('/attack')
+@login_required
+def attack():
+    """
+    Renders the attack dashboard view.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('attack.html', app_data=app_data)
+
 
 @app.route('/admin')
 @login_required
