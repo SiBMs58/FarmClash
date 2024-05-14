@@ -15,7 +15,7 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "Townhall.html",
+    "ui": "game.townhall",
     "augmentation": [[20,"AP"],[5,"DP"]]
   },
 
@@ -33,7 +33,7 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "Barn.html",
+    "ui": "game.barn",
     "augmentation": [[10,"Limit"],[5,"DP"]]
   },
 
@@ -51,7 +51,7 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "Silo.html",
+    "ui": "game.silo",
     "augmentation": [[10,"Limit"],[5,"DP"]]
   },
 
@@ -70,7 +70,7 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[40000,"Money"],[500,""]]
     },
-    "ui": "explore.html",
+    "ui": "exploration.exploration",
     "augmentation": [[0.1,"risk"],[10,"AP"],[5,"DP"]]
   },
 
