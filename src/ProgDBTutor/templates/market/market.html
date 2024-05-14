@@ -3,6 +3,8 @@
 <head>
     <link rel="stylesheet" href="../../static/css/market.css">
     <title>{{ app_data['app_name'] }}</title>
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     {% include 'head.html' %}
 </head>
 <body>
@@ -12,23 +14,23 @@
             <div class="product">
                 <img src="../../static/img/crates/wheat_crate.png" alt="Wheat" class="crate-image" title="Wheat">
                 <p id="price1">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
-                <button id="decreaseButton1" class="quantity-button" onmousedown="startDecrease(1)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage1" draggable="false"> </button>
+                <button id="decreaseButton1" class="quantity-button sound-image-button" onmousedown="startDecrease(1)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage1" draggable="false"> </button>
                 <label for="quantity1"></label><input type="number" id="quantity1" min="0" value="0">
-                <button id="increaseButton1" class="quantity-button" onmousedown="startIncrease(1)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage1" draggable="false"> </button>
+                <button id="increaseButton1" class="quantity-button sound-image-button" onmousedown="startIncrease(1)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage1" draggable="false"> </button>
             </div>
             <div class="product">
                 <img src="../../static/img/crates/carrot_crate.png" alt="Carrot" class="crate-image" title="Carrot">
                 <p id="price2">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
-                <button id="decreaseButton2" class="quantity-button" onmousedown="startDecrease(2)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage2" draggable="false"> </button>
+                <button id="decreaseButton2" class="quantity-button sound-image-button" onmousedown="startDecrease(2)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage2" draggable="false"> </button>
                 <label for="quantity2"></label><input type="number" id="quantity2" min="0" value="0">
-                <button id="increaseButton2" class="quantity-button" onmousedown="startIncrease(2)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage2" draggable="false"> </button>
+                <button id="increaseButton2" class="quantity-button sound-image-button" onmousedown="startIncrease(2)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage2" draggable="false"> </button>
             </div>
             <div class="product">
                 <img src="../../static/img/crates/cauliflower_crate.png" alt="Cauliflower" class="crate-image" title="Cauliflower">
                 <p id="price3">0<img src="../../static/img/resources/Coin.png" alt="🪙" class="coin-image" draggable="false"></p>
-                <button id="decreaseButton3" class="quantity-button" onmousedown="startDecrease(3)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage3" draggable="false"> </button>
+                <button id="decreaseButton3" class="quantity-button sound-image-button" onmousedown="startDecrease(3)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/minus_btn.png" alt="minus" id="minusImage3" draggable="false"> </button>
                 <label for="quantity3"></label><input type="number" id="quantity3" min="0" value="0">
-                <button id="increaseButton3" class="quantity-button" onmousedown="startIncrease(3)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage3" draggable="false"> </button>
+                <button id="increaseButton3" class="quantity-button sound-image-button" onmousedown="startIncrease(3)" onmouseup="stopAction()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/plus_btn.png" alt="plus" id="plusImage3" draggable="false"> </button>
             </div>
             <div class="product">
                 <img src="../../static/img/crates/corn_crate.png" alt="Corn" class="crate-image" title="Corn">
@@ -85,9 +87,20 @@
     <div class="cart">
         <button id="sell-btn" class="sell-btn" onmousedown="sell()" onmouseleave="stopAction()"> <img src="../../static/img/buttons/sell_btn.png" alt="sell" id="sell-image" draggable="false"> </button>
     </div>
+
 </div>
+
+
+
 <script src="../../static/js/market.js"></script>
-<script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
+
+
+
+
+
+
+
+
 {% include 'footer.html' %}
 </body>
 </html>

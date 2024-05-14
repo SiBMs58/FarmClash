@@ -38,6 +38,9 @@
         </button>
     </header>
     <script>
+             localStorage.setItem('muteButtonState', "sound_btn.png");
+             localStorage.setItem('backsoundButtonState', "slider_on.png");
+
         let clickedResourceButton = false;
 
         function clickResources() {
@@ -101,6 +104,7 @@
         }
     </script>
      <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
+     <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
 
 
 

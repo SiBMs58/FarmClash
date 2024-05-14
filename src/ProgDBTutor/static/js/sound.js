@@ -1,16 +1,20 @@
-//TODO:storage first
-//TODO buttons moeten juist werken met aan en uit juiste click  => enkel de mute een kleien fout
+//TODO:storage first fixen
 //TODO: implemtn all buttons
-//TODO zoom functie
+//TODO zoom functie...
 
 
 
- class GameSoundManager {
+import {backsoundState} from './settings.js';
+import {muteState} from './settings.js';
+
+class GameSoundManager {
     constructor() {
         this.soundButtons = [];
         this.backgroundMusic = false;
-        this.muted = false
+        this.muted =  localStorage.getItem('muted') === 'true';
         this.volume = parseFloat(localStorage.getItem('volumesetting')) || 0.5;
+
+
     }
 
     addSoundButton(buttonElement, soundSrc, volume = 1) {
@@ -30,7 +34,7 @@
             this.soundButtons.push(soundButton);
 
             buttonElement.addEventListener('click', () => {
-                if (!this.muted) {
+                if (muteState==="sound_btn.png"/* !this.muted)*/) {
                     sound.play();
                 }
             });
@@ -47,27 +51,48 @@
         });
         if (this.backgroundMusic) {
             this.backgroundMusic.volume = volume;
+            localStorage.setItem('volumesetting', volume);
+
         }
     }
 
-    setBackgroundMusic(soundSrc, volume) {
+    setBackgroundMusic(soundSrc) {
         this.backgroundMusic = new Audio(soundSrc);
         this.backgroundMusic.loop = true;
         this.backgroundMusic.volume = this.volume;
     }
 
-    playBackgroundMusic(bool) {
-        if (!this.muted && this.backgroundMusic) {
+    playBackgroundMusic() {
+        if (backsoundState === "slider_on.png" && muteState==="sound_btn.png" ) {
             this.backgroundMusic.play();
         }
     }
 
     stopBackgroundMusic() {
-        if (this.backgroundMusic) {
+        if (backsoundState === "slider_off.png" ) {
             this.backgroundMusic.pause();
             this.backgroundMusic.currentTime = 0; // Reset the playback position to the beginning
         }
     }
+
+
+    mute() {
+    const muteSound = new Audio("/static/music/discord-notification.mp3");
+    muteSound.play();
+
+    if (muteState==="sound_pbtn.png") {
+        this.setVolume(0);
+    } else {
+        if(backsoundState === "slider_on.png"){
+            this.playBackgroundMusic();
+            this.setVolume(this.volume);
+        }else {
+            this.setVolume(this.volume);
+        }
+    }
+
+    }
+    /*
 
     soundUP() {
     if ( !this.muted && this.backgroundMusic) {
@@ -88,53 +113,55 @@
             }
         }
     }
+    */
 
-    mute(muted) {
-    const muteSound = new Audio("/static/music/discord-notification.mp3");
-    muteSound.play();
+/*
+    initialize() {
+        // Initialize background music
+        this.setBackgroundMusic("/static/music/Peach.mp3");
+        this.backgroundMusic=true;
 
-    this.muted = muted;
-    if (this.muted) {
-        this.setVolume(0);
-    } else {
-        this.setVolume(1);
-
+        // Check the toggle state and play or stop the background music accordingly
+        if (backsoundState === "slider_on.png") {
+            this.playBackgroundMusic();
+        } else {
+            this.stopBackgroundMusic();
+        }
     }
-    //this.muted = !this.muted;
-    }
 
-
-
+*/
 }
 
 
+
 export const soundManager = new GameSoundManager();
-//soundManager.playBackgroundMusic();
+
 document.addEventListener('DOMContentLoaded', function() {
     //const soundManager = new GameSoundManager();
-
 
     const baseSoundSrc = "/static/music/discord-notification.mp3";
     const volume = 0.5; //volume van the buttons
 
-
     const soundButtons = document.querySelectorAll('.sound-image-button');
-
-    // Loop through each button and add the sound
     soundButtons.forEach((button) => {
         soundManager.addSoundButton(button, baseSoundSrc, volume);
     });
 
+
+
     soundManager.setBackgroundMusic("/static/music/Peach.mp3");
 
-        soundManager.playBackgroundMusic();
+
+    //if (backsoundState === "slider_on.png"  && muteState==="sound_btn.png") {
+      soundManager.playBackgroundMusic();
+       // this.backgroundMusic = true;
+   // } else {
+        //soundManager.stopBackgroundMusic();
+   // }
 
 
 
-
-    //const playBackgroundMusicButton = document.getElementById('playBackgroundMusicButton');
-
-
+/*
     document.getElementById('soundup').addEventListener('click', () => {
         soundManager.soundUP();
     });
@@ -143,6 +170,8 @@ document.addEventListener('DOMContentLoaded', function() {
         soundManager.sounddown();
     });
 
-
+*/
 
 });
+
+

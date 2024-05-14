@@ -34,12 +34,12 @@
             </div>
             <div class="col-auto">
                 <div class="sound-btn"></div>
-                <button  class="sound-image-button" id="sounddown"><img src="../static/img/UI/sounddown_btn.png" id="sounddownimg"></button>
+                <button  class="sound-image-button" id="sounddown" ><img src="../static/img/UI/sounddown_btn.png" id="sounddownimg"></button>
                 <span>&nbsp;</span>
                 <p id="soundNumber"> 50 </p>
                 <p> % </p>
                 <span>&nbsp;</span>
-                <button class="sound-image-button"  id="soundup"><img src="../static/img/UI/soundup_btn.png" id="soundupimg"></button>
+                <button class="sound-image-button" id="soundup" ><img src="../static/img/UI/soundup_btn.png" id="soundupimg"></button>
 
             </div>
         </div>
@@ -81,11 +81,11 @@
             </div>
         </div>
     </div>
-    <canvas id="terrainCanvas" width="800" height="600"></canvas>
 
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/zoom.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 

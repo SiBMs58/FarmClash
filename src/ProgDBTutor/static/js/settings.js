@@ -1,24 +1,24 @@
 import  {soundManager} from './sound.js'
 
-const zoomUpButton = document.getElementById("zoomUpButton");
-const zoomDownButton = document.getElementById("zoomDownButton");
+//const zoomUpButton = document.getElementById("zoomUpButton");
+//const zoomDownButton = document.getElementById("zoomDownButton");
 
 const mutebutton = document.getElementById('mutebuttonimg');
 const backsoundButton = document.getElementById('backsoundimg');
 
 
-zoomUpButton.addEventListener("click", zoomUpPrecent);
-zoomDownButton.addEventListener("click", zoomDownPrecent);
+//zoomUpButton.addEventListener("click", zoomUpPrecent);
+//zoomDownButton.addEventListener("click", zoomDownPrecent);
 
-let countZoom = parseInt(localStorage.getItem('zoomSetting')) || 0; //sett countzoom into storage
-let zoomNumber = document.getElementById("zoomNumber");
-zoomNumber.innerText = countZoom;
+//let countZoom = parseInt(localStorage.getItem('zoomSetting')) || 0; //sett countzoom into storage
+//let zoomNumber = document.getElementById("zoomNumber");
+//zoomNumber.innerText = countZoom;
 
 /**
  * De zoompercentage word met 20% verhoogd.
  */
 
-
+/*
 function zoomUpPrecent(){
      if(countZoom < 100) {
          document.getElementById("zoomupimg").src="../static/img/UI/plus_pbtn.png";
@@ -33,7 +33,7 @@ function zoomUpPrecent(){
 /**
  * e zoompercentage word met 20% verlaagd
  */
-
+/*
 
 function zoomDownPrecent(){
       if(countZoom > 0) {
@@ -44,13 +44,13 @@ function zoomDownPrecent(){
           button("zoomdownimg","../static/img/UI/minus_btn.png" );
       }
 }
-
+*/
 
 const soundUpButton = document.getElementById("soundup");
 const soundDownButton = document.getElementById("sounddown");
 
-soundUpButton.addEventListener("click", soundUp);
-soundDownButton.addEventListener("click", soundDown);
+soundUpButton.onmousedown = soundUp;
+soundDownButton.onmousedown = soundDown;
 
 
 let countSound = parseInt(localStorage.getItem('soundSetting')) || 50; //sett countSound into storage
@@ -61,8 +61,8 @@ soundNumber.innerText = countSound;
 /**
  * Sound is increased with 10
  */
-function soundDown(){
-    if(countSound >= 0) {
+ function soundDown(){
+    if(countSound >= 0 && muteState==="sound_btn.png") {
         document.getElementById("sounddownimg").src = "../static/img/UI/sounddown_pbtn.png";
         countSound -= 10
         soundNumber.innerText = countSound;
@@ -78,7 +78,7 @@ function soundDown(){
  * Sound is decresed with 10
  */
 function soundUp(){
-    if(countSound < 100) {
+    if(countSound < 100 && muteState==="sound_btn.png") {
         document.getElementById("soundupimg").src = "../static/img/UI/soundup_pbtn.png";
         countSound += 10;
         soundNumber.innerText = countSound;
@@ -103,8 +103,8 @@ function button(buttonType, img1) {
 }
 
 
-let muteState = localStorage.getItem('muteButtonState');
-let backsoundState = localStorage.getItem('backsoundButtonState') || "slider_off.png";
+//export let muteState = localStorage.getItem('muteButtonState');
+//export let backsoundState = localStorage.getItem('backsoundButtonState') || "slider_off.png";
 
 mutebutton.src = (muteState === "sound_pbtn.png") ? "../static/img/UI/sound_pbtn.png" : "../static/img/UI/sound_btn.png";
 backsoundButton.src = (backsoundState === "slider_on.png") ? "../static/img/UI/slider_on.png" : "../static/img/UI/slider_off.png";
@@ -117,12 +117,12 @@ mutebutton.addEventListener("click", function() {
     if (mutebutton.src.endsWith("sound_btn.png") && muteState === "sound_btn.png") {
         mutebutton.src = "../static/img/UI/sound_pbtn.png";
         muteState = "sound_pbtn.png";
-        soundManager.mute(true);
+        soundManager.mute();
 
     } else {
         mutebutton.src = "../static/img/UI/sound_btn.png";
         muteState = "sound_btn.png";
-        soundManager.mute(false);
+        soundManager.mute();
     }
     localStorage.setItem('muteButtonState', muteState);
 });
@@ -130,24 +130,22 @@ mutebutton.addEventListener("click", function() {
 /**
  * chnages the button with a click
  */
- let isBackgroundMusicPlaying = false;
+
 backsoundButton.addEventListener("click", function() {
     if (backsoundButton.src.endsWith("slider_off.png") && backsoundState === "slider_off.png") {
         backsoundButton.src = "../static/img/UI/slider_on.png";
         backsoundState = "slider_on.png";
-        soundManager.playBackgroundMusic(true);
-
-
+        soundManager.playBackgroundMusic();
 
     } else {
         backsoundButton.src = "../static/img/UI/slider_off.png";
         backsoundState = "slider_off.png";
-        soundManager.stopBackgroundMusic(false);
-        isBackgroundMusicPlaying = false;
-
+        soundManager.stopBackgroundMusic();
     }
     localStorage.setItem('backsoundButtonState', backsoundState);
 });
+
+
 
 
 
