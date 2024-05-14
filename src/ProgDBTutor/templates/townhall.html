@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_data['app_name'] }} - Townhall</title>
+    <link rel="stylesheet" href="../static/css/townhall.css">
+    <link rel="icon" href="../static/img/ico/happy.ico" type="image/x-icon" id="favicon">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+{% include 'header&footer.html' %}
+<body>
+<div class="slider-container">
+    <input type="range" min="0" max="10" value="1" class="slider" id="slider">
+    <div class="slide-container">
+        <div class="slide" data-level="0">Level 0 Perks</div>
+        <div class="slide" data-level="1">Level 1 Perks</div>
+        <div class="slide" data-level="2">Level 2 Perks</div>
+        <div class="slide" data-level="3">Level 3 Perks</div>
+        <div class="slide" data-level="4">Level 4 Perks</div>
+        <div class="slide" data-level="5">Level 5 Perks</div>
+        <div class="slide" data-level="6">Level 6 Perks</div>
+        <div class="slide" data-level="7">Level 7 Perks</div>
+        <div class="slide" data-level="8">Level 8 Perks</div>
+        <div class="slide" data-level="9">Level 9 Perks</div>
+        <div class="slide" data-level="10">Level 10 Perks</div>
+    </div>
+</div>
+<div class="stats-container" id="stats">
+    <div class="stat-column">
+        <div class="stat"></div> <!-- ATK -->
+        <div class="stat"></div> <!-- DEF -->
+    </div>
+    <div class="stat-column">
+        <div class="stat"></div> <!-- LVL -->
+        <div class="stat"></div> <!-- COINS -->
+    </div>
+</div>
+
+<script src="../static/js/buildingUI/Townhall.js"></script>
+
+</body>
+</html>

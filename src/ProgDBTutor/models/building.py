@@ -66,6 +66,3 @@ class Building:
         elif self.building_type == 'Bay':
             self.width = 6
             self.height = 5
-
-
-

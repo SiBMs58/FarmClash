@@ -25,7 +25,6 @@ class GameServices:
         self.resource_data_access = resource_data_access
         self.animal_data_access = animal_data_access
         self.building_data_access = building_data_access
-        self.animal_data_access = animal_data_access
 
     def create_default_map(self, username):
         """
