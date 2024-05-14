@@ -43,6 +43,41 @@ def get_all_resources():
     resources = resource_data_access.get_resources(current_user.username)
     return jsonify([resource.to_dict() for resource in resources])
 
+@api_blueprint.route('/add-resources', methods=['POST'])
+@login_required
+def add_resources():
+    """
+    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
+    use this for
+    :return: Status of the update operation, in json format
+    """
+    try:
+        ## TODO add logic so resources are limited to their appropirate buildings
+
+        data = request.get_json()
+        resource_data_access = current_app.config.get('resource_data_access')
+        update_status = [True, 'Resources updated successfully']
+        already_updated = []
+
+        for resource_type, amount in data.items():
+
+            updated_resource = Resource(None, current_user.username, resource_type, amount)
+            update_status = resource_data_access.update_by_adding_resource(updated_resource)
+
+            if not update_status[0]:
+                for rollback_resource in already_updated:
+                    rollback_resource.amount = -rollback_resource.amount
+                    resource_data_access.update_by_adding_resource(rollback_resource)
+                    return jsonify({"status": "error", "message": update_status[1]}), 500
+            already_updated.append(updated_resource)
+
+        return jsonify({"status": "success", "message": update_status[1]}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+
 @api_blueprint.route('/resources/<string:username>')
 @login_required
 def get_resources(username):
