@@ -1,7 +1,9 @@
-from flask import Blueprint, current_app, jsonify, abort
+from flask import Blueprint, current_app, jsonify, abort, request
 from flask_login import login_required, current_user
 
 from services.game_services import GameServices
+
+from src.ProgDBTutor.models.resource import Resource
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
@@ -106,7 +108,7 @@ def get_terrain_map():
     # for map in maps:
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'))
+    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'),current_app.config.get('building_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
@@ -123,7 +125,7 @@ def get_friend_terrain_map(friend_username):
         return "No maps found", 404
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'))
+    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'),current_app.config.get('building_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
@@ -260,6 +262,43 @@ def fetch_building_information_for_user(username):
             building_information[building.building_id] = building_info
 
         json_response = {
+            "building_information": building_information
+        }
+
+        return jsonify(json_response)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/fetch-building-information-by-type/<string:building_type>', methods=['GET'])
+def fetch_building_information_by_type(building_type):
+    try:
+        building_data_access = current_app.config.get('building_data_access')
+        # Fetch building information based on username and building type
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, building_type)
+
+        # If no buildings found, return appropriate JSON response
+        if not buildings:
+            return jsonify({"status": "No buildings", "type": building_type, "user": current_user.username})
+
+        # Construct the final JSON response
+        building_information = {}
+        for building in buildings:
+            building_info = {
+                "self_key": building.building_id,
+                "general_information": building.building_type,
+                "level": building.level,
+                "augment_level": building.augment_level,
+                "building_location": [building.x, building.y],
+                "tile_rel_locations": building.tile_rel_locations
+            }
+            building_information[building.building_id] = building_info
+
+        json_response = {
+            "status": "success",
+            "user": current_user.username,
+            "type": building_type,
             "building_information": building_information
         }
 

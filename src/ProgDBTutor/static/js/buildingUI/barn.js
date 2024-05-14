@@ -1,35 +1,61 @@
 let interval = null;
-let crops ={
-    'Wheat': 100,
-    'Carrot': 150,
-    'Corn': 150,
-    'Lettuce': 150,
-    'Tomato': 150,
-    'Turnip': 150,
-    'Zucchini': 150,
-    'Parsnip': 150,
-    'Cauliflower': 150,
-    'Eggplant': 150
+let resources ={
+    'Stick': 0,
+    'Plank': 0,
+    'Stone': 0,
+    'Ingot': 0,
+    'Log': 0,
+
+    'Egg': 0,
+    'Rustic Egg': 0,
+    'Crimson Egg': 0,
+    'Emerald Egg': 0,
+    'Sapphire Egg': 0,
+
+    'Milk': 0,
+    'Chocolate Milk': 0,
+    'Strawberry Milk': 0,
+    'Soy Milk': 0,
+    'Blueberry Milk': 0,
+
+    'Truffle': 0,
+    'Bronze Truffle': 0,
+    'Gold Truffle': 0,
+    'Forest Truffle': 0,
+    'Winter Truffle': 0,
+
+    'Wool': 0,
+    'Alpaca Wool': 0,
+    'Cashmere Wool': 0,
+    'Irish Wool': 0,
+    'Dolphin Wool': 0
 };
-let selectedCrop = ''
+const typeLoc = {
+        'raws/': ["Stick", "Plank", "Stone", "Ingot", "Log"],
+        'animalproduct/': ['Egg', 'Rustic Egg', 'Crimson Egg', 'Emerald Egg', 'Sapphire Egg',
+                    'Milk', 'Chocolate Milk','Strawberry Milk', 'Soy Milk', 'Blueberry Milk',
+                    'Truffle', 'Bronze Truffle', 'Gold Truffle', 'Forest Truffle', 'Winter Truffle',
+                    'Wool', 'Alpaca Wool', 'Cashmere Wool', 'Irish Wool', 'Dolphin Wool']
+};
+let selectedResource = ''
 let buildingAugmentLevel = 0;
 let buildingLevel = 0;
 
 //___________________________ Page Initialization ___________________________//
 initialize();
 function initialize() {
-    fetchCrops()
+    fetchResources()
     .then(updatedCrops => {
-        crops = updatedCrops;
+        resources = updatedCrops;
         console.log(updatedCrops);
     }).then(() => {
-        displayCrops();
+        displayResources();
     })
     .catch(error => {
         // Handle error
         console.error(error);
     });
-    fetchSilo().then(() => {
+    fetchBarn().then(() => {
         displayLimit();
         updateDescription()
     });
@@ -46,15 +72,15 @@ function initialize() {
 
 
 //___________________________ UI Functions ___________________________//
-function displayCrops(){
+function displayResources(){
     const itemsContainer = document.getElementById('items');
     itemsContainer.innerHTML = '';
 
     // Iterate over the crops object
-    Object.keys(crops).forEach((cropName) => {
-        const cropQuantity = crops[cropName];
+    Object.keys(resources).forEach((type) => {
+        const Quantity = resources[type];
 
-        if (cropQuantity === 0) {
+        if (Quantity === 0) {
             return;
         }
 
@@ -65,43 +91,43 @@ function displayCrops(){
         // Create a div for the amount
         const amountDiv = document.createElement('div');
         amountDiv.classList.add('item-amount'); // Add a class for styling
-        amountDiv.innerHTML = getAmountImage(cropQuantity);
+        amountDiv.innerHTML = getAmountImage(Quantity);
 
         // Create a button for the crop
-        const cropBtn = document.createElement('button');
-        cropBtn.classList.add('item-btn');
-        cropBtn.id = cropName;
-        cropBtn.alt = cropName;
-        cropBtn.title = cropName;
+        const resourceBtn = document.createElement('button');
+        resourceBtn.classList.add('item-btn');
+        resourceBtn.id = type;
+        resourceBtn.alt = type;
+        resourceBtn.title = type;
 
-        const cropImg = document.createElement('img');
-        cropImg.src = `../../static/img/resources/crops/${cropName}.png`;
-        cropImg.id = cropName + "-img"; // Set ID to crop name
-        cropImg.draggable = false;
-        cropBtn.appendChild(cropImg);
-        cropBtn.addEventListener('click', handleItemClick);
+        const resourceImg = document.createElement('img');
+        resourceImg.src = `../../static/img/resources/${getResourceImage(type)}.png`;
+        resourceImg.id = type + "-img"; // Set ID to crop name
+        resourceImg.draggable = false;
+        resourceBtn.appendChild(resourceImg);
+        resourceBtn.addEventListener('click', handleItemClick);
 
         // Append the amount and button to the row
         row.appendChild(amountDiv);
-        row.appendChild(cropBtn);
+        row.appendChild(resourceBtn);
 
         // Append the row to the items container
         itemsContainer.appendChild(row);
     });
 }
 function displayLimit() {
-    let totalCrops = 0;
+    let total = 0;
 
     // Calculate total amount of crops
-    Object.keys(crops).forEach((cropName) => {
-        totalCrops += crops[cropName];
+    Object.keys(resources).forEach((type) => {
+        total += resources[type];
     });
 
     // Get the limit
     let limit = getLimit();
 
     // Calculate percentage
-    let percentage = (totalCrops / limit) * 100;
+    let percentage = (total / limit) * 100;
     if (limit === -1) {
         percentage = 0;
         limit = '∞';
@@ -114,7 +140,7 @@ function displayLimit() {
             ${percentage.toFixed(2)}%
         </div>
     </div>
-    <p>${totalCrops} / ${limit}</p>`;
+    <p>${total} / ${limit}</p>`;
     // Get limitContainer
     const limitContainer = document.getElementById('limit');
 
@@ -123,10 +149,10 @@ function displayLimit() {
 }
 // Update description based on the initial state or any other changes
 function updateDescription() {
-    if (!selectedCrop) {
-        document.getElementById('description').innerText = 'You can press a crop to select it. Scrapping a selected crop gives the user 1 coin per crop.';
+    if (!selectedResource) {
+        document.getElementById('description').innerText = 'You can press a resource to select it. Scrapping a selected crop gives the user 2 coin per resource.';
     } else {
-        document.getElementById('description').innerText = 'You can press a selected crop again to deselect it. Scrapping a selected crop gives the user 1 coin per crop.';
+        document.getElementById('description').innerText = 'You can press a selected resource again to deselect it. Scrapping a selected crop gives the user 2 coin per resource.';
     }
 }
 
@@ -138,13 +164,13 @@ function updateDescription() {
 
 
 //___________________________ API Requests ___________________________//
-async function fetchCrops() {
+async function fetchResources() {
     return fetch('/api/resources')
         .then(response => response.json())
         .then(data => {
             const updatedCrops = {};
             data.forEach((resource) => {
-                if (crops.hasOwnProperty(resource.resource_type)) {
+                if (resources.hasOwnProperty(resource.resource_type)) {
                     updatedCrops[resource.resource_type] = resource.amount;
                 }
             });
@@ -156,8 +182,8 @@ async function fetchCrops() {
             throw error; // Re-throwing the error to be caught by the caller
         });
 }
-async function fetchSilo() {
-     return fetch('/api/fetch-building-information-by-type/Silo')
+async function fetchBarn() {
+     return fetch('/api/fetch-building-information-by-type/Barn')
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
@@ -174,10 +200,10 @@ async function fetchSilo() {
         console.error('Error fetching building information:', error);
     });
 }
-async function sendCropChange(quantity){
+async function sendResourceChange(quantity){
     let data = {};
-    data[selectedCrop] = -quantity;
-    data['Money']= quantity;
+    data[selectedResource] = -quantity;
+    data['Money']= quantity*2;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-resources";
     try {
@@ -221,19 +247,19 @@ function handleItemClick(event) {
             button.style.background = 'none'; // Reset background
         });
         document.getElementById('scrap-quantity').value = 0;
-        if(selectedCrop === clickedItem.id) {
-            selectedCrop = '';
+        if(selectedResource === clickedItem.id) {
+            selectedResource = '';
             updateDescription()
             return;
         }
         clickedItem.style.background = '#c8a277';
-        selectedCrop = clickedItem.id;
+        selectedResource = clickedItem.id;
         updateDescription();
     }
 }
 document.getElementById('scrap-quantity').addEventListener('input', (event) => {
     let currentValue = parseInt(event.target.value);
-    let maxLimit = selectedCrop ? crops[selectedCrop] : 0;
+    let maxLimit = selectedResource ? resources[selectedResource] : 0;
 
     // Check if the current value is within the allowed range
     if (isNaN(currentValue) || currentValue < 0) {
@@ -244,8 +270,8 @@ document.getElementById('scrap-quantity').addEventListener('input', (event) => {
 });
 
 document.getElementById('max').addEventListener('mousedown', () => {
-    if (selectedCrop){
-        document.getElementById('scrap-quantity').value = crops[selectedCrop];
+    if (selectedResource){
+        document.getElementById('scrap-quantity').value = resources[selectedResource];
     }
     document.getElementById(`right`).src = "../../static/img/UI/right_pbtn.png";
 });
@@ -280,22 +306,22 @@ document.addEventListener('mouseleave' , () => {
 document.getElementById('scrap-btn').addEventListener('click', () => {
     document.getElementById('scrap').src = "../../static/img/UI/scrap_pbtn.png";
     setTimeout(() => {
-        if (selectedCrop) {
+        if (selectedResource) {
             let quantity = parseInt(document.getElementById(`scrap-quantity`).value);
             if (quantity > 0) {
-                alert(`Amount selected to scrap from ${selectedCrop} is ${quantity}`);
+                alert(`Amount selected to scrap from ${selectedResource} is ${quantity}`);
 
-                sendCropChange(quantity).then(r => {
-                    crops[selectedCrop] -= quantity;
-                    displayCrops();
+                sendResourceChange(quantity).then(r => {
+                    resources[selectedResource] -= quantity;
+                    displayResources();
                     displayLimit();
-                    selectedCrop = '';
+                    selectedResource = '';
                     updateDescription()
                     document.getElementById(`scrap-quantity`).value = 0;
                 });
                 // Notify Database with new amount
             } else {
-                alert(`No amount selected to scrap from ${selectedCrop}`);
+                alert(`No amount selected to scrap from ${selectedResource}`);
             }
         } else {
             alert('No crop selected');
@@ -326,7 +352,14 @@ function getAmountImage(amount) {
 
     return imgTags.join('');
 }
+function getResourceImage(type) {
 
+    for (const [map, value] of Object.entries(typeLoc)) {
+        if (value.includes(type)) {
+            return map + type;
+        }
+    }
+}
 
 
 
@@ -350,7 +383,7 @@ function stopAction() {
 function increaseQuantity() {
     let inputField = document.getElementById(`scrap-quantity`);
     let currentValue = parseInt(inputField.value);
-    let maxLimit = selectedCrop ? crops[selectedCrop] : 0;
+    let maxLimit = selectedResource ? resources[selectedResource] : 0;
     if (currentValue < maxLimit) {
         currentValue++;
         inputField.value = currentValue;
@@ -385,36 +418,36 @@ function getLimit(){
     let limit = 0;
     switch (buildingLevel) {
         case 1:
-            limit = 500;
+            limit = 800;
             break;
         case 2:
-            limit = 1000;
+            limit = 1600;
             break;
         case 3:
-            limit = 5000;
+            limit = 8000;
             break;
         case 4:
-            limit = 10000;
+            limit = 16000;
             break;
         case 5:
-            limit = 50000;
+            limit = 80000;
             break;
         case 6:
-            limit = 100000;
+            limit = 160000;
             break;
         case 7:
-            limit = 500000;
+            limit = 800000;
             break;
         case 8:
-            limit = 1000000;
+            limit = 1600000;
             break;
         case 9:
-            limit = 5000000;
+            limit = 8000000;
             break;
         case 10:
             return -1;
         default:
             return 0;
     }
-    return limit + buildingAugmentLevel * 100;
+    return limit + buildingAugmentLevel * 150;
 }

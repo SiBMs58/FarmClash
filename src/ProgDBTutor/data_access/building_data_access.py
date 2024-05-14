@@ -39,6 +39,27 @@ class BuildingDataAccess:
 
         return buildings
 
+    def get_buildings_by_username_and_type(self, username_owner, building_type):
+        """
+        Fetches all buildings belonging to the given username_owner and building_type from the database
+        :param username_owner: the username of the owner
+        :param building_type: the type of the building
+        :return: A list of Building objects belonging to the given username_owner and building_type, an empty list if none found
+        """
+        cursor = self.db_connection.get_cursor()
+        cursor.execute("SELECT * FROM buildings WHERE username_owner = %s AND building_type = %s",
+                       (username_owner, building_type))
+        results = cursor.fetchall()
+
+        buildings = []
+        for result in results:
+            building = Building(result['building_id'], result['username_owner'], result['building_type'],
+                                result['level'], result['x'], result['y'], result['tile_rel_locations'],
+                                result['created_at'], result['augment_level'])
+            buildings.append(building)
+
+        return buildings
+
     def add_building(self, building):
         """
         Adds or updates the given building object in the database

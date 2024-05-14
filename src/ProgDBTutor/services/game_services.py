@@ -6,13 +6,16 @@ from models.tile import Tile
 from models.resource import Resource
 from services.map_creator import generate_map
 
+from src.ProgDBTutor.models.building import Building
+
 
 class GameServices:
-    def __init__(self, user_data_access, map_data_access, tile_data_access, resource_data_access):
+    def __init__(self, user_data_access, map_data_access, tile_data_access, resource_data_access,building_data_access):
         self.user_data_access = user_data_access
         self.map_data_access = map_data_access
         self.tile_data_access = tile_data_access
         self.resource_data_access = resource_data_access
+        self.building_data_access = building_data_access
 
     def create_default_map(self, username):
         """
@@ -30,7 +33,7 @@ class GameServices:
             for col in range(len(terrain_tiles[row])):
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
 
-        create_building_map(username, terrain_tiles)
+        self.create_building_map(username, terrain_tiles)
 
     def create_building_map(self, username, terrain_map):
         self.building_data_access.add_building(Building("bay", username, "Bay", x=0, y=15, level=0))
