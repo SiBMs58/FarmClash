@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, jsonify
+from flask import Blueprint, current_app, jsonify, abort
 from flask_login import login_required, current_user
 
 from services.game_services import GameServices
@@ -31,6 +31,32 @@ def get_maps():
     maps = map_data_access.get_all_maps()  # Assuming this method exists
     return jsonify([map.to_dict() for map in maps])
 
+@api_blueprint.route('/resources')
+@login_required
+def get_all_resources():
+    """
+    Handles GET requests for all resources. This will return a list of all resources, if the logged in user is admin
+    :return: A list of all resources, in json format
+    """
+    resource_data_access = current_app.config.get('resource_data_access')
+    # Fetch resources for the specified username instead of the current user
+    resources = resource_data_access.get_resources(current_user.username)
+    return jsonify([resource.to_dict() for resource in resources])
+
+@api_blueprint.route('/resources/<string:username>')
+@login_required
+def get_resources(username):
+    """
+    Handles GET requests for all resources. This will return a list of all resources for the specified user.
+    :param username: The username of the user whose resources are being requested.
+    :return: A list of all resources for the specified user, in json format.
+    """
+    resource_data_access = current_app.config.get('resource_data_access')
+    # Fetch resources for the specified username instead of the current user
+    resources = resource_data_access.get_resources(username)
+
+    return jsonify([resource.to_dict() for resource in resources])
+
 @api_blueprint.route('/terrain-map')
 @login_required
 def get_terrain_map():
@@ -38,10 +64,6 @@ def get_terrain_map():
     Handles GET requests for the terrain map. This will return the terrain map, if the logged in user is admin
     :return: The terrain map, in json format
     """
-
-    # Voor debugging
-    #return jsonify({"status": "success", "message": "This is a test response"})
-
     map_data_access = current_app.config.get('map_data_access')
     map = map_data_access.get_map_by_username_owner(current_user.username) # TODO: Handle more maps than one
     if map is None:
@@ -53,16 +75,22 @@ def get_terrain_map():
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
-@api_blueprint.route('/resources')
+@api_blueprint.route('/terrain-map/<string:friend_username>')
 @login_required
-def get_resources():
+def get_friend_terrain_map(friend_username):
     """
-    Handles GET requests for all resources. This will return a list of all resources, for the current user
-    :return: A lsit of all resources, in json format
+    Handles GET requests for the terrain map. This will return the terrain map, for the friend
+    :return: The terrain map, in json format
     """
-    resource_data_access = current_app.config.get('resource_data_access')
-    resources = resource_data_access.get_resources(current_user.username)
-    return jsonify([resource.to_dict() for resource in resources])
+    map_data_access = current_app.config.get('map_data_access')
+    map = map_data_access.get_map_by_username_owner(friend_username)
+    if map is None:
+        return "No maps found", 404
+    tile_data_access = current_app.config.get('tile_data_access')
+    tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
+    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'))
+    formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
+    return jsonify(formatted_terrain_map)
 
 
 @api_blueprint.route('/friends')
@@ -98,3 +126,109 @@ def get_messages(friend_name):
         return jsonify([message.to_dict() for message in messages])
     else:
         return jsonify({"message": "No messages found"}), 200  # Consider returning an empty list with a 200 OK
+
+@api_blueprint.route('/leaderboard')
+@login_required
+def get_leaderboard():
+    """
+    Handles GET requests for the leaderboard. This will return a list of all users, sorted by score
+    :return: A list of all users, in json format
+    """
+    user_data_access = current_app.config.get('user_data_access')
+    resource_data_access = current_app.config.get('resource_data_access')
+
+    users = user_data_access.get_all_users()
+    scores = {}
+    for user in users:
+        recources = resource_data_access.get_resources(user.username)
+        user_score = sum([resource.amount for resource in recources])
+        scores[user.username] = user_score
+    # Sort users based on their scores stored in the scores dictionary
+    sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
+    # Get the top 3 users
+    top_three = sorted_users[:3]
+    # Get two friends (implementation depends on your data model)
+    friends_response = get_friends().json
+    friends = friends_response[:2]  # Assume the response is a list of usernames and we need the first two
+    # Ensure current user is included
+    friend_objects = [user_data_access.get_user(friend) for friend in friends]
+    leaderboard_users = top_three + friend_objects
+    for leaderboard_user in leaderboard_users:
+        if leaderboard_user.username == current_user.username:
+            break
+        leaderboard_users.append(current_user)
+    # Remove duplicates and create ranked list
+    unique_users = list({user.username: user for user in leaderboard_users}.values())
+    ranked_users = [{'place': i + 1, 'username': user.username, 'score': scores[user.username]}
+                    for i, user in enumerate(unique_users)]
+    return jsonify(ranked_users)
+
+@api_blueprint.route('/fetch-building-information', methods=['GET'])
+def fetch_building_information():
+    try:
+        building_data_access = current_app.config.get('building_data_access')
+        # Fetch building information based on username
+        buildings = building_data_access.get_buildings_by_username_owner(current_user.username)
+
+        # If no buildings found, return appropriate JSON response
+        if not buildings:
+            return jsonify({"status": "No buildings", "user": current_user.username})
+
+        # Construct the final JSON response
+        building_information = {}
+        for building in buildings:
+            building_info = {
+                "self_key": building.building_id,
+                "general_information": building.building_type,
+                "level": building.level,
+                "building_location": [building.x, building.y],
+                "tile_rel_locations": building.tile_rel_locations
+            }
+            building_information[building.building_id] = building_info
+
+        json_response = {
+            "building_information": building_information
+        }
+
+        return jsonify(json_response)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@api_blueprint.route('/fetch-building-information/<string:username>', methods=['GET'])
+@login_required
+def fetch_building_information_for_user(username):
+    """
+    Handles GET requests for fetching building information for a specific user.
+    :param username: The username of the user whose building information is being fetched.
+    :return: A JSON response containing the building information for the specified user.
+    """
+    try:
+        building_data_access = current_app.config.get('building_data_access')
+        # Fetch building information based on the username passed in the URL
+        buildings = building_data_access.get_buildings_by_username_owner(username)
+
+        # If no buildings found, return appropriate JSON response
+        if not buildings:
+            return jsonify({"status": "No buildings", "user": username}), 404
+
+        # Construct the final JSON response
+        building_information = {}
+        for building in buildings:
+            building_info = {
+                "self_key": building.building_id,
+                "general_information": building.building_type,
+                "level": building.level,
+                "building_location": [building.x, building.y],
+                "tile_rel_locations": building.tile_rel_locations
+            }
+            building_information[building.building_id] = building_info
+
+        json_response = {
+            "building_information": building_information
+        }
+
+        return jsonify(json_response)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500

@@ -1,0 +1,161 @@
+:root {
+    --background-img-width: 480px;
+}
+
+/*
+.test-popup {
+    width: 500px;
+    height: 650px;
+    position: absolute;
+    right: -510px;
+    opacity: 0;
+    transition: right 200ms, opacity  200ms;
+    top: 70px;
+    z-index: 10;
+}
+
+.test-popup.show {
+    right: 50px;
+    opacity: 1;
+}
+ */
+
+.test-popup {
+  width: 500px;
+  height: 650px;
+  position: absolute;
+  right: -510px;
+  opacity: 0;
+  transition: right 200ms, opacity 200ms;
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust centering based on the popup's height */
+  z-index: 10;
+  /* Adjust the min-top with JavaScript if needed */
+}
+
+.test-popup.show {
+  right: 50px;
+  opacity: 1;
+}
+
+
+#background-img {
+    position: absolute;
+    top: 10px;
+    width: calc(var(--background-img-width));
+    height: auto;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.close-button {
+    position: absolute;
+    width: calc(0.0957 * var(--background-img-width)); /* To make sure pixel size matches */
+    right: 0;
+}
+
+#close-button-pressed {
+    display: none;
+}
+
+.upgrade-button {
+    position: absolute;
+    width: calc(0.4787 * var(--background-img-width)); /* To make sure pixel size matches */
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+}
+
+#upgrade-button-pressed {
+    display: none;
+}
+
+#building-info-title {
+    width: 300px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 40px;
+    border: 0 solid black;
+    font-size: 1.3em;
+    text-align: center;
+    color: #8a5f5c;
+}
+
+#building-display-name {
+    width: 300px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 80px;
+    border: 0 solid black;
+    text-align: center;
+    color: #8a5f5c;
+}
+
+#building-explanation {
+    width: 450px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    padding: 0 30px;
+    transform: translateX(-50%);
+    top: 150px;
+    border: 0 solid black;
+    font-size: 12px;
+    text-align: left;
+    color: #8a5f5c;
+}
+
+#building-stats {
+    width: 450px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    padding-left: 30px;
+    transform: translateX(-50%);
+    bottom: 100px;
+    border: 0 solid black;
+    text-align: left;
+    color: #8a5f5c;
+    display: block;
+    font-size: 15px;
+}
+
+#building-stats li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+#building-stats {
+    list-style-type: none;
+}
+
+#building-upgrade-cost {
+    display: flex;
+    align-items: center;
+}
+
+#building-upgrade-cost p {
+    margin-bottom: 0;
+}
+
+#building-upgrade-cost img {
+    height: 20px;
+    top: 0;
+    margin-bottom: 0;
+    margin-left: 7px;
+}
+
+
+
+
+
+/*
+.test-popup img {
+    width: 100%;
+    height: auto;
+}
+*/

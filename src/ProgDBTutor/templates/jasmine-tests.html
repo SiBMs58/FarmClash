@@ -16,23 +16,22 @@
     <script src="https://cdn.jsdelivr.net/npm/jasmine-core@latest/lib/jasmine-core/boot0.js"></script>
     <!-- This will be added dynamically, and run the tests on button click -->
     <script src="https://cdn.jsdelivr.net/npm/jasmine-core@latest/lib/jasmine-core/boot1.js"></script>
+
     <!-- Source scripts -->
-    <script type="module" src="{{ url_for('static', filename='js/BaseMapKlasse.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/baseMap.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/buildingLayer.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/developerFunctions.js') }}"></script>
-    <!-- <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script> -->
     <script type="module" src="{{ url_for('static', filename='js/terrainLayer.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/ticker.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/userInputHandler.js') }}"></script>
+
     <!-- Test scripts -->
-    <script type="module" src="{{ url_for('static', filename='js/tests/BaseMapKlasse-tests.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/tests/basemap-tests.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/tests/buildinglayer-tests.js') }}"></script>
-    <!-- <script type="module" src="{{ url_for('static', filename='js/tests/canvas-tests.js') }}"></script> -->
-    <script type="module" src="{{ url_for('static', filename='js/tests/developerfunctions-tests.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/tests/terrainlayer-tests.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/tests/baseMap-tests.js') }}"></script>
+    <!--<script type="module" src="{{ url_for('static', filename='js/tests/buildingLayer-tests.js') }}"></script>-->
+    <script type="module" src="{{ url_for('static', filename='js/tests/developerFunctions-tests.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/tests/terrainLayer-tests.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/tests/ticker-tests.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/tests/userinputhandler-tests.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/tests/userInputHandler-tests.js') }}"></script>
 
 </head>
 <body>

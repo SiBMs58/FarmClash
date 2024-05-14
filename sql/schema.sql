@@ -17,19 +17,33 @@ CREATE TABLE farms (
 
 -- Buildings Table
 CREATE TABLE buildings (
-    building_id SERIAL PRIMARY KEY,
-    farm_id INT REFERENCES farms(farm_id),
+    building_id VARCHAR(255),
+    username_owner VARCHAR(255),
     building_type VARCHAR(255) NOT NULL,
     level INT DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    x INT NOT NULL,
+    y INT NOT NULL,
+    tile_rel_locations JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (username_owner, building_id),  -- Adding a primary key constraint
+    CONSTRAINT unique_building_username_building_id UNIQUE (username_owner, building_id) -- Adding a unique constraint
 );
+
 
 -- Crops Table
 CREATE TABLE crops (
     crop_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     growth_time INT NOT NULL, -- Time in hours
-    sell_price INT NOT NULL
+    sell_price INT NOT NULL  -- base sell price
+);
+
+-- Animal Table
+CREATE TABLE animals (
+    crop_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    growth_time INT NOT NULL, -- Time in hours
+    sell_price INT NOT NULL -- base sell price
 );
 
 -- Planted Crops Table to track crops planted on a farm
@@ -42,10 +56,12 @@ CREATE TABLE planted_crops (
 
 -- Market Table for dynamic pricing (Optional, depends on game mechanics)
 CREATE TABLE market (
-    market_id SERIAL PRIMARY KEY,
-    crop_id INT REFERENCES crops(crop_id),
+    crop_name VARCHAR(255) NOT NULL PRIMARY KEY,
     current_price INT NOT NULL,
-    last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    current_quantity_crop INT,
+    prev_quantity_crop INT,
+    last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_crop_name UNIQUE (crop_name)
 );
 
 -- Resources Table to track user resources like money, crops, etc.

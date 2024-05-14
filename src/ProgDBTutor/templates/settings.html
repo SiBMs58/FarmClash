@@ -7,9 +7,9 @@
 </head>
 <html lang="en">
 <body>
-    {% include 'logged_in_header.html' %} <!-- moet nog naar   'header&footer.html' worden veranderld -->
+    {% include 'header&footer.html' %}
 
-<div class="center-wrapper">
+    <div class="center-wrapper">
     <img src="../static/img/UI/Settings_tab.png">
 </div>
 
@@ -88,8 +88,5 @@
 
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
-
-
-    <!--{% include 'footer.html' %}-->
 </body>
 </html>
