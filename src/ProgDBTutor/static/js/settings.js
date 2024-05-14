@@ -1,7 +1,7 @@
 import  {soundManager} from './sound.js'
 
-//const zoomUpButton = document.getElementById("zoomUpButton");
-//const zoomDownButton = document.getElementById("zoomDownButton");
+const zoomUpButton = document.getElementById("zoomUpButton");
+const zoomDownButton = document.getElementById("zoomDownButton");
 
 const mutebutton = document.getElementById('mutebuttonimg');
 const backsoundButton = document.getElementById('backsoundimg');
@@ -103,11 +103,11 @@ function button(buttonType, img1) {
 }
 
 
-//export let muteState = localStorage.getItem('muteButtonState');
-//export let backsoundState = localStorage.getItem('backsoundButtonState') || "slider_off.png";
+export let muteState = localStorage.getItem('muteButtonState');
+export let backsoundState = localStorage.getItem('backsoundButtonState') || "slider_off.png";
 
-mutebutton.src = (localStorage.getItem('muteButtonState') === "sound_pbtn.png") ? "../static/img/UI/sound_pbtn.png" : "../static/img/UI/sound_btn.png";
-backsoundButton.src = (localStorage.getItem('backsoundButtonState') === "slider_on.png") ? "../static/img/UI/slider_on.png" : "../static/img/UI/slider_off.png";
+mutebutton.src = (muteState=== "sound_pbtn.png") ? "../static/img/UI/sound_pbtn.png" : "../static/img/UI/sound_btn.png";
+backsoundButton.src = (backsoundState === "slider_on.png") ? "../static/img/UI/slider_on.png" : "../static/img/UI/slider_off.png";
 
 
 /**
@@ -116,14 +116,15 @@ backsoundButton.src = (localStorage.getItem('backsoundButtonState') === "slider_
 mutebutton.addEventListener("click", function() {
     if (mutebutton.src.endsWith("sound_btn.png") && muteState === "sound_btn.png") {
         mutebutton.src = "../static/img/UI/sound_pbtn.png";
-        localStorage.setItem('muteButtonState', 'sound_pbtn.png');
+        muteState = 'sound_pbtn.png';
         soundManager.mute();
 
     } else {
         mutebutton.src = "../static/img/UI/sound_btn.png";
-        localStorage.setItem('muteButtonState', 'sound_btn.png');
+        muteState =  'sound_btn.png';
         soundManager.mute();
     }
+    localStorage.setItem('muteButtonState', muteState);
 
 });
 
@@ -134,14 +135,15 @@ mutebutton.addEventListener("click", function() {
 backsoundButton.addEventListener("click", function() {
     if (backsoundButton.src.endsWith("slider_off.png") && backsoundState === "slider_off.png") {
         backsoundButton.src = "../static/img/UI/slider_on.png";
-        localStorage.setItem('backsoundButtonState', "slider_on.png");
+        backsoundState =  "slider_on.png";
         soundManager.playBackgroundMusic();
 
     } else {
         backsoundButton.src = "../static/img/UI/slider_off.png";
-        localStorage.setItem('backsoundButtonState', "slider_off.png");
+        backsoundState = "slider_off.png";
         soundManager.stopBackgroundMusic();
     }
+     localStorage.setItem('backsoundButtonState',backsoundState  );
 
 });
 
