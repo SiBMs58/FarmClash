@@ -35,10 +35,10 @@ function updateStats(level) {
 function displayStats() {
     const statsContainer = document.getElementById("stats");
     const statsDivs = statsContainer.querySelectorAll('.stat');
-    let level = getAmountImage(LVL) + `<img src="../../img/UI/LVL.png" alt="LVL" title="Level" draggable="false">`;
-    let attack = getAmountImage(ATK) + `<img src="../../img/UI/ATK.png" alt="ATK" title="Attack Points" draggable="false">`;
-    let defense = getAmountImage(DEF) + `<img src="../../img/UI/DEF.png" alt="DEF" title="Defense Points" draggable="false">`;
-    let coins = getAmountImage(COINS) + `<img src="../../img/UI/COINS.png" alt="COINS" title="Coins" draggable="false">`;
+    let level = getAmountImage(LVL) + `<img src="../../static/img/UI/LVL.png" alt="LVL" title="Level" draggable="false">`;
+    let attack = getAmountImage(ATK) + `<img src="../../static/img/UI/ATK.png" alt="ATK" title="Attack Points" draggable="false">`;
+    let defense = getAmountImage(DEF) + `<img src="../../static/img/UI/DEF.png" alt="DEF" title="Defense Points" draggable="false">`;
+    let coins = getAmountImage(COINS) + `<img src="../../static/img/UI/COINS.png" alt="COINS" title="Coins" draggable="false">`;
 
     statsDivs[0].innerHTML = attack;
     statsDivs[1].innerHTML = defense;
@@ -51,9 +51,9 @@ function getAmountImage(amount) {
 
     const imgTags = amountStr.map(digit => {
         if (digit === '.') {
-            return `<img src="../../img/UI/dot.png" alt="dot" draggable="false">`;
+            return `<img src="../../static/img/UI/dot.png" alt="dot" draggable="false">`;
         }
-        return `<img src="../../img/UI/${digit}.png" alt="${digit}" draggable="false">`;
+        return `<img src="../../static/img/UI/${digit}.png" alt="${digit}" draggable="false">`;
     });
 
     return imgTags.join('');
@@ -61,10 +61,10 @@ function getAmountImage(amount) {
 function handleVisibilityChange() {
     if (document.hidden) {
         // If the page is hidden, change favicon to the sad one
-        document.getElementById('favicon').href = './../../img/ico/dead.ico';
+        document.getElementById('favicon').href = './../../static/img/ico/dead.ico';
     } else {
         // If the page is visible, change favicon to the base one
-        document.getElementById('favicon').href = './../../img/ico/happy.ico';
+        document.getElementById('favicon').href = './../../static/img/ico/happy.ico';
     }
 }
 

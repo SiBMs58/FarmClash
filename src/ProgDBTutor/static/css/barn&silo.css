@@ -1,3 +1,6 @@
+html {
+   cursor: url("../img/UI/cursor.png"), auto;
+}
 body {
     display: flex;
     flex-direction: column;

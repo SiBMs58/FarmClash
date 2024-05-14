@@ -44,7 +44,7 @@ def barn():
     Renders the barn view.
     :return:
     """
-    return render_template('silo.html', app_data=config_data)
+    return render_template('barn.html', app_data=config_data)
 
 @game_blueprint.route('/townhall')
 @login_required

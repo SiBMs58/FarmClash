@@ -235,6 +235,18 @@ async function sendResourceChange(quantity){
 
 
 //___________________________ Event Listeners ___________________________//
+function handleVisibilityChange() {
+    if (document.hidden) {
+        // If the page is hidden, change favicon to the sad one
+        document.getElementById('favicon').href = './../../static/img/ico/dead.ico';
+    } else {
+        // If the page is visible, change favicon to the base one
+        document.getElementById('favicon').href = './../../static/img/ico/happy.ico';
+    }
+}
+
+// Listen for visibility change events
+document.addEventListener('visibilitychange', handleVisibilityChange);
 
 function handleItemClick(event) {
     // Get the clicked item button
