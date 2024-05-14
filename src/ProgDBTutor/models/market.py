@@ -18,3 +18,4 @@ class Market:
             'prev_quantity_crop': self.prev_quantity_crop,
             'last_update': self.last_update
         }
+
