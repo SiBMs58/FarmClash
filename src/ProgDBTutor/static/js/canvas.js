@@ -1,7 +1,8 @@
 import { TerrainMap } from './terrainLayer.js'
-import { BuildingMap} from "./buildingLayer.js";
+import { BuildingMap } from "./buildingLayer.js";
+import { UICanvasLayer } from "./uiCanvasLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
-import { UserInputHandler} from "./userInputHandler.js";
+import { UserInputHandler } from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
 // Set on-screen tileSize-
@@ -11,12 +12,35 @@ export let tileSize = 50;
 const terrainCanvas = document.getElementById('terrainCanvas');
 const terrainCtx = terrainCanvas.getContext('2d');
 const mapData = generateRandomTerrainMap(50, 50);
-export let terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
+let terrainMap;
+if (window.friend) {
+    // If friendData is available, use it in the constructor
+    console.log("Friend data is available", window.friend);
+    terrainMap = new TerrainMap(mapData, tileSize, terrainCtx, window.friend);
+} else {
+    // If friendData is not available, omit it from the constructor
+    terrainMap = new TerrainMap(mapData, tileSize, terrainCtx);
+}
+console.log(terrainMap);
+
+// Create UI canvas
+const uiCanvas = document.getElementById('uiCanvas');
+const uiCtx = uiCanvas.getContext('2d');
+const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
 
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
-export let buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap);
+let buildingMap;
+if (window.friend) {
+    // If friendData is available, use it in the constructor
+    console.log("Friend data is available", window.friend);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer, window.friend);
+} else {
+    // If friendData is not available, omit it from the constructor
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
+}
+
 
 // Create ticker
 const ticker = new Ticker([terrainMap, buildingMap]);
@@ -36,6 +60,10 @@ function resizeCanvas() {
     buildingCanvas.width = window.innerWidth;
     buildingCanvas.height = window.innerHeight;
     buildingCtx.imageSmoothingEnabled = false;
+
+    uiCanvas.width = window.innerWidth;
+    uiCanvas.height = window.innerHeight;
+    uiCtx.imageSmoothingEnabled = false;
 
     try { // Redraw terrain after resizing
         terrainMap.drawTiles();
@@ -72,12 +100,7 @@ initializeGame().then(
 
 
 
-//export function updateTileSize(){
- //   tileSize +=  countZoom; // Adjust tileSize based on countZoom
- //   terrainMap.setTileSize(tileSize);
-  //  buildingMap.setTileSize(tileSize);
 
-//}
 
 
 
@@ -135,5 +158,5 @@ function updateZoom() {
 }
 });
 
-// Event listeners for zooming
+
 

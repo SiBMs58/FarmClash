@@ -1,4 +1,5 @@
 import { tileSize } from './canvas.js'
+import {closePopup, openPopup, togglePopup} from './buildingPopup.js'
 
 export class UserInputHandler {
     /**
@@ -20,35 +21,60 @@ export class UserInputHandler {
 
 
         // ———————————————————
-        // Add event listeners:
+        // Add event listeners: //
 
         document.addEventListener('keydown', (event) => {
             this.handleKeyDown(event);
         });
+        /*
+        document.getElementById("canvasContainer").addEventListener('contextmenu', function(event) {
+            event.preventDefault(); // Prevents the default context menu from showing
+            console.log('Right click on canvas detected.');
+
+            openPopup();
+
+            return false; // Some browsers may require this to prevent the default context menu
+        });
+*/
         // To check whether to register click or drag
         let clickStartPosition = null;
-        document.addEventListener('mousedown', (event) => {
-            clickStartPosition = { x: event.clientX - rect.left, y: event.clientY - rect.top};
-            this.handleScrollInput(event);
-        });
-        document.addEventListener('mouseup', (event) => {
-            this.handleScrollInput(event);
-
-            if (clickStartPosition !== null) {
-                const dx = Math.abs((event.clientX - rect.left) - clickStartPosition.x);
-                const dy = Math.abs((event.clientY - rect.top) - clickStartPosition.y);
-
-                const threshold = 5; // Adjust as needed
-
-                if (dx > threshold || dy > threshold) {
-                    clickStartPosition = null;
-                    return;
-                }
-
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-                this.handleClickInput(x, y);
+        document.getElementById("canvasContainer").addEventListener('mousedown', (event) => {
+            switch(event.button) {
+                case 0:
+                    clickStartPosition = { x: event.clientX - rect.left, y: event.clientY - rect.top};
+                    this.handleScrollInput(event);
+                    closePopup();
+                    break;
+                case 2:
+                    break;
             }
+
+        });
+        document.getElementById("canvasContainer").addEventListener('mouseup', (event) => {
+            switch (event.button) {
+                case 0:
+                    this.handleScrollInput(event);
+
+                    if (clickStartPosition !== null) {
+                        const dx = Math.abs((event.clientX - rect.left) - clickStartPosition.x);
+                        const dy = Math.abs((event.clientY - rect.top) - clickStartPosition.y);
+
+                        const threshold = 5; // Adjust as needed
+
+                        if (dx > threshold || dy > threshold) {
+                            clickStartPosition = null;
+                            return;
+                        }
+
+                        const x = event.clientX - rect.left;
+                        const y = event.clientY - rect.top;
+                        this.handleClickInput(x, y);
+                    }
+                    break;
+                case 2:
+                    this.handleRightClickInput(event.clientX, event.clientY);
+            }
+
         });
         document.addEventListener('mousemove', (event) => {
             this.handleScrollInput(event);
@@ -108,6 +134,9 @@ export class UserInputHandler {
                 break;
             case 'Escape':
                 // todo move van gebouw cancelen als je het aan het verplaatsen bent
+                break;
+            case 'o':
+                togglePopup();
                 break;
             default:
                 // Optional: handle any other keys
@@ -175,10 +204,18 @@ export class UserInputHandler {
 
         // normal click order execution
         for (const currClass of this.classes) {
-            if (currClass.handleClick(x,y) === true) {
+            if (typeof currClass.handleClick === 'function' && currClass.handleClick(x,y) === true) {
                 if (currClass.ownNextClick) {
                     this.priorityClickClass = currClass;
                 }
+                break;
+            }
+        }
+    }
+
+    handleRightClickInput(x, y) {
+        for (const currClass of this.classes) {
+            if (typeof currClass.handleRightClick === 'function' && currClass.handleRightClick(x,y) === true) {
                 break;
             }
         }

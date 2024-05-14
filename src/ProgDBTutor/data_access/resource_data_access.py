@@ -17,6 +17,19 @@ class ResourceDataAccess:
             resources.append(Resource(row['resource_id'], row['owner'], row['type'], row['quantity']))
         return resources
 
+    def get_all_resources(self):
+        """
+        Get all resources
+        :return: An list of resources objects
+        """
+        cursor = self.db_connection.get_cursor()
+        cursor.execute('SELECT * FROM resources')
+        rows = cursor.fetchall()
+        resources = []
+        for row in rows:
+            resources.append(Resource(row['resource_id'], row['owner'], row['type'], row['quantity']))
+        return resources
+
     def add_resource(self, resource):
         """
         Add resource to the db
