@@ -1,16 +1,20 @@
 from data_access.user_data_access import UserDataAccess
 from data_access.map_data_access import MapDataAccess
 from data_access.resource_data_access import ResourceDataAccess
+from data_access.building_data_access import BuildingDataAccess
+from flask import current_app
 from models.map import Map
+from models.building import Building
 from models.tile import Tile
 from models.resource import Resource
 from services.map_creator import generate_map
-
-from src.ProgDBTutor.models.building import Building
+import json
+import os
 
 
 class GameServices:
-    def __init__(self, user_data_access, map_data_access, tile_data_access, resource_data_access,building_data_access):
+    def __init__(self, user_data_access, map_data_access, tile_data_access, resource_data_access,
+                 building_data_access):
         self.user_data_access = user_data_access
         self.map_data_access = map_data_access
         self.tile_data_access = tile_data_access
@@ -28,7 +32,7 @@ class GameServices:
         terrain_tiles = generate_map()
 
         self.map_data_access.add_map(Map(None, username, len(terrain_tiles[0]), len(terrain_tiles)))
-        map = self.map_data_access.get_map_by_username_owner(username)  # TODO: Currently we just get the first map
+        map = self.map_data_access.get_map_by_username_owner(username)
         for row in range(len(terrain_tiles)):
             for col in range(len(terrain_tiles[row])):
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
@@ -36,10 +40,23 @@ class GameServices:
         self.create_building_map(username, terrain_tiles)
 
     def create_building_map(self, username, terrain_map):
-        self.building_data_access.add_building(Building("bay", username, "Bay", x=0, y=15, level=0))
-        self.building_data_access.add_building(Building("townhall", username, "Townhall", x=6, y=15, level=0))
-        self.building_data_access.add_building(Building("barn", username, "Barn", x=4, y=10, level=1)) #TODO position
-        self.building_data_access.add_building(Building("silo", username, "Silo", x=21, y=6, level=1)) #TODO position
+        # Construct the file path relative to the script directory
+        file_path = os.path.join(current_app.root_path, "static", "img", "assets", "relativeLocation.json")
+
+        data = {}
+        with open(file_path) as f:
+            data = json.load(f)
+
+        self.building_data_access.add_building(
+            Building("bay", username, "Bay", y=0, x=15, level=0, tile_rel_locations=json.dumps(data["Bay.L1.F1"])))
+        self.building_data_access.add_building(Building("townhall", username, "Townhall", y=6, x=15, level=0,
+                                                        tile_rel_locations=json.dumps(data["Townhall.L0"])))
+        self.building_data_access.add_building(Building("barn", username, "Barn", y=4, x=10, level=1,
+                                                        tile_rel_locations=json.dumps(
+                                                            data["Barn.L1"])))  # TODO position
+        self.building_data_access.add_building(Building("silo", username, "Silo", y=6, x=21, level=1,
+                                                        tile_rel_locations=json.dumps(
+                                                            data["Silo.L1.0%"])))  # TODO position
 
         # concatenate name with counter for building_id
         fenceCounter = 0
