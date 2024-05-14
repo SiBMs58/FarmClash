@@ -23,8 +23,9 @@ CREATE TABLE buildings (
     level INT DEFAULT 1,
     x INT NOT NULL,
     y INT NOT NULL,
-    tile_rel_locations JSONB,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tile_rel_locations JSONB, --TODO These are same for all users so read it from the static/img/assets/relativeLocation.json file instead
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --TODO can be removed as all buildings are created at authentication time
+    augment_level INT DEFAULT 0,
     PRIMARY KEY (username_owner, building_id),  -- Adding a primary key constraint
     CONSTRAINT unique_building_username_building_id UNIQUE (username_owner, building_id) -- Adding a unique constraint
 );
@@ -40,18 +41,19 @@ CREATE TABLE crops (
 
 -- Animal Table
 CREATE TABLE animals (
-    crop_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    growth_time INT NOT NULL, -- Time in hours
-    sell_price INT NOT NULL -- base sell price
+    owner VARCHAR(255) REFERENCES users(username),
+    species VARCHAR(255) NOT NULL,
+    amount INT NOT NULL,
+    last_idle_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (owner,species)
 );
 
 -- Planted Crops Table to track crops planted on a farm
 CREATE TABLE planted_crops (
-    planted_crop_id SERIAL PRIMARY KEY,
-    crop_id INT REFERENCES crops(crop_id),
-    farm_id INT REFERENCES farms(farm_id),
-    harvest_time TIMESTAMP NOT NULL
+    planted_crop_id SERIAL PRIMARY KEY,    -- TODO can be changed to string which if type of of resource crop ( e.g Carrot, Wheat ...)
+    crop_id INT REFERENCES crops(crop_id), -- TODO can be removed as we have infinite seeds
+    farm_id INT REFERENCES farms(farm_id), -- TODO have a building id and username that refer to which field it is planted on MAYBE
+    harvest_time TIMESTAMP NOT NULL --TODO change to start_time, duration can be derived from type of crop
 );
 
 -- Market Table for dynamic pricing (Optional, depends on game mechanics)
@@ -73,7 +75,7 @@ CREATE TABLE resources (
 );
 
 -- Attacks Table (If implementing the attack feature)
-CREATE TABLE attacks (
+CREATE TABLE attacks ( -- TODO dont really need this table as Attack is just a function and doesnt require idleness and doesnt need to be stored unless we want to show the history of attacks
     attack_id SERIAL PRIMARY KEY,
     attacker_farm_id INT REFERENCES farms(farm_id),
     defender_farm_id INT REFERENCES farms(farm_id),
@@ -116,4 +118,26 @@ CREATE TABLE map_tiles (
     terrain_type VARCHAR(255) NOT NULL, -- e.g., Grassland, Forest, Water
     occupant_id INT, -- Optional, to link to whatever occupies the tile (a building, resource, etc.)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- explorations Table to track user ongoing explorations.
+CREATE TABLE explorations (
+    owner VARCHAR(255) PRIMARY KEY REFERENCES users(username),
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    duration INT NOT NULL  , -- in minutes
+    chickens INT,
+    goats INT,
+    pigs INT,
+    cows INT,
+    -- the exploration level refers to the building level and augment level to the buildings augment level, but this needs to be stored as building levels can change during exploration
+    exploration_level INT,
+    augment_level INT,
+    -- refetching the exploration from database can regenerate the actual rewarded items but the amount of surviving animals and crates should be constant
+    surviving_goats INT,
+    rewards_of_goats INT,
+    surviving_chickens INT,
+    surviving_pigs INT,
+    surviving_cows INT,
+    rewards_of_cows INT,
+    base_rewards INT
 );

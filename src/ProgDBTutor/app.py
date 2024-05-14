@@ -11,7 +11,10 @@ from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
 from data_access.friendship_data_access import FriendshipDataAccess
 from data_access.chatmessage_data_access import ChatMessageDataAccess
+from data_access.exploration_data_access import ExplorationDataAccess
+from data_access.animal_data_access import AnimalDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
+from views.exploration import exploration_blueprint
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
@@ -19,7 +22,6 @@ from views.friends import friends_blueprint
 from views.market import market_blueprint
 from models.user import User
 from models.building import Building
-from extensions import login_manager
 
 # Initialize the Flask application
 app = Flask('FarmClash')
@@ -46,6 +48,10 @@ market_data_access = MarketDataAccess(connection)
 app.config['market_data_access'] = market_data_access
 crops_data_access = CropsDataAccess(connection)
 app.config['crops_data_access'] = crops_data_access
+exploration_data_access = ExplorationDataAccess(connection)
+app.config['exploration_data_access'] = exploration_data_access
+animal_data_access = AnimalDataAccess(connection)
+app.config['animal_data_access'] = animal_data_access
 
 
 # Insert the admin user
@@ -62,6 +68,7 @@ app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
+app.register_blueprint(exploration_blueprint, url_prefix='/exploration')
 
 DEBUG = True
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -149,3 +156,6 @@ def inject_base_url():
 # RUN DEV SERVER
 if __name__ == "__main__":
     app.run(HOST, debug=DEBUG)
+
+
+
