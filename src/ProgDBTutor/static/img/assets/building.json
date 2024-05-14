@@ -1,0 +1,223 @@
+{
+  "comment": "if UI has a value make sure the popup has a button to display that ui (img/UI/view_btn).    if augmentation is has a list then starting from 100 coins (and increasing per augment), you can increase the building's stats with this amount. (img/UI/augment_btn & img/UI/augment_pbtn)",
+
+  "Townhall": {
+    "description": "Welcome to the Farm Hall, the heart of your farm's progress! It determines your user level, unlocks crops, and reveals more of the map. Fortify it for defense and research for attack levels. Upgrading boosts defense and attack. In here you can keep track of your farm information" ,
+    "costs": {
+      "L1": [[50,"Money"]],
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "game.townhall",
+    "augmentation": [[20,"AP"],[5,"DP"]]
+  },
+
+
+  "Barn": {
+    "description": "This is where you store animal products and raw materials. Keep track of your resources here and upgrade to expand its capacity.",
+    "costs":{
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "game.barn",
+    "augmentation": [[10,"Limit"],[5,"DP"]]
+  },
+
+
+  "Silo": {
+    "description": "This is where you store your crops. Keep track of your crops here and upgrade to expand its capacity.",
+    "costs":{
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "game.silo",
+    "augmentation": [[10,"Limit"],[5,"DP"]]
+  },
+
+
+  "Bay": {
+    "description": "Welcome to the Bunny Bay! This is where your explorations begin and where you claim found treasures. The bunny of the bay will embark on explorations with the animals you select for a duration of your choosing.",
+    "costs":{
+      "L1": [[200,"Money"]],
+      "L2": [[500,"Money"]],
+      "L3": [[100,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[40000,"Money"],[500,""]]
+    },
+    "ui": "exploration.exploration",
+    "augmentation": [[0.1,"risk"],[10,"AP"],[5,"DP"]]
+  },
+
+
+  "Chickencoop": {
+    "description": "This cozy 'Cluck' Cabin is the perfect home for your feathered friends. It's not just an egg production facility but also a hub for breeding chickens. Upgrade the coop to boost egg production and expand the flock size",
+    "costs": {
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "",
+    "augmentation": [[15,"DP"]],
+    "comment": "each chicken owned increases the AP"
+  },
+
+
+  "Cowbarn": {
+    "description": "Welcome to your 'Moo' Manor! This spacious abode is home to your beloved cows and serves as your milk production center. Upgrade the barn to increase milk production and the herd size.",
+    "costs": {
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "",
+    "augmentation": [[5,"AP"],[10,"DP"]],
+    "comment": "each cow owned increases the AP"
+  },
+
+
+  "Goatbarn": {
+    "description": "Step into the charming 'Baa Baa' Barn, where wool production meets goat breeding! Upgrade the barn to enhance wool production and expand the herd size.",
+    "costs": {
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "",
+    "augmentation": [[15,"AP"]],
+    "comment": "each goat owned increases the AP"
+  },
+
+
+  "Pigpen": {
+    "description": "Let's take a look at the 'Oinker' Oasis, where our porcine pals live in luxury and sniff out savory truffles! Upgrade the oasis to increase truffle production and expand your pack size.",
+    "costs": {
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "",
+    "augmentation": [[10,"AP"],[5,"DP"]],
+    "comment": "each pig owned increases the AP"
+  },
+
+
+  "Field": {
+    "description": "Welcome to the Harvest Haven. This fertile soil is used as a canvas for planting and cultivating a bountiful harvest. Upgrading the field enhances the crop yield",
+    "costs": {
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "",
+    "augmentation": false
+  },
+
+
+  "Harvesthopper": {
+    "description": "Meet the Harvest Hopper, your trusty farming companion! With a hop and a skip, the energetic rabbit is always ready to lend a helping paw in the fields whilst you are gone. Upgrading allows the hopper to harvest more crops.",
+    "costs": {
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "",
+    "augmentation": false
+  },
+
+
+  "Fence": {
+    "description": "Not just a barrier for defense, but also a charming addition to your surroundings. Upgrade your fence to enhance your defense capabilities and beautify your farm with decorative flair.",
+    "costs": {
+      "L2": [[100,"Money"]],
+      "L3": [[800,"Money"],[150,""]],
+      "L4": [[2000,"Money"],[200,""]],
+      "L5": [[5000,"Money"],[250,""]],
+      "L6": [[10000,"Money"],[300,""]],
+      "L7": [[20000,"Money"],[350,""]],
+      "L8": [[40000,"Money"],[400,""]],
+      "L9": [[80000,"Money"],[450,""]],
+      "L10":[[160000,"Money"],[500,""]]
+    },
+    "ui": "",
+    "augmentation": [[25,"DP"]]
+  },
+
+
+  "Tree": {
+    "description": "This is just a tree."
+  },
+  "AppleTree": {
+    "description": "This is just a tree, but also a charming one with apples"
+  },
+  "OrangeTree": {
+    "description": "This is just a tree, but also a charming one with oranges"
+  },
+  "PearTree": {
+    "description": "This is just a tree, but also a charming one with pears"
+  },
+  "PeachTree": {
+    "description": "This is just a tree, but also a charming one with peaches"
+  }
+}
