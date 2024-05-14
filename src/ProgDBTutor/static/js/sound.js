@@ -4,8 +4,8 @@
 
 
 
-import {backsoundState} from './settings.js';
-import {muteState} from './settings.js';
+//import {backsoundState} from './settings.js';
+//import {muteState} from './settings.js';
 
 class GameSoundManager {
     constructor() {
@@ -34,7 +34,7 @@ class GameSoundManager {
             this.soundButtons.push(soundButton);
 
             buttonElement.addEventListener('click', () => {
-                if (muteState==="sound_btn.png"/* !this.muted)*/) {
+                if ( localStorage.getItem('muteButtonState')==="sound_btn.png"/* !this.muted)*/) {
                     sound.play();
                 }
             });
@@ -63,13 +63,13 @@ class GameSoundManager {
     }
 
     playBackgroundMusic() {
-        if (backsoundState === "slider_on.png" && muteState==="sound_btn.png" ) {
+        if (localStorage.getItem('backsoundButtonState') === "slider_on.png" &&  localStorage.getItem('muteButtonState') ==="sound_btn.png" ) {
             this.backgroundMusic.play();
         }
     }
 
     stopBackgroundMusic() {
-        if (backsoundState === "slider_off.png" ) {
+        if (localStorage.getItem('backsoundButtonState') === "slider_off.png" ) {
             this.backgroundMusic.pause();
             this.backgroundMusic.currentTime = 0; // Reset the playback position to the beginning
         }
@@ -80,10 +80,10 @@ class GameSoundManager {
     const muteSound = new Audio("/static/music/discord-notification.mp3");
     muteSound.play();
 
-    if (muteState==="sound_pbtn.png") {
+    if ( localStorage.getItem('muteButtonState')==="sound_pbtn.png") {
         this.setVolume(0);
     } else {
-        if(backsoundState === "slider_on.png"){
+        if(localStorage.getItem('backsoundButtonState') === "slider_on.png"){
             this.playBackgroundMusic();
             this.setVolume(this.volume);
         }else {
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
     soundManager.setBackgroundMusic("/static/music/Peach.mp3");
 
 
-    if (backsoundState === "slider_on.png"  && muteState==="sound_btn.png") {
+    if (localStorage.getItem('backsoundButtonState') === "slider_on.png"  &&  localStorage.getItem('muteButtonState') ==="sound_btn.png") {
       soundManager.playBackgroundMusic();
         this.backgroundMusic = true;
     } else {
