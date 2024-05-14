@@ -111,9 +111,9 @@ function stopAction() {
 
 // This action is called after you press on the sell button
 // it will also notify the database with the changes
-function sell() {
+async function sell() {
     document.getElementById('sell-image').src = '../../static/img/UI/sell_pbtn.png';
-    setTimeout(() => {
+    setTimeout(async () => {
         // Revert button image to default variant
         document.getElementById('sell-image').src = '../../static/img/UI/sell_btn.png';
 
@@ -125,10 +125,11 @@ function sell() {
         let soldMessage = "Sold:";
         let anySold = false;
 
-        quantitiesArray.forEach((quantity, index) => {
+        for (let index = 0; index < quantitiesArray.length; index++) {
+            let quantity = quantitiesArray[index];
             if (quantity !== 0) {
-                let cropPrice = market.prices[index];
                 let cropName = market.crops[index];
+                let cropPrice = await fetchCropPricesFromAPI(cropName, market.prices[index]);
                 let cropTotalPrice = cropPrice * quantity;
 
                 totalSalePrice += cropTotalPrice;
@@ -142,14 +143,16 @@ function sell() {
                 // Reset the input value
                 inputValues[index].value = 0;
 
-                updateSale(cropName, quantity, cropPrice)
+                await updateSale(cropName, quantity, cropPrice);
+                await updateResources(cropName, -quantity);
+                await updateResources("Money", totalSalePrice);
 
                 //TODO update database entry
                 // on resource table of user and market.crops[index] with new market.quantities
                 // on market table with quantities sold (and current timestamp?)
                 // on resource table of user and "Money" with +cropTotalPrice
             }
-        });
+        }
 
         if (anySold) {
             soldMessage += `\nTotal Sale Price: $${totalSalePrice}`;
@@ -158,8 +161,8 @@ function sell() {
             alert("No market sold.");
         }
     }, 100);
-
 }
+
 
 
 // used for displaying things on the screen
@@ -215,6 +218,33 @@ async function updateSale(crop, count, base_price) {
             console.error('market_data DB update failed with status:', response.status);
         }
     } catch (error) {
-        console.error('Failed to update map in database:', error);
+        console.error('Failed to update market in database:', error);
+    }
+}
+
+async function updateResources(resource, count) {
+    const resources = {
+        [resource]: count // Use the resource as the key and the count as the value
+    };
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = `${BASE_URL}/api/add-resources`;
+
+    try {
+        const response = await fetch(fetchLink, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(resources) // Send the serialized resource data as the request body
+        });
+
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('Resources DB update successful:', jsonResponse);
+        } else {
+            console.error('Add-resources DB update failed with status:', response.status);
+        }
+    } catch (error) {
+        console.error('Failed to update resources:', error);
     }
 }
