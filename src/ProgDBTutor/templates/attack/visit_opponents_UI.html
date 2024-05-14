@@ -15,7 +15,7 @@
             </div>
         </div>
         <button id="attack-btn" class="attack-btn" style="bottom: auto; top: 10px;">
-            <a href="{{ url_for('game.game') }}">
+            <a href="{{ url_for('attack.attack_animation') }}">
                 <img src="../../static/img/UI/attack_btn.png" alt="⚔️">
             </a>
         </button>
@@ -32,7 +32,12 @@
             resourceButton.querySelector('img').src = clickedResourceButton ? "../../static/img/UI/resource_btn.png" : "../../static/img/UI/resource_pbtn.png";
             clickedResourceButton = !clickedResourceButton;
 
-            fetch('/api/resources/{{ friend.username }}')
+            // Access the script tag
+            const scriptTag = document.getElementById('dataScript');
+            // Get the opponent's username stored in the data-opponent attribute
+            const opponentUsername = scriptTag.getAttribute('data-opponent');
+            console.log(opponentUsername);
+            fetch(`/api/resources/${opponentUsername}`)
             .then(response => response.json())
             .then(data => {
                 updateResources(data);
@@ -79,12 +84,15 @@
     </script>
 
     <footer style="display: flex; justify-content: space-between; align-items: end;">
-         <a href="{{ url_for('friends.dashboard') }}" style="margin: 10px">
+        <a href="{{ url_for('game.game') }}" style="margin: 10px">
                 <img src="../../static/img/UI/back_btn.png" alt="🏡">
         </a>
         <div class="copyright" style="left: auto; right: 10px; transform: none; margin: 10px;">
             &copy; Team3 – Universiteit Antwerpen - PPDB
         </div>
+        <a href="{{ url_for('attack.visit_opponent') }}" style="margin: 10px">
+                <img src="../../static/img/UI/right_btn.png" alt="⚔️">
+        </a>
     </footer>
 
 </body>
