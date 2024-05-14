@@ -3,12 +3,15 @@ from data_access.map_data_access import MapDataAccess
 from data_access.resource_data_access import ResourceDataAccess
 from data_access.animal_data_access import AnimalDataAccess
 from data_access.building_data_access import BuildingDataAccess
+from flask import current_app
 from models.map import Map
 from models.building import Building
 from models.animal import Animal
 from models.tile import Tile
 from models.resource import Resource
 from services.map_creator import generate_map
+import json
+import os
 
 
 class GameServices:
@@ -40,10 +43,23 @@ class GameServices:
         self.create_building_map(username, terrain_tiles)
 
     def create_building_map(self, username, terrain_map):
-        self.building_data_access.add_building(Building("bay", username, "Bay", x=0, y=15, level=0))
-        self.building_data_access.add_building(Building("townhall", username, "Townhall", x=6, y=15, level=0))
-        self.building_data_access.add_building(Building("barn", username, "Barn", x=4, y=10, level=1)) #TODO position
-        self.building_data_access.add_building(Building("silo", username, "Silo", x=21, y=6, level=1)) #TODO position
+        # Construct the file path relative to the script directory
+        file_path = os.path.join(current_app.root_path, "static", "img", "assets", "relativeLocation.json")
+
+        data = {}
+        with open(file_path) as f:
+            data = json.load(f)
+
+        self.building_data_access.add_building(
+            Building("bay", username, "Bay", y=0, x=15, level=0, tile_rel_locations=json.dumps(data["Bay.L1.F1"])))
+        self.building_data_access.add_building(Building("townhall", username, "Townhall", y=6, x=15, level=0,
+                                                        tile_rel_locations=json.dumps(data["Townhall.L0"])))
+        self.building_data_access.add_building(Building("barn", username, "Barn", y=4, x=10, level=1,
+                                                        tile_rel_locations=json.dumps(
+                                                            data["Barn.L1"])))  # TODO position
+        self.building_data_access.add_building(Building("silo", username, "Silo", y=6, x=21, level=1,
+                                                        tile_rel_locations=json.dumps(
+                                                            data["Silo.L1.0%"])))  # TODO position
 
         # concatenate name with counter for building_id
         fenceCounter = 0
