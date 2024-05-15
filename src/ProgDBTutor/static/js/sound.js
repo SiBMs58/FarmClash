@@ -2,10 +2,6 @@
 //TODO: documentatie
 
 
-
-//import {backsoundState} from './settings.js';
-//import {muteState} from './settings.js';
-
 class GameSoundManager {
     constructor() {
         this.soundButtons = [];
