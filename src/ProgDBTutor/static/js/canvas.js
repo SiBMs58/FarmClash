@@ -1,9 +1,9 @@
-import { TerrainMap } from './terrainLayer.js'
-import { BuildingMap } from "./buildingLayer.js";
-import { UICanvasLayer } from "./uiCanvasLayer.js";
-import { generateRandomTerrainMap } from './developerFunctions.js'
-import { UserInputHandler } from "./userInputHandler.js";
-import { Ticker } from './ticker.js'
+import {TerrainMap} from './terrainLayer.js'
+import {BuildingMap} from "./buildingLayer.js";
+import {UICanvasLayer} from "./uiCanvasLayer.js";
+import {generateRandomTerrainMap} from './developerFunctions.js'
+import {UserInputHandler} from "./userInputHandler.js";
+import {Ticker} from './ticker.js'
 
 // Set on-screen tileSize-
 // Function to safely get zoom size from local storage
@@ -24,7 +24,6 @@ function getZoomSize() {
 
 // Set on-screen tileSize, default to 50 if zoom size is not set
 export let tileSize = getZoomSize();
-
 
 
 // Create terrain map
@@ -115,10 +114,3 @@ async function initializeGame() {
 initializeGame().then(
     // Add code that is dependent on initialisation
 );
-
-
-
-
-
-
-

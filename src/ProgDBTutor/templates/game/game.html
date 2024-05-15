@@ -84,33 +84,33 @@
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
 
     <script>
-    let localStorageItem = false;
-    let consoleLog = false;
+        let localStorageItem = false;
+        let consoleLog = false;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        if (localStorage.getItem('gameData') === 'true') {
-            localStorageItem = true;
-        }
-        checkConditions();
-    });
-
-    (function() {
-        const originalLog = console.log;
-        console.log = function(message) {
-            if (message === 'fetchBuildingLayerList() success') {
-                consoleLog = true;
-                checkConditions();
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('gameData') === 'true') {
+                localStorageItem = true;
             }
-            originalLog.apply(console, arguments);
-        };
-    })();
+            checkConditions();
+        });
 
-    function checkConditions() {
-        if (localStorageItem && consoleLog) {
-            document.getElementById('loadingScreen').classList.add('hidden');
+        (function() {
+            const originalLog = console.log;
+            console.log = function(message) {
+                if (message === 'fetchBuildingLayerList() success') {
+                    consoleLog = true;
+                    checkConditions();
+                }
+                originalLog.apply(console, arguments);
+            };
+        })();
+
+        function checkConditions() {
+            if (localStorageItem && consoleLog) {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }
         }
-    }
-</script>
+    </script>
 
 
 
