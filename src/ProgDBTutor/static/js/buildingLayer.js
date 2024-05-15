@@ -114,6 +114,7 @@ export const defaultMapData2 = {
                 [[1, 0], "Fence.L10.NZ"],
             ]
         },
+        /*
         chicken_coop: {
             self_key: "chicken_coop",
             general_information: "chicken_house",
@@ -127,9 +128,18 @@ export const defaultMapData2 = {
                 [[2, 0], "Chickencoop.3.1"],
                 [[2, 1], "Chickencoop.3.2"],
             ]
+        },
+         */
+        field1: {
+            self_key: "field1",
+            general_information: "field",
+            level: 1,
+            building_location: [5, 5],
+            tile_rel_locations: [
+                [[0,0], "Field.L1.N,O,Z,W,"]
+            ]
         }
     },
-
     building_general_information: {
         chicken_house: {
             display_name: "Chicken House", // Name to be displayed in the popup
@@ -149,6 +159,12 @@ export const defaultMapData2 = {
         tree: {
             display_name: "Tree",
             explanation: "This is just a tree."
+        },
+        field: {
+            display_name: "field",
+            explanation: "This is a field.",
+            upgrade_costs: [500, 1000, 2000, 3500],
+            other_stats: [["Defence", [50, 100, 150, 200, 400]]]
         }
     }
 }
@@ -197,6 +213,18 @@ export class BuildingMap extends BaseMap {
     }
 
     /**
+     * Initialises the building layer. Fetches everything that needs to be fetched from the server, and stores it.
+     */
+    async initialize() {
+        await this.fetchBuildingAssetList();
+        //await this.fetchBuildingMapData();
+        this.tiles = this.generateBuildingTileMap();
+        await new Promise((resolve) => this.preloadBuildingAssets(resolve));
+        // Safe to call stuff here
+        console.log("debug");
+    }
+
+        /**
      * Looks like:
      * [["None"  ,     "None"         ,["Fence.1.1", fence5], "None"],
      * ["None"  ,["Fence.1.2", fence6],       "None"        , "None],
@@ -233,24 +261,11 @@ export class BuildingMap extends BaseMap {
     }
 
     /**
-     * Initialises the building layer. Fetches everything that needs to be fetched from the server, and stores it.
-     */
-    async initialize() {
-        await this.fetchBuildingAssetList();
-        await this.fetchBuildingMapData();
-        this.tiles = this.generateBuildingTileMap();
-        await new Promise((resolve) => this.preloadBuildingAssets(resolve));
-        // Safe to call stuff here
-        //debugger;
-        console.log("debug");
-    }
-
-    /**
      * Fetches the 'assetList.json' which is used to later fetch the right assets.
      */
     async fetchBuildingAssetList() {
         try {
-            const response = await fetch('/static/img/assets/assetList.json');
+            const response = await fetch('/static/img/assets/assetList2.json');
             const responseJson = await response.json();
             this.buildingAssetList = responseJson.buildings;
         } catch (error) {
@@ -436,6 +451,7 @@ export class BuildingMap extends BaseMap {
             if (!Object.hasOwnProperty.call(this.buildingInformation, buildingKey)) {
                 continue;
             }
+            debugger;
             const currBuilding = this.buildingInformation[buildingKey];
 
             this.drawBuilding(currBuilding);

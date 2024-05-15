@@ -4,7 +4,7 @@
  * Toggles the pop-up. When pop-up is showing this function will hide it and vice-versa.
  */
 export function togglePopup() {
-    const popup = document.querySelector('.test-popup');
+    const popup = document.querySelector('.information-popup');
     popup.classList.toggle('show');
 }
 
@@ -39,7 +39,7 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
  * @param buildingName The unique name of the building.
  */
 export function actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName) {
-    const popup = document.querySelector('.test-popup');
+    const popup = document.querySelector('.information-popup');
 
     // Set all the right text elements
     const building = buildingInformation[buildingName];
@@ -81,7 +81,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
  * Closes the pop-up
  */
 export function closePopup() {
-    const popup = document.querySelector('.test-popup');
+    const popup = document.querySelector('.information-popup');
     popup.classList.remove('show');
     isPopupOpen = false;
 }
@@ -139,7 +139,7 @@ upgradeButtonPressed.addEventListener('mouseleave', releaseUpgradeButton);
  * Correctly adjusts the position of the pop-up relative to the screen size.
  */
 function adjustPopupPosition() {
-  const popup = document.querySelector('.test-popup');
+  const popup = document.querySelector('.information-popup');
   if (!popup) return;
 
   const viewportHeight = window.innerHeight;

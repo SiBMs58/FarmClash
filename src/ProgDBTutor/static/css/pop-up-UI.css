@@ -20,7 +20,7 @@
 }
  */
 
-.test-popup {
+.information-popup {
   width: 500px;
   height: 650px;
   position: absolute;
@@ -33,7 +33,7 @@
   /* Adjust the min-top with JavaScript if needed */
 }
 
-.test-popup.show {
+.information-popup.show {
   right: 50px;
   opacity: 1;
 }
@@ -150,12 +150,5 @@
 }
 
 
+/* Crop selector */
 
-
-
-/*
-.test-popup img {
-    width: 100%;
-    height: auto;
-}
-*/
