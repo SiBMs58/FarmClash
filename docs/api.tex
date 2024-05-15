@@ -110,20 +110,23 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \end{verbatim}
 \end{itemize}
 
-\subsection{General Resource Update Information}
+\subsection{General Resource adding Information}
 \begin{itemize}
-    \item Endpoint: \texttt{/update-resources}
+    \item Endpoint: \texttt{/add-resources}
     \item Method: POST
-    \item Description:updated list of animals for a user. This endpoint is used to update the quantity of animals owned by a user.
+    \item Description:list of resources for a user. This endpoint is used to add a quantity of animals owned by a user.
     \item Access: Requires logged-in user privileges.
     \item Request: A JSON object with general information about the update.
-    The object includes an update type which describes why the amount was updated (Useful for Idle updates) and a species JSON object which includes an array for each animal. The first element represents wheter or not the amount was updated from the one stored in the database and the second element containing the new value if it was updated (It is done like this remove redundent update DB calls and to not have to call fetches for each animal apart. Here are a few examples.
+    The object include as key the Resources and as value the amount of the resource to be added. Here is an example.
     \begin{verbatim}
 {
-
+    "Zucchini": 20,
+    "Money": 20,
+    "Egg": 20,
+    "Wheat": 20,
 }
     \end{verbatim}
-    \item Response: A JSON object indicating the status of the update operation.
+    \item Response: A JSON object indicating the status of the add operation.
     \begin{verbatim}
 {
   "status": "success/error",
