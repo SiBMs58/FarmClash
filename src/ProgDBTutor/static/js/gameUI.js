@@ -5,6 +5,15 @@ resources.money = 0
 let clickedResourceButton = false;
 
 
+if (localStorage.getItem('backsoundButtonState') === null) {
+        // If not, set the default settings (sound off)
+        localStorage.setItem('backsoundButtonState', 'slider_off.png');
+        localStorage.setItem('muteButtonState', 'sound_btn.png');
+    }
+        localStorage.getItem('muteButtonState')
+        localStorage.getItem('backsoundButtonState')
+
+
 document.addEventListener("DOMContentLoaded", function() {
     fetchCropsAndMoney()
         .then(() => {

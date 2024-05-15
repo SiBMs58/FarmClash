@@ -4,25 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     <!-- Bootstrap CSS -->
 
 
     <style>
 
-        /* Custom CSS classes for chat window customization */
     .custom-chat-window {
-        height: 500px; /* Adjust height as needed */
+        height: 500px;
         width: 700px;
         margin-bottom: 10px;
         margin-top:50px;
     }
 
     .custom-chat-body {
-        overflow-y: scroll; /* Enable vertical scrolling */
+        overflow-y: scroll;
     }
 
     .custom-card-footer {
-        border-top: 1px solid #ccc; /* Add border to the footer */
+        border-top: 1px solid #ccc;
     }
 
     .custom-input {
@@ -84,6 +85,9 @@
 
 
 <script>
+
+    localStorage.getItem('muteButtonState')
+    localStorage.getItem('backsoundButtonState')
     // Function to load chat messages
     function loadChat(friend_name) {
         // Here you would make an API call to fetch the chat messages
