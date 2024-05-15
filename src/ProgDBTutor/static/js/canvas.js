@@ -6,11 +6,25 @@ import { UserInputHandler } from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
 // Set on-screen tileSize-
-// Retrieve the zoom size from local storage
-let zoomSize = localStorage.getItem('zoomSetting');
+// Function to safely get zoom size from local storage
+function getZoomSize() {
+    try {
+        let zoomSize = localStorage.getItem('zoomSetting');
+        if (zoomSize !== null) {
+            let parsedZoomSize = parseInt(zoomSize);
+            if (!isNaN(parsedZoomSize) && parsedZoomSize > 0) {
+                return parsedZoomSize;
+            }
+        }
+    } catch (e) {
+        console.error('Error accessing local storage:', e);
+    }
+    return 50; // Default to 50 if value is not set or invalid
+}
 
 // Set on-screen tileSize, default to 50 if zoom size is not set
-export let tileSize = zoomSize ? parseInt(zoomSize) : 50;
+export let tileSize = getZoomSize();
+
 
 
 // Create terrain map
