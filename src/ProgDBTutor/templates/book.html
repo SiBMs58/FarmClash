@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{app_data['app_name']}} - Book</title>
+    <link rel="stylesheet" href="../static/css/book.css">
+    {% include 'head.html' %}
+</head>
+<body>
+    {% include 'header&footer.html' %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Game Aspects Explanation</h1>
+                <p>Welcome to the game aspects explanation page. Here you can learn about various settings and features available in the game to enhance your experience.</p>
+                <ul>
+                    <li><strong>Log-out:</strong> Click the log-out button to securely log out of your account.</li>
+                    <li><strong>Sound:</strong> Adjust the game volume using the sound buttons. You can increase or decrease the volume as per your preference.</li>
+                    <li><strong>Mute:</strong> Use the mute button to quickly mute all game sounds.</li>
+                    <li><strong>Background Sound:</strong> Toggle the background music on or off to suit your liking.</li>
+                    <li><strong>Zoom:</strong> Adjust the zoom level of the game interface to get a better view or more detailed perspective.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- You can add more content here -->
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/book.js') }}"></script>
+</body>
+</html>
