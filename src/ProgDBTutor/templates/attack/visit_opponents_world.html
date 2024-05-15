@@ -45,6 +45,31 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            animation: backgroundPulse 3s infinite;
+        }
+
+        #loadingScreen h1 {
+            color: white;
+            animation: typing 4s steps(40, end) forwards, blink 0.75s step-end infinite;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid transparent;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 40ch; }
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: white; }
+        }
+
+        @keyframes backgroundPulse {
+            0% { background-color: rgba(0, 0, 0, 0.8); }
+            50% { background-color: rgba(0, 0, 0, 0.6); }
+            100% { background-color: rgba(0, 0, 0, 0.8); }
         }
 
         .hidden {
@@ -57,7 +82,7 @@
 <body>
     <!-- Loading Screen -->
     <div id="loadingScreen">
-        Loading, please wait...
+        <h1>Loading {{ opponent['username'] }}'s world. Please wait...</h1>
     </div>
 
     {% include 'attack/visit_opponents_UI.html' %} <!-- This would be a new include for the UI when visiting -->
