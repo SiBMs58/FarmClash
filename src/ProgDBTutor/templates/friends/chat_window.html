@@ -51,6 +51,17 @@
          border-radius: 20px;
      }
 
+
+    button:active {
+    cursor: url('../../static/img/UI/pointer_click.png'), auto;
+}
+    img:hover {
+    cursor: url('../../static/img/UI/pointer_hover.png'), auto;
+    }
+
+    body{
+         cursor: url('../../static/img/UI/cursor.png'), auto;
+    }
     </style>
 
 
@@ -76,7 +87,7 @@
             <div class="input-group">
                 <input type="text" name="message" id="message-input" class="form-control custom-input" placeholder="Type a message..." required>
                 <div class="input-group-append">
-                    <button type="button" id="send-message-btn" class="btn btn-custom-search">Send</button>
+                    <button type="button" id="send-message-btn" class="btn btn-custom-search" style="cursor: url('../../static/img/UI/pointer_click.png'), auto;">Send</button>
                 </div>
             </div>
         </form>
@@ -114,7 +125,9 @@
         visitWorldButton.textContent = 'Visit World';
         visitWorldButton.className = 'btn btn-custom-search';
         visitWorldButton.style.float = 'right';
+        visitWorldButton.style.cursor = 'url("../../static/img/UI/pointer_click.png"), auto';
         visitWorldButton.onclick = visitFriendsWorld; // Assuming you've defined this function
+
 
         // Append the button to the header
         const chatHeader = document.getElementById('chat-header');

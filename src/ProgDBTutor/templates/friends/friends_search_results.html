@@ -18,7 +18,7 @@
                         {{ user.username }}
                         <!-- Form aligned to the right -->
                         <form action="{{ url_for('friends.add_friend', friend_name=user.username) }}" method="post">
-                            <button type="submit" class="btn btn-primary">Add as Friend</button>
+                            <button type="submit" class="btn btn-primary" style="cursor: url('../../static/img/UI/pointer_click.png'), auto;">Add as Friend</button>
                         </form>
                     </li>
                 {% endfor %}
@@ -27,7 +27,7 @@
             <p>No matching users found.</p>
         {% endif %}
         <div class="my-3">
-            <a href="{{ url_for('friends.dashboard') }}">Return to Dashboard</a>
+            <a href="{{ url_for('friends.dashboard') }}" >Return to Dashboard</a>
         </div>
     </div>
 

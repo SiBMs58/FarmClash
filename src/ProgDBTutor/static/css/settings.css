@@ -41,7 +41,7 @@ h1 {
 }
 
 .image-button {
-        background-image: url('../img/buttons/plus_btn.png');
+        cursor: url('../img/UI/pointer_click.png'), auto;
         background-size: cover;
 
     }
@@ -73,10 +73,15 @@ h1 {
     height: 100%;
 }
 
+button:active,
+body:active {
+    cursor: url('../img/UI/pointer_click.png'), auto;
+}
 button:hover {
-    cursor: url('../../static/img/UI/hover_cursor.png'), auto;
+    cursor: url('../img/UI/pointer_hover.png'), auto;
 }
 
-button:active {
-    cursor: url('../../static/img/click_cursor.png'), auto;
+img:hover {
+    cursor: url('../img/UI/pointer_hover.png'), auto;
 }
+

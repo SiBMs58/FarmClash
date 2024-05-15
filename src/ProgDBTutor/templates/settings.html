@@ -4,6 +4,7 @@
     {% include 'head.html' %}
     <link rel="stylesheet" href="../static/css/settings.css"> <!--or different image -->
 
+
 </head>
 <html lang="en">
 <body>
@@ -14,19 +15,20 @@
 </div>
 
     <div class="container">
-
         <div class="row">
             <div class="col">
                 LOG-OUT
             </div>
             <div class="col-auto">
                 <div class="logout-btn"></div>
-                <img src="../static/img/UI/logout_btn.png" alt="Logout" usemap="#logoutMap" id= "image-button">
-                <map name="logoutMap">
-                    <area shape="rect" coords="0,0,150,150" alt="Logout" href="{{ url_for('auth.logout') }}">
-                </map>
+                <button class="sound-image-button" >
+                    <a href="{{ url_for('auth.logout') }}">
+                        <img src="../static/img/UI/logout_btn.png" alt="Logout" usemap="#logoutMap" id= "image-button">
+                    </a>
+                </button>
             </div>
         </div>
+
 
         <div class="row">
             <div class="col">
@@ -85,6 +87,7 @@
     <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/zoom.js') }}"></script>
+
 
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>

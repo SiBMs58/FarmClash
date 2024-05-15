@@ -70,7 +70,9 @@ class GameSoundManager {
         });
         if (this.backgroundMusic) {
             this.backgroundMusic.volume = volume;
-            localStorage.setItem('volumesetting', volume);
+            if(volume!=0) {
+                localStorage.setItem('volumesetting', volume);
+            }
 
         }
     }
@@ -112,17 +114,18 @@ class GameSoundManager {
      */
 
     mute() {
-    const muteSound = new Audio("/static/music/discord-notification.mp3");
-    muteSound.play();
+    const muteSound = new Audio("/static/music/click.mp3");
 
-    if ( localStorage.getItem('muteButtonState')==="sound_pbtn.png") {
+    let volumemute = localStorage.getItem('volumesetting')
+    if (localStorage.getItem('muteButtonState')==="sound_pbtn.png") {
+        muteSound.play();
         this.setVolume(0);
     } else {
         if(localStorage.getItem('backsoundButtonState') === "slider_on.png"){
+            this.setVolume(volumemute);
             this.playBackgroundMusic();
-            this.setVolume(this.volume);
         }else {
-            this.setVolume(this.volume);
+            this.setVolume(volumemute);
         }
     }
 
