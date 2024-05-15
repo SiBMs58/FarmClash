@@ -1,6 +1,5 @@
-//TODO:storage first fixen
-//TODO: implemtn all buttons
-//TODO zoom functie...
+//TODO zoom functie...=> dat moet ik linken aan hetgene dat ook, vergroot en verkleint wnr ik het scherm aanpas
+//TODO: documentatie
 
 
 
@@ -33,11 +32,21 @@ class GameSoundManager {
             };
             this.soundButtons.push(soundButton);
 
-            buttonElement.addEventListener('click', () => {
-                if ( localStorage.getItem('muteButtonState')==="sound_btn.png"/* !this.muted)*/) {
+            buttonElement.addEventListener('click', (event) => {
+                if (localStorage.getItem('muteButtonState') === "sound_btn.png") {
                     sound.play();
+                    const href = buttonElement.querySelector('a').getAttribute('href');
+                        if (href) {
+                            event.preventDefault(); // Prevent the default navigation
+                            setTimeout(() => {
+                                window.location.href = href;
+                            }, 350); // Adjust the delay as needed
+                        }
                 }
             });
+
+
+
         })
         .catch(error => {
             console.error('Er is een fout opgetreden bij het laden van het geluidsbestand:', error);
@@ -92,44 +101,7 @@ class GameSoundManager {
     }
 
     }
-    /*
 
-    soundUP() {
-    if ( !this.muted && this.backgroundMusic) {
-        if (this.backgroundMusic.volume < 1.0) {
-            const newVolume = Math.min(1, this.backgroundMusic.volume + 0.1);
-            this.backgroundMusic.volume = newVolume;
-             localStorage.setItem('volumesetting', newVolume);
-        }
-    }
-}
-
-    sounddown() {
-        if (!this.muted && this.backgroundMusic) {
-            if (this.backgroundMusic.volume > 0.1) {
-                const newVolume = Math.min(1, this.backgroundMusic.volume - 0.1);
-                this.backgroundMusic.volume = newVolume;
-              localStorage.setItem('volumesetting', newVolume);
-            }
-        }
-    }
-    */
-
-/*
-    initialize() {
-        // Initialize background music
-        this.setBackgroundMusic("/static/music/Peach.mp3");
-        this.backgroundMusic=true;
-
-        // Check the toggle state and play or stop the background music accordingly
-        if (backsoundState === "slider_on.png") {
-            this.playBackgroundMusic();
-        } else {
-            this.stopBackgroundMusic();
-        }
-    }
-
-*/
 }
 
 
@@ -139,17 +111,15 @@ export const soundManager = new GameSoundManager();
 document.addEventListener('DOMContentLoaded', function() {
     //const soundManager = new GameSoundManager();
 
-    const baseSoundSrc = "/static/music/discord-notification.mp3";
+    const baseSoundSrc = "/static/music/click.mp3";
     const volume = 0.5; //volume van the buttons
 
-    const soundButtons = document.querySelectorAll('.sound-image-button');
+    const soundButtons = document.querySelectorAll('button');
     soundButtons.forEach((button) => {
         soundManager.addSoundButton(button, baseSoundSrc, volume);
     });
 
-
-
-    soundManager.setBackgroundMusic("/static/music/Peach.mp3");
+    soundManager.setBackgroundMusic("/static/music/carraiben.mp3");
 
 
     if (localStorage.getItem('backsoundButtonState') === "slider_on.png"  &&  localStorage.getItem('muteButtonState') ==="sound_btn.png") {
@@ -160,17 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
    }
 
 
-
-/*
-    document.getElementById('soundup').addEventListener('click', () => {
-        soundManager.soundUP();
-    });
-
-    document.getElementById('sounddown').addEventListener('click', () => {
-        soundManager.sounddown();
-    });
-
-*/
 
 });
 

@@ -2,6 +2,8 @@
 <html lang="">
 <head>
     <title>Dashboard - {{ app_data['app_name'] }}</title>
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     {% include 'head.html' %}
 
     <style>
@@ -44,6 +46,5 @@
             loadFriends();
         });
     </script>
-    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
 </body>
 </html>

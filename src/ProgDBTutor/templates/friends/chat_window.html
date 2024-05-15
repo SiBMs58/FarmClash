@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     <!-- Bootstrap CSS -->
 
 
@@ -83,6 +85,9 @@
 
 
 <script>
+
+    localStorage.getItem('muteButtonState')
+    localStorage.getItem('backsoundButtonState')
     // Function to load chat messages
     function loadChat(friend_name) {
         // Here you would make an API call to fetch the chat messages
