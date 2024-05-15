@@ -1,6 +1,6 @@
 body{
      background-image: url('../../static/img/wood.background.png'); /* or different image: ../../static/img/backround_dashboard.png  */
-      cursor: url('../../static/img/cursor.png'), auto;
+      cursor: url('../../static/img/UI/cursor.png'), auto;
 }
 
 
@@ -42,7 +42,7 @@ h1 {
 
 .image-button {
         background-image: url('../img/buttons/plus_btn.png');
-        background-size: cover; /* Adjust this as needed */
+        background-size: cover;
 
     }
 
@@ -74,7 +74,7 @@ h1 {
 }
 
 button:hover {
-    cursor: url('../../static/img/hover_cursor.png'), auto;
+    cursor: url('../../static/img/UI/hover_cursor.png'), auto;
 }
 
 button:active {

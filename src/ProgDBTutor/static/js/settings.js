@@ -1,12 +1,13 @@
 
-//TODO: 1 kleine bug als ik mute druk en dan undo dat ùijn geluid hoger wordt
+//TODO: 1 kleine bug als ik mute druk en dan undo dat mijn geluid hoger wordt
+
 import  {soundManager} from './sound.js'
 
-const zoomUpButton = document.getElementById("zoomUpButton");
-const zoomDownButton = document.getElementById("zoomDownButton");
+const zoomUpButton = document.getElementById("zoomUpButton"); //Initializes the right button from settings.html for zoomUp to a var
+const zoomDownButton = document.getElementById("zoomDownButton"); //Initializes the right button from settings.html for zoomDown to a var
 
-const mutebutton = document.getElementById('mutebuttonimg');
-const backsoundButton = document.getElementById('backsoundimg');
+const mutebutton = document.getElementById('mutebuttonimg'); //Initializes mutebutton
+const backsoundButton = document.getElementById('backsoundimg'); //Initializes backsoundbutton
 
 
 zoomUpButton.addEventListener("click", zoomUpPrecent);
@@ -17,9 +18,9 @@ let zoomNumber = document.getElementById("zoomNumber");
 zoomNumber.innerText = countZoom;
 
 /**
- * De zoompercentage word met 20% verhoogd.
+ * De zoompercentage is increased by 20%
+ * The number countzoom is kept in storage for late use
  */
-
 
 function zoomUpPrecent(){
      if(countZoom < 100) {
@@ -33,7 +34,8 @@ function zoomUpPrecent(){
 }
 
 /**
- * e zoompercentage word met 20% verlaagd
+ * zoompercentage is decresed by 20%
+ * The number countzoom is kept in storage for late use
  */
 
 
@@ -48,20 +50,21 @@ function zoomDownPrecent(){
 }
 
 
-const soundUpButton = document.getElementById("soundup");
-const soundDownButton = document.getElementById("sounddown");
+const soundUpButton = document.getElementById("soundup"); //Initializes the right button from settings.html for soundup to a var
+const soundDownButton = document.getElementById("sounddown"); // Initializes gets the right button from settings.html for sounddown to a var
 
 soundUpButton.onmousedown = soundUp;
 soundDownButton.onmousedown = soundDown;
 
 
 let countSound = parseInt(localStorage.getItem('soundSetting')) || 50; //sett countSound into storage
-let soundNumber = document.getElementById("soundNumber");
+let soundNumber = document.getElementById("soundNumber"); //Initializes the current Sounnumber
 soundNumber.innerText = countSound;
 
 
 /**
  * Sound is increased with 10
+ * The number countSound is kept in storage for other pages to acces the sound its currently at.
  */
  function soundDown(){
     if(countSound >= 0 &&  localStorage.getItem('muteButtonState') ==="sound_btn.png") {
@@ -71,6 +74,8 @@ soundNumber.innerText = countSound;
         localStorage.setItem('soundSetting', countSound);
         button("sounddownimg","../static/img/UI/sounddown_btn.png" );
 
+        //countsound is the number set by the user and being used as parameter to set the actual volume with
+        // the function setVolume of the soundClass.
         const volume = countSound / 100;
         soundManager.setVolume(volume);
     }
@@ -78,6 +83,7 @@ soundNumber.innerText = countSound;
 
 /**
  * Sound is decresed with 10
+ * The number countSound is kept in storage for other pages to acces the sound its currently at.
  */
 function soundUp(){
     if(countSound < 100 && localStorage.getItem('muteButtonState')==="sound_btn.png") {
@@ -87,10 +93,11 @@ function soundUp(){
         localStorage.setItem('soundSetting', countSound);
         button("soundupimg","../static/img/UI/soundup_btn.png" );
 
+         //countsound is the number set by the user and being used as parameter to set the actual volume with
+        // the function setVolume of the soundClass.
         const volume = countSound / 100;
         soundManager.setVolume(volume);
     }
-
 }
 
 /**
@@ -105,15 +112,13 @@ function button(buttonType, img1) {
 }
 
 
-//export let muteState = localStorage.getItem('muteButtonState');
-//export let backsoundState = localStorage.getItem('backsoundButtonState') || "slider_off.png";
-
 mutebutton.src = (localStorage.getItem('muteButtonState') === "sound_pbtn.png") ? "../static/img/UI/sound_pbtn.png" : "../static/img/UI/sound_btn.png";
 backsoundButton.src = (localStorage.getItem('backsoundButtonState') === "slider_on.png") ? "../static/img/UI/slider_on.png" : "../static/img/UI/slider_off.png";
 
 
 /**
- * Changes the button with a click
+ * This function is a mute function, looks based on the localstorage to see if it needs to unmute or mute and
+ * calls the mute function from class sound.
  */
 mutebutton.addEventListener("click", function() {
     if (mutebutton.src.endsWith("sound_btn.png") && localStorage.getItem('muteButtonState') === "sound_btn.png") {
@@ -126,7 +131,6 @@ mutebutton.addEventListener("click", function() {
         localStorage.setItem('muteButtonState', 'sound_btn.png');
         soundManager.mute();
     }
-    //localStorage.setItem('muteButtonState', muteState);
 
 });
 
@@ -145,7 +149,7 @@ backsoundButton.addEventListener("click", function() {
         localStorage.setItem('backsoundButtonState', "slider_off.png");
         soundManager.stopBackgroundMusic();
     }
-     //localStorage.setItem('backsoundButtonState',backsoundState  );
+
 
 });
 
@@ -153,36 +157,3 @@ backsoundButton.addEventListener("click", function() {
 
 
 
-/*
-import {buildingMap, terrainMap} from "./canvas";
-import {tileSize} from "./canvas";
-
-
-let zoomLevel = 1; // Initial zoom level
-
-function zoomIn() {
-    zoomLevel += 0.1; // Increase zoom level
-    updateZoom();
-}
-
-function zoomOut() {
-    zoomLevel -= 0.1; // Decrease zoom level
-    updateZoom();
-}
-
-function updateZoom() {
-    // Adjust tileSize based on zoom level
-    tileSize = 50 * zoomLevel;
-
-    // Update terrain map
-    terrainMap.tileSize = tileSize;
-    terrainMap.drawTiles();
-
-    // Update building map
-    buildingMap.tileSize = tileSize;
-    buildingMap.drawTiles();
-}
-
-
-
-*/

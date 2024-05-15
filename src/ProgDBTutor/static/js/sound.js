@@ -2,6 +2,9 @@
 //TODO: documentatie
 
 
+/**
+ * Class for assigning sound
+ */
 class GameSoundManager {
     constructor() {
         this.soundButtons = [];
@@ -12,6 +15,12 @@ class GameSoundManager {
 
     }
 
+    /**
+     *
+     * @param buttonElement is the button itself
+     * @param soundSrc the sound that is given
+     * @param volume gives the volume of the clicksound
+     */
     addSoundButton(buttonElement, soundSrc, volume = 1) {
 
         fetch(soundSrc)
@@ -29,6 +38,7 @@ class GameSoundManager {
             this.soundButtons.push(soundButton);
 
             buttonElement.addEventListener('click', (event) => {
+                //here it looks if the button has a href to go to, and plays the sound before it redirects
                 if (localStorage.getItem('muteButtonState') === "sound_btn.png") {
                     sound.play();
                     const href = buttonElement.querySelector('a').getAttribute('href');
@@ -49,6 +59,10 @@ class GameSoundManager {
         });
 }
 
+    /**
+     * This function is being used in settings to adjust the volume of the background music with the right number i
+     * @param volume is a number given by the function soundUp/soundDown to adjust the volume of the background. this is adjustable by the user
+     */
     setVolume(volume) {
         this.soundButtons.forEach(soundButton => {
             soundButton.sound.volume = volume;
@@ -61,17 +75,30 @@ class GameSoundManager {
         }
     }
 
+    /**
+     * This functions sets the background music for the entire game
+     * @param soundSrc is the given music path
+     */
     setBackgroundMusic(soundSrc) {
         this.backgroundMusic = new Audio(soundSrc);
         this.backgroundMusic.loop = true;
         this.backgroundMusic.volume = this.volume;
     }
 
+    /**
+     * this function is responsible for the actual playing of the background msuic
+     */
+
     playBackgroundMusic() {
         if (localStorage.getItem('backsoundButtonState') === "slider_on.png" &&  localStorage.getItem('muteButtonState') ==="sound_btn.png" ) {
             this.backgroundMusic.play();
         }
     }
+
+    /**
+     * This function is responsible for stopping the background msuic
+     * this function is being used by the function ... in settings to stop the background music with right sllider
+     */
 
     stopBackgroundMusic() {
         if (localStorage.getItem('backsoundButtonState') === "slider_off.png" ) {
@@ -80,6 +107,9 @@ class GameSoundManager {
         }
     }
 
+    /**
+     * This function is responsible for muting all the sound, inclusive the buttons.
+     */
 
     mute() {
     const muteSound = new Audio("/static/music/discord-notification.mp3");
@@ -97,7 +127,6 @@ class GameSoundManager {
     }
 
     }
-
 }
 
 
