@@ -13,7 +13,7 @@ const backsoundButton = document.getElementById('backsoundimg'); //Initializes b
 zoomUpButton.addEventListener("click", zoomUpPrecent);
 zoomDownButton.addEventListener("click", zoomDownPrecent);
 
-let countZoom = parseInt(localStorage.getItem('zoomSetting')) || 0; //sett countzoom into storage
+let countZoom = parseInt(localStorage.getItem('zoomSetting')) || 50; //sett countzoom into storage
 let zoomNumber = document.getElementById("zoomNumber");
 zoomNumber.innerText = countZoom;
 
