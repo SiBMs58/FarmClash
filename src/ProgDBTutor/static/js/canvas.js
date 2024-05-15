@@ -6,7 +6,12 @@ import { UserInputHandler } from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
 // Set on-screen tileSize-
-export let tileSize = 50;
+// Retrieve the zoom size from local storage
+let zoomSize = localStorage.getItem('zoomSetting');
+
+// Set on-screen tileSize, default to 50 if zoom size is not set
+export let tileSize = zoomSize ? parseInt(zoomSize) : 50;
+
 
 // Create terrain map
 const terrainCanvas = document.getElementById('terrainCanvas');
