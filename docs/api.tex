@@ -265,6 +265,39 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
         \item {Access:} Requires \texttt{logged in} user privileges.
         \item {Response:} A JSON object containing building information.
     \end{itemize}
+
+
+\subsection{Building Information by type}
+\begin{itemize}
+    \item Endpoint: \texttt{/fetch-building-information-by-type/<string:building_type>}
+    \item Method: GET
+    \item {Description:} Handles GET requests to fetch building information for the current user with the given type.
+    \item {Access:} Requires \texttt{logged in} user privileges.
+    \item {Response:} A JSON object containing building information.
+\end{itemize}
+
+\subsection{Exploration Information}
+\begin{itemize}
+    \item Endpoint: \texttt{/exploration}
+    \item Method: GET
+    \item {Description:} Handles GET requests to fetch exploration information for the current user if one is ongoing.
+    \item {Access:} Requires \texttt{logged in} user privileges.
+    \item {Response:} A JSON object containing exploration information. example:
+    \begin{verbatim}
+{
+    "ongoing": true,
+    "username": "username",
+    "score": 100
+}
+{
+    "ongoing": false
+}
+    \end{verbatim}
+\end{itemize}
+
+
+
+
 \subsection{General Animal Update Information}
 \begin{itemize}
     \item Endpoint: \texttt{/update-animals}
