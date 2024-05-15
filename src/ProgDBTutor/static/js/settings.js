@@ -25,7 +25,7 @@ zoomNumber.innerText = countZoom;
 function zoomUpPrecent(){
      if(countZoom < 100) {
          document.getElementById("zoomupimg").src="../static/img/UI/plus_pbtn.png";
-         countZoom += 20;
+         countZoom += 10;
          zoomNumber.innerText = countZoom;
          localStorage.setItem('zoomSetting', countZoom);
          button("zoomupimg","../static/img/UI/plus_btn.png");
@@ -40,9 +40,9 @@ function zoomUpPrecent(){
 
 
 function zoomDownPrecent(){
-      if(countZoom > 0) {
+      if(countZoom > 20) {
            document.getElementById("zoomdownimg").src="../static/img/UI/minus_pbtn.png";
-          countZoom -= 20;
+          countZoom -= 10;
           zoomNumber.innerText = countZoom;
           localStorage.setItem('zoomSetting', countZoom);
           button("zoomdownimg","../static/img/UI/minus_btn.png" );
