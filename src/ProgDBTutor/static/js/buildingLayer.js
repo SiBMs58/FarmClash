@@ -243,7 +243,8 @@ export class BuildingMap extends BaseMap {
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
         //debugger;
-        console.log("debug");
+        console.log("fetchBuildingLayerList() success");
+        localStorage.setItem('gameData', 'true');
     }
 
     /**

@@ -40,17 +40,38 @@
             z-index: 2;
             <!--border: solid red;-->
         }
+
         #terrainCanvas {
             z-index: 1;
             <!--border: solid black;-->
         }
+
+        /* Loading screen styles */
+        #loadingScreen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
-
-
 </head>
 <body>
 
-	{% include 'game/game_UI.html' %}
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        Loading, please wait...
+    </div>
+
+    {% include 'game/game_UI.html' %}
 
     {% include 'game/pop-up.html' %}
 
@@ -61,4 +82,37 @@
     </div>
 
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
+
+    <script>
+    let localStorageItem = false;
+    let consoleLog = false;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (localStorage.getItem('gameData') === 'true') {
+            localStorageItem = true;
+        }
+        checkConditions();
+    });
+
+    (function() {
+        const originalLog = console.log;
+        console.log = function(message) {
+            if (message === 'fetchBuildingLayerList() success') {
+                consoleLog = true;
+                checkConditions();
+            }
+            originalLog.apply(console, arguments);
+        };
+    })();
+
+    function checkConditions() {
+        if (localStorageItem && consoleLog) {
+            document.getElementById('loadingScreen').classList.add('hidden');
+        }
+    }
+</script>
+
+
+
 </body>
+</html>
