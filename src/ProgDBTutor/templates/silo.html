@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_data['app_name'] }} - Silo</title>
+    <link rel="stylesheet" href="../static/css/barn&silo.css">
+    <link rel="icon" href="../static/img/ico/happy.ico" type="image/x-icon" id="favicon">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+{% include 'header&footer.html' %}
+<div class="ui-container">
+    <div class="limit" id="limit"></div>
+    <div class="description" id="description"></div>
+    <div class="items" id="items"></div>
+    <div class="scrap-button-field">
+        <button class="scrap-button" id="scrap-btn">
+            <img src="../static/img/UI/scrap_btn.png" alt="scrap" id="scrap" draggable="false">
+        </button>
+    </div>
+    <div class="scrap-input">
+        <button id="min" class="input-button">
+            <img src="../static/img/UI/left_btn.png" alt="max" id="left" title="minimum" draggable="false">
+        </button>
+        <button id="decrease" class="input-button">
+            <img src="../static/img/UI/minus_btn.png" alt="-" id="minus" title="decrease" draggable="false">
+        </button>
+        <input type="number" id="scrap-quantity" min="0" value="0" max="0" draggable="false">
+        <button id="increase" class="input-button">
+            <img src="../static/img/UI/plus_btn.png" alt="+" id="plus" title="increase" draggable="false">
+        </button>
+        <button id="max" class="input-button">
+            <img src="../static/img/UI/right_btn.png" alt="max" id="right" title="maximum" draggable="false">
+        </button>
+    </div>
+</div>
+<script src="../static/js/buildingUI/silo.js"></script>
+</body>
+</html>

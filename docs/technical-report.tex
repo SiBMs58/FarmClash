@@ -170,26 +170,26 @@ High stamina means more resources gathered. High damage means higher attack poin
         \item Milk (Common)
         \item Chocolate Milk (Uncommon)
         \item Strawberry Milk (Rare)
-        \item Blueberry Milk (Epic)
-        \item Soy Milk (Legendary)
+        \item Soy Milk (Epic)
+        \item Blueberry Milk (Legendary)
         \item Wool (Common)
         \item Alpaca Wool (Uncommon)
         \item Cashmere Wool (Rare)
-        \item Dolphin Wool (Epic)
-        \item Irish Wool (Legendary)
+        \item Irish Wool (Epic)
+        \item Dolphin Wool (Legendary)
         \item Truffle (Common)
-        \item Winter Truffle (Uncommon)
-        \item Bronze Truffle (Rare)
-        \item Gold Truffle (Epic)
-        \item Forest Truffle (Legendary)
+        \item Bronze Truffle (Uncommon)
+        \item Gold Truffle (Rare)
+        \item Forest Truffle (Epic)
+        \item Winter Truffle (Legendary)
     \end{enumerate}
     \item \textbf{Craft} (From exploring and attacking)
     \begin{enumerate}
         \item Stick (Common)
         \item Stone (Uncommon)
-        \item Plank (Rare)
-        \item Log (Epic)
-        \item Ingot (Legendary)
+        \item Plank (Uncommon)
+        \item Log (Rare)
+        \item Ingot (Rare)
     \end{enumerate}
 \end{enumerate}
 
@@ -248,9 +248,7 @@ The backend supports functionalities related to the management of friendships be
     .../api/friends
     \end{verbatim}
     \item \textbf{Visit Friends World:} The system allows users to visit their friends' farms, fostering engagement and interaction between players. This feature is implemented in the frontend, where users can navigate to their friends' maps and view their progress.
-
     The backend enables the user to see the map and buildings of there friends. This is done by fetching the building information of the user that is being visited.
-
 \end{itemize}
 \paragraph{Messaging Feature:}
 \\ $\ast$ TODO
@@ -280,6 +278,25 @@ route : \begin{verbatim}`@api/building-map`\end{verbatim}
     \item \textbf{update\_map Function:} inserts a given building json in the database. If it exists, it updates, else it creates a new entry.
     \item \textbf{fetch\_building\_information Route:} Handles GET requests to the requested building info. if the requested building does not exist, returns an error.
 \end{itemize}
+
+\subsubsection{Attack Feature}
+The attack feature allows users to visit opponents' worlds and simulate an attack, determining the outcome based on scores.
+\begin{itemize}
+    \item \textbf{Endpoint} The route `/visit\_oppenents\_world` (methods=['GET']) handles the attack requests.
+    \item \textbf{Opponent Selection} When a user visits the endpoint, the system selects an opponent who meets certain criteria (not previously searched, score difference less than 1000, and not a friend).
+        \begin{itemize}
+            \item The opponent is chosen using `choose\_opponent\_logic()` which retrieves all users, the current user's friends, and calculates scores for each user based on their resources.
+            \item If no suitable opponent is found, the previously searched list is reset, and the user is notified via the `no\_opponent.html` template.
+        \end{itemize}
+    \item \textbf{Attack Simulation} Once an opponent is selected, the user visits the opponent's world.
+        \begin{itemize}
+            \item The outcome of the attack is determined by comparing the player's score with the opponent's score using `determine\_attack\_outcome(player\_score, opponent\_score)`.
+            \item The attack outcome can be a win, loss, or a random outcome if the scores are close.
+            \item The resources transferred are calculated as a percentage of the opponent's resources, adjusted based on the attack outcome.
+        \end{itemize}
+    \item \textbf{Response} The attack view is rendered using the `visit\_opponents\_world.html` template, displaying the opponent's world and the result of the attack.
+\end{itemize}
+
 
 
 \subsection{Frontend Interface}
@@ -406,6 +423,30 @@ The friends and messaging features are central to fostering a community environm
     \item \textbf{HTML and CSS:} The leaderboard.html contains the HTML structure, including a table where the leaderboard will be dynamically populated. The CSS file leaderboard.css styles the leaderboard page, ensuring a visually appealing and consistent design.
     \item \textbf{JavaScript:} A JavaScript function loadLeaderboard() (event handling; this function is triggered when document content is fully loaded) is responsible for fetching the leaderboard data from the backend API. Upon successful fetch, it populates the leaderboard table in the HTML dynamically. Error handling is incorporated to manage and alert users in case of failures in data retrieval.
 \end{itemize}
+
+\subsubsection{Attack Feature}
+\begin{itemize}
+    \item \textbf{HTML and CSS:}
+        \begin{itemize}
+            \item \textbf{attack\_animation.html:} This file provides the structure for the attack animation view, including styled emoji swords for visual effect. The animation runs on page load and redirects to the attack result page after a short delay.
+            \item \textbf{attack\_result.html:} This file displays the results of an attack, showing a table of resources taken. It includes basic styling and an optional script for dynamic updates.
+            \item \textbf{no\_opponent.html:} This file informs the user when no opponents are available for an attack. It includes a simple message and basic layout styling.
+            \item \textbf{visit\_opponents\_world.html:} This file is used for rendering the opponent's world view during an attack. It includes several canvas elements for displaying game visuals and links to JavaScript for game logic.
+            \item \textbf{visit\_opponents\_UI.html:} This file contains the user interface for visiting an opponent's world, including buttons for resources and attacks, as well as dynamic elements for displaying resource information.
+        \end{itemize}
+    \item \textbf{JavaScript:}
+        \begin{itemize}
+            \item \textbf{attack\_animation.html:} A script triggers the animation of sword emojis and redirects to the attack result page after a specified time.
+            \item \textbf{visit\_opponents\_UI.html:} Contains multiple JavaScript functions:
+                \begin{itemize}
+                    \item \textbf{clickResources():} Handles the display and hiding of the resource overlay. Fetches the opponent's resources from an API and dynamically updates the resource display.
+                    \item \textbf{updateResources(resources):} Updates the HTML to show the opponent's resources.
+                    \item \textbf{getImage(resourceType):} Returns the appropriate image for a given resource type.
+                \end{itemize}
+            \item \textbf{visit\_opponents\_world.html:} Includes a script to load game data specific to the opponent's world using the `data-opponent` attribute.
+        \end{itemize}
+\end{itemize}
+
 
 \subsubsection{Books}
 \begin{itemize}

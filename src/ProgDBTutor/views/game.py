@@ -28,6 +28,33 @@ def leaderboard():
     :return:
     """
     return render_template('game/leaderboard.html', app_data=config_data)
+@game_blueprint.route('/silo')
+@login_required
+def silo():
+    """
+    Renders the silo view.
+    :return:
+    """
+    return render_template('silo.html', app_data=config_data)
+
+@game_blueprint.route('/barn')
+@login_required
+def barn():
+    """
+    Renders the barn view.
+    :return:
+    """
+    return render_template('barn.html', app_data=config_data)
+
+@game_blueprint.route('/townhall')
+@login_required
+def townhall():
+    """
+    Renders the townhall view.
+    :return:
+    """
+    return render_template('townhall.html', app_data=config_data)
+
 
 """
 Building fetch and update functions
