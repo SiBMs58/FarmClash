@@ -8,6 +8,8 @@ fetchCropPricesFromAPI();
 fetchCropQuantityFromAPI();
 displayPrices();
 
+localStorage.getItem('muteButtonState')
+localStorage.getItem('backsoundButtonState')
 
 // API calls
 function fetchCropPricesFromAPI() {

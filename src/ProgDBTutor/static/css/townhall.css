@@ -1,0 +1,87 @@
+html {
+   cursor: url("../img/UI/cursor.png"), auto;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-image: url("../img/background/wood.panel.png");
+    user-select: none;
+}
+.slider:hover,
+.slide:hover {
+    cursor: url("../img/UI/brown_cursor.png"), auto;
+    background: #e8c187;
+}
+
+
+.slider-container {
+    padding-top: 20px;
+    width: 80%;
+    margin: 0 auto; /* Center the slider container horizontally */
+    text-align: center;
+}
+
+.slider {
+    display: inline-block; /* Display the slider as inline block */
+    width: 100%; /* Fill the available width in the container */
+    max-width: 900px; /* Set the maximum width for the slider */
+    min-width: 600px; /* Set the minimum width for the slider */
+    height: 15px;
+    margin-bottom: 25px;
+    border-radius: 1px;
+    text-align: justify;
+    overflow: hidden; /* Ensure slides don't overflow */
+}
+
+.slide {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 600px;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto; /* Center the slides horizontally */
+    height: 35%;
+    padding: 20px;
+    border-radius: 4px;
+    border: 8px solid #aa7959;
+    background: #e8cfa6;
+    text-align: center;
+}
+
+
+.stats-container {
+    position: absolute;
+    left: 50%;
+    bottom: 2%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 250px;
+    padding: 20px;
+    background: #e8cfa6;
+    border-radius: 4px;
+    border: 8px solid #aa7959;
+    text-align: center;
+    margin-top: 50px; /* Add margin to the top for spacing */
+    display: flex;
+    justify-content: space-between;
+}
+
+.stat-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Align items to the end of the column */
+    padding-left: 80px; /* Add padding to the left */
+    padding-right: 80px;
+}
+
+.stat {
+    margin-bottom: 40px; /* Decrease the margin between stats */
+}
+
+.stat img {
+    height: 50px;
+    width: auto; /* Ensures width is proportional to height */
+    image-rendering: pixelated; /* Prevents pixelation */
+}

@@ -11,13 +11,17 @@ from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
 from data_access.friendship_data_access import FriendshipDataAccess
 from data_access.chatmessage_data_access import ChatMessageDataAccess
+from data_access.exploration_data_access import ExplorationDataAccess
+from data_access.animal_data_access import AnimalDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
+from views.exploration import exploration_blueprint
 from views.books import book_blueprint
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
 from views.friends import friends_blueprint
 from views.market import market_blueprint
+from views.attack import attack_blueprint
 from models.user import User
 from models.building import Building
 from extensions import login_manager
@@ -47,7 +51,10 @@ market_data_access = MarketDataAccess(connection)
 app.config['market_data_access'] = market_data_access
 crops_data_access = CropsDataAccess(connection)
 app.config['crops_data_access'] = crops_data_access
-
+exploration_data_access = ExplorationDataAccess(connection)
+app.config['exploration_data_access'] = exploration_data_access
+animal_data_access = AnimalDataAccess(connection)
+app.config['animal_data_access'] = animal_data_access
 
 # Insert the admin user
 user_data_access.add_user(
@@ -64,6 +71,8 @@ app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
 app.register_blueprint(book_blueprint, url_prefix='/book')
+app.register_blueprint(exploration_blueprint, url_prefix='/exploration')
+app.register_blueprint(attack_blueprint, url_prefix='/attack')
 
 DEBUG = True
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -80,12 +89,12 @@ def main():
     return redirect(url_for('auth.login'))  # Assuming 'login' is the function name for the login view
 
 
-
 @app.route('/friends')
 @login_required
 def friends():
     """
     Renders the dashboard view, for a user.
+    TODO: Verify if this along with the friends.html template is used, i don't think so
     """
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
