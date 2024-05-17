@@ -336,6 +336,35 @@ def get_animals():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@api_blueprint.route('/add-animals', methods=['POST'])
+@login_required
+def update_animals():
+    """
+    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
+    use this for
+    :return: Status of the update operation, in json format
+    """
+    try:
+        limit = 10
+        # TODO get building levels of appropriate buildings
+
+        data = request.get_json()
+        animal_data_access = current_app.config.get('animal_data_access')
+
+        Idle = data.get('idle', False)  # Get the value of 'idle' key, default to False if not present
+        for specie in data:
+            if specie == 'idle':
+                continue
+
+            updated_animal = Animal(specie, current_user.username, data[specie] if len(data[specie]) == 2 else None,
+                                    None if Idle else False)
+            update_success = animal_data_access.update_animal_by_adding(updated_animal, limit)
+
+        return jsonify({"status": "success", "message": "Animal updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @api_blueprint.route('/update-animals', methods=['POST'])
 @login_required

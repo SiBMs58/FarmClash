@@ -92,10 +92,10 @@ function setupNextHour(){
 //_________________________ GENERATION FUNCTIONS _________________________//
 function generateAnimals(hours){
     return {
-        "Pig": pigpens["level"] * hours,
-        "Cow": cowbarns["level"] * hours,
-        "Chicken": chickencoops["level"] * hours,
-        "Goat": goatbarns["level"] * hours
+        "Pig": hours,
+        "Cow": hours,
+        "Chicken": hours,
+        "Goat": hours
     };
 }
 function generateAnimalProduct(hours){
@@ -219,7 +219,8 @@ async function fetchLastUpdated(){
         console.error('Error fetching animal:', error);
     }
 }
-async function sendResourceQuantity(quantity){
+async function sendResourceQuantity(data){
+    data["idle"] = true;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-resources";
     try {
@@ -228,7 +229,7 @@ async function sendResourceQuantity(quantity){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(quantity)
+            body: JSON.stringify(data)
         });
 
         if (response.ok) {
@@ -241,7 +242,8 @@ async function sendResourceQuantity(quantity){
         console.error('Error occurred while updating resources:', error);
     }
 }
-async function sendAnimalQuantity(quantity){
+async function sendAnimalQuantity(data){
+    data["idle"] = true;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-animals";
     try {
@@ -250,7 +252,7 @@ async function sendAnimalQuantity(quantity){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(quantity)
+            body: JSON.stringify(data)
         });
 
         if (response.ok) {
