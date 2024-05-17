@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{amsmath}
 
 \geometry{a4paper}
 
@@ -83,50 +84,113 @@ FarmClash allows players to build and manage their farms, defend against attacks
 
 \subsubsection{Exploration Mechanics}
 
-The bunny of the Bay will go explore for a [user selected] time with a [set of user selected] animals with a limit of Building level.
-After exploring, the user can open the gathered boxes.
+The bunny of the Bay will embark on an exploration journey for a duration chosen by the user, accompanied by a selection of animals chosen by the user, with the exploration time capped by the building level.
 
-The longer the exploring takes, the higher number of resources per box will be. A box can be a coin, a crop, or a resource box as well as be empty. The more animals are sent to explore, the more boxes will be returned. Choosing which animal goes also has perks and downsides:
+During exploration, the user can open the gathered boxes, ensuring there is enough space in storage buildings. The longer the exploration duration, the higher the risk and the average number of resources per box obtained.
+
+A higher building level results in lower risk, higher average resources per box, and higher standard deviation of resources.
+
+Additionally, a higher augment level of the building reduces the risk.
+
+The number of boxes and surviving animals is predetermined at the start of exploration.
+
+Risk chance is calculated as follows:
+A : \text{Augment Level}
+L : \text{Building Level}
+d : \text{Duration}
+
+\[
+R(d) =
+\begin{cases}
+0 & \text{if } d = 1 \\
+5 & \text{if } d = 20 \\
+10 & \text{if } d = 60 \\
+30 & \text{if } d = 180 \\
+50 & \text{if } d = 720 \\
+70 & \text{if } d = 1440 \\
+\end{cases}
+
+\text{Risk}(d, L, A) =
+\begin{cases}
+100 & \text{if } L = 0 \\
+\max\left(0, \frac{R(d)}{L}\right) & \text{if } L \neq 0 \text{ and } A = 0 \\
+\max\left(0, \frac{R(d)}{L} + 1 - \left(\frac{3 \log_6 (A + 1)}{2 (A + 1)}\right)\right) & \text{if } L \neq 0 \text{ and } A \neq 0
+\end{cases}
+\]
+
+The base amount of rewards X is between 0 and 3. If a random integer between 0 and 100 is larger than X \times Risk, then X boxes will be generated.
+
+A box can contain:
 
 \begin{itemize}
-\item \textbf{Chickens}:
-\begin{itemize}
-\item Increased chance of finding eggs.
-\item Increases the yield of crops if found during exploration.
-\item Higher rarity of animal resources.
-\item Higher chance of getting lost.
-\end{itemize}
-\item \textbf{Cows}:
-\begin{itemize}
-    \item Increased chances of milk.
-    \item Brings more resources on average.
-    \item Higher chance to bring coins.
-    \item Higher chance to bring no boxes.
+    \item Coin (Base: 25\%)
+    \item Crop (Base: 25\%)
+    \item Animal product box (Base: 25\%)
+    \item Raw material box (Base: 15\%)
+    \item Empty box (Base: 10\%)
 \end{itemize}
 
-\item \textbf{Pigs}:
+The types of crops are limited to the building level.
+
+The more animals sent to explore, the more boxes will be returned. The chance that an animal survives is 100\%−Risk (with slight variations for chickens).
+
+Every surviving animal brings one box, except for cows, which may bring no boxes, and goats, which may bring up to 3 boxes.
+
+Choosing which animals to send on the exploration has its perks and downsides.
+
+
 \begin{itemize}
-    \item Increased chances of truffles.
-    \item Higher rarity of craft resources.
-    \item Higher amount of craft resources.
-    \item Higher chance of empty boxes.
-\end{itemize}
+    \item \textbf{Chickens}:
+    \begin{itemize}
+        \item Increased yield of eggs if found.
+        (50\% if animal product box is found.)
+        \item Increased amount of crops if found.
+        (First surviving chicken \cdot1.35, Second surviving chicken \cdot1.35^2 ...).
+        \item Increased spread of amount of crops if found.
+        (First surviving chicken \cdot1.15, Second surviving chicken \cdot1.15^2 ...).
+        \item Higher rarity of animal resources.
+        \item Lower chance of getting home safe
+        (First surviving chicken -5\%, Second surviving chicken -10\% ...).
+    \end{itemize}
+    \item \textbf{Cows}:
+    \begin{itemize}
+        \item Increased yield of milk if found.
+        (50\% if animal product box is found.)
+        \item Brings more resources on average.
+        (First cow \cdot1.25, Second cow \cdot1.25^2 ...).
+        \item Higher chance to bring coins.
+        (First surviving cow +5\%, Second surviving cow +10\% ...).
+        \item Lower chance to bring a box.
+        (First surviving cow -10\%, Second surviving cow -20\% ...).
+    \end{itemize}
+
+    \item \textbf{Pigs}:
+    \begin{itemize}
+        \item Increased chances of truffles.
+        (50\% if animal product box is found.)
+        \item Higher rarity of craft resources if found.
+        \item Higher amount of craft resources if found.
+        (First surviving pig \cdot1.35, Second surviving pig \cdot1.35^2 ...).
+        \item Higher chance of empty boxes.
+        (First surviving pig +15 weight, Second surviving pig +30 weight ...).
+    \end{itemize}
 
 \item \textbf{Goats}:
 \begin{itemize}
     \item Increased chances of wool.
+    (50\% if animal product box is found.)
     \item Has a chance to bring 2 boxes.
+    (10\% + (0.5\% for the first surviving goat, 1\% for the second surviving goat ...))
     \item Has a small chance to bring 3 boxes.
+    (5\% + (0.5\% for the first surviving goat, 1\% for the second surviving goat ...))
     \item Brings lower resources on average.
+    (First pig \cdot0.95, Second pig \cdot0.95^2 ...).
 \end{itemize}
 \end{itemize}
 
-Keep in mind exploring carries a risk with it; long explorations will carry a higher risk. Boats can get lost, and so will the animals and boxes on those boats. There is also a risk that no boats will return; in that case, no boxes are returned, and the building will have a longer downtime. The risk decreases the higher the level of the building and the higher the investment in the building is.
 
 \subsection{Animals}
-
-Losing animals is possible  during exploration; this will lower the defense level for a while until the animals are bred again.
-
+- Can be sent on explorations.
 \begin{enumerate}
     \item Chicken
     \item Cow
