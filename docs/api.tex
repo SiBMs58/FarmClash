@@ -309,6 +309,54 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \end{verbatim}
 \end{itemize}
 
+\subsection{Starting an exploration}
+\begin{itemize}
+    \item Route: \texttt{exploration/start-exploration}
+    \item Method: POST
+    \item {Description:} Handles POST requests to start an exploration with given information for the current user.
+    \item {Access:} Requires \texttt{logged in} user privileges.
+    \item {Request:} A JSON object exploration information. example:
+    \begin{verbatim}
+{
+  "chickens": amount of chickens sent on exploration,
+  "goats": amount of goats sent on exploration,
+  "pigs": amount of pigs sent on exploration,
+  "cows": amount of cows sent on exploration,
+  "exploration_level": level of bay building,
+  "augment_level": augment level of bay building,
+  "remaining_time": duration of exploration in minutes
+}
+    \end{verbatim}
+    \item {Response:} status of the exploration:
+    \begin{verbatim}
+{
+    'status': 'success',
+    'message': 'Exploration started successfully.'
+}
+{
+    'status': 'error',
+    'message': 'Failed to start exploration.'
+}
+    \end{verbatim}
+\end{itemize}
+
+\subsection{Stopping an exploration}
+\begin{itemize}
+    \item Route: \texttt{exploration/stop-exploration}
+    \item Method: POST
+    \item {Description:} Handles POST requests to stop an exploration for the current user.
+    \item {Access:} Requires \texttt{logged in} user privileges.
+    \item {Response:} status of stopping the exploration:
+    \begin{verbatim}
+{   'status': 'success',
+    'message': 'Exploration stopped successfully.'
+}
+{
+    'status': 'error',
+    'message': 'Failed to stop exploration.'
+}
+    \end{verbatim}
+\end{itemize}
 
 
 
