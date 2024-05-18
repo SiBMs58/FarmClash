@@ -243,8 +243,10 @@ export class BuildingMap extends BaseMap {
             const generalInfoKey = currBuilding.general_information
             const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations
             for (const currTile of tile_rel_locations) {
-            //for (const currTile of currBuilding.tile_rel_locations) {
-                const newTileMapElement = [currTile[1], buildingKey];
+                let tileToDrawWithoutLevelReplaced = currTile[1];
+                const buildingLevel = currBuilding.level
+                let tileToDrawName = tileToDrawWithoutLevelReplaced.replace(/@/g, buildingLevel);
+                const newTileMapElement = [tileToDrawName, buildingKey];
                 const currMapLocationY = locationY + currTile[0][0];
                 const currMapLocationX = locationX + currTile[0][1];
                 toReturn[currMapLocationY][currMapLocationX] = newTileMapElement;
