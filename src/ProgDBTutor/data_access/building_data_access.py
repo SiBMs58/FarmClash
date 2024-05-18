@@ -15,8 +15,7 @@ class BuildingDataAccess:
         result = cursor.fetchone()
         if result:
             return Building(result['building_id'], result['username_owner'], result['farm_id'],
-                            result['building_type'], result['level'], result['x'], result['y'],
-                            result['tile_rel_locations'], result['created_at'], result['augment_level'])
+                            result['building_type'], result['level'], result['x'], result['y'], result['created_at'], result['augment_level'])
         else:
             return None
 
@@ -33,7 +32,7 @@ class BuildingDataAccess:
         buildings = []
         for result in results:
             building = Building(result['building_id'], result['username_owner'], result['building_type'],
-                                result['level'], result['x'], result['y'], result['tile_rel_locations'],
+                                result['level'], result['x'], result['y'],
                                 result['created_at'], result['augment_level'])
             buildings.append(building)
 
@@ -53,7 +52,7 @@ class BuildingDataAccess:
         buildings = []
         for result in results:
             building = Building(result['building_id'], result['username_owner'], result['building_type'],
-                                result['level'], result['x'], result['y'], result['tile_rel_locations'],
+                                result['level'], result['x'], result['y'],
                                 result['created_at'], result['augment_level'])
             buildings.append(building)
 
@@ -74,7 +73,7 @@ class BuildingDataAccess:
         buildings = []
         for result in results:
             building = Building(result['building_id'], result['username_owner'], result['building_type'],
-                                result['level'], result['x'], result['y'], result['tile_rel_locations'],
+                                result['level'], result['x'], result['y'],
                                 result['created_at'], result['augment_level'])
             buildings.append(building)
 
@@ -107,13 +106,13 @@ class BuildingDataAccess:
                 cursor.execute("""
                     INSERT INTO buildings (building_id, username_owner, building_type, level, x, y, 
                     tile_rel_locations, created_at, augment_level)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (username_owner, building_id) DO UPDATE 
                     SET building_type = EXCLUDED.building_type, level = EXCLUDED.level,
                         x = EXCLUDED.x, y = EXCLUDED.y, tile_rel_locations = EXCLUDED.tile_rel_locations,
                         created_at = EXCLUDED.created_at;
                 """, (building.building_id, building.username_owner, building.building_type,
-                      building.level, building.x, building.y, building.tile_rel_locations, building.created_at, building.augment_level))
+                      building.level, building.x, building.y, building.created_at, building.augment_level))
             self.db_connection.conn.commit()
             return True
         except Exception as e:

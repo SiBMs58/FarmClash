@@ -10,7 +10,6 @@ class Building:
         self.level = level
         self.x = x
         self.y = y
-        self.tile_rel_locations = tile_rel_locations
         if created_at is None:
             created_at = datetime.now()
         self.created_at = created_at
@@ -28,7 +27,6 @@ class Building:
             'augment_level': self.augment_level,
             'x': self.x,
             'y': self.y,
-            'tile_rel_locations': self.tile_rel_locations,
             'created_at': self.created_at,
             'width': self.width,
             'height': self.height
