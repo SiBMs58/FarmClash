@@ -22,6 +22,7 @@ const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
 
 function isUpgradable(buildingInformation, buildingGeneralInformation) {
     isUpgradableBool = true;
+    return true; // ook nog true returnen
 }
 
 /**
