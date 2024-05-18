@@ -100,7 +100,6 @@ export class TerrainMap extends BaseMap {
     /**
      * Fetches the terrainMapData json which stores the layout and other information needed.
      */
-
     async fetchTerrainMapData() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         //debugger;
