@@ -1,4 +1,4 @@
-// todo mss er voor zorgen dat de popup ook echt verdwijnt
+import { buildingMap } from "./canvas.js";
 
 /**
  * Toggles the pop-up. When pop-up is showing this function will hide it and vice-versa.
@@ -11,6 +11,18 @@ export function togglePopup() {
 export let isPopupOpen = false;
 let prevBuildingName = "";
 
+
+// CHECKS FOR UPGRADE BUTTON
+let currOpenedBuildingInformation;
+let currOpenedBuildingGeneralInformation;
+let isUpgradableBool = true;
+
+const upgradeButton = document.getElementById('upgrade-button');
+const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
+
+function isUpgradable(buildingInformation, buildingGeneralInformation) {
+    isUpgradableBool = true;
+}
 
 /**
  * Opens the pop-up. When another pop-up is already open it initialises a switch animation and delays the actual opening
@@ -29,7 +41,9 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
         // If the popup is not already open, open it directly
         actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName);
     }
-    prevBuildingName = buildingName
+    prevBuildingName = buildingName;
+    currOpenedBuildingInformation = buildingInformation
+    currOpenedBuildingGeneralInformation = buildingGeneralInformation
 }
 
 /**
@@ -105,6 +119,7 @@ function softReleaseCloseButton() {
 function releaseCloseButton() {
     softReleaseCloseButton()
     closePopup()
+    console.log("Release upgrade button")
 }
 
 closeButton.addEventListener('mousedown', pressCloseButton);
@@ -116,16 +131,18 @@ closeButtonPressed.addEventListener('mouseleave', softReleaseCloseButton);
 
 // This code is responsible for correctly applying the functionality of the upgrade button of the pop-up
 
-const upgradeButton = document.getElementById('upgrade-button');
-const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
 
 function pressUpgradeButton() {
     upgradeButton.style.display = 'none';
     upgradeButtonPressed.style.display = 'block';
 }
 function releaseUpgradeButton() {
-    upgradeButton.style.display = 'block';
-    upgradeButtonPressed.style.display = 'none';
+    if (isUpgradableBool) {
+        upgradeButton.style.display = 'block';
+        upgradeButtonPressed.style.display = 'none';
+        // level += 1
+        buildingMap.drawTiles();
+    }
 }
 
 upgradeButton.addEventListener('mousedown', pressUpgradeButton);

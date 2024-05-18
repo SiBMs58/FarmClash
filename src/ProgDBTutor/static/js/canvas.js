@@ -31,7 +31,7 @@ const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
-const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
+export const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
 
 
 

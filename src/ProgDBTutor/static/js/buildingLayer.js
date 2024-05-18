@@ -108,8 +108,8 @@ export const defaultMapData2 = {
                 "step closer to agricultural dominance.",
             upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
             other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]], // All other stats specific for this building. ["Stat name display", [array of all values per level]]
-            maxLevel: 10, // todo toevoegen aan db
-            tile_rel_locations: [ // todo toevoegen aan db
+            maxLevel: 10,
+            tile_rel_locations: [
                 [[0, 0], "Chickencoop.L@.1.1"], // location relative to 'building_location'
                 [[0, 1], "Chickencoop.L@.1.2"], // [ rel_location ([y, x]), "Tile asset"]
                 [[1, 0], "Chickencoop.L@.2.1"], // All the '@' will be replaced with the correct level
