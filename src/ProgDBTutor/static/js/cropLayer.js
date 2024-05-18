@@ -3,7 +3,7 @@
 import {BaseMap} from "./baseMap.js";
 //import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
 import { utils } from "./utils.js";
-import { buildingMap } from "./canvas";
+import { buildingMap } from "./canvas.js";
 
 /**
  * Sets the string value of
@@ -90,7 +90,7 @@ export class CropMap extends BaseMap {
         try {
             const response = await fetch('/static/img/assets/assetList.json');
             const responseJson = await response.json();
-            this.cropAssetList = responseJson.buildings;
+            this.cropAssetList = responseJson.crops;
         } catch (error) {
             debugger;
             console.error('fetchCropAssetList() failed:', error);
@@ -199,9 +199,8 @@ export class CropMap extends BaseMap {
         const cropCoords = [[cropY, cropX], [cropY + 1, cropX], [cropY, cropX + 1], [cropY + 1, cropX + 1]];
 
         // Draw crops
-        for (let cropCoord in cropCoords) {
-            debugger;
-            console.log();
+        for (let index in cropCoords) {
+            
         }
 
         /*

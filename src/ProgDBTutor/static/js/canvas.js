@@ -1,5 +1,3 @@
-debugger;
-
 import { TerrainMap } from './terrainLayer.js'
 import { BuildingMap } from "./buildingLayer.js";
 import { CropMap } from "./cropLayer.js";

@@ -32,8 +32,12 @@
         }
 
         #uiCanvas {
-            z-index: 3;
+            z-index: 4;
             <!--border: solid red;-->
+        }
+
+        #cropCanvas {
+            z-index: 3;
         }
 
         #buildingCanvas {
@@ -102,6 +106,7 @@
 
     <div id="canvasContainer">
         <canvas id="uiCanvas"></canvas>
+        <canvas id="cropCanvas"></canvas>
         <canvas id="buildingCanvas"></canvas>
         <canvas id="terrainCanvas"></canvas>
     </div>
@@ -136,8 +141,6 @@
             }
         }
     </script>
-
-
 
 </body>
 </html>
