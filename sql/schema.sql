@@ -23,7 +23,6 @@ CREATE TABLE buildings (
     level INT DEFAULT 1,
     x INT NOT NULL,
     y INT NOT NULL,
-    tile_rel_locations JSONB, --TODO These are same for all users so read it from the static/img/assets/oldRelativeLocation.json file instead
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --TODO can be removed as all buildings are created at authentication time
     augment_level INT DEFAULT 0,
     PRIMARY KEY (username_owner, building_id),  -- Adding a primary key constraint

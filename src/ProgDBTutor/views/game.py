@@ -86,7 +86,6 @@ def update_map():
             building_type = building_info["general_information"]
             level = building_info["level"]
             created_at = datetime.now()
-            tile_rel_locations_json = json.dumps(building_info["tile_rel_locations"])  # Serialize to JSON
             x_value = building_info["building_location"][0]
             y_value = building_info["building_location"][1]
             building_id = building_info["self_key"]
@@ -100,13 +99,11 @@ def update_map():
                 building.created_at = created_at
                 building.x = x_value
                 building.y = y_value
-                building.tile_rel_locations = tile_rel_locations_json
                 building_data_access.add_building(building)
 
             else:
                 # Insert a new building entry
-                new_building = Building(building_id, username_owner, building_type, level, x_value, y_value,
-                                        tile_rel_locations_json, created_at)
+                new_building = Building(building_id, username_owner, building_type, level, x_value, y_value, created_at)
                 building_data_access.add_building(new_building)
 
 
