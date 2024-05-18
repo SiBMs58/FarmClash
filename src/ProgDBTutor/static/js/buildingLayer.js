@@ -211,11 +211,12 @@ export class BuildingMap extends BaseMap {
         //await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
-        // Safe to call stuff here
-        console.log("debug");
+        console.log("fetchBuildingLayerList() success");
+        localStorage.setItem('gameData', 'true');
     }
 
-        /**
+
+    /**
      * Looks like:
      * [["None"  ,     "None"         ,["Fence.1.1", fence5], "None"],
      * ["None"  ,["Fence.1.2", fence6],       "None"        , "None],
@@ -256,19 +257,6 @@ export class BuildingMap extends BaseMap {
         return toReturn;
     }
 
-    /**
-     * Initialises the building layer. Fetches everything that needs to be fetched from the server, and stores it.
-     */
-    async initialize() {
-        await this.fetchBuildingAssetList();
-        await this.fetchBuildingMapData();
-        this.tiles = this.generateBuildingTileMap();
-        await new Promise((resolve) => this.preloadBuildingAssets(resolve));
-        // Safe to call stuff here
-        //debugger;
-        console.log("fetchBuildingLayerList() success");
-        localStorage.setItem('gameData', 'true');
-    }
 
     /**
      * Fetches the 'assetList.json' which is used to later fetch the right assets.
