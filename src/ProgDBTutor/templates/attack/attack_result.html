@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attack Results - {{ app_data['app_name'] }}</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/UI.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/leaderboard.css">
+    {% include 'head.html' %}
+     <style>
+        .table-hover tbody tr td {
+            border-top: 0px solid transparent !important;
+        }
+    </style>
+</head>
+<body>
+{% include 'header&footer.html' %}
+<div class="leaderboard">
+    <h1 class="leaderboard-header">Attack Result: {{ result }}</h1>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-custom-header">
+                <tr>
+                    <th>Resource Type</th>
+                    <th>Amount Taken</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resource, amount in resources.items() %}
+                <tr>
+                    <td>{{ resource }}</td>
+                    <td>{{ amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Optional: Script to dynamically update or load results if they are fetched from an API
+</script>
+
+</body>
+</html>

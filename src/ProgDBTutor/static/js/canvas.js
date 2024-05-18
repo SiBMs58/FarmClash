@@ -6,7 +6,25 @@ import { UserInputHandler } from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
 // Set on-screen tileSize-
-export const tileSize = 50;
+// Function to safely get zoom size from local storage
+function getZoomSize() {
+    try {
+        let zoomSize = localStorage.getItem('zoomSetting');
+        if (zoomSize !== null) {
+            let parsedZoomSize = parseInt(zoomSize);
+            if (!isNaN(parsedZoomSize) && parsedZoomSize > 0) {
+                return parsedZoomSize;
+            }
+        }
+    } catch (e) {
+        console.error('Error accessing local storage:', e);
+    }
+    return 50; // Default to 50 if value is not set or invalid
+}
+
+// Set on-screen tileSize, default to 50 if zoom size is not set
+export let tileSize = getZoomSize();
+
 
 // Create terrain map
 const terrainCanvas = document.getElementById('terrainCanvas');
@@ -31,8 +49,15 @@ const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
-export const buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
-
+export let buildingMap;
+if (window.friend) {
+    // If friendData is available, use it in the constructor
+    console.log("Friend data is available", window.friend);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer, window.friend);
+} else {
+    // If friendData is not available, omit it from the constructor
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
+}
 
 
 // Create ticker
@@ -89,22 +114,3 @@ async function initializeGame() {
 initializeGame().then(
     // Add code that is dependent on initialisation
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

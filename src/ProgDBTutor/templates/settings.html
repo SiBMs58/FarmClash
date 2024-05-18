@@ -2,27 +2,94 @@
 <head>
     <title>{{ app_data['app_name'] }}</title>
     {% include 'head.html' %}
+    <link rel="stylesheet" href="../static/css/settings.css"> <!--or different image -->
+
+
 </head>
 <html lang="en">
 <body>
     {% include 'header&footer.html' %}
 
-    <div class="container-fluid mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8 text-center">
-                <h1>Settings</h1>
-                <div class="logout-btn">
-                    <div class="my-3">
-                        <img src="../static/img/UI/logout_btn.png" alt="Logout" usemap="#logoutMap" id="logout-btn">
-                        <map name="logoutMap">
-                            <area shape="rect" coords="0,0,150,150" alt="Logout" href="{{ url_for('auth.logout') }}">
-                        </map>
-                    </div>
-                </div>
+    <div class="center-wrapper">
+    <img src="../static/img/UI/Settings_tab.png">
+</div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                LOG-OUT
+            </div>
+            <div class="col-auto">
+                <div class="logout-btn"></div>
+                <button class="sound-image-button" >
+                    <a href="{{ url_for('auth.logout') }}">
+                        <img src="../static/img/UI/logout_btn.png" alt="Logout" usemap="#logoutMap" id= "image-button">
+                    </a>
+                </button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                SOUND
+            </div>
+            <div class="col-auto">
+                <div class="sound-btn"></div>
+                <button  class="sound-image-button" id="sounddown" ><img src="../static/img/UI/sounddown_btn.png" id="sounddownimg"></button>
+                <span>&nbsp;</span>
+                <p id="soundNumber"> 50 </p>
+                <p> % </p>
+                <span>&nbsp;</span>
+                <button class="sound-image-button" id="soundup" ><img src="../static/img/UI/soundup_btn.png" id="soundupimg"></button>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                MUTE
+            </div>
+            <div class="col-auto">
+               <div class="mute-btn"></div>
+                <button  class="sound-image-button" id="muteButton"> <img src="../static/img/UI/sound_btn.png" id="mutebuttonimg"></button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                BACKGROUND SOUND
+            </div>
+            <div class="col-auto">
+               <div class="mute-btn"></div>
+                <button class="sound-image-button" id="playBackgroundMusicButton"><img src="../static/img/UI/slider_off.png" id="backsoundimg" ></button>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                ZOOM
+            </div>
+            <div class="col-auto">
+                <div class="zoom-btn"></div>
+                <button class="sound-image-button" id="zoomDownButton"><img src="../static/img/UI/minus_btn.png" id="zoomdownimg" ></button>
+                <span>&nbsp;</span>
+                <p id="zoomNumber"> 50 </p>
+                <p>% </p>
+                <span>&nbsp;</span>
+                <button class="sound-image-button" id="zoomUpButton"><img src="../static/img/UI/plus_btn.png" id="zoomupimg"></button>
             </div>
         </div>
     </div>
 
-    {% include 'footer.html' %}
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/zoom.js') }}"></script>
+
+
+    <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
 </body>
 </html>

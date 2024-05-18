@@ -13,38 +13,52 @@ def mock_db_connection():
 def market_data_access(mock_db_connection):
     return MarketDataAccess(mock_db_connection)
 
-def test_get_market_data_returns_market_object(market_data_access, mock_db_connection):
-    # Mock data returned by fetchone
-    mock_db_connection.get_cursor().fetchone.return_value = {
-        'crop_name': 'carrot',
-        'current_price': 15,
-        'current_quantity_crop': 100,
-        'prev_quantity_crop': 50,
-        'last_update': datetime(2023, 5, 1, 12, 0, 0)
-    }
+def test_get_market_data_returns_none_when_not_found(market_data_access, mock_db_connection):
+    mock_db_connection.get_cursor().fetchone.return_value = None
 
-    market = market_data_access.get_market_data('carrot')
+    market = market_data_access.get_market_data('nonexistentcrop')
 
-    assert isinstance(market, Market)
-    assert market.crop_name == 'carrot'
-    assert market.current_price == 15
-    assert market.current_quantity_crop == 100
-    assert market.prev_quantity_crop == 50
-    assert market.last_update == datetime(2023, 5, 1, 12, 0, 0)
+    assert market is None
     mock_db_connection.get_cursor().execute.assert_called_once_with(
         'SELECT * FROM market WHERE crop_name = %s',
-        ('carrot',)
+        ('nonexistentcrop',)
     )
 
-def test_add_market_data_adds_successfully(market_data_access, mock_db_connection):
-    new_market = Market('corn', 20, 300, 200, datetime.now())
+def test_add_market_data_updates_successfully(market_data_access, mock_db_connection):
+    existing_market = Market('corn', 20, 300, 200, datetime.now())
+    mock_db_connection.get_cursor().fetchone.return_value = {
+        'crop_name': 'corn',
+        'current_price': 20,
+        'current_quantity_crop': 300,
+        'prev_quantity_crop': 200,
+        'last_update': existing_market.last_update
+    }
 
-    success = market_data_access.add_market_data(new_market)
+    updated_market = Market('corn', 22, 320, 310, datetime.now())
+    success = market_data_access.add_market_data(updated_market)
 
     assert success
-    mock_db_connection.get_cursor().execute.assert_called_once_with(
-        'INSERT INTO market (crop_name, current_price, current_quantity_crop, prev_quantity_crop, last_update) '
-        'VALUES (%s, %s, %s, %s, %s)',
-        ('corn', 20, 300, 200, new_market.last_update)
-    )
+    expected_sql = """
+        UPDATE market
+        SET current_price = %s, current_quantity_crop = %s, prev_quantity_crop = %s, last_update = %s
+        WHERE crop_name = %s;
+    """
+    normalized_expected_sql = ' '.join(expected_sql.split())  # This removes all extraneous whitespace
+    actual_call = mock_db_connection.get_cursor().execute.call_args[0][0]
+    normalized_actual_sql = ' '.join(actual_call.split())  # Also normalizes the actual SQL
+
+    assert normalized_expected_sql == normalized_actual_sql  # Compare normalized SQL statements
     mock_db_connection.conn.commit.assert_called_once()
+
+
+
+def test_add_market_data_handles_errors_gracefully(market_data_access, mock_db_connection):
+    new_market = Market('wheat', 10, 150, 100, datetime.now())
+    mock_db_connection.get_cursor().execute.side_effect = Exception("Database error")
+
+    try:
+        market_data_access.add_market_data(new_market)
+    except Exception as e:
+        assert "Database error" in str(e)
+
+    mock_db_connection.conn.commit.assert_not_called()

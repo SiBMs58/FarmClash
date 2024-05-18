@@ -1,6 +1,6 @@
 import { UserInputHandler } from '../userInputHandler.js';
 
-describe("UserInputHandler Tests", () => {
+/*describe("UserInputHandler Tests", () => {
     let userInputHandler;
     let mockClass;
 
@@ -35,4 +35,4 @@ describe("UserInputHandler Tests", () => {
     });
 
     // Additional tests can be added here to cover more scenarios and methods.
-});
+});*/

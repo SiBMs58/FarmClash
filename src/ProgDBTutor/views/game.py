@@ -28,6 +28,33 @@ def leaderboard():
     :return:
     """
     return render_template('game/leaderboard.html', app_data=config_data)
+@game_blueprint.route('/silo')
+@login_required
+def silo():
+    """
+    Renders the silo view.
+    :return:
+    """
+    return render_template('silo.html', app_data=config_data)
+
+@game_blueprint.route('/barn')
+@login_required
+def barn():
+    """
+    Renders the barn view.
+    :return:
+    """
+    return render_template('barn.html', app_data=config_data)
+
+@game_blueprint.route('/townhall')
+@login_required
+def townhall():
+    """
+    Renders the townhall view.
+    :return:
+    """
+    return render_template('townhall.html', app_data=config_data)
+
 
 """
 Building fetch and update functions
@@ -84,39 +111,6 @@ def update_map():
 
 
         return jsonify({"status": "success", "message": "Data inserted successfully"})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-
-@game_blueprint.route('/fetch-building-information', methods=['GET'])
-def fetch_building_information():
-    try:
-        building_data_access = current_app.config.get('building_data_access')
-        # Fetch building information based on username
-        buildings = building_data_access.get_buildings_by_username_owner(current_user.username)
-
-        # If no buildings found, return appropriate JSON response
-        if not buildings:
-            return jsonify({"status": "No buildings", "user": current_user.username})
-
-        # Construct the final JSON response
-        building_information = {}
-        for building in buildings:
-            building_info = {
-                "self_key": building.building_id,
-                "general_information": building.building_type,
-                "level": building.level,
-                "building_location": [building.x, building.y],
-                "tile_rel_locations": building.tile_rel_locations
-            }
-            building_information[building.building_id] = building_info
-
-        json_response = {
-            "building_information": building_information
-        }
-
-        return jsonify(json_response)
-
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

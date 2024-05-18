@@ -5,6 +5,15 @@ resources.money = 0
 let clickedResourceButton = false;
 
 
+if (localStorage.getItem('backsoundButtonState') === null) {
+        // If not, set the default settings (sound off)
+        localStorage.setItem('backsoundButtonState', 'slider_off.png');
+        localStorage.setItem('muteButtonState', 'sound_btn.png');
+    }
+        localStorage.getItem('muteButtonState')
+        localStorage.getItem('backsoundButtonState')
+
+
 document.addEventListener("DOMContentLoaded", function() {
     fetchCropsAndMoney()
         .then(() => {
@@ -67,7 +76,7 @@ function updateMoneyDisplay() {
 
     if (moneyDisplay) {
         moneyDisplay.innerHTML = '<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">';
-        moneyDisplay.innerHTML += getAmountDisplay(resources.money);
+        moneyDisplay.innerHTML += getAmountDisplay(resources.money, 'money');
         moneyDisplay.innerHTML += '<img src="../../static/img/UI/display.money.right.png" alt="🪙" draggable="false">'
     }
 }
@@ -75,7 +84,7 @@ function updateCropDisplay() {
     const popupDiv = document.querySelector('.popup');
     let resourceHTML = '<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">';
     for (let i = 0; i < resources.crops.length; i++) {
-        resourceHTML += getAmountDisplay(resources.crops[i][1])
+        resourceHTML += getAmountDisplay(resources.crops[i][1], resources.crops[i][0])
         resourceHTML += getCropDisplay(resources.crops[i][0]);
         if (i < resources.crops.length - 1) {
             resourceHTML += '<img src="../../static/img/UI/display.extender.png" alt=" " draggable="false">'.repeat(5);
@@ -114,11 +123,15 @@ function getCropDisplay(resourceType) {
             return '';
     }
 }
-function getAmountDisplay(amount){
+function getAmountDisplay(amount, type){
     let value = amount.toString();
 
     let HTML = ''
     for (let i = 0; i < value.length; i++) {
+        if(i === 4 && type !== 'money'){
+            HTML += `<img src="../../static/img/UI/display.+.png" alt="." draggable="false">`;
+            break;
+        }
         HTML += `<img src="../../static/img/UI/display.${value[i]}.png" alt="${value[i]}" draggable="false">`;
     }
     return HTML

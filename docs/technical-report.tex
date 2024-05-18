@@ -39,6 +39,159 @@ This project is designed to meet the educational goals of learning to develop ex
 
 \section{Game Description}
 FarmClash allows players to build and manage their farms, defend against attacks from other players, and maximize their profits through strategic selling of farm produce influenced by dynamic market prices. Players start with a basic farm and can upgrade their facilities and defenses as they progress, interacting with other players through alliances and competitive gameplay.
+\subsection{Buildings}
+
+\subsubsection{Idle Buildings}
+
+\begin{enumerate}
+    \item \textbf{Chickencoop}: Produces eggs and allows breeding of chickens. Higher levels yield more products and increases the limit of chickens.
+    \item \textbf{Cowbarn}: Produces milk and allows breeding of cows. Higher levels yield more products and increases the limit of cows.
+    \item \textbf{Goatbarn}: Produces wool and allows breeding of goats. Higher levels yield more products and increases the limit of goats.
+    \item \textbf{Pigpen}: Produces truffles and allows breeding of pigs. Higher levels yield more products and increases the limit of pigs.
+    \item \textbf{Field}: Used for planting crops. Higher levels yield more harvest. (Passive upgrades increase farm time)
+    \item \textbf{Harvesthopper}: Harvests and replants crops in adjacent fields automatically. Higher level increases the harvest limit.
+\end{enumerate}
+
+\subsubsection{Defense Buildings}
+
+\begin{enumerate}
+    \item \textbf{Fence}:
+    Increases defense level. Higher level increases the defense level severely. Fortifying can increment the defense level slightly.
+    \item \textbf{Townhall}: Determines user level, prevents buildings from leveling beyond its level, unlocks crops, allows the user to discover more of the map, can be fortified for increased defense and researched for a higher attack level, however upgrading does more to the defense and attack level. This building will open a Townhall UI where Next unlocks can be viewed as well as the defense level and base attack level.
+\end{enumerate}
+
+\subsubsection{Storage Buildings}
+
+\begin{enumerate}
+    \item \textbf{Silo}: Stores crops. Level 10 removes storage limit. Organizing can increment the limit slightly, however upgrading does more to the limit. This building will open a Silo UI. This building will open a Barn UI where resources can be viewed and removed.
+    \item \textbf{Barn}: Stores resources besides crops and money. Level 10 removes storage limit. Organizing can increment the limit slightly, however upgrading does more to the limit. This building will open a Barn UI where resources can be viewed and removed.
+\end{enumerate}
+
+\subsubsection{Explore Buildings}
+
+\begin{enumerate}
+    \item \textbf{Bunny Bay}: Exploring is unlocked as soon as the building reaches level 1. The higher the level, the lower the risk. Investing in the building will also lower the risk slightly. This building will open an Explore UI.
+\end{enumerate}
+
+\subsubsection{Friend-placed Buildings}
+
+\begin{enumerate}
+    \item \textbf{Gift Boxes}: Friends can place gift boxes once a day with gifts for you. Gifting to others increases your defense level (depending on what and how much you gift).
+\end{enumerate}
+
+\subsection{Exploring}
+
+\subsubsection{Exploration Mechanics}
+
+The bunny of the Bay will go explore for a [user selected] time with a [set of user selected] animals with a limit of Building level. After exploring, the user can open the gathered boxes and after that a downtime will be set.
+
+The longer the exploring takes, the higher number of resources per box/the higher the rarity of resources will be. A box can be a coin, a crop, or a resource box as well as be empty. The more animals are sent to explore, the more boxes will be returned. Choosing which animal goes also has perks and downsides:
+
+\begin{itemize}
+\item \textbf{Chickens}:
+\begin{itemize}
+\item Increased chance of finding eggs.
+\item Increases the yield of crops if found during exploration.
+\item Higher rarity of animal resources.
+\item Higher chance of getting lost.
+\end{itemize}
+\item \textbf{Cows}:
+\begin{itemize}
+    \item Increased chances of milk.
+    \item Brings more resources on average.
+    \item Higher chance to bring coins.
+    \item Higher chance to bring no boxes.
+\end{itemize}
+
+\item \textbf{Pigs}:
+\begin{itemize}
+    \item Increased chances of truffles.
+    \item Higher rarity of craft resources.
+    \item Higher amount of craft resources.
+    \item Higher chance of empty boxes.
+\end{itemize}
+
+\item \textbf{Goats}:
+\begin{itemize}
+    \item Increased chances of wool.
+    \item Has a chance to bring 2 boxes.
+    \item Has a small chance to bring 3 boxes.
+    \item Brings lower resources on average.
+\end{itemize}
+\end{itemize}
+
+Keep in mind exploring carries a risk with it; long explorations will carry a higher risk. Boats can get lost, and so will the animals and boxes on those boats. There is also a risk that no boats will return; in that case, no boxes are returned, and the building will have a longer downtime. The risk decreases the higher the level of the building and the higher the investment in the building is.
+
+\subsection{Animals}
+
+Losing animals is possible in attack and during exploration; this will lower the defense level for a while until the animals are bred again.
+
+\begin{enumerate}
+    \item Chicken
+    \item Cow
+    \item Pig
+    \item Goat
+\end{enumerate}
+
+\subsection{Attacking}
+
+High stamina means more resources gathered. High damage means higher attack points.
+\begin{enumerate}
+    \item \textbf{Chicken}: Low Defense, High stamina, Low Damage.
+    \item \textbf{Cow}: High Defense, Low stamina, Medium Damage.
+    \item \textbf{Pig}: Medium Defense, Low stamina, Medium Damage.
+    \item \textbf{Goat}: Medium Defense, Medium stamina, High Damage.
+\end{enumerate}
+
+\subsection{Resources}
+
+\begin{enumerate}
+    \item \textbf{Coins}: Used for various purposes. Like upgrading, fortifying, investing...
+    \item \textbf{Crops}: Various crops with increasing unlock levels. Total amount limited by Silo capacity.
+    \begin{enumerate}
+        \item Wheat (Level 0)
+        \item Carrot (Level 1)
+        \item Corn (Level 2)
+        \item Lettuce (Level 3)
+        \item Tomato (Level 4)
+        \item Turnip (Level 5)
+        \item Zucchini (Level 6)
+        \item Parsnips (Level 7)
+        \item Cauliflower (Level 8)
+        \item Eggplant (Level 9)
+    \end{enumerate}
+    \item \textbf{From Animals}:
+    \begin{enumerate}
+        \item Egg (Common)
+        \item Rustic Egg (Uncommon)
+        \item Crimson Egg (Rare)
+        \item Emerald Egg (Epic)
+        \item Sapphire Egg (Legendary)
+        \item Milk (Common)
+        \item Chocolate Milk (Uncommon)
+        \item Strawberry Milk (Rare)
+        \item Soy Milk (Epic)
+        \item Blueberry Milk (Legendary)
+        \item Wool (Common)
+        \item Alpaca Wool (Uncommon)
+        \item Cashmere Wool (Rare)
+        \item Irish Wool (Epic)
+        \item Dolphin Wool (Legendary)
+        \item Truffle (Common)
+        \item Bronze Truffle (Uncommon)
+        \item Gold Truffle (Rare)
+        \item Forest Truffle (Epic)
+        \item Winter Truffle (Legendary)
+    \end{enumerate}
+    \item \textbf{Craft} (From exploring and attacking)
+    \begin{enumerate}
+        \item Stick (Common)
+        \item Stone (Uncommon)
+        \item Plank (Uncommon)
+        \item Log (Rare)
+        \item Ingot (Rare)
+    \end{enumerate}
+\end{enumerate}
 
 \section{Technologies Used}
 \begin{itemize}
@@ -95,6 +248,7 @@ The backend supports functionalities related to the management of friendships be
     .../api/friends
     \end{verbatim}
     \item \textbf{Visit Friends World:} The system allows users to visit their friends' farms, fostering engagement and interaction between players. This feature is implemented in the frontend, where users can navigate to their friends' maps and view their progress.
+    The backend enables the user to see the map and buildings of there friends. This is done by fetching the building information of the user that is being visited.
 \end{itemize}
 \paragraph{Messaging Feature:}
 \\ $\ast$ TODO
@@ -107,6 +261,43 @@ The backend manages the leaderboard by fetching and calculating user scores, sor
     \item \textbf{Ensure Inclusion of Current User:} The system checks if the current user is among the top users or friends listed. If not, the current user is also added to the leaderboard. It then removes duplicates and finalizes a ranked list of unique users.
     \item \textbf{Return Leaderboard Data:} The backend returns the leaderboard data in JSON format, including the user's rank, username, and score. This data is then displayed on the frontend for users to view and engage with.
 \end{itemize}
+
+\subsubsection{Market Feature}
+The backend manages the market by storing the current price and adjusting it based on user sales of a given crop. This process occurs in intervals of 1 minute using past and current sales data:
+route : \begin{verbatim}`@api/update-market`\end{verbatim}
+\begin{itemize}
+    \item \textbf{update price:} Calculates a new price for a crop. Adjusts the price based on the current count and a random factor. Constrains the new price within a specific range. Returns the calculated new price.
+    \item \textbf{update market:} Handles POST requests for updating market data. Retrieves current market data for a specific crop. If 1 minute has passed since the last update, calculates and updates the price using the update\_price function. Updates the market data with the current sales and price. Creates a new entry with a default price if no existing market data is found. Returns a response indicating the success or failure of the update.
+    \item \textbf{fetch price:} Handles GET requests to fetch the current price of a crop. Retrieves market data for the requested crop. Updates the price using the update\_price function if needed. Returns the current price of the crop in the response.
+\end{itemize}
+
+\subsubsection{Building Feature}
+The backend manages the buildings by storing, updating or fatching the requested building\_data:
+route : \begin{verbatim}`@api/building-map`\end{verbatim}
+\begin{itemize}
+    \item \textbf{update\_map Function:} inserts a given building json in the database. If it exists, it updates, else it creates a new entry.
+    \item \textbf{fetch\_building\_information Route:} Handles GET requests to the requested building info. if the requested building does not exist, returns an error.
+\end{itemize}
+
+\subsubsection{Attack Feature}
+The attack feature allows users to visit opponents' worlds and simulate an attack, determining the outcome based on scores.
+\begin{itemize}
+    \item \textbf{Endpoint} The route `/visit\_oppenents\_world` (methods=['GET']) handles the attack requests.
+    \item \textbf{Opponent Selection} When a user visits the endpoint, the system selects an opponent who meets certain criteria (not previously searched, score difference less than 1000, and not a friend).
+        \begin{itemize}
+            \item The opponent is chosen using `choose\_opponent\_logic()` which retrieves all users, the current user's friends, and calculates scores for each user based on their resources.
+            \item If no suitable opponent is found, the previously searched list is reset, and the user is notified via the `no\_opponent.html` template.
+        \end{itemize}
+    \item \textbf{Attack Simulation} Once an opponent is selected, the user visits the opponent's world.
+        \begin{itemize}
+            \item The outcome of the attack is determined by comparing the player's score with the opponent's score using `determine\_attack\_outcome(player\_score, opponent\_score)`.
+            \item The attack outcome can be a win, loss, or a random outcome if the scores are close.
+            \item The resources transferred are calculated as a percentage of the opponent's resources, adjusted based on the attack outcome.
+        \end{itemize}
+    \item \textbf{Response} The attack view is rendered using the `visit\_opponents\_world.html` template, displaying the opponent's world and the result of the attack.
+\end{itemize}
+
+
 
 \subsection{Frontend Interface}
 The frontend provides an interactive and user-friendly interface using React, allowing players to engage with the game seamlessly. It features a map view for navigating different parts of the farm and a market interface for selling produce.
@@ -124,11 +315,143 @@ The registration page allows new users to create an account by providing essenti
     \item \textbf{JavaScript:} Button Feedback: Implements the same interactive feedback for the registration button, enhancing user experience during the account creation process.
 \end{itemize}
 
+\subsubsection{MAIN GAME WORLD}
+The \textit{main game world} consists of several HTML canvases layered on top of each other, each with their own unique
+JavaScript classes to provide the right functionality. These canvases display 16x16 tiles scaled to a variable size and
+fill the entire screen. The player can click and drag the screen to look around the game world, interact with buildings,
+and use the appropriate UI to navigate different parts of the game.
+
+After logging in, the player gets redirected to \texttt{https://"baseLink"/game/} which fetches \texttt{game.html}. This
+file is the most important HTML, as it connects and fetches every other file. It includes the UI HTML, the pop-up HTML,
+sets and positions the canvases, and links \texttt{canvas.js}. All the canvases have their own set of tiles which are
+pre-fetched and stored during the initialization period. This is needed for instantaneous loading; otherwise, a fetch
+delay is noticeable during runtime.
+
+The HTML UI elements sit on top of these canvases and utilize CSS styling. The only technologies used are JavaScript,
+HTML, and CSS.
+
+
+\paragraph{canvas.js} This file is most important for initializing the game. It creates all the JavaScript classes used
+throughout the main game in the correct order (some classes depend on other classes). It is also responsible for
+correctly resizing all the layered canvases when the browser window's size is changed by the user. Additionally the
+initialize() functions of some classes are called. These async functions perform all the correct fetches for the
+asset's. Then the resize event gets linked and the ticker class gets started.
+
+\paragraph{Terrain Layer}
+The terrain layer provides functionality for correctly displaying the terrain tiles and is the lowest layered canvas,
+providing as a sort of background layer.
+The map is procedurally generated with a map size with width 58 and height 43
+with the usable part of the map being the middle 50x35 as 4 tiles are used as border/padding around the map. This padding
+consists of 3 water tiles and a grass water border. As for the map itself it is generated using a generate\_water\_positions()
+function which takes parameters the actual width (50) and height (35), number of lakes (default = 8), minimum lake size
+(default = 3 tiles) and the maximum lake size (default = 10 tiles) and returns the positions where water should be generated.
+The actual variation of the tile is then randomly chosen out of a set of assets. There are default assets and special assets
+which contain special things (stone, logs, bushes etc.).
+The map is stored as a 2D array of strings that refer to their tile png name.
+All these assets were fetched beforehand and stored in a map with the tile name as the key. The 'drawTiles()' function
+uses the map array together with the camera location to correctly draw the tiles on the screen. This function gets
+called many times throughout the code every time there's an adjustment and the tiles need to be redrawn. When dragging
+the screen the appropriate move functions of the map get called which change the camera location and redraw the screen.
+
+After starting the game you may notice some tiles are being animated. This is accomplished by utilizing the tick()
+function and going through the terrain map array, changing specific tiles to the consequent tile in the animation and
+redrawing them.
+
+\paragraph{Building Layer} The building layer works similarly to the terrain layer in terms of rendering the tiles but
+there are some distinctions and  additional features. The way the building map is saved differs from the the terrain
+layer. The buildings and building information are saved in a json structure. (opslag methode moet ge\"update worden dus
+hier is nog geen documentatie voor).
+
+The building layer provides support for interacting with buildings. To move a building you can click (without dragging),
+after which the building is locked to the mouse. Move the mouse, then click again to place the building. When attempting
+to place a building on an invalid location the building simply doesn't get placed and stays attached to the mouse.
+Invalid locations include other buildings and water tiles. When trying to drag a building outside the window or outside
+the map bounds the building doesn't move any further in a way such that it is never in an impossible location. You can
+drag the screen while moving a building to easily move around the map without needing to let go of the building.
+
+When moving a building it gets rendered on top of all other buildings to avoid it from going underneath other structures
+around the map. This would lead to a somewhat strange visual otherwise.
+
+\paragraph{Building Pop-up} When right-clicking on a building, a HTML pop-up shows up on the right side of the screen.
+This is used to display various details about the building of interest and also allows you to upgrade the building. The
+pop-up contains a "Building Info" title, the name of the type of building, a small text with some information (namely
+the purpose of the building). On top of that there are, depending on the type of building, potentially some stats that
+include the level the building is at and other stats like upgrade cost, defense, eggs/hour, etc. Lastly there is an
+upgrade button and a close button that are both animated when clicked.
+
+When right-clicking another building while a pop-up is already open, a switch animation is displayed to make clear that
+you are switching to the information of a different building. When right-clicking the same building twice this animation
+doesn't happen. Lastly when doing almost any other action like dragging the screen and moving a building the pop-up
+automatically closes.
+
+\paragraph{Main UI} The header and footer HTML provide the user with buttons for easy access to different parts of the
+game as well as displaying some useful information such as the amount of coins and produce the player has.
+
+\paragraph{Ticker class} This JavaScript code utilizes the observer pattern. During initialization, classes can
+subscribe to this class, then when the  ticker starts it will call the tick() function on every subscribed class every
+set milliseconds (1000/24 ms to get 24 frames/second). Classes can then use this function to implement timing sensitive
+functionality, namely animations.
+
+\paragraph{User Input Handler} This is a class that has set up all the event listeners needed to detect useful user
+input in its constructor. Like the Ticker class it also uses an observer pattern approach, where all classes that
+potentially need to know about user input get added in the initialization phase of the game.
+
+In this project a click on any of the canvases only gets registered on the mouse up event. This is because we clearly
+want to differentiate between a click and a drag. To achieve this the user input handler stores the mouse down location.
+On the mouse up event it compares the current location to the mouse down location and when this distance is smaller then
+5 pixels in the x and y direction, a click is registered. This margin ensures that when the user accidentally moves the
+mouse a few pixels, the input still gets registered as a click.
+
+In order to check on what canvas the user intended to click, a trickle-down method is used. The input handler first
+checks the first class in the list and calls the 'handleClickInput(x,y)' function on this class. This function will then
+return a boolean whether the click was applicable to the class or not. If not, the handleClick function is called on the
+next layer's class and so on.
+
+
 \subsubsection{Friends and Messaging Feature}
+The friends and messaging features are central to fostering a community environment and enabling social interactions within the game.
+\paragraph{Friends Feature}
+\begin{itemize}
+    \item \textbf{HTML and CSS:} The friends/dashboard.html file structures the friends page, displaying the user's friends list. The friends.css file styles the page, ensuring a consistent design with the rest of the application.
+    \item \textbf{JavaScript:} The loadFriends() function fetches the user's friends list from the backend API. It populates the friends table in the HTML dynamically, ensuring that users can easily view and interact with their friends. Error handling is included to manage and alert users in case of API failures. The visitFriendsWorld() function allows users to visit their friends' farms, enhancing social interactions within the game.
+\end{itemize}
+\paragraph{Messaging Feature}
+\\ $\ast$ TODO
+
 \subsubsection{Leaderboard Feature}
 \begin{itemize}
     \item \textbf{HTML and CSS:} The leaderboard.html contains the HTML structure, including a table where the leaderboard will be dynamically populated. The CSS file leaderboard.css styles the leaderboard page, ensuring a visually appealing and consistent design.
     \item \textbf{JavaScript:} A JavaScript function loadLeaderboard() (event handling; this function is triggered when document content is fully loaded) is responsible for fetching the leaderboard data from the backend API. Upon successful fetch, it populates the leaderboard table in the HTML dynamically. Error handling is incorporated to manage and alert users in case of failures in data retrieval.
+\end{itemize}
+
+\subsubsection{Attack Feature}
+\begin{itemize}
+    \item \textbf{HTML and CSS:}
+        \begin{itemize}
+            \item \textbf{attack\_animation.html:} This file provides the structure for the attack animation view, including styled emoji swords for visual effect. The animation runs on page load and redirects to the attack result page after a short delay.
+            \item \textbf{attack\_result.html:} This file displays the results of an attack, showing a table of resources taken. It includes basic styling and an optional script for dynamic updates.
+            \item \textbf{no\_opponent.html:} This file informs the user when no opponents are available for an attack. It includes a simple message and basic layout styling.
+            \item \textbf{visit\_opponents\_world.html:} This file is used for rendering the opponent's world view during an attack. It includes several canvas elements for displaying game visuals and links to JavaScript for game logic.
+            \item \textbf{visit\_opponents\_UI.html:} This file contains the user interface for visiting an opponent's world, including buttons for resources and attacks, as well as dynamic elements for displaying resource information.
+        \end{itemize}
+    \item \textbf{JavaScript:}
+        \begin{itemize}
+            \item \textbf{attack\_animation.html:} A script triggers the animation of sword emojis and redirects to the attack result page after a specified time.
+            \item \textbf{visit\_opponents\_UI.html:} Contains multiple JavaScript functions:
+                \begin{itemize}
+                    \item \textbf{clickResources():} Handles the display and hiding of the resource overlay. Fetches the opponent's resources from an API and dynamically updates the resource display.
+                    \item \textbf{updateResources(resources):} Updates the HTML to show the opponent's resources.
+                    \item \textbf{getImage(resourceType):} Returns the appropriate image for a given resource type.
+                \end{itemize}
+            \item \textbf{visit\_opponents\_world.html:} Includes a script to load game data specific to the opponent's world using the `data-opponent` attribute.
+        \end{itemize}
+\end{itemize}
+
+
+\subsubsection{Books}
+\begin{itemize}
+    \item \textbf{HTML and CSS:} The bookChat.html and bookMarket.html contain the HTML structure of the books, covers and pages (front and back), along with the content for the chat and the market respectively.
+    \item \textbf{JavaScript:} There is a JavaScript function: openBook() to open the cover of the book and a closeBook() to close the cover of the book. In addition, you have the goNextPage() function to go to the next page and the goPrevPage() function to go to the previous page. In addition to these functions, there are querySelectors for the covers, pages and buttons
 \end{itemize}
 
 \section{Challenges and Solutions}
@@ -146,6 +469,8 @@ For backend testing, we utilized Pytest, a powerful and flexible testing tool. O
             \item \textbf{Maps Endpoint:} Ensured that map data could only be accessed by administrators, testing for correct map attributes and response format.
             \item \textbf{Resources Endpoint:} Checked both general and specific resource retrieval endpoints for proper authorization checks and JSON formatting.
             \item \textbf{Terrain Map Endpoint:} Tested user-specific access to terrain maps, ensuring the integrity and format of the terrain data returned.
+            \item \textbf{Market Data Access:} We insert and fetch new crop elements , to check if the database requests work.
+            \item \textbf{Building Data Access:} We check if the databse is updated correctly when inserting new elements and fetching them.
             \item \textbf{Friendships Endpoint:} Assured that users could reliably retrieve their list of friends, with responses properly formatted as JSON arrays.
             \item \textbf{Chat Endpoint:} Confirmed functionality for retrieving chat messages between users, focusing on correct data handling and security measures.
         \end{itemize}
@@ -158,17 +483,18 @@ For backend testing, we utilized Pytest, a powerful and flexible testing tool. O
         \item \textbf{Resource Data Access:} Through \texttt{test\_resource\_data\_access.py}, we tested the handling of game resources, confirming the correct implementation of resource accumulation and usage.
         \item \textbf{Friendship Data Access:} With \texttt{test\_friendship\_data\_access.py}, we assessed the systems managing player interactions and relationships within the game.
         \item \textbf{Chat Message Data Access:} Using \texttt{test\_chatmessage\_data\_access.py}, we evaluated the functionality of in-game chat systems, ensuring reliable and secure message delivery and storage.
+        \item \textbf{Building Data Access:} Using \texttt{test\_building\_data\_access.py}, we ensure correct retrieval of building information
+        \item \textbf{Market Data Access:} Using \texttt{test\_market\_data\_access.py}, we check if the sale count if updated correctly using the database
     \end{itemize}
     \item \textbf{Integration Tests:} We conducted extensive tests to ensure that these individual components functioned together seamlessly, simulating real-world usage to detect any integration issues.
 \end{itemize}
 These targeted tests helped us to systematically validate each aspect of our backend, ensuring robustness and reliability throughout the game's infrastructure.
 
 \subsection{Frontend Testing}
-Frontend testing was conducted using Jasmine, focusing on the interactive aspects of our application:
+Frontend testing was conducted using a combination of Jasmine and manual testing, focusing on the interactive aspects of our application:
 \begin{itemize}
-    \item \textbf{UI Component Tests:} Using \texttt{canvas-tests.js}, we tested the rendering and behavior of graphical components, such as the game map and resource widgets, to ensure they behaved consistently across different browsers and resolutions.
-    \item \textbf{User Interaction Tests:} We simulated user interactions such as clicking, dragging, and keyboard inputs to ensure the UI responded correctly and efficiently without errors or unexpected behavior.
-    \item \textbf{Performance Tests:} To assess the application’s performance, particularly during peak load times, we measured response times and resource usage to identify and mitigate any potential bottlenecks.
+    \item \textbf{UI Component Tests:} We tested the rendering and behavior of graphical components, such as the game map and resource widgets, to ensure they behaved consistently across different browsers and resolutions.
+    \item \textbf{User Interaction Tests:} We simulated user interactions such as clicking, dragging, clicking button and resizing the browser window to ensure the UI responded correctly and efficiently without errors or unexpected behavior.
 \end{itemize}
 \subsection{User Acceptance Testing}
 User acceptance testing was carried out with a group of target users who provided valuable feedback on the usability and overall experience of the game. This feedback was crucial in refining the gameplay mechanics and interface, leading to several iterations that enhanced user engagement and satisfaction.

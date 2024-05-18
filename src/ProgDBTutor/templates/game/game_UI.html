@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" type="text/css" href="../../static/css/UI.css">
+     <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     <title>game UI</title>
 </head>
 <body>
@@ -46,11 +48,12 @@
             </a>
         </button>
         <button id="attack-btn" class="attack-btn">
-            <a href="{{ url_for('attack') }}">
+            <a href="{{ url_for('attack.visit_opponent') }}">
                 <img src="../../static/img/UI/attack_btn.png" alt="⚔️">
             </a>
         </button>
     </footer>
     <script src="../../static/js/gameUI.js"></script>
+
 </body>
 </html>

@@ -2,15 +2,18 @@
 <html lang="">
 <head>
     <title>Dashboard - {{ app_data['app_name'] }}</title>
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     {% include 'head.html' %}
 
     <style>
 
         body {
-            background-image: url("../../static/img/background/terrain.png");
-            background-size: cover; /* Ensure the background image covers the entire viewport */
-            background-repeat: no-repeat; /* Prevent the background image from repeating */
-            /* Optionally, you can add more CSS properties to customize the background image */
+            background-image: url("../../static/img/background/terrain.png");  /* or different image: ../../static/img/backround_dashboard.png  */
+             image-rendering: pixelated;
+
+
+
         }
 
     </style>
@@ -21,7 +24,7 @@
   <div class="container-fluid mt-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <h1 class="text-center">Dashboard</h1>
+            <h1 class="text-center"><img src="../../static/img/UI/Friends_tab.png"></h1>
             <div class="row">
                 <!-- Friends Column -->
                 {% include 'friends/friends_list.html' %}
