@@ -20,7 +20,7 @@ let prevBuildingName = "";
  * @param buildingName The unique name of the building.
  */
 export function openPopup(buildingInformation, buildingGeneralInformation, buildingName) {
-    if (isPopupOpen && prevBuildingName !== buildingName) {
+    if (isPopupOpen && (prevBuildingName !== buildingName)) {
         closePopup();
         setTimeout(function() { // Wait 200 ms
             actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName);

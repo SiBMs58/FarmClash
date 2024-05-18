@@ -211,6 +211,17 @@
         "Field": [
             "Field.L1.N,O,Z,W,"
         ],
+        "Field2": [
+            "Field2.B",
+            "Field2.BL",
+            "Field2.BR",
+            "Field2.L",
+            "Field2.M",
+            "Field2.R",
+            "Field2.T",
+            "Field2.TL",
+            "Field2.TR"
+        ],
         "Townhall": [
             "Townhall.1.4",
             "Townhall.L4.3.1",

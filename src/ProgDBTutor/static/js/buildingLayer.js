@@ -43,29 +43,21 @@ export const defaultMapData2 = {
             self_key: "fence1", // Must be the exact key of this sub-object
             general_information: "fence", // Link to the general information of this building type
             level: 4, // Building level (set "None" if not relevant)
-            building_location: [5, 4], // --> [y (height), x (width)], it's best practice to take the top-left corner of the building
-            tile_rel_locations: [ // location relative to 'building_location'
-                [[0, 0], "Fence.L4"], // [ rel_location ([y, x]), "Tile asset"]
-            ]
+            building_location: [8, 8] // --> [y (height), x (width)], it's best practice to take the top-left corner of the building
         },
         fence2: {
             self_key: "fence2",
             general_information: "fence",
             level: 3,
-            building_location: [5, 7],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L5"],
-            ]
+            building_location: [8, 9]
         },
         fence3: {
             self_key: "fence3",
             general_information: "fence",
             level: 2,
-            building_location: [8, 8],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L3"],
-            ]
+            building_location: [8, 10]
         },
+        /*
         fences_lv1: {
             self_key: "fences_lv1",
             general_information: "fence",
@@ -81,63 +73,30 @@ export const defaultMapData2 = {
                 [[2, 0], "Fence.L1.NO"],
                 [[1, 0], "Fence.L1.NZ"],
             ]
-        },
-        fences_lv9: {
-            self_key: "fences_lv9",
-            general_information: "fence",
-            level: 9,
-            building_location: [6, 15],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L9.OZ"],
-                [[0, 1], "Fence.L9.OW"],
-                [[0, 2], "Fence.L9.ZW"],
-                [[1, 2], "Fence.L9.NZ"],
-                [[2, 2], "Fence.L9.NW"],
-                [[2, 1], "Fence.L9.OW"],
-                [[2, 0], "Fence.L9.NO"],
-                [[1, 0], "Fence.L9.NZ"],
-            ]
-        },
-        fences_lv10: {
-            self_key: "fences_lv10",
-            general_information: "fence",
-            level: 10,
-            building_location: [6, 19],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L10.OZ"],
-                [[0, 1], "Fence.L10.OW"],
-                [[0, 2], "Fence.L10.ZW"],
-                [[1, 2], "Fence.L10.NZ"],
-                [[2, 2], "Fence.L10.NW"],
-                [[2, 1], "Fence.L10.OW"],
-                [[2, 0], "Fence.L10.NO"],
-                [[1, 0], "Fence.L10.NZ"],
-            ]
-        },
-        /*
+        },*/
         chicken_coop: {
             self_key: "chicken_coop",
             general_information: "chicken_house",
-            level: 5,
-            building_location: [12, 11],
-            tile_rel_locations: [
-                [[0, 0], "Chickencoop.L1.1.1"],
-                [[0, 1], "Chickencoop.L1.1.2"],
-                [[1, 0], "Chickencoop.L1.2.1"],
-                [[1, 1], "Chickencoop.L1.2.2"],
-                [[2, 0], "Chickencoop.3.1"],
-                [[2, 1], "Chickencoop.3.2"],
-            ]
+            level: 6,
+            building_location: [5, 11]
         },
-         */
-        field1: {
-            self_key: "field1",
+        field2: {
+            self_key: "field2",
             general_information: "field",
             level: 1,
-            building_location: [5, 5],
-            tile_rel_locations: [
-                [[0,0], "Field.L1.N,O,Z,W,"]
-            ]
+            building_location: [10, 8]
+        },
+        field3: {
+            self_key: "field3",
+            general_information: "field",
+            level: 1,
+            building_location: [10, 12]
+        },
+        field4: {
+            self_key: "field4",
+            general_information: "field",
+            level: 1,
+            building_location: [10, 16]
         }
     },
     building_general_information: {
@@ -148,23 +107,54 @@ export const defaultMapData2 = {
                 "market sale. Upgrade to boost production. Every egg sold brings you one " +
                 "step closer to agricultural dominance.",
             upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
-            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]] // All other stats specific for this building. ["Stat name display", [array of all values per level]]
+            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]], // All other stats specific for this building. ["Stat name display", [array of all values per level]]
+            maxLevel: 10, // todo toevoegen aan db
+            tile_rel_locations: [ // todo toevoegen aan db
+                [[0, 0], "Chickencoop.L@.1.1"], // location relative to 'building_location'
+                [[0, 1], "Chickencoop.L@.1.2"], // [ rel_location ([y, x]), "Tile asset"]
+                [[1, 0], "Chickencoop.L@.2.1"], // All the '@' will be replaced with the correct level
+                [[1, 1], "Chickencoop.L@.2.2"],
+                [[2, 0], "Chickencoop.3.1"],
+                [[2, 1], "Chickencoop.3.2"],
+            ]
         },
         fence: {
             display_name: "Fence",
             explanation: "Strategically place your fences in order to defend you farm from intruders as effectively as possible.",
             upgrade_costs: [500, 1000, 2000, 3500],
-            other_stats: [["Defence", [50, 100, 150, 200, 400]]]
-        },
-        tree: {
-            display_name: "Tree",
-            explanation: "This is just a tree."
+            other_stats: [["Defence", [50, 100, 150, 200, 400]]],
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[0, 0], "Fence.L@"], // This will be replaced with the correct type of fence according to its neighbours.
+            ]
         },
         field: {
-            display_name: "field",
-            explanation: "This is a field.",
+            display_name: "Field",
+            explanation: "This is a field.\nSelect a crop",
             upgrade_costs: [500, 1000, 2000, 3500],
-            other_stats: [["Defence", [50, 100, 150, 200, 400]]]
+            other_stats: [["Defence", [50, 100, 150, 200, 400]]],
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[0,0], "Field2.TL"],
+                [[0,1], "Field2.T"],
+                [[0,2], "Field2.T"],
+                [[0,3], "Field2.TR"],
+
+                [[1,0], "Field2.L"],
+                [[1,1], "Field2.M"],
+                [[1,2], "Field2.M"],
+                [[1,3], "Field2.R"],
+
+                [[2,0], "Field2.L"],
+                [[2,1], "Field2.M"],
+                [[2,2], "Field2.M"],
+                [[2,3], "Field2.R"],
+
+                [[3,0], "Field2.BL"],
+                [[3,1], "Field2.B"],
+                [[3,2], "Field2.B"],
+                [[3,3], "Field2.BR"],
+            ]
         }
     }
 }
@@ -234,6 +224,7 @@ export class BuildingMap extends BaseMap {
      *
      */
     generateBuildingTileMap() {
+        //debugger;
         const toReturn = [];
         for (let i = 0; i < this.map_height; i++) {
             toReturn[i] = [];
@@ -241,15 +232,19 @@ export class BuildingMap extends BaseMap {
                 toReturn[i][j] = EMPTY_TILE;
             }
         }
-
         for (const buildingKey in this.buildingInformation) {
+            //debugger;
             if (!Object.hasOwnProperty.call(this.buildingInformation, buildingKey)) {
                 continue;
             }
             const currBuilding = this.buildingInformation[buildingKey];
             const locationY = currBuilding.building_location[0];
             const locationX = currBuilding.building_location[1];
-            for (const currTile of currBuilding.tile_rel_locations) {
+
+            const generalInfoKey = currBuilding.general_information
+            const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations
+            for (const currTile of tile_rel_locations) {
+            //for (const currTile of currBuilding.tile_rel_locations) {
                 const newTileMapElement = [currTile[1], buildingKey];
                 const currMapLocationY = locationY + currTile[0][0];
                 const currMapLocationX = locationX + currTile[0][1];
@@ -362,39 +357,6 @@ export class BuildingMap extends BaseMap {
         this.ctx.clearRect(x_tile_screen, y_tile_screen, this.tileSize, this.tileSize);
     }
 
-    /**
-     * Old draw function. Draws using the generated 'this.tiles'.
-     */
-    /*
-    drawTiles2() {
-        this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
-
-        const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
-        const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
-
-        for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
-            for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
-                let filePath;
-                if (this.tiles[i_map] && this.tiles[i_map][j_map]) {
-                    const currTile = this.tiles[i_map][j_map];
-                    if (currTile === EMPTY_TILE) {
-                        this.clearTile(x_screen * this.tileSize, y_screen * this.tileSize);
-                        continue;
-                    }
-                    filePath = "/static/img/assets/buildings/" + getAssetDir(currTile[0]) + "/" + currTile[0] + ".png"; // currTile[0] want dit bestaat uit ["tileAsset", "buildingName"]
-                } else { // Out-of bounds
-                    continue;
-                }
-                const img = this.buildingAssets[filePath];
-                if (img) {
-                    this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
-                } else {
-                    console.error("BuildingMap.drawTiles(): image does not exist")
-                }
-            }
-        }
-    }
-     */
 
     /**
      * Draws a building.
@@ -406,33 +368,22 @@ export class BuildingMap extends BaseMap {
         const screen_buildLocationY = building.building_location[0] - this.viewY;
         const screen_buildLocationX = building.building_location[1] - this.viewX;
 
-        for (const tile of building.tile_rel_locations) {
+        const generalInfoKey = building.general_information;
+        const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+
+        //for (const tile of building.tile_rel_locations) {
+        for (const tile of tile_rel_locations) {
             const screen_currTileLocY = screen_buildLocationY + tile[0][0];
             const screen_currTileLocX = screen_buildLocationX + tile[0][1];
-
-            /* This works but very buggy, also doesnt take in to account water and buildings beneath
-            const grassImg = new Image();
-            grassImg.src = "/static/img/assets/terrain/Grass/Grass.1.png";
-            grassImg.onload = () => {
-                this.ctx.drawImage(grassImg, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
-                 if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
-                continue;
-            }
-
-            const img = this.buildingAssets["/static/img/assets/buildings/" + getAssetType(tile[1]) + "/" + tile[1] + ".png"];
-            if (img) {
-                this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
-            } else {
-                console.error("BuildingMap.drawTiles(): image does not exist")
-            }
-            };
-             */
 
             if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
                 continue;
             }
 
-            const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
+            let tileToDrawWithoutLevelReplaced = tile[1];
+            const buildingLevel = building.level
+            let tileToDrawName = tileToDrawWithoutLevelReplaced.replace(/@/g, buildingLevel);
+            const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tileToDrawName) + "/" + tileToDrawName + ".png"];
             if (img) {
                 this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
             } else {
@@ -451,7 +402,6 @@ export class BuildingMap extends BaseMap {
             if (!Object.hasOwnProperty.call(this.buildingInformation, buildingKey)) {
                 continue;
             }
-            debugger;
             const currBuilding = this.buildingInformation[buildingKey];
 
             this.drawBuilding(currBuilding);
@@ -484,7 +434,10 @@ export class BuildingMap extends BaseMap {
         delete buildingInfoCopy[buildingToMove.self_key];
         // Finding all forbidden tiles
         for (const building of Object.values(buildingInfoCopy)) {
-            for (const currTile of building.tile_rel_locations) {
+            const generalInfoKey = building.general_information;
+            const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+            for (const currTile of tile_rel_locations) {
+            //for (const currTile of building.tile_rel_locations) {
                 const currYValue = building.building_location[0] + currTile[0][0];
                 const currXValue = building.building_location[1] + currTile[0][1];
                 forbiddenTiles.push([currYValue, currXValue]);
@@ -493,7 +446,10 @@ export class BuildingMap extends BaseMap {
 
         // Finding all new tile locations
         let newLocations = [];
-        for (const currTile of buildingToMove.tile_rel_locations) {
+        const generalInfoKey = buildingToMove.general_information;
+        const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+        for (const currTile of tile_rel_locations) {
+        //for (const currTile of buildingToMove.tile_rel_locations) {
             const currNewYValue = buildingToMove.building_location[0] + rel_y + currTile[0][0];
             const currNewXValue = buildingToMove.building_location[1] + rel_x + currTile[0][1];
             newLocations.push([currNewYValue, currNewXValue]);
@@ -531,7 +487,10 @@ export class BuildingMap extends BaseMap {
     inBounds(rel_y, rel_x, buildingToMove) {
         // Finding all new tile locations
         let newLocations = [];
-        for (const currTile of buildingToMove.tile_rel_locations) {
+        const generalInfoKey = buildingToMove.general_information;
+        const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+        for (const currTile of tile_rel_locations) {
+        //for (const currTile of buildingToMove.tile_rel_locations) {
             const currNewYValue = buildingToMove.building_location[0] + rel_y + currTile[0][0];
             const currNewXValue = buildingToMove.building_location[1] + rel_x + currTile[0][1];
             newLocations.push([currNewYValue, currNewXValue]);
@@ -710,7 +669,7 @@ export class BuildingMap extends BaseMap {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         const fetchLink = BASE_URL + "/game/update-building-map";
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON
-        console.log('BuildingMap DB ', mapDataJson);
+        //console.log('BuildingMap DB ', mapDataJson);
         try {
             const response = await fetch(fetchLink, {
                 method: 'POST',
@@ -731,3 +690,42 @@ export class BuildingMap extends BaseMap {
         }
     }
 }
+
+
+
+
+
+
+    /**
+     * Old draw function. Draws using the generated 'this.tiles'.
+     */
+    /*
+    drawTiles2() {
+        this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
+
+        const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
+        const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
+
+        for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
+            for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
+                let filePath;
+                if (this.tiles[i_map] && this.tiles[i_map][j_map]) {
+                    const currTile = this.tiles[i_map][j_map];
+                    if (currTile === EMPTY_TILE) {
+                        this.clearTile(x_screen * this.tileSize, y_screen * this.tileSize);
+                        continue;
+                    }
+                    filePath = "/static/img/assets/buildings/" + getAssetDir(currTile[0]) + "/" + currTile[0] + ".png"; // currTile[0] want dit bestaat uit ["tileAsset", "buildingName"]
+                } else { // Out-of bounds
+                    continue;
+                }
+                const img = this.buildingAssets[filePath];
+                if (img) {
+                    this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
+                } else {
+                    console.error("BuildingMap.drawTiles(): image does not exist")
+                }
+            }
+        }
+    }
+     */
