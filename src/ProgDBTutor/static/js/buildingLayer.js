@@ -429,7 +429,7 @@ export class BuildingMap extends BaseMap {
         if (topBuilding !== null) {
             this.drawBuilding(topBuilding);
         }
-
+        this.terrainMapInstance.drawTiles();
     }
 
     /**

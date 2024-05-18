@@ -25,7 +25,6 @@ function getZoomSize() {
 // Set on-screen tileSize, default to 50 if zoom size is not set
 export let tileSize = getZoomSize();
 
-
 // Create terrain map
 const terrainCanvas = document.getElementById('terrainCanvas');
 const terrainCtx = terrainCanvas.getContext('2d');
@@ -58,6 +57,9 @@ if (window.friend) {
     // If friendData is not available, omit it from the constructor
     buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
 }
+
+// Add buildingMap instance to the terrainLayer
+terrainMap.addBuildingMapInstance(buildingMap);
 
 
 // Create ticker
