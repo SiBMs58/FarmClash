@@ -17,12 +17,9 @@ let currOpenedBuildingInformation;
 let currOpenedBuildingGeneralInformation;
 let isUpgradableBool = true;
 
-const upgradeButton = document.getElementById('upgrade-button');
-const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
-
 function isUpgradable(buildingInformation, buildingGeneralInformation) {
-    isUpgradableBool = true;
-    return true; // ook nog true returnen
+    isUpgradableBool = false;
+    return false; // ook nog true returnen
 }
 
 /**
@@ -64,12 +61,19 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
     document.getElementById('building-explanation').innerText = generalInformation.explanation;
     const buildingStats = document.getElementById('building-stats');
     const upgradeButton = document.getElementById('upgrade-button');
+    const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
     if (building.level === -1) {
         buildingStats.style.display = "none";
         upgradeButton.style.display = "none";
     } else {
+        debugger;
         buildingStats.style.display = "block";
-        upgradeButton.style.display = "block";
+        if (isUpgradable(buildingInformation, buildingGeneralInformation)) {
+            upgradeButton.style.display = "block";
+        } else {
+            upgradeButton.style.display = "none";
+            upgradeButtonPressed.style.display = "block";
+        }
         document.getElementById('level-stat').innerText = "Level: " + building.level;
         document.getElementById('building-upgrade-cost-number').innerText = generalInformation.upgrade_costs[building.level-1]
         const list = document.getElementById('building-stats');
@@ -131,6 +135,8 @@ closeButtonPressed.addEventListener('mouseleave', softReleaseCloseButton);
 // UPGRADE BUTTON
 
 // This code is responsible for correctly applying the functionality of the upgrade button of the pop-up
+const upgradeButton = document.getElementById('upgrade-button');
+const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
 
 
 function pressUpgradeButton() {
