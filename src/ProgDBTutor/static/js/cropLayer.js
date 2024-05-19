@@ -41,8 +41,8 @@ const defaultCropData = {
         field3: {
             building_name: "field3",
             phase: 3,
-            crop: "Carrot",
-            assetPhase: 4,
+            crop: "Corn",
+            assetPhase: 1,
             time_planted: 43516688
         }
     }
@@ -183,44 +183,43 @@ export class CropMap extends BaseMap {
 
 
     drawOneCrop(field) {
+        if (field.phase === 1) {
+            return;
+        }
+
         const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
         const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
 
         const buildingInformation = this.buildingMapInstace.buildingInformation;
 
         const linkedBuilding = buildingInformation[field.building_name];
-        const screen_buildLocationY = linkedBuilding.building_location[0] - this.viewY;
+        const screen_buildLocationY = linkedBuilding.building_location[0] - this.viewY; // todo check of ' - this.viewY' klopt
         const screen_buildLocationX = linkedBuilding.building_location[1] - this.viewX;
 
-        // Calculate coordinates to place crops
-        const cropY = screen_buildLocationY + 1;
-        const cropX = screen_buildLocationX + 1;
+        const assetName = field.crop + "." + field.assetPhase
 
-        const cropCoords = [[cropY, cropX], [cropY + 1, cropX], [cropY, cropX + 1], [cropY + 1, cropX + 1]];
+        // Calculate coordinates to place crops
+        const screen_cropY = screen_buildLocationY + 1;
+        const screen_cropX = screen_buildLocationX + 1;
+
+        const cropCoords = [[screen_cropY, screen_cropX], [screen_cropY + 1, screen_cropX], [screen_cropY, screen_cropX + 1], [screen_cropY + 1, screen_cropX + 1]];
 
         // Draw crops
-        for (let index in cropCoords) {
-            
-        }
+        for (let cropCoord of cropCoords) {
+            // todo checken de image binnen het canvas is
 
-        /*
-        for (const tile of linkedBuilding.tile_rel_locations) {
-            const screen_currTileLocY = screen_buildLocationY + tile[0][0];
-            const screen_currTileLocX = screen_buildLocationX + tile[0][1];
-
-            if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
-                continue;
-            }
-
-            const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
+            const img = this.buildingAssets["/static/img/assets/crops/" + utils.getAssetDir(assetName) + "/" + assetName + ".png"];
             if (img) {
-                this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
+                // todo de exacte plant locatie een beetje meer random maken
+                if (field.crop === "Wheat") {
+                    this.ctx.drawImage(img, cropCoord[1] * this.tileSize, (cropCoord[0] - 1 - 2/16) * this.tileSize, this.tileSize, this.tileSize * 2);
+                } else {
+                    this.ctx.drawImage(img, cropCoord[1] * this.tileSize, (cropCoord[0] - 2/16) * this.tileSize, this.tileSize, this.tileSize);
+                }
             } else {
                 console.error("BuildingMap.drawTiles(): image does not exist")
             }
         }
-
-         */
     }
 
     /**

@@ -58,10 +58,10 @@ export let buildingMap;
 if (window.friend) {
     // If friendData is available, use it in the constructor
     console.log("Friend data is available", window.friend);
-    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer, window.friend);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, cropMap, uiCanvasLayer, window.friend);
 } else {
     // If friendData is not available, omit it from the constructor
-    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, cropMap, uiCanvasLayer);
 }
 
 // Add buildingMap instance to classes that need it
@@ -99,7 +99,7 @@ function resizeCanvas() {
     try { // Redraw terrain after resizing
         terrainMap.drawTiles();
         buildingMap.drawTiles();
-        cropMap.drawCrops()
+        cropMap.drawCrops();
     } catch (error) {
         console.error("Resize failed:", error);
     }

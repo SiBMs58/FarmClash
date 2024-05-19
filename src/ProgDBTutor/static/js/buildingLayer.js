@@ -93,7 +93,7 @@ export const defaultMapData2 = {
             building_location: [10, 12]
         },
         field3: {
-            self_key: "field4",
+            self_key: "field3",
             general_information: "field",
             level: 1,
             building_location: [10, 16]
@@ -181,7 +181,7 @@ export class BuildingMap extends BaseMap {
      * @param uiLayerInstance This instance is needed to draw the correct building UI.
      * @param username The username of the player. Used to fetch the right map data.
      */
-    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, uiLayerInstance, username) {
+    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, cropMapInstance, uiLayerInstance, username) {
 
         super(mapData, _tileSize, username);
 
@@ -194,6 +194,7 @@ export class BuildingMap extends BaseMap {
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
         this.terrainMapInstance = terrainMapInstance;
+        this.cropMapInstance = cropMapInstance;
         this.uiLayerInstance = uiLayerInstance;
 
 
@@ -419,6 +420,7 @@ export class BuildingMap extends BaseMap {
             this.drawBuilding(topBuilding);
         }
         this.terrainMapInstance.drawTiles();
+        this.cropMapInstance.drawCrops();
     }
 
     /**
