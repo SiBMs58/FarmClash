@@ -8,25 +8,30 @@ fetchCropPricesFromAPI();
 fetchCropQuantityFromAPI();
 displayPrices();
 
-localStorage.getItem('muteButtonState')
-localStorage.getItem('backsoundButtonState')
+
+
 
 // API calls
-function fetchCropPricesFromAPI() {
-    //TODO read current prices from database
-    /* still need to make api/market probably
-    fetch('/api/market')
-     .then(response => response.json())
-     .then(data => {
-         data.forEach((resource) => {
-             if (!market.crops.includes(resource.resource_type)) return; // Skip non-crops
-             market.prices[market.crops.indexOf(resource.resource_type)] = resource.new_price;
-         });
-     })
-     .catch(error => {
-         console.error('Error fetching prices:', error);
-     });
-     */
+async function fetchCropPricesFromAPI(crop, base_price) {
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = `${BASE_URL}/game/fetch-crop-price?crop=${crop}&base_price=${base_price}`;
+
+    try {
+        const response = await fetch(fetchLink);
+        const responseData = await response.json();
+
+        // Assuming the response contains the price, update the base price
+        if (responseData && responseData.price) {
+            let new_price = responseData.price;
+            console.log("fetchCropPricesFromAPI(crop) success " + new_price);
+            return new_price;
+        }
+        console.log('fetchCropPricesFromAPI(crop) no price found (db):', responseData);
+        return base_price;
+    } catch (error) {
+        console.error('fetchCropPricesFromAPI(crop) failed:'+ base_price, error);
+        return base_price; // Return the default base price in case of failure
+    }
 }
 function fetchCropQuantityFromAPI() {
      fetch('/api/resources')
@@ -106,9 +111,9 @@ function stopAction() {
 
 // This action is called after you press on the sell button
 // it will also notify the database with the changes
-function sell() {
+async function sell() {
     document.getElementById('sell-image').src = '../../static/img/UI/sell_pbtn.png';
-    setTimeout(() => {
+    setTimeout(async () => {
         // Revert button image to default variant
         document.getElementById('sell-image').src = '../../static/img/UI/sell_btn.png';
 
@@ -120,9 +125,11 @@ function sell() {
         let soldMessage = "Sold:";
         let anySold = false;
 
-        quantitiesArray.forEach((quantity, index) => {
+        for (let index = 0; index < quantitiesArray.length; index++) {
+            let quantity = quantitiesArray[index];
             if (quantity !== 0) {
-                let cropPrice = market.prices[index];
+                let cropName = market.crops[index];
+                let cropPrice = await fetchCropPricesFromAPI(cropName, market.prices[index]);
                 let cropTotalPrice = cropPrice * quantity;
 
                 totalSalePrice += cropTotalPrice;
@@ -136,12 +143,12 @@ function sell() {
                 // Reset the input value
                 inputValues[index].value = 0;
 
-                //TODO update database entry
-                // on resource table of user and market.crops[index] with new market.quantities
-                // on market table with quantities sold (and current timestamp?)
-                // on resource table of user and "Money" with +cropTotalPrice
+                await updateSale(cropName, quantity, cropPrice);
+                await updateResources(cropName, -quantity);
+                await updateResources("Money", totalSalePrice);
+
             }
-        });
+        }
 
         if (anySold) {
             soldMessage += `\nTotal Sale Price: $${totalSalePrice}`;
@@ -150,21 +157,20 @@ function sell() {
             alert("No market sold.");
         }
     }, 100);
-
 }
 
 
 
-
-
-
 // used for displaying things on the screen
-function displayPrices(){
+async function displayPrices(){
     for (let i = 1; i <= market.crops.length; i++) {
         const priceElement = document.getElementById(`price${i}`);
         if (priceElement) {
             priceElement.innerHTML = '<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">';
-            priceElement.innerHTML += getAmountDisplay(market.prices[i - 1])
+
+            let price = await fetchCropPricesFromAPI(market.crops[i-1],market.prices[i - 1])
+            console.log('price: ' + price);
+            priceElement.innerHTML += getAmountDisplay(price)
             priceElement.innerHTML += '<img src="../../static/img/UI/display.money.right.png"  alt="🪙" draggable="false">'
         }
     }
@@ -181,4 +187,60 @@ function getAmountDisplay(amount){
 function displayUnpressedButton(index){
     document.getElementById(`plusImage${index + 1}`).src = "../../static/img/UI/plus_btn.png";
     document.getElementById(`minusImage${index + 1}`).src = "../../static/img/UI/minus_btn.png";
+}
+
+
+// adds sale amount to database
+async function updateSale(crop, count, base_price) {
+    const market_data = {
+        crop: crop,
+        sale: count,
+        base_price: base_price,
+    }
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = BASE_URL + "/game/update-market";
+    try {
+        const response = await fetch(fetchLink, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(market_data) // Send the serialized map data as the request body
+        });
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('market_data DB update successful:', jsonResponse);
+        } else {
+            console.error('market_data DB update failed with status:', response.status);
+        }
+    } catch (error) {
+        console.error('Failed to update market in database:', error);
+    }
+}
+
+async function updateResources(resource, count) {
+    const resources = {
+        [resource]: count // Use the resource as the key and the count as the value
+    };
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = `${BASE_URL}/api/add-resources`;
+
+    try {
+        const response = await fetch(fetchLink, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(resources) // Send the serialized resource data as the request body
+        });
+
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('Resources DB update successful:', jsonResponse);
+        } else {
+            console.error('Add-resources DB update failed with status:', response.status);
+        }
+    } catch (error) {
+        console.error('Failed to update resources:', error);
+    }
 }

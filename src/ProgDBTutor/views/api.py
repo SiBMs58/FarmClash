@@ -46,6 +46,30 @@ def get_all_resources():
     resources = resource_data_access.get_resources(current_user.username)
     return jsonify([resource.to_dict() for resource in resources])
 
+@api_blueprint.route('/api/single-resource-quantity', methods=['GET'])
+@login_required
+def get_resource_quantity():
+    """
+    Handles GET requests for the quantity of a specific resource.
+    This will return the quantity of the requested resource for the current logged-in user.
+    :return: The quantity of the resource in JSON format
+    """
+    resource_data_access = current_app.config.get('resource_data_access')
+
+    # Get resource type from query parameters
+    resource_type = request.args.get('resource_type')
+
+    if not resource_type:
+        return jsonify({"error": "resource_type query parameter is required"}), 400
+
+    # Fetch resource quantity for the current user
+    quantity = resource_data_access.get_resource_quantity(current_user.username, resource_type)
+
+    if quantity is not None:
+        return jsonify({"resource_type": resource_type, "quantity": quantity})
+    else:
+        return jsonify({"resource_type": "resource not found", "quantity": 0}), 404
+
 
 @api_blueprint.route('/add-resources', methods=['POST'])
 @login_required

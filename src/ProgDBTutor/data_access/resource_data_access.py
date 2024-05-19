@@ -83,3 +83,18 @@ class ResourceDataAccess:
                        (new_quantity, resource.username_owner, resource.resource_type))
         self.db_connection.conn.commit()
         return [True,'']
+
+    def get_resource_quantity(self, username_owner, resource_type):
+        """
+        Get the quantity of a specific resource for a user.
+        :param username_owner: The username of the resource owner.
+        :param resource_type: The type of the resource.
+        :return: The quantity of the resource, or None if not found.
+        """
+        cursor = self.db_connection.get_cursor()
+        cursor.execute('SELECT quantity FROM resources WHERE owner = %s AND type = %s',
+                       (username_owner, resource_type))
+        result = cursor.fetchone()
+        if result:
+            return result['quantity']
+        return None

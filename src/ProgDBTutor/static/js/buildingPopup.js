@@ -17,7 +17,14 @@ let currOpenedBuildingInformation;
 let currOpenedBuildingGeneralInformation;
 let isUpgradableBool = true;
 
-function isUpgradable(buildingInformation, buildingGeneralInformation) {
+function isUpgradable(buildingInformation, buildingGeneralInformation, buildingName) {
+    // todo : check is max level, has resources, can be upgraded (level -1)
+    if (upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName)){
+        isUpgradableBool = true;
+        console.log("upgarde true");
+        return true; // ook nog true returnen
+    }
+    console.log("upgarde true");
     isUpgradableBool = false;
     return false; // ook nog true returnen
 }
@@ -68,7 +75,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
     } else {
         debugger;
         buildingStats.style.display = "block";
-        if (isUpgradable(buildingInformation, buildingGeneralInformation)) {
+        if (isUpgradable(buildingInformation, buildingGeneralInformation, buildingName)) {
             upgradeButton.style.display = "block";
         } else {
             upgradeButton.style.display = "none";
@@ -155,6 +162,77 @@ function releaseUpgradeButton() {
 upgradeButton.addEventListener('mousedown', pressUpgradeButton);
 upgradeButtonPressed.addEventListener('mouseup', releaseUpgradeButton);
 upgradeButtonPressed.addEventListener('mouseleave', releaseUpgradeButton);
+
+// ——————————————
+// UPGRADE CHECKS
+
+async function fetchResources(resourceType) {
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    try {
+        let fetchLink = `${BASE_URL}/api/single-resource-quantity?resource_type=${resourceType}`;
+        console.log("fetchResources() fetchLink: ", fetchLink);
+        const response = await fetch(fetchLink);
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        const resourceData = await response.json();
+        console.log("Resource Data: ", resourceData);
+
+        // Process the resource data as needed
+        return resourceData.quantity;
+    } catch (error) {
+        console.error('fetchResources() failed:', error);
+        throw error;
+    }
+}
+
+async function upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName) {
+    let building_type;
+    let current_level;
+    let townhall_level;
+
+    // First loop to find the building's type and current level
+    for (const key in buildingInformation) {
+        if (buildingInformation.hasOwnProperty(key)) {
+            if (buildingName === buildingInformation[key].self_key) {
+                building_type = buildingInformation[key].general_information;
+                current_level = buildingInformation[key].level;
+            }
+            if ("townhall" === buildingInformation[key].self_key) {
+                building_type = buildingInformation[key].general_information;
+                townhall_level = buildingInformation[key].level;
+
+            }
+        }
+    }
+
+    if (current_level>townhall_level){
+        return false;
+    }
+
+    let current_resources = await fetchResources("Money");
+    let upgrade_cost;
+
+    if (building_type && current_level !== undefined) {
+        // Second loop to check if the current level is the max level for this building type
+        if (buildingGeneralInformation.hasOwnProperty(building_type)) {
+            upgrade_cost = buildingGeneralInformation[building_type].upgrade_costs[current_level-1];
+            if (current_resources<upgrade_cost){
+                return false;
+            }
+            if (current_level === buildingGeneralInformation[building_type].maxLevel) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    // Return false if building type or current level is not found
+    return false;
+}
 
 // ——————————————————
 // SET POPUP POSITION (min gap of 70px for the top)

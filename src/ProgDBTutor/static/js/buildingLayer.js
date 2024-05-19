@@ -97,6 +97,12 @@ export const defaultMapData2 = {
             general_information: "field",
             level: 1,
             building_location: [10, 16]
+        },
+        townhall1: {
+            self_key: "townhall1",
+            general_information: "townhall",
+            level: 4,
+            building_location: [15, 20]
         }
     },
     building_general_information: {
@@ -116,6 +122,26 @@ export const defaultMapData2 = {
                 [[1, 1], "Chickencoop.L@.2.2"],
                 [[2, 0], "Chickencoop.3.1"],
                 [[2, 1], "Chickencoop.3.2"],
+            ]
+        },
+        townhall: {
+            display_name: "Townhall", // Name to be displayed in the popup
+            explanation: "This is the Townhall",
+            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
+            other_stats: [["Defence", [50, 100, 150, 200, 400, 470, 550]]], // All other stats specific for this building. ["Stat name display", [array of all values per level]]
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[0, 0], "Townhall.L@.1.1"],
+                [[0, 1], "Townhall.L@.1.2"],
+                [[0, 2], "Townhall.L@.1.3"],
+                [[1, 0], "Townhall.L@.2.1"],
+                [[1, 1], "Townhall.L@.2.2"],
+                [[1, 2], "Townhall.L@.2.3"],
+                [[1, 3], "Townhall.L@.2.4"],
+                [[2, 0], "Townhall.L@.3.1"],
+                [[2, 1], "Townhall.L@.3.2"],
+                [[2, 2], "Townhall.L@.3.3"],
+                [[2, 3], "Townhall.L@.3.4"],
             ]
         },
         fence: {
