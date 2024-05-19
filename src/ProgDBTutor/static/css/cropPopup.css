@@ -1,29 +1,41 @@
 .cropSelector {
-  width: 190px;
-  height: 650px;
-  position: absolute;
-  right: -510px;
-  opacity: 0;
-  transition: right 200ms, opacity 200ms;
-  top: 50%; /* Center vertically */
-  transform: translateY(-50%); /* Adjust centering based on the popup's height */
-  z-index: 10;
-  border: solid red;
-  /* Adjust the min-top with JavaScript if needed */
+    width: 190px;
+    height: 465px;
+    position: absolute;
+    left: -230px; /* Initially position it off-screen to the left */
+    opacity: 0;
+    transition: left 200ms, opacity 200ms; /* Transition the left property */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust centering based on the popup's height */
+    z-index: 11;
+    /*border: solid red;*/
+    padding: 20px;
 }
 
 .cropSelector.show {
-  right: 50px;
-  opacity: 1;
+    left: -10px;
+    opacity: 1;
 }
 
-
-#cropPopup-background img {
+#cropPopup-background {
     position: absolute;
-    top: 10px;
+    top: 0;
     width: 190px;
     height: auto;
     left: 50%;
     transform: translateX(-50%);
 }
 
+.crop-buttons-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -9px -10px;
+}
+
+.crop-buttons-grid img {
+    flex: 0 0 calc(50% - 20px);
+    margin: 9px 10px; /* 9px vertical (4.5px top + 4.5px bottom), 7px horizontal (3.5px left + 3.5px right) */
+    width: calc(100% - 20px); /* Adjust width to maintain image size within the grid */
+    height: auto;
+    z-index: 13;
+}

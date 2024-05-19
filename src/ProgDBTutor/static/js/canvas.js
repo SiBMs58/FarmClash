@@ -49,7 +49,7 @@ const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
 // Create CropMap
 const cropCanvas = document.getElementById('cropCanvas');
 const cropCtx = cropCanvas.getContext('2d');
-const cropMap = new CropMap(undefined, tileSize, cropCtx);
+export const cropMap = new CropMap(undefined, tileSize, cropCtx);
 
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
@@ -70,7 +70,7 @@ cropMap.addBuildingMapInstance(buildingMap);
 
 
 // Create ticker
-const ticker = new Ticker([terrainMap, buildingMap]);
+const ticker = new Ticker([terrainMap, buildingMap, cropMap]);
 
 // Create userInputHandler
 const userInputHandler = new UserInputHandler([buildingMap, terrainMap, cropMap]);

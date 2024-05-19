@@ -1,11 +1,14 @@
 import { buildingMap } from "./canvas.js";
+import { cropMap } from "./canvas.js";
 
 /**
  * Toggles the pop-up. When pop-up is showing this function will hide it and vice-versa.
  */
 export function togglePopup() {
     const popup = document.querySelector('.information-popup');
+    const cropPopup = document.querySelector('.cropSelector');
     popup.classList.toggle('show');
+    cropPopup.classList.toggle('show');
 }
 
 export let isPopupOpen = false;
@@ -14,7 +17,7 @@ let prevBuildingName = "";
 
 // CHECKS FOR UPGRADE BUTTON
 let currOpenedBuildingInformation;
-let currOpenedBuildingGeneralInformation;
+//let currOpenedBuildingGeneralInformation;
 let isUpgradableBool = true;
 
 function isUpgradable(buildingInformation, buildingGeneralInformation, buildingName) {
@@ -47,8 +50,8 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
         actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName);
     }
     prevBuildingName = buildingName;
-    currOpenedBuildingInformation = buildingInformation
-    currOpenedBuildingGeneralInformation = buildingGeneralInformation
+    currOpenedBuildingInformation = buildingInformation[buildingName]
+    //currOpenedBuildingGeneralInformation = buildingGeneralInformation[buil]
 }
 
 /**
@@ -59,6 +62,7 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
  */
 export function actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName) {
     const popup = document.querySelector('.information-popup');
+    const cropPopup = document.querySelector('.cropSelector');
 
     // Set all the right text elements
     const building = buildingInformation[buildingName];
@@ -73,7 +77,6 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
         buildingStats.style.display = "none";
         upgradeButton.style.display = "none";
     } else {
-        debugger;
         buildingStats.style.display = "block";
         if (isUpgradable(buildingInformation, buildingGeneralInformation, buildingName)) {
             upgradeButton.style.display = "block";
@@ -99,17 +102,32 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
         }
     }
 
+    // Check if field and in phase 1
+    if (buildingInformation[buildingName].general_information === "Field") {
+        const fieldName = buildingInformation[buildingName].self_key;
+        if (cropMap.isFieldEmpty(fieldName)) {
+            cropPopup.classList.add('show');
+        }
+    }
+
     popup.classList.add('show');
     isPopupOpen = true;
 }
 
 /**
- * Closes the pop-up
+ * Closes the pop-up and the possible crop popup
  */
 export function closePopup() {
     const popup = document.querySelector('.information-popup');
+    const cropPopup = document.querySelector('.cropSelector');
     popup.classList.remove('show');
+    cropPopup.classList.remove('show');
     isPopupOpen = false;
+}
+
+function closeCropPopup() {
+    const cropPopup = document.querySelector('.cropSelector');
+    cropPopup.classList.remove('show');
 }
 
 // ————————————
@@ -259,3 +277,46 @@ function adjustPopupPosition() {
 
 window.onload = adjustPopupPosition;
 window.onresize = adjustPopupPosition;
+
+
+const buttons = document.querySelectorAll(".crop-buttons-grid img");
+
+function getCropName(url) {
+    const filename = url.substring(url.lastIndexOf('/') + 1);
+    return filename.split('Button')[0];
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll(".crop-buttons-grid img");
+
+    buttons.forEach(button => {
+        const originalSrc = button.src;
+        const pressedSrc = originalSrc.replace("Button.png", "PressedButton.png");
+
+        // Add mousedown event to change the src to the pressed version
+        button.addEventListener("mousedown", function() {
+            button.src = pressedSrc;
+        });
+
+        // Add mouseup event to revert src and handle hard release
+        button.addEventListener("mouseup", function() {
+            if (button.src === pressedSrc) {
+                button.src = originalSrc;
+                const cropType = getCropName(originalSrc);
+                console.log(cropType + " has been pressed");
+                closeCropPopup()
+                const field = currOpenedBuildingInformation.self_key;
+                cropMap.plantCrop(cropType, field);
+                debugger;
+            }
+        });
+
+        // Add mouseleave event to revert src and handle soft release
+        button.addEventListener("mouseleave", function() {
+            if (button.src === pressedSrc) {
+                button.src = originalSrc;
+            }
+        });
+    });
+});
+

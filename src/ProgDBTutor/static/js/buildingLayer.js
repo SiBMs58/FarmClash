@@ -41,43 +41,43 @@ export const defaultMapData2 = {
     building_information: {
         fence1: {
             self_key: "fence1", // Must be the exact key of this sub-object
-            general_information: "fence", // Link to the general information of this building type
+            general_information: "Fence", // Link to the general information of this building type
             level: 4, // Building level (set "None" if not relevant)
             building_location: [8, 8] // --> [y (height), x (width)], this needs to be the top-left corner of the building
         },
         fence2: {
             self_key: "fence2",
-            general_information: "fence",
+            general_information: "Fence",
             level: 3,
             building_location: [8, 9]
         },
         fence3: {
             self_key: "fence3",
-            general_information: "fence",
+            general_information: "Fence",
             level: 2,
             building_location: [8, 10]
         },
         chicken_coop: {
             self_key: "chicken_coop",
-            general_information: "chicken_house",
+            general_information: "Chicken_house",
             level: 3,
             building_location: [5, 11]
         },
         field1: {
             self_key: "field1",
-            general_information: "field",
+            general_information: "Field",
             level: 1,
             building_location: [10, 8]
         },
         field2: {
             self_key: "field2",
-            general_information: "field",
+            general_information: "Field",
             level: 1,
             building_location: [10, 12]
         },
         field3: {
             self_key: "field3",
-            general_information: "field",
+            general_information: "Field",
             level: 1,
             building_location: [10, 16]
         },
@@ -91,7 +91,7 @@ export const defaultMapData2 = {
 
 
     building_general_information: {
-        chicken_house: {
+        Chicken_house: {
             display_name: "Chicken House", // Name to be displayed in the popup
             explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
                 "This vital building is where your feathered friends lay eggs, ready for " +
@@ -129,7 +129,7 @@ export const defaultMapData2 = {
                 [[2, 3], "Townhall.L@.3.4"],
             ]
         },
-        fence: {
+        Fence: {
             display_name: "Fence",
             explanation: "Strategically place your fences in order to defend you farm from intruders as effectively as possible.",
             upgrade_costs: [500, 1000, 2000, 3500],
@@ -138,8 +138,8 @@ export const defaultMapData2 = {
             tile_rel_locations: [
                 [[0, 0], "Fence.L@"], // This will be replaced with the correct type of fence according to its neighbours.
             ]
-        },
-        field: {
+        },/*
+        Field: {
             display_name: "Field",
             explanation: "This is a field.\nSelect a crop",
             upgrade_costs: [500, 1000, 2000, 3500],
@@ -165,6 +165,19 @@ export const defaultMapData2 = {
                 [[3,1], "Field2.B"],
                 [[3,2], "Field2.B"],
                 [[3,3], "Field2.BR"],
+            ]
+        },*/
+        Field: {
+            display_name: "Field",
+            explanation: "This is a field.",
+            upgrade_costs: [500, 1000, 2000, 3500],
+            other_stats: [["Defence", [50, 100, 150, 200, 400]]],
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[0,0], "Field3.TL"],
+                [[0,1], "Field3.TR"],
+                [[1,0], "Field3.BL"],
+                [[1,1], "Field3.BR"],
             ]
         },
         Barn: {
@@ -328,8 +341,6 @@ export class BuildingMap extends BaseMap {
             const currBuilding = this.buildingInformation[buildingKey];
             const locationY = currBuilding.building_location[0];
             const locationX = currBuilding.building_location[1];
-
-            debugger;
 
             const generalInfoKey = currBuilding.general_information
             const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations
@@ -694,10 +705,22 @@ export class BuildingMap extends BaseMap {
 
         // Click on building and not yet moving
         if (this.movingBuilding === false) {
+            const buildingName = this.tiles[tileY][tileX][1];
+            this.buildingClickedName = buildingName;
+
+            // Check whether building is a harvestable field
+            if (this.buildingInformation[buildingName].general_information === "Field") {
+                const fieldName = this.buildingClickedName
+                if (this.cropMapInstance.isHarvestable(fieldName)) {
+                    const fieldLevel = this.buildingInformation[buildingName].level
+                    this.cropMapInstance.harvestField(fieldName, fieldLevel);
+                    return true;
+                }
+            }
+
             this.movingBuilding = true;
             this.ownNextClick = true;
-            this.buildingClickedName = this.tiles[tileY][tileX][1];
-            this.currBuildingOrgLocation = Array.from(this.buildingInformation[this.buildingClickedName].building_location);
+
             return true;
         }
 

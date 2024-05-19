@@ -24,12 +24,12 @@ const defaultCropData = {
     map_height: 43,
     // 3 phases: empty (1), growth (2), harvest (3)
     crop_information: {
-        field1: {
+        field1: { // moet dezelfde naam hebben als 'building_name'
             building_name: "field1", // to link to the field building
-            phase: 2, // growth phase
-            crop: "Wheat", // can be null
-            assetPhase: 3, // asset phases 1-4. Set's the correct growth phase of the asset
-            time_planted: 43516688, // time in seconds since random day (can be null)
+            phase: 1, // growth phase
+            crop: null, // can be null
+            assetPhase: null, // asset phases 1-4. Set's the correct growth phase of the asset
+            time_planted: null, // time in seconds since random day (can be null)
         },
         field2: {
             building_name: "field2", // to link to the field building
@@ -40,11 +40,44 @@ const defaultCropData = {
         },
         field3: {
             building_name: "field3",
-            phase: 3,
-            crop: "Corn",
-            assetPhase: 1,
-            time_planted: 43516688
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
         }
+    },
+    crop_general_information: {
+        Wheat: {
+            growth_time: 30
+        },
+        Carrot: {
+            growth_time: 30
+        },
+        Corn: {
+            growth_time: 30
+        },
+        Lettuce: {
+            growth_time: 30
+        },
+        Tomato: {
+            growth_time: 30
+        },
+        Turnip: {
+            growth_time: 30
+        },
+        Zucchini: {
+            growth_time: 30
+        },
+        Parsnip: {
+            growth_time: 30
+        },
+        Cauliflower: {
+            growth_time: 30
+        },
+        Eggplant: {
+            growth_time: 30
+        },
+
     }
 }
 
@@ -59,12 +92,15 @@ export class CropMap extends BaseMap {
         super(cropData, _tileSize);
 
         this.cropInformation = cropData.crop_information;
+        this.cropGeneralInformation = cropData.crop_general_information;
         this.ctx = _ctx;
 
         this.cropAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
         this.cropAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
         this.buildingMapInstace = null;
+
+        this.tickCount = 0;
     }
 
     /**
@@ -171,6 +207,65 @@ export class CropMap extends BaseMap {
         return Math.floor(differenceInMilliseconds / 1000);
     }
 
+    isFieldEmpty(fieldName) {
+        const phase = this.cropInformation[fieldName].phase;
+        return phase === 1;
+    }
+
+    isHarvestable(fieldName) {
+        const phase = this.cropInformation[fieldName].phase;
+        return phase === 3;
+    }
+
+    harvestField(fieldName, fieldLevel) {
+        const field = this.cropInformation[fieldName];
+        field.phase = 1;
+        field.crop = null;
+        field.assetPhase = null;
+        field.time_planted =  null;
+        this.drawTiles();
+
+        // todo resources updaten
+    }
+
+    plantCrop(cropType, fieldName) {
+        const field = this.cropInformation[fieldName];
+        field.phase = 2;
+        field.crop = cropType;
+        field.assetPhase = 1;
+        field.time_planted = this.getSecondsSinceDay0()
+        this.drawTiles();
+    }
+
+    checkCropGrowth() {
+        for (let key in this.cropInformation) {
+            const currField = this.cropInformation[key];
+            if (currField.phase !== 2) {
+                continue;
+            }
+            const cropType = currField.crop;
+            const currTime = this.getSecondsSinceDay0();
+            const deltaTime = currTime - currField.time_planted;
+            const growthTime = this.cropGeneralInformation[cropType].growth_time;
+            const timeFraction = deltaTime/growthTime;
+            const prevAssetPhase = currField.assetPhase;
+            if (timeFraction < 1/3) {
+                currField.assetPhase = 1;
+            } else if (timeFraction < 2/3 && timeFraction >= 1/3) {
+                currField.assetPhase = 2;
+            } else if (timeFraction < 1 && timeFraction >= 2/3) {
+                currField.assetPhase = 3;
+            } else if (timeFraction >= 1) {
+                // Asset is ready
+                currField.phase = 3;
+                currField.assetPhase = 4;
+            }
+            if (prevAssetPhase !== currField.assetPhase) {
+                this.drawTiles();
+            }
+        }
+    }
+
 
     /**
      * Clears a specific tile relative to the screen (not the buildingMap)
@@ -206,10 +301,11 @@ export class CropMap extends BaseMap {
         const assetName = field.crop + "." + field.assetPhase
 
         // Calculate coordinates to place crops
-        const screen_cropY = screen_buildLocationY + 1;
-        const screen_cropX = screen_buildLocationX + 1;
+        const screen_cropY = screen_buildLocationY;
+        const screen_cropX = screen_buildLocationX;
 
-        const cropCoords = [[screen_cropY, screen_cropX], [screen_cropY + 1, screen_cropX], [screen_cropY, screen_cropX + 1], [screen_cropY + 1, screen_cropX + 1]];
+        const offset = 1;
+        const cropCoords = [[screen_cropY, screen_cropX], [screen_cropY + offset, screen_cropX], [screen_cropY, screen_cropX + offset], [screen_cropY + offset, screen_cropX + offset]];
 
         // Draw crops
         for (let cropCoord of cropCoords) {
@@ -244,12 +340,15 @@ export class CropMap extends BaseMap {
         }
     }
 
-
     /**
      * Gets called by the Tick class with regular time intervals.
      */
     tick() {
-        //console.log("building layer tick");
+        this.tickCount += 1
+        if (this.tickCount >= 5) {
+            this.tickCount = 0;
+            this.checkCropGrowth();
+        }
     }
 
 

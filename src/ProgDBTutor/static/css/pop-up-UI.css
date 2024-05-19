@@ -30,7 +30,6 @@
   top: 50%; /* Center vertically */
   transform: translateY(-50%); /* Adjust centering based on the popup's height */
   z-index: 10;
-  /* Adjust the min-top with JavaScript if needed */
 }
 
 .information-popup.show {
