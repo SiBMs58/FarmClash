@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/css/welcome_screen.css">
+    <title>Video Pagina</title>
+</head>
+<body>
+<button class="start-button" onclick="startGame()">
+    <a href="{{ url_for('auth.login') }}">
+        <img src="../../static/img/UI/cancel_btn.png" alt="Logout" usemap="#logoutMap" id= "image-button">
+    </a>
+</button>
+<div class="video-container">
+        <video width="500px", controls>
+            <source src="../../static/img/Chapter1.mp4" type="video/mp4">
+            Je browser ondersteunt de video tag niet.
+        </video>
+    </div>
+
+    <script>
+        function startGame() {
+            window.location.href = url_for('auth.logout');
+        }
+    </script>
+</body>
+</html>
