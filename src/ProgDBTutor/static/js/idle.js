@@ -169,9 +169,11 @@ async function fetchBuildingLevel(buildingType) {
         const data = await response.json();
         if (data.status === 'success') {
             data.forEach(building => {
+                /*
                 if (!building.unlocked) {
                     return;
                 }
+                 */
                 // Update the appropriate dictionary based on the building type
                 switch (buildingType) {
                     case 'Pigpen':

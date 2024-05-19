@@ -9,6 +9,65 @@ from src.ProgDBTutor.models.resource import Resource
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
 crops = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant']
+buildingData = {}
+with open(os.path.join(current_app.root_path, "static", "img", "assets", "building.json")) as f:
+    buildingData = json.load(f)
+
+
+def get_augmentation_value(building_type, augmentation_type):
+    augmentation = buildingData[building_type].get('augment', False)
+    if not augmentation:
+        return 0
+    for aug_type, value in augmentation:
+        if aug_type == augmentation_type:
+            return value
+    return 0
+
+
+def get_stats_value(building_type, stats_type, level):
+    stats = buildingData[building_type].get('other_stats', False)
+    if not stats:
+        return 0
+    for stat_type, values in stats:
+        if stat_type == stats_type:
+            return values[level]
+    return 0
+
+
+def user_stats(username=current_user.username):
+    level = 0
+    atk = 0
+    defn = 0
+    coins = resource_data_access.get_resource_by_type(username, 'Money').amount
+    buildings = building_data_access.get_buildings_by_username_owner(username)
+    animals = animal_data_access.get_animals(username)
+    for building in buildings:
+        if building.building_type == "Townhall":
+            level = building.level
+        atk += get_stats_value(building.building_type, 'Attack', building.level) + building.augment_level * get_augmentation_value(building.building_type, 'Attack')
+        defn += get_stats_value(building.building_type, 'Defense', building.level) + building.augment_level * get_augmentation_value(building.building_type, 'Defense')
+
+    for animal in animals:
+        if animal.species == "Chicken":
+            defn += 20 * animal.amount
+            atk += 5 * animal.amount
+        elif animal.species == "Cow":
+            defn += 15 * animal.amount
+            atk += 10 * animal.amount
+        elif animal.species == "Pig":
+            defn += 10 * animal.amount
+            atk += 15 * animal.amount
+        elif animal.species == "Goat":
+            defn += 5 * animal.amount
+            atk += 20 * animal.amount
+
+    return {
+        "level": level,
+        "attack": atk,
+        "defense": defn,
+        "coins": coins
+    }
+
 
 @api_blueprint.route('/users')
 @login_required
@@ -22,6 +81,16 @@ def get_users():
     user_data_access = current_app.config.get('user_data_access')
     users = user_data_access.get_all_users()  # Assuming this is a method you have
     return jsonify([user.to_dict() for user in users])  # Convert users to dicts
+
+@login_required
+def get_user_stats():
+    """
+    Handles GET requests for the stats of the current user.
+    :return: The stats of the current user, in json format
+    """
+    return jsonify(user_stats())
+
+
 
 @api_blueprint.route('/maps')
 @login_required
@@ -70,7 +139,7 @@ def add_resources():
 
             updated_resource = Resource(current_user.username, resource_type, amount, None if Idle else False)
             rollback.append(resource_data_access.get_resource_by_type(current_user.username, resource_type))
-            update_status = resource_data_access.update_by_adding_resource(updated_resource, get_resource_limit(resource_type))
+            update_status = resource_data_access.update_by_adding_resource(updated_resource, get_resource_category_limit(resource_type))
 
             if not update_status[0]:
                 for resource in rollback:
@@ -390,68 +459,29 @@ def get_exploration():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-def get_resource_limit(resource_type):
+def get_resource_category_limit(resource_type):
     def get_barn_limit(building_level, building_augment_level):
-        barn_limit = 0
-        if building_level == 1:
-            barn_limit = 800
-        elif building_level == 2:
-            barn_limit = 1600
-        elif building_level == 3:
-            barn_limit = 8000
-        elif building_level == 4:
-            barn_limit = 16000
-        elif building_level == 5:
-            barn_limit = 80000
-        elif building_level == 6:
-            barn_limit = 160000
-        elif building_level == 7:
-            barn_limit = 800000
-        elif building_level == 8:
-            barn_limit = 1600000
-        elif building_level == 9:
-            barn_limit = 8000000
-        elif building_level == 10:
+        barn_limit = get_stats_value('Barn', 'Limit', building_level)
+        if barn_limit == "inf":
             return float('inf')
-        else:
-            return 0
-        return barn_limit + building_augment_level * 150
+        return barn_limit + building_augment_level * get_augmentation_value('Barn', 'Limit')
 
     def get_silo_limit(building_level, building_augment_level):
-        silo_limit = 0
-        if building_level == 1:
-            lsilo_limitimit = 500
-        elif building_level == 2:
-            silo_limit = 1000
-        elif building_level == 3:
-            silo_limit = 5000
-        elif building_level == 4:
-            silo_limit = 10000
-        elif building_level == 5:
-            silo_limit = 50000
-        elif building_level == 6:
-            silo_limit = 100000
-        elif building_level == 7:
-            silo_limit = 500000
-        elif building_level == 8:
-            silo_limit = 1000000
-        elif building_level == 9:
-            silo_limit = 5000000
-        elif building_level == 10:
+        silo_limit = get_stats_value('Silo', 'Limit', building_level)
+        if silo_limit == "inf":
             return float('inf')
-        else:
-            return 0
-        return silo_limit + building_augment_level * 100
+        return silo_limit + building_augment_level * get_augmentation_value('Silo', 'Limit')
 
     limit = 0
+    if resource_type == 'Money':
+        return float('inf')
+
     if resource_type in crops:
         building = building_data_access.get_buildings_by_username_and_type(current_user.username, "Silo")[0]
         return get_silo_limit(building.level, building.augment_level)
-    elif resource_type == 'Money':
-        return float('inf')
-    else:
-        building = building_data_access.get_buildings_by_username_and_type(current_user.username, "Barn")[0]
-        return get_barn_limit(building.level, building.augment_level)
+
+    building = building_data_access.get_buildings_by_username_and_type(current_user.username, "Barn")[0]
+    return get_barn_limit(building.level, building.augment_level)
 
 def get_animal_limit(animal):
     buildings = []

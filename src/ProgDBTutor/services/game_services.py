@@ -61,10 +61,10 @@ class GameServices:
                                                         tile_rel_locations=json.dumps(data["Barn.L1"])))  # TODO position
         self.building_data_access.add_building(Building("silo", username, "Silo", x=6, y=21, level=1,
                                                         tile_rel_locations=json.dumps(data["Silo.L1.0%"])))  # TODO position
-        pigCounter = 0
-        cowCounter = 0
-        goatCounter = 0
-        chickenCounter = 0
+        pigCounter = 1
+        cowCounter = 1
+        goatCounter = 1
+        chickenCounter = 1
         self.building_data_access.add_building(Building(f"chickencoop{chickenCounter}", username, "Chickencoop", x=10, y=21, level=1,
                                                         tile_rel_locations=json.dumps(data["Chickencoop.L1"])))
         self.building_data_access.add_building(Building(f"goatbarn{chickenCounter}", username, "Goatbarn", x=10, y=21, level=1,
@@ -77,13 +77,13 @@ class GameServices:
 
 
         # concatenate name with counter for building_id
-        fenceCounter = 0
-        fieldCounter = 0
+        fenceCounter = 1
+        fieldCounter = 1
 
 
         ## 3 fences per cloud area
 
-        ## 6 fields per cloud area or one of 3 Pigpens, 3 Chicken Coops, 3 Cow Barns, 3 Goat Barns in total
+        ## 4 fields per cloud area or one of 4 Pigpens, 4 Chicken Coops, 4 Cow Barns, 4 Goat Barns in total
         ## 3 Pigpens, 3 Chicken Coops, 3 Cow Barns, 3 Goat Barns in total
         return True
 

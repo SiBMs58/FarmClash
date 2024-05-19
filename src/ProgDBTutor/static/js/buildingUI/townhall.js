@@ -14,10 +14,25 @@ function initialize() {
     slides.forEach(slide => {
         slide.style.display = slide.dataset.level === LVL.toString() ? 'block' : 'none';
     });
-    slider.value = LVL;
-    displayStats();
+    fetchStats().then(() => {
+        displayStats();
+        slider.value = LVL;
+    });
 }
 
+
+
+
+function fetchStats() {
+    fetch('api/user-stats')
+        .then(response => response.json())
+        .then(data => {
+            LVL = data.level;
+            ATK = data.attack;
+            DEF = data.defense;
+            COINS = data.coins;
+        });
+}
 
 
 slider.addEventListener('input', () => {
