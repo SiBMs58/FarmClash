@@ -166,7 +166,84 @@ export const defaultMapData2 = {
                 [[3,2], "Field2.B"],
                 [[3,3], "Field2.BR"],
             ]
+        },
+        Barn: {
+            display_name: "Barn",
+            explanation: "This is a barn.",
+            upgrade_costs: [500, 1000, 2000, 3500],
+            other_stats: [["Defence", [50, 100, 150, 200, 400]]],
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[0,0],"Barn.L@.1.1"],
+                [[1,0],"Barn.L@.2.1"],
+                [[2,0],"Barn.3.1"],
+                [[0,1],"Barn.L@.1.2"],
+                [[1,1],"Barn.2.2"],
+                [[2,1],"Barn.3.2"],
+                [[0,2],"Barn.L@.1.3"],
+                [[1,2],"Barn.L@.2.3"],
+                [[2,2],"Barn.3.3"]
+            ]
+        },
+        Bay: {
+            display_name: "Bay",
+            explanation: "This is a bay.",
+            upgrade_costs: [500, 1000, 2000, 3500],
+            other_stats: [["Defence", [50, 100, 150, 200, 400]]],
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[1,0],"Bay.L@.2.1.F1"],
+                [[2,0],"Bay.L@.3.1.F1"],
+                [[3,0],"Bay.L@.4.1.F1"],
+                [[1,1],"Bay.L@.2.2.F1"],
+                [[2,1],"Bay.L@.3.2.F1"],
+                [[3,1],"Bay.L@.4.2.F1"],
+                [[4,1],"Bay.L@.5.2.F1"],
+                [[1,2],"Bay.L@.2.3.F1"],
+                [[2,2],"Bay.L@.3.3.F1"],
+                [[3,2],"Bay.L@.4.3.F1"],
+                [[0,3],"Bay.L@.1.4"],
+                [[1,3],"Bay.L@.2.4"],
+                [[2,3],"Bay.L@.3.4"],
+                [[3,3],"Bay.L@.4.4"],
+                [[4,3],"Bay.L@.5.4"],
+                [[0,4],"Bay.L@.1.5"],
+                [[1,4],"Bay.L@.2.5"],
+                [[2,4],"Bay.L@.3.5"],
+                [[3,4],"Bay.L@.4.5"],
+                [[4,4],"Bay.L@.5.5"],
+                [[0,5],"Bay.L@.1.6"],
+                [[1,5],"Bay.L@.2.6"],
+                [[2,5],"Bay.L@.3.6"],
+                [[3,5],"Bay.L@.4.6"],
+                [[4,5],"Bay.L@.5.6"]
+            ],
+        },
+        Silo: {
+            display_name: "Silo",
+            explanation: "This is a silo.",
+            upgrade_costs: [500, 1000, 2000, 3500],
+            other_stats: [["Defence", [50, 100, 150, 200, 400]]],
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[0,0],"Silo.L@.1.1"],
+                [[1,0],"Silo.0%.2.1"],
+                [[2,0],"Silo.0%.3.1"],
+                [[3,0],"Silo.0%.4.1"],
+                [[4,0],"Silo.0%.5.1"],
+                [[0,1],"Silo.L@.1.2"],
+                [[1,1],"Silo.0%.2.2"],
+                [[2,1],"Silo.0%.3.2"],
+                [[3,1],"Silo.0%.4.2"],
+                [[4,1],"Silo.0%.5.2"],
+                [[0,2],"Silo.L@.1.3"],
+                [[1,2],"Silo.0%.2.3"],
+                [[2,2],"Silo.0%.3.3"],
+                [[3,2],"Silo.0%.4.3"],
+                [[4,2],"Silo.0%.5.3"]
+            ]
         }
+
     }
 }
 
@@ -220,7 +297,7 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        //await this.fetchBuildingMapData();
+        await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         console.log("fetchBuildingLayerList() success"); // Don't remove this
@@ -253,6 +330,7 @@ export class BuildingMap extends BaseMap {
             const locationY = currBuilding.building_location[0];
             const locationX = currBuilding.building_location[1];
 
+            debugger;
             const generalInfoKey = currBuilding.general_information
             const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations
             for (const currTile of tile_rel_locations) {
