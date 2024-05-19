@@ -1,11 +1,14 @@
-import { BaseMap } from "./baseMap.js";
+// todo documentatie updaten
+
+import {BaseMap} from "./baseMap.js";
 //import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
 import { utils } from "./utils.js";
+import { buildingMap } from "./canvas.js";
 
 /**
  * Sets the string value of
  */
-const EMPTY_TILE = "None";
+//const EMPTY_TILE = "None";
 
 /** Tile coördinaten: (y,x)
  0 1 2 3 | x
@@ -17,124 +20,128 @@ const EMPTY_TILE = "None";
  */
 
 const defaultCropData = {
-    /*
-    3 fases: plantable, growth-phase, harvestable
-
-    */
-
-
+    map_width: 58,
+    map_height: 43,
+    // 3 phases: empty (1), growth (2), harvest (3)
+    crop_information: {
+        field1: {
+            building_name: "field1", // to link to the field building
+            phase: 2, // growth phase
+            crop: "Wheat", // can be null
+            assetPhase: 3, // asset phases 1-4. Set's the correct growth phase of the asset
+            time_planted: 43516688, // time in seconds since random day (can be null)
+        },
+        field2: {
+            building_name: "field2", // to link to the field building
+            phase: 1, // empty phase
+            crop: null, // can be null
+            assetPhase: null,
+            time_planted: null, // can be null
+        },
+        field3: {
+            building_name: "field3",
+            phase: 3,
+            crop: "Corn",
+            assetPhase: 1,
+            time_planted: 43516688
+        }
+    }
 }
 
 
 export class CropMap extends BaseMap {
     /**
-     * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
+     * @param cropData This is set to a default version of the map, if database fetch succeeds this will be overridden.
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
      */
-    constructor(mapData = defaultCropData, _tileSize, _ctx) {
-        super(mapData, _tileSize);
+    constructor(cropData = defaultCropData, _tileSize, _ctx) {
+        super(cropData, _tileSize);
 
-        this.cropInformation = mapData.crop_information;
-        this.buildingGeneralInformation = mapData.building_general_information
-        this.tiles = this.generateBuildingTileMap();
+        this.cropInformation = cropData.crop_information;
         this.ctx = _ctx;
 
-        this.buildingAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
-        this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
+        this.cropAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
+        this.cropAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
-
-        // Variables to remember the click state
-        this.movingBuilding = false;
-        this.buildingClickedName = "";
-
-        // To remember building following mouse movement
-        this.prevMouseMoveBuildingLoc = null; // [y, x]
+        this.buildingMapInstace = null;
     }
 
     /**
      * Initialises the building layer. Fetches everything that needs to be fetched from the server, and stores it.
      */
     async initialize() {
-        await this.fetchBuildingAssetList();
-        //await this.fetchBuildingMapData();
-        this.tiles = this.generateBuildingTileMap();
-        await new Promise((resolve) => this.preloadBuildingAssets(resolve));
+        await this.fetchCropAssetList();
+        //await this.fetchCropMapData();
+        await new Promise((resolve) => this.preloadCropAssets(resolve));
         // Safe to call stuff here
         console.log("debug");
+    }
+
+    addBuildingMapInstance(buildingMapInstance) {
+        this.buildingMapInstace = buildingMapInstance;
     }
 
 
     /**
      * Fetches the 'assetList.json' which is used to later fetch the right assets.
      */
-    async fetchBuildingAssetList() {
+    async fetchCropAssetList() {
         try {
-            const response = await fetch('/static/img/assets/assetList2.json');
+            const response = await fetch('/static/img/assets/assetList.json');
             const responseJson = await response.json();
-            this.buildingAssetList = responseJson.buildings;
+            this.cropAssetList = responseJson.crops;
         } catch (error) {
             debugger;
-            console.error('fetchBuildingAssetList() failed:', error);
+            console.error('fetchCropAssetList() failed:', error);
             throw error;
         }
-
-        console.log("fetchBuildingAssetList() success, buildingAssetList: ", this.buildingAssetList);
+        console.log("fetchCropAssetList() success, cropAssetList: ", this.buildingAssetList);
     }
 
     /**
      * Fetches the buildingMapData json which stores the layout and other information needed.
      */
-    async fetchBuildingMapData() {
+    async fetchCropMapData() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-        const fetchLink = BASE_URL + "/game/fetch-building-information";
+        const fetchLink = BASE_URL + "/game/fetch-crop-information";
         try {
             const response = await fetch(fetchLink);
             const mapData = await response.json();
 
-            // Check if mapData contains building_information
-            //debugger;
-
-            if ("building_information" in mapData) {
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
-                this.buildingInformation = mapData.building_information;
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.tiles);
+            if ("crop_information" in mapData) {
+                this.cropInformation = mapData.crop_information;
             } else {
-            // No buildings found
-                await this.updateBuildingMapDB();
+            // No crops found
+                await this.updateCropMapDB();
                 console.log("No buildings found.");
 
             }
-
             // Resetting view coordinates
             this.viewX = 0;
             this.viewY = 0;
-
         } catch(error) {
-            console.error('fetchBuildingAssetList() failed:', error);
+            console.error('fetchCropMapData() failed:', error);
             throw error;
         }
 
-        console.log("fetchBuildingMapData() success");
+        console.log("fetchCropMapData() success");
     }
 
     /**
      * Preloads the assets from the server and stores it in 'this.buildingAssets'.
      * 'callback' function is called when the function is done fetching.
      */
-    preloadBuildingAssets(callback) {
+    preloadCropAssets(callback) {
         let assetMap = {};
-        let assetList = this.buildingAssetList;
+        let assetList = this.cropAssetList;
         let totalCount = 0;
         let loadedCount = 0;
 
-        for (const buildingType in assetList) {
-            totalCount += assetList[buildingType].length;
-            assetList[buildingType].forEach(asset => {
-                const currPath = "/static/img/assets/buildings/" + buildingType + "/" + asset + ".png";
+        for (const cropType in assetList) {
+            totalCount += assetList[cropType].length;
+            assetList[cropType].forEach(asset => {
+                const currPath = "/static/img/assets/crops/" + cropType + "/" + asset + ".png";
                 const img = new Image();
                 img.src = currPath;
                 img.onload = () => {
@@ -157,6 +164,13 @@ export class CropMap extends BaseMap {
         }
     }
 
+    getSecondsSinceDay0() {
+        let startDate = new Date(2023, 0, 1); // months are 0-indexed
+        let currentDate = new Date();
+        let differenceInMilliseconds = currentDate - startDate;
+        return Math.floor(differenceInMilliseconds / 1000);
+    }
+
 
     /**
      * Clears a specific tile relative to the screen (not the buildingMap)
@@ -168,56 +182,61 @@ export class CropMap extends BaseMap {
     }
 
 
+    drawOneCrop(field) {
+        if (field.phase === 1) {
+            return;
+        }
 
-    /**
-     * Draws a building.
-     * @param building a building object of 'this.buildingInformation'
-     */
-    /*
-    drawBuilding(building) {
         const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
         const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
-        const screen_buildLocationY = building.building_location[0] - this.viewY;
-        const screen_buildLocationX = building.building_location[1] - this.viewX;
 
-        for (const tile of building.tile_rel_locations) {
-            const screen_currTileLocY = screen_buildLocationY + tile[0][0];
-            const screen_currTileLocX = screen_buildLocationX + tile[0][1];
+        const buildingInformation = this.buildingMapInstace.buildingInformation;
 
-            if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
-                continue;
-            }
+        const linkedBuilding = buildingInformation[field.building_name];
+        const screen_buildLocationY = linkedBuilding.building_location[0] - this.viewY; // todo check of ' - this.viewY' klopt
+        const screen_buildLocationX = linkedBuilding.building_location[1] - this.viewX;
 
-            const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
+        const assetName = field.crop + "." + field.assetPhase
+
+        // Calculate coordinates to place crops
+        const screen_cropY = screen_buildLocationY + 1;
+        const screen_cropX = screen_buildLocationX + 1;
+
+        const cropCoords = [[screen_cropY, screen_cropX], [screen_cropY + 1, screen_cropX], [screen_cropY, screen_cropX + 1], [screen_cropY + 1, screen_cropX + 1]];
+
+        // Draw crops
+        for (let cropCoord of cropCoords) {
+            // todo checken de image binnen het canvas is
+
+            const img = this.buildingAssets["/static/img/assets/crops/" + utils.getAssetDir(assetName) + "/" + assetName + ".png"];
             if (img) {
-                this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
+                // todo de exacte plant locatie een beetje meer random maken
+                if (field.crop === "Wheat") {
+                    this.ctx.drawImage(img, cropCoord[1] * this.tileSize, (cropCoord[0] - 1 - 2/16) * this.tileSize, this.tileSize, this.tileSize * 2);
+                } else {
+                    this.ctx.drawImage(img, cropCoord[1] * this.tileSize, (cropCoord[0] - 2/16) * this.tileSize, this.tileSize, this.tileSize);
+                }
             } else {
                 console.error("BuildingMap.drawTiles(): image does not exist")
             }
         }
     }
-    */
 
     /**
-     * Draws the buildings. 'this.buildingInformation'
-     * @param topBuilding optional: Can be set if a building needs to be drawn on top of all other buildings.
+     * Draws the crops on top of the fields.
      */
-    drawTiles(topBuilding = null) {
+    drawCrops() {
         this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
-        for (const buildingKey in this.buildingInformation) {
-            if (!Object.hasOwnProperty.call(this.buildingInformation, buildingKey)) {
+        for (const cropKey in this.cropInformation) {
+            if (!Object.hasOwnProperty.call(this.cropInformation, cropKey)) {
                 continue;
             }
-            const currBuilding = this.buildingInformation[buildingKey];
+            const currCrop = this.cropInformation[cropKey];
 
-            this.drawBuilding(currBuilding);
+            this.drawOneCrop(currCrop);
         }
-        // Draw top again
-        if (topBuilding !== null) {
-            this.drawBuilding(topBuilding);
-        }
-
     }
+
 
     /**
      * Gets called by the Tick class with regular time intervals.
@@ -226,114 +245,6 @@ export class CropMap extends BaseMap {
         //console.log("building layer tick");
     }
 
-    /**
-     * Moves a building relative to its original location.
-     * @param rel_y
-     * @param rel_x
-     * @param buildingToMove object from 'this.buildingInformation'
-     * @param setToTop if marked true, sets the building being moved to the top of the screen.
-     */
-    moveBuilding(rel_y, rel_x, buildingToMove, setToTop = false) {
-        if (this.inBounds(rel_y, rel_x, buildingToMove)) {
-            if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
-                console.log("Move successful");
-                // zet ui op groen
-            } else {
-                console.log("Move not valid");
-                // zet ui op rood
-            }
-
-            buildingToMove.building_location[0] += rel_y;
-            buildingToMove.building_location[1] += rel_x;
-            this.tiles = this.generateBuildingTileMap();
-            if (isPopupOpen) {
-                closePopup();
-            }
-
-            if (setToTop) {
-                this.drawTiles(buildingToMove);
-            } else {
-                this.drawTiles();
-            }
-
-        } else {
-            console.log("can't move out of bounds");
-        }
-    }
-
-
-
-
-    /**
-     * Gets called when user clicks.
-     * @param client_x x click on screen
-     * @param client_y y click on screen
-     * @returns {boolean} Returns true when click is used by this class.
-     */
-    handleClick(client_x, client_y) {
-        //debugger;
-        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
-        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
-
-        // No click on building and not moving building
-        if (this.tiles[tileY][tileX] === EMPTY_TILE && this.movingBuilding === false) {
-            return false;
-        }
-
-        console.log(`click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
-
-        // Click on building and not yet moving
-        if (this.movingBuilding === false) {
-            this.movingBuilding = true;
-            this.ownNextClick = true;
-            this.buildingClickedName = this.tiles[tileY][tileX][1];
-            this.currBuildingOrgLocation = Array.from(this.buildingInformation[this.buildingClickedName].building_location);
-            return true;
-        }
-
-        // Click while moving building
-        if (this.movingBuilding === true) {
-            const buildingToMove = this.buildingInformation[this.buildingClickedName];
-
-            if (this.checkValidMoveLocation(0,0, buildingToMove)) {
-                this.movingBuilding = false;
-                this.ownNextClick = false;
-                this.prevMouseMoveBuildingLoc = null;
-                console.log("Op een juiste plek geplaatst");
-                this.updateBuildingMapDB().then(/* If something needs to happen after the update */);
-            } else {
-                //const revertRelY = this.currBuildingOrgLocation[0] - buildingToMove.building_location[0];
-                //const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
-                //this.moveBuilding(revertRelY, revertRelX, buildingToMove);
-                console.error("invalid locatie om gebouw te plaatsen");
-
-            }
-            // check of move valid is met rel_x, rel_y = 0
-            // Terug naar originele locatie
-        }
-        return true;
-    }
-
-
-    /**
-     * Handles the right-click input of the user. When right-clicking a building a pop-up needs to be opened.
-     * @param client_x the x screen pixel
-     * @param client_y the y screen pixel
-     * @returns {boolean} returns true if the click is used, false if not
-     */
-    handleRightClick(client_x, client_y) {
-        let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
-        let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
-
-        if (this.tiles[tileY][tileX] !== EMPTY_TILE) {
-            console.log(`Right click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
-            const buildingName = this.tiles[tileY][tileX][1];
-            openPopup(this.buildingInformation, this.buildingGeneralInformation, buildingName);
-            return true;
-        }
-        return false;
-
-    }
 
     /**
      * converts js object to json
@@ -343,7 +254,7 @@ export class CropMap extends BaseMap {
         return JSON.stringify({
             map_width: this.map_width,
             map_height: this.map_height,
-            building_information: this.buildingInformation
+            crop_information: this.cropInformation
         });
     }
 
@@ -351,7 +262,7 @@ export class CropMap extends BaseMap {
      * Sends the building map to the database to be updated.
      * @returns {Promise<void>}
      */
-    async updateBuildingMapDB() {
+    async updateCropMapDB() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         const fetchLink = BASE_URL + "/game/update-building-map";
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON

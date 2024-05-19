@@ -43,7 +43,7 @@ export const defaultMapData2 = {
             self_key: "fence1", // Must be the exact key of this sub-object
             general_information: "fence", // Link to the general information of this building type
             level: 4, // Building level (set "None" if not relevant)
-            building_location: [8, 8] // --> [y (height), x (width)], it's best practice to take the top-left corner of the building
+            building_location: [8, 8] // --> [y (height), x (width)], this needs to be the top-left corner of the building
         },
         fence2: {
             self_key: "fence2",
@@ -80,20 +80,20 @@ export const defaultMapData2 = {
             level: 6,
             building_location: [5, 11]
         },
-        field2: {
-            self_key: "field2",
+        field1: {
+            self_key: "field1",
             general_information: "field",
             level: 1,
             building_location: [10, 8]
         },
-        field3: {
-            self_key: "field3",
+        field2: {
+            self_key: "field2",
             general_information: "field",
             level: 1,
             building_location: [10, 12]
         },
-        field4: {
-            self_key: "field4",
+        field3: {
+            self_key: "field3",
             general_information: "field",
             level: 1,
             building_location: [10, 16]
@@ -105,6 +105,8 @@ export const defaultMapData2 = {
             building_location: [15, 20]
         }
     },
+
+
     building_general_information: {
         chicken_house: {
             display_name: "Chicken House", // Name to be displayed in the popup
@@ -205,7 +207,7 @@ export class BuildingMap extends BaseMap {
      * @param uiLayerInstance This instance is needed to draw the correct building UI.
      * @param username The username of the player. Used to fetch the right map data.
      */
-    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, uiLayerInstance, username) {
+    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, cropMapInstance, uiLayerInstance, username) {
 
         super(mapData, _tileSize, username);
 
@@ -218,6 +220,7 @@ export class BuildingMap extends BaseMap {
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
         this.terrainMapInstance = terrainMapInstance;
+        this.cropMapInstance = cropMapInstance;
         this.uiLayerInstance = uiLayerInstance;
 
 
@@ -289,7 +292,7 @@ export class BuildingMap extends BaseMap {
      */
     async fetchBuildingAssetList() {
         try {
-            const response = await fetch('/static/img/assets/assetList2.json');
+            const response = await fetch('/static/img/assets/assetList.json');
             const responseJson = await response.json();
             this.buildingAssetList = responseJson.buildings;
         } catch (error) {
@@ -316,15 +319,14 @@ export class BuildingMap extends BaseMap {
             const mapData = await response.json();
 
             // Check if mapData contains building_information
-            //debugger;
 
             if ("building_information" in mapData) {
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
                 this.buildingInformation = mapData.building_information;
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.tiles);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.tiles);
             } else {
             // No buildings found
                 await this.updateBuildingMapDB();
@@ -444,6 +446,7 @@ export class BuildingMap extends BaseMap {
             this.drawBuilding(topBuilding);
         }
         this.terrainMapInstance.drawTiles();
+        this.cropMapInstance.drawCrops();
     }
 
     /**

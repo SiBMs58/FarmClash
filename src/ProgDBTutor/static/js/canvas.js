@@ -1,5 +1,6 @@
 import { TerrainMap } from './terrainLayer.js'
 import { BuildingMap } from "./buildingLayer.js";
+import { CropMap } from "./cropLayer.js";
 import { UICanvasLayer } from "./uiCanvasLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
 import { UserInputHandler } from "./userInputHandler.js";
@@ -45,6 +46,11 @@ const uiCanvas = document.getElementById('uiCanvas');
 const uiCtx = uiCanvas.getContext('2d');
 const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
 
+// Create CropMap
+const cropCanvas = document.getElementById('cropCanvas');
+const cropCtx = cropCanvas.getContext('2d');
+const cropMap = new CropMap(undefined, tileSize, cropCtx);
+
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
@@ -52,14 +58,15 @@ export let buildingMap;
 if (window.friend) {
     // If friendData is available, use it in the constructor
     console.log("Friend data is available", window.friend);
-    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer, window.friend);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, cropMap, uiCanvasLayer, window.friend);
 } else {
     // If friendData is not available, omit it from the constructor
-    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, uiCanvasLayer);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, cropMap, uiCanvasLayer);
 }
 
-// Add buildingMap instance to the terrainLayer
+// Add buildingMap instance to classes that need it
 terrainMap.addBuildingMapInstance(buildingMap);
+cropMap.addBuildingMapInstance(buildingMap);
 
 
 // Create ticker
@@ -85,13 +92,19 @@ function resizeCanvas() {
     uiCanvas.height = window.innerHeight;
     uiCtx.imageSmoothingEnabled = false;
 
+    cropCanvas.width = window.innerWidth;
+    cropCanvas.height = window.innerHeight;
+    cropCtx.imageSmoothingEnabled = false;
+
     try { // Redraw terrain after resizing
         terrainMap.drawTiles();
         buildingMap.drawTiles();
+        cropMap.drawCrops();
     } catch (error) {
         console.error("Resize failed:", error);
     }
 }
+
 
 /**
  * Initialises the game step by step in correct order.
@@ -100,12 +113,12 @@ async function initializeGame() {
     try {
         await terrainMap.initialize();
         await buildingMap.initialize();
+        await cropMap.initialize();
 
         resizeCanvas(); // Initial resize and draw
         window.addEventListener('resize', resizeCanvas);
 
         ticker.start();
-
     } catch (error) {
         console.error('Initialization failed:', error);
         // Handle initialization error
