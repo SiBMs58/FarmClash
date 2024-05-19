@@ -91,6 +91,7 @@
         .hidden {
             display: none !important;
         }
+
     </style>
 </head>
 <body>
@@ -141,6 +142,88 @@
             }
         }
     </script>
+
+
+    <!-- ––––––––––––––––––––––––––––––– -->
+    <!-- Debug console.log output script -->
+    <!-- ––––––––––––––––––––––––––––––– -->
+
+    <!--   Druk op 'C' om de console te showen    -->
+
+    <style>
+        /* Debug output styles */
+        #debug-output {
+            display: none; /* Initially hide the debug output */
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-height: 200px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px;
+            overflow-y: auto;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            z-index: 1001;
+            font-size: 12px;
+        }
+    </style>
+
+    <script>
+        (function() {
+            const originalLog = console.log;
+            const originalError = console.error;
+
+            console.log = function(...args) {
+                originalLog.apply(console, args);
+                logToDebugOutput(args);
+            };
+
+            console.error = function(...args) {
+                originalError.apply(console, args);
+                logToDebugOutput(args, 'red'); // Passing 'red' as the second argument to logToDebugOutput for error messages
+            };
+
+            function logToDebugOutput(args, color) {
+                const debugOutput = document.getElementById('debug-output');
+                if (debugOutput) {
+                    args.forEach(arg => {
+                        let message = (typeof arg === 'string') ? arg : JSON.stringify(arg);
+                        let span = document.createElement('span');
+                        if (color) {
+                            span.style.color = color; // Setting text color to red for error messages
+                        }
+                        span.innerHTML = message + '<br>';
+                        debugOutput.appendChild(span);
+                    });
+                    debugOutput.scrollTop = debugOutput.scrollHeight; // Auto-scroll to the bottom
+                }
+            }
+
+            function createDebugOutputDiv() {
+                const debugOutput = document.createElement('div');
+                debugOutput.id = 'debug-output';
+                document.body.appendChild(debugOutput);
+            }
+
+            document.addEventListener('DOMContentLoaded', createDebugOutputDiv);
+
+            // Event listener to toggle debug output when 'c' is pressed
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'c') {
+                    const debugOutput = document.getElementById('debug-output');
+                    if (debugOutput) {
+                        debugOutput.style.display = debugOutput.style.display === 'none' ? 'block' : 'none';
+                    }
+                }
+            });
+        })();
+    </script>
+
+
+
 
 </body>
 </html>

@@ -57,23 +57,6 @@ export const defaultMapData2 = {
             level: 2,
             building_location: [8, 10]
         },
-        /*
-        fences_lv1: {
-            self_key: "fences_lv1",
-            general_information: "fence",
-            level: 1,
-            building_location: [6, 11],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L1.OZ"],
-                [[0, 1], "Fence.L1.OW"],
-                [[0, 2], "Fence.L1.ZW"],
-                [[1, 2], "Fence.L1.NZ"],
-                [[2, 2], "Fence.L1.NW"],
-                [[2, 1], "Fence.L1.OW"],
-                [[2, 0], "Fence.L1.NO"],
-                [[1, 0], "Fence.L1.NZ"],
-            ]
-        },*/
         chicken_coop: {
             self_key: "chicken_coop",
             general_information: "chicken_house",
@@ -178,6 +161,7 @@ export class BuildingMap extends BaseMap {
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
      * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
+     * @param cropMapInstance This is en instance that is needed in order to call the drawCrops function when a building moves
      * @param uiLayerInstance This instance is needed to draw the correct building UI.
      * @param username The username of the player. Used to fetch the right map data.
      */
@@ -197,7 +181,6 @@ export class BuildingMap extends BaseMap {
         this.cropMapInstance = cropMapInstance;
         this.uiLayerInstance = uiLayerInstance;
 
-
         // Variables to remember the click state
         this.movingBuilding = false;
         this.buildingClickedName = "";
@@ -211,10 +194,10 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        await this.fetchBuildingMapData();
+        //await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
-        console.log("fetchBuildingLayerList() success");
+        console.log("fetchBuildingLayerList() success"); // Don't remove this
         localStorage.setItem('gameData', 'true');
     }
 
@@ -270,12 +253,11 @@ export class BuildingMap extends BaseMap {
             const responseJson = await response.json();
             this.buildingAssetList = responseJson.buildings;
         } catch (error) {
-            debugger;
             console.error('fetchBuildingAssetList() failed:', error);
             throw error;
         }
 
-        console.log("fetchBuildingAssetList() success, buildingAssetList: ", this.buildingAssetList);
+        console.log("fetchBuildingAssetList() success");
     }
 
     /**

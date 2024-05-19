@@ -192,7 +192,14 @@ export class CropMap extends BaseMap {
 
         const buildingInformation = this.buildingMapInstace.buildingInformation;
 
-        const linkedBuilding = buildingInformation[field.building_name];
+        let linkedBuilding;
+        if (field.building_name in buildingInformation) {
+            linkedBuilding = buildingInformation[field.building_name];
+        } else {
+            console.error("There isn't a corresponding building for field: " + field.building_name);
+            return;
+        }
+
         const screen_buildLocationY = linkedBuilding.building_location[0] - this.viewY; // todo check of ' - this.viewY' klopt
         const screen_buildLocationX = linkedBuilding.building_location[1] - this.viewX;
 
