@@ -3,8 +3,8 @@ from flask_login import login_required, current_user
 
 from services.game_services import GameServices
 
-from src.ProgDBTutor.models.animal import Animal
-from src.ProgDBTutor.models.resource import Resource
+from models.animal import Animal
+from models.resource import Resource
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
