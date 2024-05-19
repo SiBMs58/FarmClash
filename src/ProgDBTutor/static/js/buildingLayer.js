@@ -83,7 +83,7 @@ export const defaultMapData2 = {
         },
         townhall1: {
             self_key: "townhall1",
-            general_information: "townhall",
+            general_information: "Townhall",
             level: 4,
             building_location: [15, 20]
         }
@@ -109,7 +109,7 @@ export const defaultMapData2 = {
                 [[2, 1], "Chickencoop.3.2"],
             ]
         },
-        townhall: {
+        Townhall: {
             display_name: "Townhall", // Name to be displayed in the popup
             explanation: "This is the Townhall",
             upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
@@ -331,6 +331,7 @@ export class BuildingMap extends BaseMap {
             const locationX = currBuilding.building_location[1];
 
             debugger;
+
             const generalInfoKey = currBuilding.general_information
             const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations
             for (const currTile of tile_rel_locations) {
