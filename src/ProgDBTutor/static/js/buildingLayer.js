@@ -60,7 +60,7 @@ export const defaultMapData2 = {
         chicken_coop: {
             self_key: "chicken_coop",
             general_information: "chicken_house",
-            level: 6,
+            level: 3,
             building_location: [5, 11]
         },
         field1: {
@@ -243,7 +243,6 @@ export const defaultMapData2 = {
                 [[4,2],"Silo.0%.5.3"]
             ]
         }
-
     }
 }
 
@@ -297,7 +296,7 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        await this.fetchBuildingMapData();
+        //await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         console.log("fetchBuildingLayerList() success"); // Don't remove this
