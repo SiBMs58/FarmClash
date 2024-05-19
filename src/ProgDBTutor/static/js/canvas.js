@@ -73,7 +73,7 @@ cropMap.addBuildingMapInstance(buildingMap);
 const ticker = new Ticker([terrainMap, buildingMap]);
 
 // Create userInputHandler
-const userInputHandler = new UserInputHandler([buildingMap, terrainMap]);
+const userInputHandler = new UserInputHandler([buildingMap, terrainMap, cropMap]);
 
 
 /**
@@ -99,7 +99,7 @@ function resizeCanvas() {
     try { // Redraw terrain after resizing
         terrainMap.drawTiles();
         buildingMap.drawTiles();
-        cropMap.drawCrops();
+        cropMap.drawTiles();
     } catch (error) {
         console.error("Resize failed:", error);
     }

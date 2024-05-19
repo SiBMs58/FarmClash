@@ -263,7 +263,7 @@ export class BuildingMap extends BaseMap {
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
      * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
-     * @param cropMapInstance This is en instance that is needed in order to call the drawCrops function when a building moves
+     * @param cropMapInstance This is en instance that is needed in order to call the drawTiles function when a building moves
      * @param uiLayerInstance This instance is needed to draw the correct building UI.
      * @param username The username of the player. Used to fetch the right map data.
      */
@@ -506,7 +506,7 @@ export class BuildingMap extends BaseMap {
             this.drawBuilding(topBuilding);
         }
         this.terrainMapInstance.drawTiles();
-        this.cropMapInstance.drawCrops();
+        this.cropMapInstance.drawTiles();
     }
 
     /**

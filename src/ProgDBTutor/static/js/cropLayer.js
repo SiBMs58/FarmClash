@@ -232,7 +232,7 @@ export class CropMap extends BaseMap {
     /**
      * Draws the crops on top of the fields.
      */
-    drawCrops() {
+    drawTiles() {
         this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
         for (const cropKey in this.cropInformation) {
             if (!Object.hasOwnProperty.call(this.cropInformation, cropKey)) {
