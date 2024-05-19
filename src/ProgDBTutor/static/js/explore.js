@@ -379,22 +379,14 @@ function fetchBuildingBayStats() {
  * @throws Will throw an error if the response from the API is not ok.
  */
 async function sendAnimalQuantity(numChickens, numGoats, numPigs, numCows) {
-    let diffCows = Barn.quantities[getIndex('Cow')] + numCows;
-    let diffPigs = Barn.quantities[getIndex('Pig')] + numPigs;
-    let diffGoats = Barn.quantities[getIndex('Goat')] + numGoats;
-    let diffChickens = Barn.quantities[getIndex('Chicken')] + numChickens;
-
     let animal_data = {
-        'update_type': 'explore',
-        'species':{
-            'Chicken': numChickens === 0 ? [false] : [true, diffChickens],
-            'Goat': numGoats === 0 ? [false] : [true, diffGoats],
-            'Pig': numPigs === 0 ? [false] : [true, diffPigs],
-            'Cow': numCows === 0 ? [false] : [true, diffCows],
-        }
+        'Chicken': numCows,
+        'Goat': numPigs,
+        'Pig': numGoats,
+        'Cow': numChickens,
     };
     try {
-        const response = await fetch('/api/update-animals', {
+        const response = await fetch('/api/add-animals', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

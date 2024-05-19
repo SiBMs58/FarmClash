@@ -44,10 +44,15 @@ let buildingLevel = 0;
 //___________________________ Page Initialization ___________________________//
 initialize();
 function initialize() {
+    fetchBarn().then(() => {
+         reload();
+    });
+}
+function reload(){
     fetchResources()
-    .then(updatedCrops => {
-        resources = updatedCrops;
-        console.log(updatedCrops);
+    .then(updatedResources => {
+        resources = updatedResources;
+        console.log(updatedResources);
     }).then(() => {
         displayResources();
     })
@@ -55,10 +60,8 @@ function initialize() {
         // Handle error
         console.error(error);
     });
-    fetchBarn().then(() => {
-        displayLimit();
-        updateDescription()
-    });
+    displayLimit();
+    updateDescription()
 }
 
 
@@ -324,11 +327,8 @@ document.getElementById('scrap-btn').addEventListener('click', () => {
                 alert(`Amount selected to scrap from ${selectedResource} is ${quantity}`);
 
                 sendResourceChange(quantity).then(r => {
-                    resources[selectedResource] -= quantity;
-                    displayResources();
-                    displayLimit();
+                    reload();
                     selectedResource = '';
-                    updateDescription()
                     document.getElementById(`scrap-quantity`).value = 0;
                 });
                 // Notify Database with new amount
@@ -365,10 +365,9 @@ function getAmountImage(amount) {
     return imgTags.join('');
 }
 function getResourceImage(type) {
-
     for (const [map, value] of Object.entries(typeLoc)) {
         if (value.includes(type)) {
-            return map + type;
+            return map + spaceTo_(type);
         }
     }
 }
@@ -462,4 +461,7 @@ function getLimit(){
             return 0;
     }
     return limit + buildingAugmentLevel * 150;
+}
+function spaceTo_(input) {
+    return input.replace(/ /g, '_');
 }

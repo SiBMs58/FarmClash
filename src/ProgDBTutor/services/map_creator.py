@@ -61,10 +61,10 @@ def generate_water_positions(width, height, num_lakes=8, min_lake_size=3, max_la
     water_positions = set()
 
     # Define the middle region to exclude
-    exclude_start_x = (width - 10) // 2
-    exclude_end_x = exclude_start_x + 9
-    exclude_start_y = (height - 5) // 2
-    exclude_end_y = exclude_start_y + 4
+    exclude_start_x = 4
+    exclude_end_x = 10
+    exclude_start_y = 10
+    exclude_end_y = 26
 
     # Track the number of water tiles generated
     water_tiles_generated = 0

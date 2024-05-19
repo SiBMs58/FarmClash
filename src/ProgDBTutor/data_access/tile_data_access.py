@@ -41,9 +41,9 @@ class TileDataAccess:
         if tile.tile_id is None:
             cursor.execute(
                 "INSERT INTO map_tiles (map_id, x, y, terrain_type, occupant_id, created_at) VALUES (%s, %s, %s, %s, %s, %s)",
-                (tile.map_id, tile.x, tile.y, tile.terrain_type, tile.occupant_id, tile.created_at))
+                (tile.map_id, tile.y, tile.x, tile.terrain_type, tile.occupant_id, tile.created_at))
         else:
             cursor.execute("INSERT INTO map_tiles (tile_id, map_id, x, y, terrain_type, occupant_id, created_at) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                       (tile.tile_id, tile.map_id, tile.x, tile.y, tile.terrain_type, tile.occupant_id, tile.created_at))
+                           (tile.tile_id, tile.map_id, tile.y, tile.x, tile.terrain_type, tile.occupant_id, tile.created_at))
         self.db_connection.conn.commit()
         return True

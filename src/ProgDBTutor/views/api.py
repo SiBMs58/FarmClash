@@ -8,6 +8,8 @@ from src.ProgDBTutor.models.resource import Resource
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
+crops = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant']
+
 @api_blueprint.route('/users')
 @login_required
 def get_users():
@@ -56,24 +58,25 @@ def add_resources():
     :return: Status of the update operation, in json format
     """
     try:
-        ## TODO add logic so resources are limited to their appropirate buildings
-
         data = request.get_json()
         resource_data_access = current_app.config.get('resource_data_access')
         update_status = [True, 'Resources updated successfully']
-        already_updated = []
+        rollback = []
+        Idle = data.get('idle', False)  # Get the value of 'idle' key, default to False if not present
 
         for resource_type, amount in data.items():
+            if resource_type == 'idle':
+                continue
 
-            updated_resource = Resource(None, current_user.username, resource_type, amount)
-            update_status = resource_data_access.update_by_adding_resource(updated_resource)
+            updated_resource = Resource(current_user.username, resource_type, amount, None if Idle else False)
+            rollback.append(resource_data_access.get_resource_by_type(current_user.username, resource_type))
+            update_status = resource_data_access.update_by_adding_resource(updated_resource, get_resource_limit(resource_type))
 
             if not update_status[0]:
-                for rollback_resource in already_updated:
-                    rollback_resource.amount = -rollback_resource.amount
+                for resource in rollback:
+                    resource.amount = -resource.amount
                     resource_data_access.update_by_adding_resource(rollback_resource)
                     return jsonify({"status": "error", "message": update_status[1]}), 500
-            already_updated.append(updated_resource)
 
         return jsonify({"status": "success", "message": update_status[1]}), 200
 
@@ -94,6 +97,49 @@ def get_resources(username):
     resources = resource_data_access.get_resources(username)
 
     return jsonify([resource.to_dict() for resource in resources])
+
+
+@api_blueprint.route('/animals', methods=['GET'])
+@login_required
+def get_animals():
+    """
+    Handles GET requests for all animals. This will return a list of all animals, for the current user
+    :return: A list of all animals, in json format
+    """
+    try:
+        animal_data_access = current_app.config.get('animal_data_access')
+        animals = animal_data_access.get_animals(current_user.username)
+        return jsonify([animal.to_dict() for animal in animals])
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/add-animals', methods=['POST'])
+@login_required
+def update_animals():
+    """
+    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
+    use this for
+    :return: Status of the update operation, in json format
+    """
+    try:
+        data = request.get_json()
+        animal_data_access = current_app.config.get('animal_data_access')
+
+        Idle = data.get('idle', False)  # Get the value of 'idle' key, default to False if not present
+        for specie in data:
+            if specie == 'idle':
+                continue
+
+            updated_animal = Animal(current_user.username, specie, data[specie] if len(data[specie]) == 2 else None,
+                                    None if Idle else False)
+            update_success = animal_data_access.update_animal_by_adding(updated_animal, get_animal_limit(specie))
+
+        return jsonify({"status": "success", "message": "Animal updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @api_blueprint.route('/terrain-map')
 @login_required
@@ -230,7 +276,7 @@ def fetch_building_information():
                 "general_information": building.building_type,
                 "level": building.level,
                 "augment_level": building.augment_level,
-                "building_location": [building.x, building.y],
+                "building_location": [building.y, building.x],
                 "tile_rel_locations": building.tile_rel_locations
             }
             building_information[building.building_id] = building_info
@@ -264,7 +310,7 @@ def fetch_building_information_by_type(building_type):
                 "general_information": building.building_type,
                 "level": building.level,
                 "augment_level": building.augment_level,
-                "building_location": [building.x, building.y],
+                "building_location": [building.y, building.x],
                 "tile_rel_locations": building.tile_rel_locations
             }
             building_information[building.building_id] = building_info
@@ -307,7 +353,7 @@ def fetch_building_information_for_user(username):
                 "general_information": building.building_type,
                 "level": building.level,
                 "augment_level": building.augment_level,
-                "building_location": [building.x, building.y],
+                "building_location": [building.y, building.x],
                 "tile_rel_locations": building.tile_rel_locations
             }
             building_information[building.building_id] = building_info
@@ -321,80 +367,6 @@ def fetch_building_information_for_user(username):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-
-@api_blueprint.route('/animals', methods=['GET'])
-@login_required
-def get_animals():
-    """
-    Handles GET requests for all animals. This will return a list of all animals, for the current user
-    :return: A list of all animals, in json format
-    """
-    try:
-        animal_data_access = current_app.config.get('animal_data_access')
-        animals = animal_data_access.get_animals(current_user.username)
-        return jsonify([animal.to_dict() for animal in animals])
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-@api_blueprint.route('/add-animals', methods=['POST'])
-@login_required
-def update_animals():
-    """
-    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
-    use this for
-    :return: Status of the update operation, in json format
-    """
-    try:
-        limit = 10
-        # TODO get building levels of appropriate buildings
-
-        data = request.get_json()
-        animal_data_access = current_app.config.get('animal_data_access')
-
-        Idle = data.get('idle', False)  # Get the value of 'idle' key, default to False if not present
-        for specie in data:
-            if specie == 'idle':
-                continue
-
-            updated_animal = Animal(specie, current_user.username, data[specie] if len(data[specie]) == 2 else None,
-                                    None if Idle else False)
-            update_success = animal_data_access.update_animal_by_adding(updated_animal, limit)
-
-        return jsonify({"status": "success", "message": "Animal updated successfully"}), 200
-
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-
-@api_blueprint.route('/update-animals', methods=['POST'])
-@login_required
-def update_animals():
-    """
-    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
-    use this for
-    :return: Status of the update operation, in json format
-    """
-    try:
-        # TODO for FERHAT: add logica to limit the animal specie to the sum of levels of the appropiate buildings
-        #  i.e if the user has 3 unlocked pigpens one of level 2, one of level 6, and one level 10, pigs are limited to 18
-
-        data = request.get_json()
-        Idle = data['update_type'] == 'idle'
-        animal_data_access = current_app.config.get('animal_data_access')
-
-        for specie in data['species']:
-            update_success = True
-            if data['species'][specie][0] or Idle:
-                updated_animal = Animal(specie, current_user.username, data[specie][1] if len(data[specie]) == 2 else None, None if Idle else False)
-                update_success = animal_data_access.update_animal(updated_animal)
-
-            if not update_success:
-                return jsonify({"status": "error", "message": f"Failed to update animal {specie}"}), 500
-
-        return jsonify({"status": "success", "message": "Animal updated successfully"}), 200
-
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @api_blueprint.route('/exploration', methods=['GET'])
@@ -416,3 +388,84 @@ def get_exploration():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+def get_resource_limit(resource_type):
+    def get_barn_limit(building_level, building_augment_level):
+        barn_limit = 0
+        if building_level == 1:
+            barn_limit = 800
+        elif building_level == 2:
+            barn_limit = 1600
+        elif building_level == 3:
+            barn_limit = 8000
+        elif building_level == 4:
+            barn_limit = 16000
+        elif building_level == 5:
+            barn_limit = 80000
+        elif building_level == 6:
+            barn_limit = 160000
+        elif building_level == 7:
+            barn_limit = 800000
+        elif building_level == 8:
+            barn_limit = 1600000
+        elif building_level == 9:
+            barn_limit = 8000000
+        elif building_level == 10:
+            return float('inf')
+        else:
+            return 0
+        return barn_limit + building_augment_level * 150
+
+    def get_silo_limit(building_level, building_augment_level):
+        silo_limit = 0
+        if building_level == 1:
+            lsilo_limitimit = 500
+        elif building_level == 2:
+            silo_limit = 1000
+        elif building_level == 3:
+            silo_limit = 5000
+        elif building_level == 4:
+            silo_limit = 10000
+        elif building_level == 5:
+            silo_limit = 50000
+        elif building_level == 6:
+            silo_limit = 100000
+        elif building_level == 7:
+            silo_limit = 500000
+        elif building_level == 8:
+            silo_limit = 1000000
+        elif building_level == 9:
+            silo_limit = 5000000
+        elif building_level == 10:
+            return float('inf')
+        else:
+            return 0
+        return silo_limit + building_augment_level * 100
+
+    limit = 0
+    if resource_type in crops:
+        building = building_data_access.get_buildings_by_username_and_type(current_user.username, "Silo")[0]
+        return get_silo_limit(building.level, building.augment_level)
+    elif resource_type == 'Money':
+        return float('inf')
+    else:
+        building = building_data_access.get_buildings_by_username_and_type(current_user.username, "Barn")[0]
+        return get_barn_limit(building.level, building.augment_level)
+
+def get_animal_limit(animal):
+    buildings = []
+    if animal == 'Chicken':
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, "Chickencoop")
+    elif animal == 'Cow':
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, "Cowbarn")
+    elif animal == 'Goat':
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, "Goatbarn")
+    elif animal == 'Pig':
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, "Pigpen")
+    else:
+        return 0
+
+    limit = 0
+    for building in buildings:
+        limit += building.level * 2

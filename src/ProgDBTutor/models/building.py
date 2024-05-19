@@ -43,9 +43,6 @@ class Building:
             self.width = 1
             self.height = 2
 
-        elif self.building_type == 'gift': #TODO only if we do gifts through buildings dropped on map
-            self.width = 2
-            self.height = 2
 
         elif self.building_type == 'Chickencoop':
             self.width = 2

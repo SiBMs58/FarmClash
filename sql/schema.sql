@@ -68,10 +68,11 @@ CREATE TABLE market (
 
 -- Resources Table to track user resources like money, crops, etc.
 CREATE TABLE resources (
-    resource_id SERIAL PRIMARY KEY,
     owner VARCHAR(255) REFERENCES users(username),
     type VARCHAR(255) NOT NULL,
-    quantity INT DEFAULT 0
+    quantity INT DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (owner,type)
 );
 
 -- Attacks Table (If implementing the attack feature)

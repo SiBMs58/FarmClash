@@ -18,9 +18,14 @@ let buildingLevel = 0;
 //___________________________ Page Initialization ___________________________//
 initialize();
 function initialize() {
-    fetchCrops()
+    fetchSilo().then(() => {
+         reload();
+    });
+}
+function reload(){
+    fetchResources()
     .then(updatedCrops => {
-        crops = updatedCrops;
+        resources = updatedCrops;
         console.log(updatedCrops);
     }).then(() => {
         displayCrops();
@@ -29,10 +34,8 @@ function initialize() {
         // Handle error
         console.error(error);
     });
-    fetchSilo().then(() => {
-        displayLimit();
-        updateDescription()
-    });
+    displayLimit();
+    updateDescription()
 }
 
 
@@ -298,11 +301,8 @@ document.getElementById('scrap-btn').addEventListener('click', () => {
                 alert(`Amount selected to scrap from ${selectedCrop} is ${quantity}`);
 
                 sendCropChange(quantity).then(r => {
-                    crops[selectedCrop] -= quantity;
-                    displayCrops();
-                    displayLimit();
+                    reload();
                     selectedCrop = '';
-                    updateDescription()
                     document.getElementById(`scrap-quantity`).value = 0;
                 });
                 // Notify Database with new amount

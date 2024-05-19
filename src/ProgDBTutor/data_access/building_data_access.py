@@ -99,7 +99,7 @@ class BuildingDataAccess:
                     SET building_type = %s, level = %s, x = %s, y = %s, 
                     tile_rel_locations = %s, created_at = %s, augment_level = %s
                     WHERE username_owner = %s AND building_id = %s;
-                """, (building.building_type, building.level,building.x, building.y,
+                """, (building.building_type, building.level, building.y, building.x,
                       building.tile_rel_locations, building.created_at, building.augment_level,
                       building.username_owner, building.building_id, ))
             else:
@@ -113,7 +113,7 @@ class BuildingDataAccess:
                         x = EXCLUDED.x, y = EXCLUDED.y, tile_rel_locations = EXCLUDED.tile_rel_locations,
                         created_at = EXCLUDED.created_at;
                 """, (building.building_id, building.username_owner, building.building_type,
-                      building.level, building.x, building.y, building.tile_rel_locations, building.created_at, building.augment_level))
+                      building.level, building.y, building.x, building.tile_rel_locations, building.created_at, building.augment_level))
             self.db_connection.conn.commit()
             return True
         except Exception as e:
