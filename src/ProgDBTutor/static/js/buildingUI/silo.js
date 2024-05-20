@@ -1,15 +1,15 @@
 let interval = null;
 let crops ={
-    'Wheat': 100,
-    'Carrot': 150,
-    'Corn': 150,
-    'Lettuce': 150,
-    'Tomato': 150,
-    'Turnip': 150,
-    'Zucchini': 150,
-    'Parsnip': 150,
-    'Cauliflower': 150,
-    'Eggplant': 150
+    'Wheat': 0,
+    'Carrot': 0,
+    'Corn': 0,
+    'Lettuce': 0,
+    'Tomato': 0,
+    'Turnip': 0,
+    'Zucchini': 0,
+    'Parsnip': 0,
+    'Cauliflower': 0,
+    'Eggplant': 0
 };
 let selectedCrop = ''
 let buildingAugmentLevel = 0;
@@ -23,19 +23,18 @@ function initialize() {
     });
 }
 function reload(){
-    fetchResources()
+    fetchCrops()
     .then(updatedCrops => {
-        resources = updatedCrops;
-        console.log(updatedCrops);
+        crops = updatedCrops;
     }).then(() => {
         displayCrops();
+    }).then(() => {
+        displayLimit();
+        updateDescription()
     })
     .catch(error => {
-        // Handle error
         console.error(error);
     });
-    displayLimit();
-    updateDescription()
 }
 
 

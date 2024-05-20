@@ -55,13 +55,15 @@ function reload(){
         console.log(updatedResources);
     }).then(() => {
         displayResources();
+    }).then(() => {
+        displayLimit();
+        updateDescription();
     })
     .catch(error => {
         // Handle error
         console.error(error);
     });
-    displayLimit();
-    updateDescription()
+
 }
 
 

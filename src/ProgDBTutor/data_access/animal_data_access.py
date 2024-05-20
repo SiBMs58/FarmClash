@@ -58,8 +58,8 @@ class AnimalDataAccess:
 
     def update_animal_by_adding(self, animal, limit):
 
-        if not animal.last_updated and animal.amount is None:
-            return False
+        #if animal.amount == 0:
+         #   return True
 
         cursor = self.db_connection.get_cursor()
         animal_amount = 0

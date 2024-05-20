@@ -51,20 +51,16 @@ button:hover {
     margin: 1%;
     text-align: center;
 }
-
-
+.product p{
+    margin: 20px;
+}
 img.crate-image {
-    width: 100px;
     height: 100px;
     image-rendering: pixelated;
 }
 
 
-.coin-image {
-    transform: scale(0.85);
-    width: 20px;
-    image-rendering: pixelated;
-}
+
 
 
 
@@ -90,7 +86,8 @@ img.crate-image {
     text-align: center; /* Center text horizontally */
     z-index: 1; /* Ensure it's above other elements */
     position: relative;
-    top: -15px;
+    top: 7%;
+    transform: translateY(-50%);
     margin-right: -5px;
     margin-left: -5px;
 }

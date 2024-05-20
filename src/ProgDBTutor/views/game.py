@@ -87,8 +87,8 @@ def update_map():
             level = building_info["level"]
             created_at = datetime.now()
             tile_rel_locations_json = json.dumps(building_info["tile_rel_locations"])  # Serialize to JSON
-            x_value = building_info["building_location"][0]
-            y_value = building_info["building_location"][1]
+            x_value = building_info["building_location"][1]
+            y_value = building_info["building_location"][0]
             building_id = building_info["self_key"]
 
             building = building_user_exists(buildings, building_id)

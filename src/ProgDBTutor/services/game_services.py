@@ -40,6 +40,7 @@ class GameServices:
         map = self.map_data_access.get_map_by_username_owner(username)
         for row in range(len(terrain_tiles)):
             for col in range(len(terrain_tiles[row])):
+                print(row, col, terrain_tiles[row][col])
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
 
         self.create_building_map(username, terrain_tiles)
@@ -167,7 +168,7 @@ class GameServices:
         for tile in tile_data:
             terrain_type = tile.terrain_type
             # print(tile.y, tile.x, terrain_type)
-            terrain_tiles[tile.x][tile.y] = terrain_type
+            terrain_tiles[tile.y][tile.x] = terrain_type
 
         # Construct the final structure
         formatted_data = {

@@ -20,15 +20,15 @@ class ResourceDataAccess:
             resources.append(Resource(row['owner'], row['type'], row['quantity'], row['last_updated']))
         return resources
 
-    def get_resources_by_type(self, username_owner, type):
+    def get_resource_by_type(self, username_owner, resource_type):
         """
         Get resources for the current owner
         :param username_owner: The user that owns the resources
         :return: An list of resources objects
         """
         cursor = self.db_connection.get_cursor()
-        cursor.execute('SELECT * FROM resources WHERE owner = %s AND resource_type = %s', (username_owner, type))
-        rows = cursor.fetchone()
+        cursor.execute('SELECT * FROM resources WHERE owner = %s AND type = %s', (username_owner, resource_type))
+        row = cursor.fetchone()
         return Resource(row['owner'], row['type'], row['quantity'], row['last_updated'])
 
     def get_all_resources(self):
@@ -84,7 +84,6 @@ class ResourceDataAccess:
         :param resource: A resource object
         :return: True if added successfully, False otherwise
         """
-        message = ''
 
         # get the total of crops or non-crops owned by the user to check if the limit is reached of their store building
         total = 0
@@ -99,22 +98,21 @@ class ResourceDataAccess:
                        (resource.username_owner, resource.resource_type))
         new_quantity = cursor.fetchone()['quantity'] + resource.amount
         if new_quantity < 0:
-            return [False, f'{resource.resource_type} quantity cannot be negative. {result["quantity"]} + {resource.amount} = {new_quantity}']
+            return False
         if resource.resource_type != "Money" and total + resource.amount > limit:
             new_quantity = limit - total
-            message = f'{resource.resource_type} exceeded the limit of {limit}.'
 
         # update the resource quantity
         if not resource.last_updated:
             cursor.execute("UPDATE resources SET quantity = %s WHERE owner = %s AND type = %s",
-                           (new_quantity, resource.owner, resource.resource_type))
+                           (new_quantity, resource.username_owner, resource.resource_type))
         else:
-            cursor.execute('UPDATE resources SET quantity = %s AND last_updated WHERE owner = %s AND type = %s',
-                           (new_quantity,  resource.last_updated, resource.username_owner, resource.resource_type))
+            cursor.execute("UPDATE resources SET quantity = %s, last_updated = %s WHERE owner = %s AND type = %s",
+                           (new_quantity, resource.last_updated, resource.username_owner, resource.resource_type))
         if cursor.rowcount == 0:
-            return [True, "No rows updated, possibly because the resource doesn't exist for the user or no change was necessary"]
+            return False
         self.db_connection.conn.commit()
-        return [True, message]
+        return True
 
     def get_crop_total(self, username_owner):
         """
