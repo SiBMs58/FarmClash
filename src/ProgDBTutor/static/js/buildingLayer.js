@@ -527,6 +527,15 @@ export class BuildingMap extends BaseMap {
         //console.log("building layer tick");
     }
 
+    isEdgeTile(tileName) {
+        if (utils.getAssetDir(tileName) === "Grass") {
+            let str = String(tileName);
+            const targetLetters = ['N', 'O', 'W', 'Z'];
+            return targetLetters.some(letter => str.includes(letter));
+        }
+        return false;
+    }
+
     /**
      *
      * @param rel_y
@@ -576,7 +585,7 @@ export class BuildingMap extends BaseMap {
         for (const currTile of newLocations) {
             const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
             const terrainType = utils.getAssetDir(correspondingTerrainTile);
-            if (terrainType === "Water") {
+            if (terrainType === "Water" || this.isEdgeTile(correspondingTerrainTile)) {
                 return false;
             }
         }
@@ -714,9 +723,12 @@ export class BuildingMap extends BaseMap {
                 if (this.cropMapInstance.isHarvestable(fieldName)) {
                     const fieldLevel = this.buildingInformation[buildingName].level
                     this.cropMapInstance.harvestField(fieldName, fieldLevel);
-                    return true;
+                    return true; // moet gebeuren
                 }
             }
+
+            // todo (Siebe) check of friend aan het bezoeken
+            // Ge moet hier true returnen omdat er op een gebouw is geklikt. De twee lijnen hier onder mogen gewoon niet gebeuren (zie hierboven als voorbeeld)
 
             this.movingBuilding = true;
             this.ownNextClick = true;
