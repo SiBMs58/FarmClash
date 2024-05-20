@@ -81,11 +81,36 @@ export const defaultMapData2 = {
             level: 1,
             building_location: [10, 16]
         },
-        townhall1: {
-            self_key: "townhall1",
-            general_information: "Townhall",
-            level: 4,
-            building_location: [15, 20]
+
+        Cowbarn: {
+            self_key: "Cowbarn",
+            general_information: "Cowbarn",
+            level: 1,
+            building_location: [10, 24]
+        },
+        Goatbarn: {
+            self_key: "Goatbarn",
+            general_information: "Goatbarn",
+            level: 10,
+            building_location: [15, 24]
+        },
+        Bay: {
+            self_key: "Bay",
+            general_information: "Bay",
+            level: 10,
+            building_location: [15, 3]
+        },
+        Pigpen: {
+            self_key: "Pigpen",
+            general_information: "Pigpen",
+            level: 10,
+            building_location: [5, 3]
+        },
+        Silo: {
+            self_key: "Silo",
+            general_information: "Silo",
+            level: 10,
+            building_location: [5, 3]
         }
     },
 
@@ -109,6 +134,73 @@ export const defaultMapData2 = {
                 [[2, 1], "Chickencoop.3.2"],
             ]
         },
+        Pigpen: {
+            display_name: "Pigpen", // Name to be displayed in the popup
+            explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
+                "This vital building is where your feathered friends lay eggs, ready for " +
+                "market sale. Upgrade to boost production. Every egg sold brings you one " +
+                "step closer to agricultural dominance.",
+            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
+            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]], // All other stats specific for this building. ["Stat name display", [array of all values per level]]
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[0, 0], "Pigpen.L@.1.1"], // location relative to 'building_location'
+                [[0, 1], "Pigpen.L@.1.2"], // [ rel_location ([y, x]), "Tile asset"]
+                [[0, 2], "Pigpen.L@.1.3"],
+                [[1, 0], "Pigpen.L@.2.1"], // All the '@' will be replaced with the correct level
+                [[1, 1], "Pigpen.2.2"],
+                [[1, 2], "Pigpen.L@.2.3"],
+                [[2, 0], "Pigpen.3.1"],
+                [[2, 1], "Pigpen.3.2"],
+                [[2, 2], "Pigpen.3.3"]
+            ]
+        },
+        Cowbarn: {
+            display_name: "Cowbarn", // Name to be displayed in the popup
+            explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
+                "This vital building is where your feathered friends lay eggs, ready for " +
+                "market sale. Upgrade to boost production. Every egg sold brings you one " +
+                "step closer to agricultural dominance.",
+            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
+            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]], // All other stats specific for this building. ["Stat name display", [array of all values per level]]
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[0, 0], "Cowbarn.L1.1.1"], // location relative to 'building_location'
+                [[0, 1], "Cowbarn.L1.1.2"], // [ rel_location ([y, x]), "Tile asset"]
+                [[0, 2], "Cowbarn.L1.1.3"], // All the '@' will be replaced with the correct level
+                [[1, 0], "Cowbarn.L1.2.1"],
+                [[1, 1], "Cowbarn.2.2"],
+                [[1, 2], "Cowbarn.L1.2.3"],
+                [[2, 0], "Cowbarn.3.1"],
+                [[2, 1], "Cowbarn.3.2"],
+                [[2, 2], "Cowbarn.3.3"]
+
+
+
+            ]
+        },
+        Goatbarn: {
+            display_name: "Goat barn", // Name to be displayed in the popup
+            explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
+                "This vital building is where your feathered friends lay eggs, ready for " +
+                "market sale. Upgrade to boost production. Every egg sold brings you one " +
+                "step closer to agricultural dominance.",
+            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
+            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]], // All other stats specific for this building. ["Stat name display", [array of all values per level]]
+            maxLevel: 10,
+            tile_rel_locations: [
+                [[0, 0], "Goatbarn.L@.1.1"], // location relative to 'building_location'
+                [[0, 1], "Goatbarn.L10.1.2"], // [ rel_location ([y, x]), "Tile asset"]
+                [[0, 2], "Goatbarn.L@.1.3"], // All the '@' will be replaced with the correct level
+                [[1, 0], "Goatbarn.L@.2.1"],
+                [[1, 1], "Goatbarn.2.2"],
+                [[1, 2], "Goatbarn.L@.2.3"],
+                [[2, 0], "Goatbarn.3.1"],
+                [[2, 1], "Goatbarn.3.2"],
+                [[2, 2], "Goatbarn.3.3"]
+            ]
+        },
+
         Townhall: {
             display_name: "Townhall", // Name to be displayed in the popup
             explanation: "This is the Townhall",
@@ -119,6 +211,7 @@ export const defaultMapData2 = {
                 [[0, 0], "Townhall.L@.1.1"],
                 [[0, 1], "Townhall.L@.1.2"],
                 [[0, 2], "Townhall.L@.1.3"],
+                [[0, 3], "Townhall.1.4"],
                 [[1, 0], "Townhall.L@.2.1"],
                 [[1, 1], "Townhall.L@.2.2"],
                 [[1, 2], "Townhall.L@.2.3"],
@@ -127,6 +220,14 @@ export const defaultMapData2 = {
                 [[2, 1], "Townhall.L@.3.2"],
                 [[2, 2], "Townhall.L@.3.3"],
                 [[2, 3], "Townhall.L@.3.4"],
+                [[3, 0], 'Townhall.4.1'],
+                [[3, 1], 'Townhall.4.2'],
+                [[3, 2], 'Townhall.4.3'],
+                [[3, 3], 'Townhall.4.4'],
+                [[4, 0], 'Townhall.5.1'],
+                [[4, 1], 'Townhall.5.2'],
+                [[4, 2], 'Townhall.5.3'],
+                [[4, 3], 'Townhall.5.4']
             ]
         },
         Fence: {
