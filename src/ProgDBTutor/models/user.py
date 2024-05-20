@@ -1,12 +1,13 @@
 from datetime import datetime
 class User:
-    def __init__(self, username, password, email, created_at=None):
+    def __init__(self, username, password, email, created_at=None, last_gift=None):
         self.username = username
         self.password = password
         self.email = email
         if created_at is None:
             created_at = datetime.now()
         self.created_at = created_at
+        self.last_gift = last_gift
 
     def get_id(self):
         """
@@ -39,4 +40,5 @@ class User:
             'password': self.password,  # Be cautious about exposing passwords.
             'email': self.email,
             'created_at': self.created_at,
+            'last_gift': self.last_login
         }

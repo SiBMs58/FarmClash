@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ app_data['app_name'] }} - Townhall</title>
+    {% include 'head.html' %}
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            text-align: center;
+        }
+        .content {
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'header&footer.html' %}
+    <div class="container">
+        <div class="content">
+            <h1>Gifts</h1>
+            {% if gift %}
+                <p>Congratulations! You've received a gift:</p>
+                <ul>
+                    <li><strong>{{ gift }}</strong>: {{ amount }}</li>
+                </ul>
+            {% else %}
+                <p>No gifts available at this time. Please check back later!</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

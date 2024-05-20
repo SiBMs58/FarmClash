@@ -85,3 +85,18 @@ body {
     width: auto; /* Ensures width is proportional to height */
     image-rendering: pixelated; /* Prevents pixelation */
 }
+
+.gifts {
+    position: absolute;
+    left: 50%;
+    bottom: 5%;
+    transform: translateX(-50%);
+}
+.gift-button{
+    background: none;
+    border: none;
+    outline: none;
+}
+.gift-button img{
+    height: 75px;
+}
