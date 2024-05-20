@@ -97,7 +97,7 @@ def gifts():
     amount = 0
 
     # Check if the user has logged in within the last hour
-    if user.last_gift + timedelta(seconds=60) <= datetime.now():
+    if user.last_gift + timedelta(hours=1) <= datetime.now():
         # Calculate bonuses based on the time the user has been playing the game
         delta_created_at = datetime.now() - user.created_at
         delta_last_gift = datetime.now() - user.last_gift
