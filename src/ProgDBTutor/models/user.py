@@ -40,5 +40,5 @@ class User:
             'password': self.password,  # Be cautious about exposing passwords.
             'email': self.email,
             'created_at': self.created_at,
-            'last_gift': self.last_login
+            'last_gift': self.last_gift
         }
