@@ -108,7 +108,7 @@ export class CropMap extends BaseMap {
      */
     async initialize() {
         await this.fetchCropAssetList();
-        //await this.fetchCropMapData();
+        await this.fetchCropMapData();
         await new Promise((resolve) => this.preloadCropAssets(resolve));
         // Safe to call stuff here
         console.log("debug");
@@ -140,17 +140,19 @@ export class CropMap extends BaseMap {
      */
     async fetchCropMapData() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-        const fetchLink = BASE_URL + "/game/fetch-crop-information";
+        const fetchLink = BASE_URL + "/api/fetch-crop-information";
         try {
             const response = await fetch(fetchLink);
             const mapData = await response.json();
 
-            if ("crop_information" in mapData) {
+            if (Object.keys(mapData.crop_information).length !== 0) {
                 this.cropInformation = mapData.crop_information;
+                console.log("fields found.");
             } else {
             // No crops found
                 await this.updateCropMapDB();
-                console.log("No buildings found.");
+                this.cropInformation = defaultCropData.crop_information;
+                console.log("no fields found.");
 
             }
             // Resetting view coordinates
@@ -370,7 +372,7 @@ export class CropMap extends BaseMap {
      */
     async updateCropMapDB() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-        const fetchLink = BASE_URL + "/game/update-building-map";
+        const fetchLink = BASE_URL + "/api/update-fields";
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON
         console.log('BuildingMap DB ', mapDataJson);
         try {

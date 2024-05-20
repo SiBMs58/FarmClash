@@ -5,6 +5,7 @@ from services.game_services import GameServices
 
 from src.ProgDBTutor.models.animal import Animal
 from src.ProgDBTutor.models.resource import Resource
+from src.ProgDBTutor.models.field import Field
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
@@ -405,6 +406,61 @@ def get_exploration():
             return jsonify(exploration_dict)
         else:
             return jsonify({"ongoing": False})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/update-fields', methods=['POST'])
+@login_required
+def update_field_map():
+    """
+        Handles POST requests to update fields. This will update fields for the current user.
+        :return: Status of the update operation, in JSON format.
+        """
+    try:
+        data = request.get_json()
+        field_data_access = current_app.config.get('field_data_access')
+
+        for field_key, field_data in data['crop_information'].items():
+            field = Field(field_data['building_name'],current_user.username, field_data['phase'], field_data['crop'], field_data['assetPhase'], field_data['time_planted'])
+
+            #return jsonify({"status": "success", "filed": field_data}), 200
+            update_success = field_data_access.add_or_update_field(field)
+
+            if not update_success:
+                return jsonify({"status": "error", "message": f"Failed to update field {field_key}"}), 500
+
+        return jsonify({"status": "success", "message": "Fields updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/fetch-crop-information', methods=['GET'])
+@login_required
+def fetch_crop_information():
+    """
+    Handles GET requests to fetch crop information for the current user.
+    :return: Crop information in JSON format.
+    """
+    try:
+        field_data_access = current_app.config.get('field_data_access')
+        username_owner = current_user.username
+        fields = field_data_access.get_fields_by_username_owner(username_owner)
+
+        crop_information = {
+            field.building_name: {
+                'building_name': field.building_name,
+                'phase': field.phase,
+                'crop': field.crop,
+                'assetPhase': field.asset_phase,
+                'time_planted': field.time_planted
+            }
+            for field in fields
+        }
+
+        return jsonify({'crop_information': crop_information}), 200
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

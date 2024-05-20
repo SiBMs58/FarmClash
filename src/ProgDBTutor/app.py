@@ -7,6 +7,7 @@ from data_access.building_data_access import BuildingDataAccess
 from data_access.market_data_access import MarketDataAccess
 from data_access.crops_data_access import CropsDataAccess
 from data_access.map_data_access import MapDataAccess
+from data_access.field_data_access import FieldDataAccess
 from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
 from data_access.friendship_data_access import FriendshipDataAccess
@@ -44,6 +45,8 @@ friendship_data_access = FriendshipDataAccess(connection)
 app.config['friendship_data_access'] = friendship_data_access
 chatmessage_data_access = ChatMessageDataAccess(connection)
 app.config['chatmessage_data_access'] = chatmessage_data_access
+field_data_access = FieldDataAccess(connection)
+app.config['field_data_access'] = field_data_access
 building_data_access = BuildingDataAccess(connection)
 app.config['building_data_access'] = building_data_access
 market_data_access = MarketDataAccess(connection)

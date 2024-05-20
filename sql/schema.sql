@@ -109,6 +109,17 @@ CREATE TABLE game_maps (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE fields (
+    building_name VARCHAR(255),
+    username_owner VARCHAR(255),
+    crop VARCHAR(255),
+    phase INT,
+    asset_phase INT,
+    time_planted INT,
+    PRIMARY KEY (building_name, username_owner)  -- Primary key constraint
+);
+
+
 CREATE TABLE map_tiles (
     tile_id SERIAL PRIMARY KEY,
     map_id INT REFERENCES game_maps(map_id),
