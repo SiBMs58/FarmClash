@@ -70,27 +70,27 @@ def gifts():
         user.last_gift = datetime.now()
 
     gifts = {
-        "money": 200,
-        "wheat": 58,
-        "carrot": 47,
+        "Money": 200,
+        "Wheat": 58,
+        "Carrot": 47,
         "corn": 45,
-        "lettuce": 40,
-        "tomato": 35,
-        "turnip": 67,
+        "Lettuce": 40,
+        "Tomato": 35,
+        "Turnip": 67,
         "zucchini": 50,
-        "parsnip": 60,
-        "cauliflower": 55,
+        "Parsnip": 60,
+        "Cauliflower": 55,
         "eggplant": 45,
         "egg": 22,
-        "rustic egg": 37,
-        "crimson egg": 55,
-        "emerald egg": 11,
-        "sapphire egg": 55,
+        "Rustic egg": 37,
+        "Crimson egg": 55,
+        "Emerald egg": 11,
+        "Sapphire egg": 55,
         "milk": 55,
-        "chocolate milk": 55,
-        "strawberry milk": 8,
-        "soy milk": 8,
-        "blueberry milk": 4,
+        "Chocolate milk": 55,
+        "Strawberry milk": 8,
+        "Soy milk": 8,
+        "Blueberry milk": 4,
     }
 
     gift = None
@@ -114,6 +114,7 @@ def gifts():
 
         # Insert it in the database
         resource_data_access = current_app.config.get('resource_data_access')
+        print(current_user.username, gift, amount)
         resource_data_access.update_resource(current_user.username, gift, amount)
 
         # Update the last gift time
