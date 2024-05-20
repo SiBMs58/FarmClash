@@ -410,7 +410,7 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        //await this.fetchBuildingMapData();
+        await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         console.log("fetchBuildingLayerList() success"); // Don't remove this
@@ -828,11 +828,14 @@ export class BuildingMap extends BaseMap {
                 }
             }
 
-            // todo (Siebe) check of friend aan het bezoeken
+            // TODO: (Siebe) check of friend aan het bezoeken
             // Ge moet hier true returnen omdat er op een gebouw is geklikt. De twee lijnen hier onder mogen gewoon niet gebeuren (zie hierboven als voorbeeld)
+             // If the username is set it means you are visitiing someone else's farm meaning you can't move buildings
+            if (!this.username) {
+                this.movingBuilding = true;
+                this.ownNextClick = true;
+            }
 
-            this.movingBuilding = true;
-            this.ownNextClick = true;
 
             return true;
         }

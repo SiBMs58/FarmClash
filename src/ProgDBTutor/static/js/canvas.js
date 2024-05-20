@@ -49,7 +49,15 @@ const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
 // Create CropMap
 const cropCanvas = document.getElementById('cropCanvas');
 const cropCtx = cropCanvas.getContext('2d');
-export const cropMap = new CropMap(undefined, tileSize, cropCtx);
+export let cropMap;
+if (window.friend) {
+    // If friendData is available, use it in the constructor
+    console.log("Friend data is available", window.friend);
+    cropMap = new CropMap(undefined, tileSize, cropCtx, terrainMap, uiCanvasLayer, window.friend);
+} else {
+    // If friendData is not available, omit it from the constructor
+    cropMap = new CropMap(undefined, tileSize, cropCtx, terrainMap, uiCanvasLayer);
+}
 
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
