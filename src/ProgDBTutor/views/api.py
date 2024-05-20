@@ -60,17 +60,17 @@ def user_stats(username):
 
     for animal in animals:
         if animal.species == "Chicken":
-            defn += 20 * animal.amount
-            atk += 5 * animal.amount
+            defn += animal.amount * get_augmentation_value('Chickencoop', 'Defense')
+            atk += animal.amount * get_augmentation_value('Chickencoop', 'Attack')
         elif animal.species == "Cow":
-            defn += 15 * animal.amount
-            atk += 10 * animal.amount
+            defn += animal.amount * get_augmentation_value('Cowbarn', 'Defense')
+            atk += animal.amount * get_augmentation_value('Cowbarn', 'Attack')
         elif animal.species == "Pig":
-            defn += 10 * animal.amount
-            atk += 15 * animal.amount
+            defn += animal.amount * get_augmentation_value('Pigpen', 'Defense')
+            atk += animal.amount * get_augmentation_value('Pigpen', 'Attack')
         elif animal.species == "Goat":
-            defn += 5 * animal.amount
-            atk += 20 * animal.amount
+            defn += animal.amount * get_augmentation_value('Goatbarn', 'Defense')
+            atk += animal.amount * get_augmentation_value('Goatbarn', 'Attack')
 
     return {
         "level": level,

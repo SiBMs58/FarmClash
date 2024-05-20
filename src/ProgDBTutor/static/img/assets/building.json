@@ -15,9 +15,9 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
+    "ui": "game.townhall",
     "other_stats": [["Defence",[0, 100, 200, 350, 550, 800, 1100, 1450, 1850, 2300, 2800]],
                     ["Attack", [0, 300, 400, 550, 750, 1000, 1300, 1650, 2050, 2500, 3000]]],
-    "ui": "game.townhall",
     "augment": [["Defence",10],["Attack",20]]
   },
 
@@ -35,10 +35,10 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
+    "ui": "game.barn",
     "other_stats": [["Defence",[0, 50, 100, 175, 275, 400, 550, 725, 925, 1150, 1400]],
                     ["Attack", [0, 75, 150, 250, 375, 525, 700, 900, 1125, 1375, 1650]],
                     ["Limit",  [0, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, "inf"]]],
-    "ui": "game.barn",
     "augment": [["Limit",150],["Defence",5],["Attack",10]]
   },
 
@@ -56,10 +56,10 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
+    "ui": "game.silo",
     "other_stats": [["Defence",[0, 75, 150, 250, 375, 525, 700, 900, 1125, 1375, 1650]],
                     ["Attack", [0, 50, 100, 175, 275, 400, 550, 725, 925, 1150, 1400]],
                     ["Limit",  [0, 800, 1600, 8000, 16000, 80000, 160000, 800000, 1600000, 8000000, "inf"]]],
-    "ui": "game.silo",
     "augment": [["Limit",100],["Defence",10],["Attack",5]]
   },
 
@@ -78,11 +78,11 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[40000,"Money"],[500,""]]
     },
-    "other_stats": [["Risk",["100%", "/1", "/2", "/3","/4", "/5", "/6", "/7", "/8", "/9", "/10"]],
+    "ui": "exploration",
+    "other_stats": [["Risk",["100%", "Risk/1", "Risk/2", "Risk/3","Risk/4", "Risk/5", "Risk/6", "Risk/7", "Risk/8", "Risk/9", "Risk/10"]],
                     ["Defence",[0, 75, 150, 250, 375, 525, 700, 900, 1125, 1375, 1650]],
                     ["Attack", [0, 50, 100, 175, 275, 400, 550, 725, 925, 1150, 1400]]],
-    "ui": "exploration.exploration",
-    "augment": [[0.1,"risk"],[10,"AP"],[5,"DP"]]
+    "augment": [["Risk","Log6(AugmentLevel)"],["Defence",5],["Attack",5]]
   },
 
 
@@ -99,9 +99,8 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "",
-    "augment": [[15,"DP"]],
-    "comment": "each chicken owned increases the AP"
+    "other_stats": [],
+    "augment": [["Defence",20],["Attack",5]]
   },
 
 
@@ -118,9 +117,8 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "",
-    "augment": [[5,"AP"],[10,"DP"]],
-    "comment": "each cow owned increases the AP"
+    "other_stats": [],
+    "augment":[["Defence",15],["Attack",10]]
   },
 
 
@@ -137,9 +135,8 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "",
-    "augment": [[15,"AP"]],
-    "comment": "each goat owned increases the AP"
+    "other_stats": [],
+    "augment":[["Defence",10],["Attack",15]]
   },
 
 
@@ -156,9 +153,8 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "",
-    "augment": [[10,"AP"],[5,"DP"]],
-    "comment": "each pig owned increases the AP"
+    "other_stats": [],
+    "augment":[["Defence",5],["Attack",25]]
   },
 
 
@@ -175,12 +171,12 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "",
-    "augment": false
+    "other_stats": []
   },
 
 
   "Harvesthopper": {
+    "comment": "scrapped building",
     "explanation": "Meet the Harvest Hopper, your trusty farming companion! With a hop and a skip, the energetic rabbit is always ready to lend a helping paw in the fields whilst you are gone. Upgrading allows the hopper to harvest more crops.",
     "costs": {
       "L2": [[100,"Money"]],
@@ -193,8 +189,7 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "",
-    "augment": false
+    "other_stats": []
   },
 
 
@@ -211,11 +206,10 @@
       "L9": [[80000,"Money"],[450,""]],
       "L10":[[160000,"Money"],[500,""]]
     },
-    "ui": "",
-    "augment": [[25,"DP"]]
+    "other_stats": [["Defence",[0, 20, 40, 65, 95, 130, 170, 215, 265, 320, 380]],
+                    ["Attack", [0, 10, 20, 35, 55, 80, 110, 145, 185, 230, 280]]],
+    "augment":[["Defence",10],["Attack",5]]
   },
-
-
   "Tree": {
     "explanation": "This is just a tree."
   },
