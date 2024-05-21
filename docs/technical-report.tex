@@ -256,6 +256,26 @@ Choosing which animals to send on the exploration has its perks and downsides.
     \end{enumerate}
 \end{enumerate}
 
+\subsection{Idle Mechanics}
+When the user logs in and is on the map, the game will fetch all resources and animals and check what the last time the user got hourly resources and animals was.
+Then the amount of hours past is calculated and rounded down (floor).
+for animals this floored value is multiplied by the amount of buildings that is unlocked for that animal (pigpen for pigs, cowbarns for cows etc.) and these animals will be added to the database if the user has enough space that is of course.
+for animal products (Milk, etc.) this floored value is multiplied by the total level of the buildings that are unlocked for that animal (I have 3 unlocked pigpens, 2 are level 5 and 1 level 4, then the total level is 14).
+Then for each produced product (for example. for each Milk that is received),
+we will randomly select an animal product rarity and the product that matches the rarity will be added to the barn if the user has enough space of course.
+
+After this happens a timer for the remaining part of the hour (12:38, then a timer for 22 minutes will be set) after the timer is over the same process will happen again but instead of computing the past hour, we will just give value 1.
+
+\subsection{Silo, Barn, animal shelter limits}
+When we add resources to the user through the 'api/add-resources' endpoint, we will calculate the limit of the silo / barn.
+Respectively for animals through the 'api/add-animals' endpoint, we will calculate the limit of the animal shelter.
+This value will be given to the data access of resources and respectively animals when adding resources/ animals where we will make sure the user doesn't get more resources / animals than the buildings limit.
+In the silo, crops will be stored and in the barn, all other resources besides money will be stored.
+In pigpens, cowbarns, chickencoops, and goatbarns, pigs, cows, chickens and goats will be stored.
+
+We can see what is in the silo and barn through the ui which can be viewed through their popups.
+
+
 \section{Technologies Used}
 \begin{itemize}
     \item \textbf{Flask:} Serves as the web server framework.
