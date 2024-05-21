@@ -420,7 +420,7 @@ async function sendAnimalQuantity(numChickens, numGoats, numPigs, numCows) {
  */
 async function sendExploration() {
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-    const fetchLink = BASE_URL + "/exploration/start-exploration";
+    const fetchLink = BASE_URL + "/api/start-exploration";
     try {
         const response = await fetch(fetchLink, {
             method: 'POST',
@@ -442,7 +442,7 @@ async function sendExploration() {
 }
 async function sendStopExploration() {
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-    const fetchLink = BASE_URL + "/exploration/stop-exploration";
+    const fetchLink = BASE_URL + "/api/stop-exploration";
     try {
         const response = await fetch(fetchLink, {
             method: 'POST'

@@ -14,7 +14,6 @@ from data_access.chatmessage_data_access import ChatMessageDataAccess
 from data_access.exploration_data_access import ExplorationDataAccess
 from data_access.animal_data_access import AnimalDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
-from views.exploration import exploration_blueprint
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
@@ -72,7 +71,6 @@ app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
-app.register_blueprint(exploration_blueprint, url_prefix='/exploration')
 app.register_blueprint(attack_blueprint, url_prefix='/attack')
 
 DEBUG = True

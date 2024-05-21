@@ -12,6 +12,17 @@ export let isPopupOpen = false;
 let prevBuildingName = "";
 
 
+
+async function fetchBuildingPopupInformation() {
+    try {
+        const response = await fetch('/static/img/assets/building.json');
+        return await response.json();
+    } catch (error) {
+        console.error('fetchBuildingPopupInformation() failed:', error);
+        throw error;
+    }
+}
+
 /**
  * Opens the pop-up. When another pop-up is already open it initialises a switch animation and delays the actual opening
  * of the pop-up.
@@ -36,17 +47,21 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
  * This is the function that actually opens the pop-up.
  * @param buildingInformation building information json found in buildingLayer.
  * @param buildingGeneralInformation building general information json found in buildingLayer.
- * @param buildingName The unique name of the building.
+ * @param buildingID The unique name of the building.
  */
-export function actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName) {
+export function actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingID) {
     const popup = document.querySelector('.test-popup');
+    fetchBuildingPopupInformation().then((info) => {
+        const building = buildingInformation[buildingID];
+        const buildingInfo = info[building.general_information];
 
-    // Set all the right text elements
-    const building = buildingInformation[buildingName];
-    const generalInformation = buildingGeneralInformation[building.general_information];
+        document.getElementById('building-display-name').innerText = building.general_information;
+        document.getElementById('building-explanation').innerText = buildingInfo.explanation;
+        if (buildingInfo.hasOwnProperty('ui')) {
+            document.getElementById('building-explanation').innerHTML += '<button id="view-btn" class="view-btn"> <a href="' + buildingInfo.ui + '"><img src="../../static/img/UI/view_btn.png" alt="view"> </a> </button>';
+        }
 
-    document.getElementById('building-display-name').innerText = generalInformation.display_name;
-    document.getElementById('building-explanation').innerText = generalInformation.explanation;
+
     const buildingStats = document.getElementById('building-stats');
     const upgradeButton = document.getElementById('upgrade-button');
     if (building.level === -1) {
@@ -56,17 +71,23 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
         buildingStats.style.display = "block";
         upgradeButton.style.display = "block";
         document.getElementById('level-stat').innerText = "Level: " + building.level;
-        document.getElementById('building-upgrade-cost-number').innerText = generalInformation.upgrade_costs[building.level-1]
+        document.getElementById('building-upgrade-cost-number').innerText = "test"; //TODO generalInformation.upgrade_costs[building.level-1]
         const list = document.getElementById('building-stats');
         const listLength = list.children.length;
         for (let i = listLength-1; i > 2; i--) {
             //debugger;
             list.removeChild(list.children[i]);
         }
-        for (let i = 0; i < generalInformation.other_stats.length; i++) {
-            const currStat = generalInformation.other_stats[i];
-            const upgradeDifference = currStat[1][building.level] - currStat[1][building.level-1];
-            const statString = currStat[0] + ": " +  currStat[1][building.level-1] + " (+" + upgradeDifference + ")";
+        for (let i = 0; i < buildingInfo.other_stats.length; i++) {
+            const currStat = buildingInfo.other_stats[i];
+            let upgradeDifference = 0;
+            let statString = currStat[0] + ": " +  currStat[1][building.level-1];
+            if (building.level !== 10){
+                upgradeDifference = currStat[1][building.level+1] - currStat[1][building.level];
+                statString+= " (+" + upgradeDifference + ")";
+            }
+
+
             const listItem = document.createElement('li');
             listItem.textContent = statString;
             list.appendChild(listItem);
@@ -75,6 +96,9 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
 
     popup.classList.add('show');
     isPopupOpen = true;
+
+        }
+    );
 }
 
 /**

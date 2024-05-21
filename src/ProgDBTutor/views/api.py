@@ -4,10 +4,11 @@ import os
 from flask import Blueprint, current_app, jsonify, abort, request
 from flask_login import login_required, current_user
 
-from services.game_services import GameServices
+from src.ProgDBTutor.services.game_services import GameServices
 
 from src.ProgDBTutor.models.animal import Animal
 from src.ProgDBTutor.models.resource import Resource
+from src.ProgDBTutor.models.exploration import Exploration
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
@@ -41,19 +42,41 @@ def get_stats_value(building_type, stats_type, level):
     return 0
 
 
-def user_stats(username):
+
+@api_blueprint.route('/users')
+@login_required
+def get_users():
+    """
+    Handles GET requests for all users. This will return a list of all users, if the logged in user is admin
+    :return: A list of all users, in json format
+    """
+    if current_user.username != 'admin':
+        return 403
+    user_data_access = current_app.config.get('user_data_access')
+    users = user_data_access.get_all_users()  # Assuming this is a method you have
+    return jsonify([user.to_dict() for user in users])  # Convert users to dicts
+
+
+@api_blueprint.route('/get-user-stats', methods=['GET'])
+@login_required
+def get_user_stats():
+    """
+    Handles GET requests for the stats of the current user.
+    :return: The stats of the current user, in json format
+    """
     level = 0
     atk = 0
     defn = 0
-    coins = current_app.config.get('resource_data_access').get_resource_by_type(username, 'Money').amount
-    buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(username)
-    animals = current_app.config.get('animal_data_access').get_animals(username)
+    coins = current_app.config.get('resource_data_access').get_resource_by_type(current_user.username, 'Money').amount
+    buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(current_user.username)
+    animals = current_app.config.get('animal_data_access').get_animals(current_user.username)
     for building in buildings:
         if building.building_type == "Townhall":
             level = building.level
         atk += get_stats_value(building.building_type, 'Attack',
-                               building.level) + building.augment_level * get_augmentation_value(building.building_type,
-                                                                                                 'Attack')
+                               building.level) + building.augment_level * get_augmentation_value(
+            building.building_type,
+            'Attack')
         defn += get_stats_value(building.building_type, 'Defense',
                                 building.level) + building.augment_level * get_augmentation_value(
             building.building_type, 'Defense')
@@ -72,35 +95,12 @@ def user_stats(username):
             defn += animal.amount * get_augmentation_value('Goatbarn', 'Defense')
             atk += animal.amount * get_augmentation_value('Goatbarn', 'Attack')
 
-    return {
+    return jsonify({
         "level": level,
         "attack": atk,
         "defense": defn,
         "coins": coins
-    }
-
-
-@api_blueprint.route('/users')
-@login_required
-def get_users():
-    """
-    Handles GET requests for all users. This will return a list of all users, if the logged in user is admin
-    :return: A list of all users, in json format
-    """
-    if current_user.username != 'admin':
-        return 403
-    user_data_access = current_app.config.get('user_data_access')
-    users = user_data_access.get_all_users()  # Assuming this is a method you have
-    return jsonify([user.to_dict() for user in users])  # Convert users to dicts
-
-
-@login_required
-def get_user_stats():
-    """
-    Handles GET requests for the stats of the current user.
-    :return: The stats of the current user, in json format
-    """
-    return jsonify(user_stats(current_user.username))
+    })
 
 
 @api_blueprint.route('/maps')
@@ -472,6 +472,38 @@ def get_exploration():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/start-exploration', methods=['POST'])
+@login_required
+def start_exploration():
+    """
+    Handles POST requests for starting an exploration
+    """
+    exploration_data_access = current_app.config.get('exploration_data_access')
+    data = request.get_json()
+
+    if exploration_data_access.start_exploration(
+            Exploration(current_user.username, data['chickens'], data['goats'], data['pigs'], data['cows'], data['exploration_level'], data['augment_level'], data['remaining_time'])):
+        return jsonify({'status': 'success', 'message': 'Exploration started successfully.'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Failed to start exploration.'}), 500
+
+
+@api_blueprint.route('/stop-exploration', methods=['POST'])
+@login_required
+def stop_exploration():
+    """
+    Handles POST requests for stopping an exploration
+    """
+    exploration_data_access = current_app.config.get('exploration_data_access')
+
+    # Remove the exploration from the database
+    if exploration_data_access.stop_exploration(current_user.username):
+        return jsonify({'status': 'success', 'message': 'Exploration stopped successfully.'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Failed to stop exploration.'}), 500
+
 
 
 def get_resource_category_limit(resource_type):

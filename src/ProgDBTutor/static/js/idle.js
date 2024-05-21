@@ -2,6 +2,10 @@ let pigpenLevel = 0;
 let cowbarnLevel = 0;
 let chickencoopLevel = 0;
 let goatbarnLevel = 0;
+let pigpens = 0;
+let cowbarns = 0;
+let chickencoops = 0;
+let goatbarns = 0;
 let LastUpdated = new Date();
 
 
@@ -29,10 +33,12 @@ function initialize(){
 function updateOfflineProduction(){
     const now = new Date();
     const hours = (now - LastUpdated) / 1000 / 60 / 60;
-    const animals = generateAnimals(hours);
-    const products = generateAnimalProduct(hours);
-    sendAnimalQuantity(animals);
-    sendResourceQuantity(products);
+    const amount = Math.floor(hours);
+    if (amount === 0) {
+        return;
+    }
+    sendAnimalQuantity(generateAnimals(amount));
+    sendResourceQuantity(generateAnimalProduct(amount));
 
 }
 
@@ -61,6 +67,10 @@ function setupNextHour(){
     cowbarnLevel= 0;
     chickencoopLevel = 0;
     goatbarnLevel = 0;
+    pigpens = 0;
+    cowbarns = 0;
+    chickencoops = 0;
+    goatbarns = 0;
     fetchBuildings().then(() => {
         sendResourceQuantity(generateAnimalProduct(1));
         sendAnimalQuantity(generateAnimals(1));
@@ -79,17 +89,15 @@ function setupNextHour(){
 
 
 //_________________________ GENERATION FUNCTIONS _________________________//
-function generateAnimals(hours){
-    let amount = Math.floor(hours);
+function generateAnimals(amount){
     return {
-        "Pig": amount,
-        "Cow": amount,
-        "Chicken": amount,
-        "Goat": amount
+        "Pig": amount * pigpens,
+        "Cow": amount * cowbarns,
+        "Chicken": amount * chickencoops,
+        "Goat": amount * goatbarns
     };
 }
-function generateAnimalProduct(hours){
-    const amount = Math.floor(hours);
+function generateAnimalProduct(amount){
     const producedTruffles = pigpenLevel * amount;
     const producedMilk = cowbarnLevel * amount;
     const producedEggs = chickencoopLevel * amount;
@@ -171,15 +179,19 @@ async function fetchBuildingLevel(buildingType) {
                 switch (buildingType) {
                     case 'Pigpen':
                         pigpenLevel += building.level;
+                        pigpens++;
                         break;
                     case 'Cowbarn':
                         cowbarnLevel += building.level;
+                        cowbarns++;
                         break;
                     case 'Chickencoop':
                         chickencoopLevel += building.level;
+                        chickencoops++;
                         break;
                     case 'Goatbarn':
                         goatbarnLevel += building.level;
+                        goatbarns++;
                         break;
                     default:
                         console.error(`Unknown building type: ${buildingType}`);

@@ -55,6 +55,13 @@ def townhall():
     """
     return render_template('townhall.html', app_data=config_data)
 
+@game_blueprint.route('/exploration')
+@login_required
+def exploration():
+    """
+    Renders the EXPLORATION  view.
+    """
+    return render_template('exploration/exploration.html', app_data=config_data)
 
 """
 Building fetch and update functions

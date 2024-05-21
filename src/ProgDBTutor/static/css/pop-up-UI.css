@@ -48,6 +48,16 @@
     transform: translateX(-50%);
 }
 
+.view-btn{
+    position: absolute;
+    border: none;
+    background: none;
+    width: calc(0.5 * var(--background-img-width));
+    margin-top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 .close-button {
     position: absolute;
     width: calc(0.0957 * var(--background-img-width)); /* To make sure pixel size matches */
