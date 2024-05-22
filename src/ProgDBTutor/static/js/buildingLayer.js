@@ -672,8 +672,8 @@ export class BuildingMap extends BaseMap {
 
         if (this.tiles[tileY][tileX] !== EMPTY_TILE) {
             console.log(`Right click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
-            const buildingName = this.tiles[tileY][tileX][1];
-            openPopup(this.buildingInformation, this.buildingGeneralInformation, buildingName);
+            const buildingId = this.tiles[tileY][tileX][1];
+            openPopup(this.buildingInformation[buildingId], buildingId);
             return true;
         }
         return false;

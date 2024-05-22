@@ -194,11 +194,9 @@ async function fetchBarn() {
         if (data.status === 'success') {
             const buildings = data.building_information;
             const id = Object.keys(buildings)[0];
-            const silo = buildings[id];
-            buildingAugmentLevel = silo.augment_level;
-            buildingLevel = silo.level;
-            buildingAugmentLevel = 1; //TODO this is for debugging
-            buildingLevel = 1; //TODO this is for debugging
+            const barn = buildings[id];
+            buildingAugmentLevel = barn.augment_level;
+            buildingLevel = barn.level;
         }
     })
     .catch(error => {

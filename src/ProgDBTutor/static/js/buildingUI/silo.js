@@ -168,8 +168,6 @@ async function fetchSilo() {
             const silo = buildings[id];
             buildingAugmentLevel = silo.augment_level;
             buildingLevel = silo.level;
-            buildingAugmentLevel = 1; //TODO this is for debugging
-            buildingLevel = 1; //TODO this is for debugging
         }
     })
     .catch(error => {

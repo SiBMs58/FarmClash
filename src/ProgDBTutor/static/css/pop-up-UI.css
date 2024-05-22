@@ -52,11 +52,55 @@
     position: absolute;
     border: none;
     background: none;
-    width: calc(0.5 * var(--background-img-width));
     margin-top: 20px;
     left: 50%;
     transform: translateX(-50%);
+    height: auto; /* Set height to auto */
+    width: auto; /* Set width to auto */
 }
+.view-btn img {
+    height: 50px;
+    image-rendering: pixelated;
+}
+.augment-button {
+    position: absolute;
+    border: none;
+    background: none;
+    right: 5px;
+    bottom: 17px;
+    transform: translateX(-50%);
+    height: auto; /* Set height to auto */
+    width: auto; /* Set width to auto */
+    outline: none; /* Remove the default focus outline */
+    box-shadow: none; /* Remove any default box-shadow */
+}
+
+.augment-button:active,
+.augment-button:focus {
+    outline: none; /* Remove the outline when the button is focused or active */
+    box-shadow: none; /* Remove any box-shadow when the button is focused or active */
+}
+.augment-cost{
+    position: absolute;
+    right: 10px;
+    bottom: 80px;
+    transform: translateX(-50%);
+
+    color: #8a5f5c;
+    justify-content: right;
+    align-items: center;
+    display: none;
+}
+.augment-cost img{
+    height: 20px;
+    margin-left: 2px;
+}
+
+.augment-button img {
+    width: 50px;
+    image-rendering: pixelated;
+}
+
 
 .close-button {
     position: absolute;

@@ -523,6 +523,10 @@ document.getElementById('open-btn').addEventListener('click', function() {
  * @listens click
  */
 document.getElementById('explore-btn').addEventListener('click', async function () {
+    if(buildingLevel === 0){
+        alert('You first need to level the building to level 1 to start an exploration');
+        return;
+    }
     let selectedTimeElement = document.getElementById('exploration-time');
     let selectedOption = selectedTimeElement.options[selectedTimeElement.selectedIndex];
     let exploreTime = selectedOption.value;
