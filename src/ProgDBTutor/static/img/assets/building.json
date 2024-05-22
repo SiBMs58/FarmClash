@@ -9,11 +9,11 @@
       "L3": [["Money",800],["Wheat",100],["Stick",10]],
       "L4": [["Money",2000],["Carrot",100],["Stick",20]],
       "L5": [["Money",5000],["Corn",100],["Stick",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Stick",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Stick",40], ["Egg",50]],
       "L7": [["Money",20000],["Tomato",100],["Stick",50]],
       "L8": [["Money",40000],["Turnip",100],["Stick",60]],
       "L9": [["Money",80000],["Zucchini",100],["Stick",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Stick",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Stick",80], ["Egg",100]]
     },
     "ui": "townhall",
     "other_stats": [["Defence",[0, 100, 200, 350, 550, 800, 1100, 1450, 1850, 2300, 2800]],
@@ -29,11 +29,11 @@
       "L3": [["Money",800],["Wheat",100],["Stone",10]],
       "L4": [["Money",2000],["Carrot",100],["Stone",20]],
       "L5": [["Money",5000],["Corn",100],["Stone",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Stone",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Stone",40], ["Milk",50]],
       "L7": [["Money",20000],["Tomato",100],["Stone",50]],
       "L8": [["Money",40000],["Turnip",100],["Stone",60]],
       "L9": [["Money",80000],["Zucchini",100],["Stone",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Stone",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Stone",80], ["Milk",100]]
     },
     "ui": "barn",
     "other_stats": [["Defence",[0, 50, 100, 175, 275, 400, 550, 725, 925, 1150, 1400]],
@@ -50,11 +50,11 @@
       "L3": [["Money",800],["Wheat",100],["Plank",10]],
       "L4": [["Money",2000],["Carrot",100],["Plank",20]],
       "L5": [["Money",5000],["Corn",100],["Plank",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Plank",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Plank",40], ["Egg",50]],
       "L7": [["Money",20000],["Tomato",100],["Plank",50]],
       "L8": [["Money",40000],["Turnip",100],["Plank",60]],
       "L9": [["Money",80000],["Zucchini",100],["Plank",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Plank",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Plank",80], ["Egg",100]]
     },
     "ui": "silo",
     "other_stats": [["Defence",[0, 75, 150, 250, 375, 525, 700, 900, 1125, 1375, 1650]],
@@ -72,11 +72,11 @@
       "L3": [["Money",800],["Wheat",100],["Stick",10]],
       "L4": [["Money",2000],["Carrot",100],["Stick",20]],
       "L5": [["Money",5000],["Corn",100],["Stick",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Stick",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Stick",40], ["Wool",50]],
       "L7": [["Money",20000],["Tomato",100],["Stick",50]],
       "L8": [["Money",40000],["Turnip",100],["Stick",60]],
       "L9": [["Money",80000],["Zucchini",100],["Stick",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Stick",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Stick",80], ["Wool",100]]
     },
     "ui": "exploration",
     "other_stats": [["Risk",["100", "Risk/1", "Risk/2", "Risk/3","Risk/4", "Risk/5", "Risk/6", "Risk/7", "Risk/8", "Risk/9", "Risk/10"]],
@@ -93,11 +93,11 @@
       "L3": [["Money",800],["Wheat",100],["Stone",10]],
       "L4": [["Money",2000],["Carrot",100],["Stone",20]],
       "L5": [["Money",5000],["Corn",100],["Stone",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Stone",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Stone",40], ["Milk",50]],
       "L7": [["Money",20000],["Tomato",100],["Stone",50]],
       "L8": [["Money",40000],["Turnip",100],["Stone",60]],
       "L9": [["Money",80000],["Zucchini",100],["Stone",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Stone",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Stone",80], ["Milk",100]]
     },
     "other_stats": [["Defence",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
                     ["Attack", [0, 150, 300, 450, 600, 750, 900, 1050, 1200, 1350, 1500]],
@@ -114,11 +114,11 @@
       "L3": [["Money",800],["Wheat",100],["Plank",10]],
       "L4": [["Money",2000],["Carrot",100],["Plank",20]],
       "L5": [["Money",5000],["Corn",100],["Plank",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Plank",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Plank",40], ["Wool",50]],
       "L7": [["Money",20000],["Tomato",100],["Plank",50]],
       "L8": [["Money",40000],["Turnip",100],["Plank",60]],
       "L9": [["Money",80000],["Zucchini",100],["Plank",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Plank",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Plank",80], ["Wool",100]]
     },
     "other_stats": [["Defence",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
                     ["Attack", [0, 150, 300, 450, 600, 750, 900, 1050, 1200, 1350, 1500]],
@@ -135,11 +135,11 @@
       "L3": [["Money",800],["Wheat",100],["Plank",10]],
       "L4": [["Money",2000],["Carrot",100],["Plank",20]],
       "L5": [["Money",5000],["Corn",100],["Plank",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Plank",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Plank",40], ["Egg",50]],
       "L7": [["Money",20000],["Tomato",100],["Plank",50]],
       "L8": [["Money",40000],["Turnip",100],["Plank",60]],
       "L9": [["Money",80000],["Zucchini",100],["Plank",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Plank",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Plank",80], ["Egg",100]]
     },
     "other_stats": [["Defence",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
                     ["Attack", [0, 150, 300, 450, 600, 750, 900, 1050, 1200, 1350, 1500]],
@@ -156,11 +156,11 @@
       "L3": [["Money",800],["Wheat",100],["Plank",10]],
       "L4": [["Money",2000],["Carrot",100],["Plank",20]],
       "L5": [["Money",5000],["Corn",100],["Plank",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Plank",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Plank",40], ["Milk",50]],
       "L7": [["Money",20000],["Tomato",100],["Plank",50]],
       "L8": [["Money",40000],["Turnip",100],["Plank",60]],
       "L9": [["Money",80000],["Zucchini",100],["Plank",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Plank",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Plank",80], ["Milk",100]]
     },
     "other_stats": [["Defence",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
                     ["Attack", [0, 150, 300, 450, 600, 750, 900, 1050, 1200, 1350, 1500]],
@@ -177,11 +177,11 @@
       "L3": [["Money",800],["Wheat",100],["Stick",10]],
       "L4": [["Money",2000],["Carrot",100],["Stick",20]],
       "L5": [["Money",5000],["Corn",100],["Stick",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Stick",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Stick",40], ["Egg",50]],
       "L7": [["Money",20000],["Tomato",100],["Stick",50]],
       "L8": [["Money",40000],["Turnip",100],["Stick",60]],
       "L9": [["Money",80000],["Zucchini",100],["Stick",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Stick",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Stick",80], ["Egg",100]]
     },
     "other_stats": [["Defence",[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
                     ["Attack", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
@@ -197,11 +197,11 @@
       "L3": [["Money",800],["Wheat",100],["Stone",10]],
       "L4": [["Money",2000],["Carrot",100],["Stone",20]],
       "L5": [["Money",5000],["Corn",100],["Stone",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Stone",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Stone",40], ["Egg",50]],
       "L7": [["Money",20000],["Tomato",100],["Stone",50]],
       "L8": [["Money",40000],["Turnip",100],["Stone",60]],
       "L9": [["Money",80000],["Zucchini",100],["Stone",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Stone",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Stone",80], ["Egg",50]]
     },
     "other_stats": []
   },
@@ -214,11 +214,11 @@
       "L3": [["Money",800],["Wheat",100],["Stick",10]],
       "L4": [["Money",2000],["Carrot",100],["Stick",20]],
       "L5": [["Money",5000],["Corn",100],["Stick",30]],
-      "L6": [["Money",10000],["Lettuce",100],["Stick",40]],
+      "L6": [["Money",10000],["Lettuce",100],["Stick",40], ["Milk",50]],
       "L7": [["Money",20000],["Tomato",100],["Stick",50]],
       "L8": [["Money",40000],["Turnip",100],["Stick",60]],
       "L9": [["Money",80000],["Zucchini",100],["Stick",70]],
-      "L10":[["Money",160000],["Parsnip",100],["Stick",80]]
+      "L10":[["Money",160000],["Parsnip",100],["Stick",80], ["Milk",100]]
     },
     "other_stats": [["Defence",[0, 20, 40, 65, 95, 130, 170, 215, 265, 320, 380]],
                     ["Attack", [0, 10, 20, 35, 55, 80, 110, 145, 185, 230, 280]]],
