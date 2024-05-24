@@ -225,7 +225,6 @@ function displayRewardItems(){
     let map = '';
     for (const reward in rewards) {
         for (const [key, value] of Object.entries(typeLoc)) {
-            console.log(value)
             if (value.includes(reward)) {
                 map = key;
                 break;

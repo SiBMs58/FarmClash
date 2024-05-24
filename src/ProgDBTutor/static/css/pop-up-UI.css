@@ -2,24 +2,6 @@
     --background-img-width: 480px;
 }
 
-/*
-.test-popup {
-    width: 500px;
-    height: 650px;
-    position: absolute;
-    right: -510px;
-    opacity: 0;
-    transition: right 200ms, opacity  200ms;
-    top: 70px;
-    z-index: 10;
-}
-
-.test-popup.show {
-    right: 50px;
-    opacity: 1;
-}
- */
-
 .test-popup {
   width: 500px;
   height: 650px;
@@ -52,11 +34,13 @@
     position: absolute;
     border: none;
     background: none;
-    margin-top: 20px;
-    left: 50%;
+    left: 77px;
+    bottom: 17px;
     transform: translateX(-50%);
     height: auto; /* Set height to auto */
     width: auto; /* Set width to auto */
+    outline: none; /* Remove the default focus outline */
+    box-shadow: none; /* Remove any default box-shadow */
 }
 .view-btn img {
     height: 50px;
@@ -66,7 +50,7 @@
     position: absolute;
     border: none;
     background: none;
-    right: 5px;
+    right: 15px;
     bottom: 17px;
     transform: translateX(-50%);
     height: auto; /* Set height to auto */
@@ -74,26 +58,12 @@
     outline: none; /* Remove the default focus outline */
     box-shadow: none; /* Remove any default box-shadow */
 }
-
+.view-btn:active,
+.view-btn:focus,
 .augment-button:active,
 .augment-button:focus {
     outline: none; /* Remove the outline when the button is focused or active */
     box-shadow: none; /* Remove any box-shadow when the button is focused or active */
-}
-.augment-cost{
-    position: absolute;
-    right: 10px;
-    bottom: 80px;
-    transform: translateX(-50%);
-
-    color: #8a5f5c;
-    justify-content: right;
-    align-items: center;
-    display: none;
-}
-.augment-cost img{
-    height: 20px;
-    margin-left: 2px;
 }
 
 .augment-button img {
@@ -137,7 +107,7 @@
     color: #8a5f5c;
 }
 
-#building-display-name {
+#display-name {
     width: 300px;
     z-index: 20;
     position: absolute;
@@ -149,7 +119,7 @@
     color: #8a5f5c;
 }
 
-#building-explanation {
+#explanation {
     width: 450px;
     z-index: 20;
     position: absolute;
@@ -163,7 +133,7 @@
     color: #8a5f5c;
 }
 
-#building-stats {
+.stats {
     width: 450px;
     z-index: 20;
     position: absolute;
@@ -176,40 +146,41 @@
     color: #8a5f5c;
     display: block;
     font-size: 15px;
+    list-style-type: none;
 }
-
-#building-stats li {
+#augment-stats{
+    display: none;
+}
+#stats{
+    display: block;
+}
+.stats li {
   margin-bottom: 10px;
   line-height: 1.5;
 }
 
-#building-stats {
-    list-style-type: none;
-}
 
-#building-upgrade-cost {
-    display: flex;
+
+.cost{
+    flex-wrap: wrap;
     align-items: center;
 }
-
-#building-upgrade-cost p {
+.cost p {
     margin-bottom: 0;
 }
-
-#building-upgrade-cost img {
+#upgrade-cost{
+    display: flex;
+}
+#upgrade-cost > *{
+    margin-right: 10px;
+}
+#cost img {
     height: 20px;
     top: 0;
     margin-bottom: 0;
-    margin-left: 7px;
+    margin-right: 7px;
+    image-rendering: pixelated;
 }
-
-
-
-
-
-/*
-.test-popup img {
-    width: 100%;
-    height: auto;
+#augment-cost{
+    display: none;
 }
-*/

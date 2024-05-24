@@ -5,6 +5,7 @@ const values = 1;
 const name = 0;
 const maxLevel = 10;
 let buildingID= "";
+let buildingData ={};
 
 function Log6(x) {
     return Math.log(x) / Math.log(6);
@@ -41,6 +42,7 @@ async function fetchBuildingPopupInformation() {
  */
 export function openPopup(building, buildingId) {
     buildingID = buildingId;
+    buildingData = building;
     if (isPopupOpen && prevBuildingName !== buildingId) {
         closePopup();
         setTimeout(function() { // Wait 200 ms
@@ -64,21 +66,31 @@ export function actualOpenPopup(building, buildingID) {
         const buildingInfo = info[building.general_information];
 
         // Set the building name and description
-        document.getElementById('building-display-name').innerText = building.general_information;
+        document.getElementById('display-name').innerText = building.general_information;
         if (buildingInfo.hasOwnProperty('explanation')) {
-            document.getElementById('building-explanation').innerText = buildingInfo.explanation;
+            document.getElementById('explanation').innerText = buildingInfo.explanation;
         }
 
         // If the building has a UI, add a button to view it
-        if (buildingInfo.hasOwnProperty('ui') && building.level > 0) {
-            document.getElementById('building-explanation').innerHTML += '<button id="view-btn" class="view-btn"> <a href="' + buildingInfo.ui + '"><img src="../../static/img/UI/view_btn.png" alt="view"> </a> </button>';
+        if (buildingInfo.hasOwnProperty('ui')) {
+            document.getElementById('view-UI').href = buildingInfo.ui;
+            document.getElementById('view-btn').style.display = 'block';
+        }else{
+            document.getElementById('view-btn').style.display = 'none';
         }
 
-        // Only show upgrade button and stats for upgradable buildings
-        const buildingStats = document.getElementById('building-stats');
+
+        // Clear the building stats
+        const buildingStats = document.getElementById('stats');
+        const augmentStats = document.getElementById('augment-stats');
         while (buildingStats.children.length > 3) {
             buildingStats.removeChild(buildingStats.lastChild);
         }
+        while (augmentStats.children.length > 3) {
+            augmentStats.removeChild(augmentStats.lastChild);
+        }
+
+        // Only show upgrade button and stats for upgradable buildings
         const upgradeButton = document.getElementById('upgrade-button');
         if (!buildingInfo.hasOwnProperty('upgrade_costs') || building.level < 0) {
             upgradeButton.style.display = "none";
@@ -90,8 +102,10 @@ export function actualOpenPopup(building, buildingID) {
         upgradeButton.style.display = (building.level === maxLevel) ? "none" : "block";
         buildingStats.style.display = "block";
 
-        // Display the building level
+
+        // Display the building levels
         document.getElementById('level-stat').innerText = "Level: " + building.level;
+        document.getElementById('augment-level-stat').innerText = "Augment Level: " + building.augment_level;
 
 
         // Augment button and map augment stats if building can be augmented
@@ -107,7 +121,7 @@ export function actualOpenPopup(building, buildingID) {
             image.draggable = false;
             let textNode = document.createTextNode(augmentCost(building.augment_level));
             let augmentCostDiv = document.getElementById('augment-cost');
-            augmentCostDiv.innerHTML = '';
+            augmentCostDiv.innerHTML = 'Augment: ';
 
             augmentCostDiv.appendChild(textNode);
             augmentCostDiv.appendChild(image);
@@ -115,40 +129,61 @@ export function actualOpenPopup(building, buildingID) {
             document.getElementById('augment-btn').style.display = "none";
         }
 
+        // Display the upgrade cost
         if (building.augment_level !== 10) {
             const upgradeCost = buildingInfo.upgrade_costs[`L${building.level+1}`];
-            document.getElementById('building-upgrade-cost-number').innerText = '';
+            let costDiv = document.getElementById('upgrade-cost');
+            costDiv.innerHTML = 'Upgrade: ';
             for (let i = 0; i < upgradeCost.length; i++) {
-                document.getElementById('building-upgrade-cost-number').innerText += upgradeCost[i][values] + " ";
-                break; //TODO rest of costs
+                let value = document.createTextNode(upgradeCost[i][values]);
+                costDiv.appendChild(value);
+
+                let resourceImg = getResourceImg(upgradeCost[i][name]);
+                costDiv.appendChild(resourceImg);
+
+                let space = document.createTextNode('  ');
+                costDiv.appendChild(space);
             }
         }
 
 
+
         // Set the building stats
         let statString = "";
+        let augmentString = "";
         let augmentValue = 0;
+        let augmentUpgrade = '';
         for (let i = 0; i < buildingInfo.other_stats.length; i++) {
             const stat = buildingInfo.other_stats[i];
             const baseStatValue = stat[values][building.level];
-
             if (Number.isInteger(baseStatValue)){
-                augmentValue = augments.hasOwnProperty(stat[name]) ? augments[stat[name]] * building.augment_level : 0;
+                augmentValue = 0;
+                augmentUpgrade = '';
+                if (augments.hasOwnProperty(stat[name])){
+                    augmentValue = augments[stat[name]] * building.augment_level
+                    augmentUpgrade= ` (+${augments[stat[name]]})`;
+                }
+                augmentString= `${stat[name]}: ${baseStatValue + augmentValue}` + augmentUpgrade;
                 statString = `${stat[name]}: ${baseStatValue + augmentValue}`;
                 if (building.level !== maxLevel){
                     statString+= ` (+${stat[values][building.level+1] - stat[values][building.level]})`;
                 }
+
             }else{
                 statString = `${stat[name]}: ${baseStatValue}`;
+                augmentString = '';
                 if(augments.hasOwnProperty(stat[name])){
-                    if (augments[stat[name]].includes('building.augment_level')) {
-                        augmentValue = augments[stat[name]].replace('building.augment_level', building.augment_level);
+                    augmentString = `${stat[name]}: ${baseStatValue}`;
+                    augmentValue = augments[stat[name]];
+                    if (augmentValue.includes('building.augment_level')) {
+                        augmentValue = augmentValue.replace('building.augment_level', building.augment_level);
                     }
                     augmentValue = eval(augmentValue);
                     if (augmentValue % 1 !== 0) {
                         augmentValue.toFixed(2);
                     }
                     statString+= ` ${augmentValue}`;
+                    augmentString += ` ${augmentValue} (${augmentValue > 0 ? '+' : ''}${augmentValue})`;
                 }
                 if (building.level !== maxLevel){
                     statString+= ` (${stat[values][building.level+1]})`;
@@ -156,11 +191,14 @@ export function actualOpenPopup(building, buildingID) {
             }
 
 
-            const listItem = document.createElement('li');
-            listItem.textContent = statString;
-            buildingStats.appendChild(listItem);
-
+            const list1 = document.createElement('li');
+            list1.textContent = statString;
+            buildingStats.appendChild(list1);
+            const list2 = document.createElement('li');
+            list2.textContent = augmentString;
+            augmentStats.appendChild(list2);
         }
+
         popup.classList.add('show');
         isPopupOpen = true;
     });
@@ -205,25 +243,47 @@ closeButtonPressed.addEventListener('mouseleave', softReleaseCloseButton);
 
 // This code is responsible for correctly applying the functionality of the augment button of the pop-up
 
+let mouseIsDown = false;
 
 function pressAugment() {
     document.getElementById('augment-image').src = "../../static/img/UI/augment_pbtn.png";
+    mouseIsDown = true;
+    buildingData.augment_level++;
+    //TODO redisplay stats
+    // send augment request
+    //actualOpenPopup(buildingData, buildingID);
 }
 
 function releaseAugment() {
     document.getElementById('augment-image').src = "../../static/img/UI/augment_btn.png";
+    mouseIsDown = false;
+    document.getElementById('augment-stats').style.display = "none";
     document.getElementById('augment-cost').style.display = "none";
+    document.getElementById('stats').style.display = "block";
+    document.getElementById('upgrade-cost').style.display = "flex";
 }
 
 function hoverAugment() {
-    document.getElementById('augment-cost').style.display = "block";
+    document.getElementById('augment-stats').style.display = "block";
+    document.getElementById('augment-cost').style.display = "flex";
+    document.getElementById('stats').style.display = "none";
+    document.getElementById('upgrade-cost').style.display = "none";
    // display cost and inmprovement stats
+}
+
+function leaveAugment() {
+    if (!mouseIsDown) {
+        releaseAugment();
+    }
 }
 
 document.getElementById('augment-btn').addEventListener('mousedown', pressAugment);
 document.getElementById('augment-btn').addEventListener('mouseover', hoverAugment);
-document.getElementById('augment-btn').addEventListener('mouseup', releaseAugment);
-document.getElementById('augment-btn').addEventListener('mouseleave', releaseAugment);
+document.getElementById('augment-btn').addEventListener('mouseup' ,()=>{
+    document.getElementById('augment-image').src = "../../static/img/UI/augment_btn.png";
+    mouseIsDown=false;
+});
+document.getElementById('augment-btn').addEventListener('mouseleave', leaveAugment);
 
 
 
@@ -283,4 +343,32 @@ window.onresize = adjustPopupPosition;
 
 function augmentCost(level) {
     return 50 * Math.pow(2, level) + 50;
+}
+function getResourceImg(resource) {
+    const typeDir = {
+        '': ['Money'],
+        'crops/': ["Wheat", "Carrot", "Corn", "Lettuce", "Tomato", "Turnip", "Zucchini", "Parsnip", "Cauliflower", "Eggplant"],
+        'raws/': ["Stick", "Plank", "Stone", "Ingot", "Log"],
+        'animalproduct/': ['Egg', 'Rustic Egg', 'Crimson Egg', 'Emerald Egg', 'Sapphire Egg',
+                    'Milk', 'Chocolate Milk','Strawberry Milk', 'Soy Milk', 'Blueberry Milk',
+                    'Truffle', 'Bronze Truffle', 'Gold Truffle', 'Forest Truffle', 'Winter Truffle',
+                    'Wool', 'Alpaca Wool', 'Cashmere Wool', 'Irish Wool', 'Dolphin Wool']
+    }
+
+    let pngName = '';
+    let dir = '';
+    const img = document.createElement('img');
+    for (const [key, value] of Object.entries(typeDir)) {
+        if (!value.includes(resource)) continue;
+        pngName = (resource === 'Money') ? 'Coin' : spaceTo_(resource);
+        dir = key;
+        img.src = '../../static/img/resources/' + dir + pngName + '.png';
+        img.alt = resource;
+        img.draggable = false;
+        img.title = resource;
+        return img;
+    }
+}
+function spaceTo_(input) {
+    return input.replace(/ /g, '_');
 }

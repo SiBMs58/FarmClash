@@ -2,9 +2,9 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pop-up-UI.css') }}">
     <div id="Popup-text">
         <p id="building-info-title">Building Info</p>
-        <p id="building-display-name">Chicken House</p>
+        <p id="display-name"></p>
 
-        <p id="building-explanation">
+        <p id="explanation">
             Dive into the heart of your farm's egg production with the Chicken House.
             This vital building is where your feathered friends lay eggs, ready for
             market sale. Upgrade to boost production. Every egg sold brings you one
@@ -13,20 +13,32 @@
 
 
 
-        <ul id="building-stats">
-            <li id="level-stat">Level: 4</li>
+        <ul id="stats" class="stats">
+            <li id="level-stat"></li>
             <li>———————————</li>
             <li>
-                <div id="building-upgrade-cost">
-                    <p>Upgrade cost: <span id="building-upgrade-cost-number">500</span></p> <!-- This will be updated dynamically -->
-                    <img src="{{ url_for('static', filename='img/resources/Coin.png') }}" alt="🪙">
+                <div id="upgrade-cost" class="cost">
+
                 </div>
             </li>
-            <li>Eggs/hour: 3 (upgrade +1)</li>
+        </ul>
+        <ul id="augment-stats" class="stats">
+            <li id="augment-level-stat"></li>
+            <li>———————————</li>
+            <li>
+                <div id="augment-cost" class="cost">
+
+                </div>
+            </li>
         </ul>
     </div>
     <img id="background-img" class="popup-background" src="{{ url_for('static', filename='img/ui_Elements/popupBackground.png') }}" alt="popup background">
-    <div class="augment-cost" id="augment-cost"></div>
+
+    <button id="view-btn" class="view-btn" alt="View">
+        <a href="" id="view-UI">
+            <img src="../../static/img/UI/view_btn.png" alt="View">
+        </a>
+    </button>
 
     <button id="augment-btn" class="augment-button">
         <img src="../../static/img/UI/augment_btn.png" alt="+" id="augment-image" draggable="false">
