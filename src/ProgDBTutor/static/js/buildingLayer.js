@@ -459,6 +459,19 @@ export class BuildingMap extends BaseMap {
         return toReturn;
     }
 
+    /**
+     * Initialises the building layer. Fetches everything that needs to be fetched from the server, and stores it.
+     */
+    async initialize() {
+        await this.fetchBuildingAssetList();
+        await this.fetchBuildingMapData();
+        this.tiles = this.generateBuildingTileMap();
+        await new Promise((resolve) => this.preloadBuildingAssets(resolve));
+        // Safe to call stuff here
+        //debugger;
+        console.log("fetchBuildingLayerList() success");
+        hideLoadingScreen();
+    }
 
     /**
      * Fetches the 'assetList.json' which is used to later fetch the right assets.
@@ -925,42 +938,3 @@ export class BuildingMap extends BaseMap {
         }
     }
 }
-
-
-
-
-
-
-    /**
-     * Old draw function. Draws using the generated 'this.tiles'.
-     */
-    /*
-    drawTiles2() {
-        this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
-
-        const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
-        const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
-
-        for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
-            for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
-                let filePath;
-                if (this.tiles[i_map] && this.tiles[i_map][j_map]) {
-                    const currTile = this.tiles[i_map][j_map];
-                    if (currTile === EMPTY_TILE) {
-                        this.clearTile(x_screen * this.tileSize, y_screen * this.tileSize);
-                        continue;
-                    }
-                    filePath = "/static/img/assets/buildings/" + getAssetDir(currTile[0]) + "/" + currTile[0] + ".png"; // currTile[0] want dit bestaat uit ["tileAsset", "buildingName"]
-                } else { // Out-of bounds
-                    continue;
-                }
-                const img = this.buildingAssets[filePath];
-                if (img) {
-                    this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
-                } else {
-                    console.error("BuildingMap.drawTiles(): image does not exist")
-                }
-            }
-        }
-    }
-     */
