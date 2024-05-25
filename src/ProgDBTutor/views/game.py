@@ -56,6 +56,73 @@ def townhall():
     return render_template('townhall.html', app_data=config_data)
 
 
+@game_blueprint.route('/gifts')
+@login_required
+def gifts():
+    """
+    Renders the gifts view with the current user's gifts.
+    The gifts are based on the user's last login time and the time the user has been playing the game.
+    :return: Rendered template for the gifts view.
+    """
+    user_data_access = current_app.config.get('user_data_access')
+    user = user_data_access.get_user(current_user.username)
+    if user.last_gift is None:
+        user.last_gift = datetime.now()
+
+    gifts = {
+        "Money": 200,
+        "Wheat": 58,
+        "Carrot": 47,
+        "corn": 45,
+        "Lettuce": 40,
+        "Tomato": 35,
+        "Turnip": 67,
+        "zucchini": 50,
+        "Parsnip": 60,
+        "Cauliflower": 55,
+        "eggplant": 45,
+        "egg": 22,
+        "Rustic egg": 37,
+        "Crimson egg": 55,
+        "Emerald egg": 11,
+        "Sapphire egg": 55,
+        "milk": 55,
+        "Chocolate milk": 55,
+        "Strawberry milk": 8,
+        "Soy milk": 8,
+        "Blueberry milk": 4,
+    }
+
+    gift = None
+    amount = 0
+
+    # Check if the user has logged in within the last hour
+    if user.last_gift + timedelta(hours=1) <= datetime.now():
+        # Calculate bonuses based on the time the user has been playing the game
+        delta_created_at = datetime.now() - user.created_at
+        delta_last_gift = datetime.now() - user.last_gift
+
+        # Determine bonus multipliers
+        # Example bonus logic (you can customize this logic as needed)
+        time_played_bonus = max(delta_created_at.days // 30, 1)  # 1 bonus point for each month played
+        recent_login_bonus = max((60 - delta_last_gift.seconds // 60), 1)  # Up to 60 bonus points for recent login
+
+        # Pick a random gift and calculate the total amount with bonuses
+        gift = random.choice(list(gifts.keys()))
+        base_amount = gifts[gift]
+        amount = base_amount + time_played_bonus + recent_login_bonus
+
+        # Insert it in the database
+        resource_data_access = current_app.config.get('resource_data_access')
+        print(current_user.username, gift, amount)
+        resource_data_access.update_resource(current_user.username, gift, amount)
+
+        # Update the last gift time
+        user_data_access.update_last_gift(current_user.username)
+
+    return render_template('gifts.html', app_data=config_data, gift=gift, amount=amount)
+
+
 """
 Building fetch and update functions
 """
