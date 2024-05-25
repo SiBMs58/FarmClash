@@ -122,17 +122,20 @@
         (function() {
             const originalLog = console.log;
             console.log = function(message) {
-                if (message === 'fetchBuildingLayerList() success') {
+                originalLog.apply(console, arguments); // Ensure the original console.log is called first
+                if (message.includes('fetchBuildingLayerList() success')) {
                     consoleLog = true;
                     checkConditions();
                 }
-                originalLog.apply(console, arguments);
             };
         })();
 
         function checkConditions() {
             if (localStorageItem && consoleLog) {
-                document.getElementById('loadingScreen').classList.add('hidden');
+                const loadingScreen = document.getElementById('loadingScreen');
+                if (loadingScreen) {
+                    loadingScreen.classList.add('hidden');
+                }
             }
         }
     </script>
