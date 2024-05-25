@@ -7,10 +7,10 @@ class AnimalDataAccess:
 
     def add_animal(self, animal: Animal):
         """
-            add an animal to the db
-            :param animal: A Animal object
-            :return: True if added successfully, False otherwise
-            """
+        add an animal to the db
+        :param animal: A Animal object
+        :return: True if added successfully, False otherwise
+        """
         cursor = self.db_connection.get_cursor()
         cursor.execute(
             "INSERT INTO animals (owner, species, amount, last_updated) VALUES (%s, %s, %s, %s)",

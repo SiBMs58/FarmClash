@@ -5,6 +5,7 @@
 
 import psycopg2
 from psycopg2.extras import DictCursor
+from threading import Lock
 
 
 class DBConnection:
@@ -12,33 +13,40 @@ class DBConnection:
         self.dbname = dbname
         self.dbuser = dbuser
         self.conn = None
+        self.lock = Lock()
         self._connect()
 
     def _connect(self):
         try:
-            self.conn = psycopg2.connect(dbname=self.dbname, user=self.dbuser)
+            with self.lock:
+                self.conn = psycopg2.connect(dbname=self.dbname, user=self.dbuser)
         except Exception as e:
             print(f'ERROR: Unable to connect to the database: {e}')
             raise
 
     def get_connection(self):
-        if self.conn is None or self.conn.closed:
-            self._connect()
-        return self.conn
+        with self.lock:
+            if self.conn is None or self.conn.closed:
+                self._connect()
+            return self.conn
 
     def get_cursor(self):
-        if not self.conn or self.conn.closed:
-            self._connect()
-        return self.conn.cursor(cursor_factory=DictCursor)
+        with self.lock:
+            if not self.conn or self.conn.closed:
+                self._connect()
+            return self.conn.cursor(cursor_factory=DictCursor)
 
     def close(self):
-        if self.conn:
-            self.conn.close()
+        with self.lock:
+            if self.conn:
+                self.conn.close()
 
     def commit(self):
-        if self.conn:
-            self.conn.commit()
+        with self.lock:
+            if self.conn:
+                self.conn.commit()
 
     def rollback(self):
-        if self.conn:
-            self.conn.rollback()
+        with self.lock:
+            if self.conn:
+                self.conn.rollback()

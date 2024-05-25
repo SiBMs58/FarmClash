@@ -114,4 +114,3 @@ class BuildingDataAccess:
             cursor.close()  # Ensure the cursor is closed
 
 
-
