@@ -123,7 +123,7 @@
             const originalLog = console.log;
             console.log = function(message) {
                 originalLog.apply(console, arguments); // Ensure the original console.log is called first
-                if (message.includes('fetchBuildingLayerList() success')) {
+                if (message === 'fetchBuildingLayerList() success') {
                     consoleLog = true;
                     checkConditions();
                 }
@@ -132,10 +132,7 @@
 
         function checkConditions() {
             if (localStorageItem && consoleLog) {
-                const loadingScreen = document.getElementById('loadingScreen');
-                if (loadingScreen) {
-                    loadingScreen.classList.add('hidden');
-                }
+                document.getElementById('loadingScreen').classList.add('hidden');
             }
         }
     </script>
