@@ -58,11 +58,6 @@ app.config['animal_data_access'] = animal_data_access
 animal_data_access = AnimalDataAccess(connection)
 app.config['animal_data_access'] = animal_data_access
 
-# Insert the admin user
-user_data_access.add_user(
-    User(config_data['admin_username'], werkzeug_generate_password_hash(config_data['admin_password']),
-         config_data['admin_email']))
-
 # Initialize the login manager
 login_manager.init_app(app)
 
@@ -162,3 +157,7 @@ def inject_base_url():
 # RUN DEV SERVER
 if __name__ == "__main__":
     app.run(HOST, debug=DEBUG)
+    # Insert the admin user
+    user_data_access.add_user(
+        User(config_data['admin_username'], werkzeug_generate_password_hash(config_data['admin_password']),
+             config_data['admin_email']))
