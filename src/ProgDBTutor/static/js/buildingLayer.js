@@ -244,7 +244,7 @@ export class BuildingMap extends BaseMap {
         // Safe to call stuff here
         //debugger;
         console.log("fetchBuildingLayerList() success");
-        localStorage.setItem('gameData', 'true');
+        hideLoadingScreen();
     }
 
     /**
