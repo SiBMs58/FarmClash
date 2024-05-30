@@ -481,8 +481,13 @@ The friends and messaging features are central to fostering a community environm
     \item \textbf{HTML and CSS:} The friends/dashboard.html file structures the friends page, displaying the user's friends list. The friends.css file styles the page, ensuring a consistent design with the rest of the application.
     \item \textbf{JavaScript:} The loadFriends() function fetches the user's friends list from the backend API. It populates the friends table in the HTML dynamically, ensuring that users can easily view and interact with their friends. Error handling is included to manage and alert users in case of API failures. The visitFriendsWorld() function allows users to visit their friends' farms, enhancing social interactions within the game.
 \end{itemize}
+
 \paragraph{Messaging Feature}
-\\ $\ast$ TODO
+\begin{itemize}
+    \item \textbf{HTML and CSS:} The chat_window.html/dashboard.html files structure the message window page, displaying a chat window with messagess between you and a friend. The frinds.htmlfile styles the page, ensuring a consistent design with the rest of the application.
+    \item \textbf{JavaScript:}
+\end{itemize}
+
 
 \subsubsection{Leaderboard Feature}
 \begin{itemize}
@@ -495,6 +500,13 @@ The friends and messaging features are central to fostering a community environm
     \item \textbf{HTML and CSS:} The bookChat.html and bookMarket.html contain the HTML structure of the books, covers and pages (front and back), along with the content for the chat and the market respectively.
     \item \textbf{JavaScript:} There is a JavaScript function: openBook() to open the cover of the book and a closeBook() to close the cover of the book. In addition, you have the goNextPage() function to go to the next page and the goPrevPage() function to go to the previous page. In addition to these functions, there are querySelectors for the covers, pages and buttons
 \end{itemize}
+
+\subsection{Settings}
+\begin{itemize}
+    \item \textbf{HTML and CSS:} The settings.html contain the HTML structure of the settings. This html file defines the structure of the buttons needed in the setting: logout, sound, zoom.  These sound buttons are designed for controlling the sound. The CSS file settings.css styles settings page, matching the design of other pages.
+    \item \textbf{JavaScript:} There is a JavaScript file, where the setting functions are implemented. There is a function is a function SoundDown() to physically bring the sound up. This function is connected to a sound function in sound.js .and SoundDown() that is responsible for bringing the sound down. This function is connected to a sound function in sound.js.
+\end{itemize}
+
 
 \section{Challenges and Solutions}
 Throughout the development, the team encountered and overcame numerous challenges, such as optimizing database queries and ensuring smooth synchronous player interactions. Specific issues included managing the real-time update of resource levels and implementing secure authentication mechanisms.
