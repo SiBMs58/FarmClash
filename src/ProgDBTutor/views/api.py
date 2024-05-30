@@ -257,7 +257,6 @@ def fetch_building_information():
                 "level": building.level,
                 "augment_level": building.augment_level,
                 "building_location": [building.x, building.y],
-                "tile_rel_locations": building.tile_rel_locations
             }
             building_information[building.building_id] = building_info
 
