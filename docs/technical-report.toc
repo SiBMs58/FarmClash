@@ -26,34 +26,34 @@
 \contentsline {paragraph}{Friends Feature:}{12}{}%
 \contentsline {paragraph}{Messaging Feature:}{13}{}%
 \contentsline {subsubsection}{\numberline {5.2.3}Leaderboard Feature}{13}{}%
-\contentsline {subsubsection}{\numberline {5.2.4}Market Feature}{13}{}%
+\contentsline {subsubsection}{\numberline {5.2.4}Market Feature}{14}{}%
 \contentsline {subsubsection}{\numberline {5.2.5}Building Feature}{14}{}%
-\contentsline {subsection}{\numberline {5.3}Frontend Interface}{14}{}%
-\contentsline {subsubsection}{\numberline {5.3.1}Login and Authentication Feature}{14}{}%
-\contentsline {paragraph}{Login Page}{14}{}%
+\contentsline {subsection}{\numberline {5.3}Frontend Interface}{15}{}%
+\contentsline {subsubsection}{\numberline {5.3.1}Login and Authentication Feature}{15}{}%
+\contentsline {paragraph}{Login Page}{15}{}%
 \contentsline {paragraph}{Registration Page}{15}{}%
 \contentsline {subsubsection}{\numberline {5.3.2}MAIN GAME WORLD}{15}{}%
 \contentsline {paragraph}{canvas.js}{16}{}%
 \contentsline {paragraph}{Terrain Layer}{16}{}%
-\contentsline {paragraph}{Building Layer}{16}{}%
+\contentsline {paragraph}{Building Layer}{17}{}%
 \contentsline {paragraph}{Building Pop-up}{17}{}%
 \contentsline {paragraph}{Main UI}{17}{}%
-\contentsline {paragraph}{Ticker class}{17}{}%
-\contentsline {paragraph}{User Input Handler}{17}{}%
+\contentsline {paragraph}{Ticker class}{18}{}%
+\contentsline {paragraph}{User Input Handler}{18}{}%
 \contentsline {subsubsection}{\numberline {5.3.3}Friends and Messaging Feature}{18}{}%
 \contentsline {paragraph}{Friends Feature}{18}{}%
-\contentsline {paragraph}{Mesaging Feature}{18}{}%
+\contentsline {paragraph}{Mesaging Feature}{19}{}%
 \contentsline {subsubsection}{\numberline {5.3.4}Leaderboard Feature}{19}{}%
 \contentsline {subsubsection}{\numberline {5.3.5}Books}{19}{}%
 \contentsline {subsubsection}{\numberline {5.3.6}Settings and Sound Feature}{19}{}%
-\contentsline {paragraph}{Settings Feature}{19}{}%
+\contentsline {paragraph}{Settings Feature}{20}{}%
 \contentsline {paragraph}{Sound Feature}{20}{}%
 \contentsline {section}{\numberline {6}Challenges and Solutions}{20}{}%
 \contentsline {section}{\numberline {7}Results and Testing}{20}{}%
-\contentsline {subsection}{\numberline {7.1}Backend Testing}{20}{}%
+\contentsline {subsection}{\numberline {7.1}Backend Testing}{21}{}%
 \contentsline {subsection}{\numberline {7.2}Frontend Testing}{22}{}%
-\contentsline {subsection}{\numberline {7.3}User Acceptance Testing}{22}{}%
-\contentsline {subsection}{\numberline {7.4}Continuous Integration}{22}{}%
+\contentsline {subsection}{\numberline {7.3}User Acceptance Testing}{23}{}%
+\contentsline {subsection}{\numberline {7.4}Continuous Integration}{23}{}%
 \contentsline {section}{\numberline {8}User Manual}{23}{}%
 \contentsline {subsection}{\numberline {8.1}Installation}{23}{}%
 \contentsline {subsection}{\numberline {8.2}Gameplay}{23}{}%

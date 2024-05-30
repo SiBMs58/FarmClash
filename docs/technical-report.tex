@@ -333,11 +333,22 @@ The backend supports functionalities related to the management of friendships be
     \item \textbf{Visit Friends World:} The system allows users to visit their friends' farms, fostering engagement and interaction between players. This feature is implemented in the frontend, where users can navigate to their friends' maps and view their progress.
 
     The backend enables the user to see the map and buildings of there friends. This is done by fetching the building information of the user that is being visited.
-
 \end{itemize}
+
 \paragraph{Messaging Feature:}
-\\ $\ast$ TODO
 These features not only enhance user engagement but also contribute to the game's social dynamics, making the gaming experience more interactive and enjoyable for users.
+\begin{itemize}
+    \item \textbf{Messaging window:} You can retrieve the previous messages from the right friend. this is done by using  A GET request that is made to the API endpoint, where friend-name is the name of the friend whose messages are being fetched.
+    \begin{verbatim}
+    /api/messages/${friend_name}
+    \end{verbatim}
+    \item \textbf{Message Element Creation:} A div element is created for the message, with a class of received if the message is from the friend, or sent if it is from the current user. The message content is added to this div.
+    \item \textbf{Timestamp Divider:}  If there is an hour or more difference between the current message and the last message, a timestamp divider is added to indicate the time.
+\end{itemize}
+
+
+
+
 \subsubsection{Leaderboard Feature}
 The backend manages the leaderboard by fetching and calculating user scores, sorting them, and handling specific leaderboard queries. Here's how it is structured:
 \begin{itemize}
@@ -505,13 +516,13 @@ The settings and sound features are integral to creating an immersive and person
 \paragraph{Settings Feature}
 \begin{itemize}
     \item \textbf{HTML and CSS:} The settings.html contains the HTML structure of the settings. This html file creates the buttons needed in the settins: LOG-OUT, SOUND, ZOOM.  The CSS file settings.css styles settings page, matching the design of other pages.
-    \item \textbf{JavaScript:} There is a JavaScript file, where the setting functions are implemented. There is a function is a function SoundDown() to control the sound up. This function is connected to a sound function in sound.js. SoundDown()  is responsible for bringing the sound down. These functions are connected to functions in the sound javascript file.
+    \item \textbf{JavaScript:} There is a JavaScript file, where the setting functions are implemented. There is a function soundUp() that lets you volume up the sound. The variable countSound keeps this value and stores it in a storage. The value is also given as a parameter to the sound function setVolume(). The same with soundDown(). zoomUpPrecent() is a function that controls the variable tilesize in the the file canvas.js for updating the window size. also with zoomDownPrecent().
 \end{itemize}
 
 \paragraph{Sound Feature}
 \begin{itemize}
-    \item \textbf{HTML and CSS:}
-    \item \textbf{JavaScript:}
+    \item \textbf{HTML and CSS:} The settings.html contains the sound buttons created for this feature.
+    \item \textbf{JavaScript:} There is a javascript file sound.js with a class GameSoundManager that contains functions to control the music in the game controlled by the buttons in settings.js.The function setBackgroundMusic() initializes the music being given and plays it when the background button is on in settings. The function setVolume() is given the variable countSound as parameter from the file settings.js and is used to set the right volume for the background music.
 \end{itemize}
 
 
