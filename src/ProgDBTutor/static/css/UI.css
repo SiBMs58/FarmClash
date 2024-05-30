@@ -155,6 +155,20 @@ footer {
     justify-content: center;
 }
 
+#building-placement-warning {
+    text-align: center;
+    font-size: 16px;
+    color: black;
+    display: none;
+}
+
+#building-placement-warning.show {
+    display: block;
+}
+
+#building-placement-warning.red {
+ color: #e01010;
+}
 
 
 

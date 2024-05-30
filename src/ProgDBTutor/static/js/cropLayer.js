@@ -225,6 +225,7 @@ export class CropMap extends BaseMap {
         field.crop = null;
         field.assetPhase = null;
         field.time_planted =  null;
+        this.updateCropMapDB();
         this.drawTiles();
 
         // todo resources updaten
@@ -236,6 +237,7 @@ export class CropMap extends BaseMap {
         field.crop = cropType;
         field.assetPhase = 1;
         field.time_planted = this.getSecondsSinceDay0()
+        this.updateCropMapDB();
         this.drawTiles();
     }
 
