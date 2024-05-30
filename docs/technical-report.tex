@@ -482,12 +482,11 @@ The friends and messaging features are central to fostering a community environm
     \item \textbf{JavaScript:} The loadFriends() function fetches the user's friends list from the backend API. It populates the friends table in the HTML dynamically, ensuring that users can easily view and interact with their friends. Error handling is included to manage and alert users in case of API failures. The visitFriendsWorld() function allows users to visit their friends' farms, enhancing social interactions within the game.
 \end{itemize}
 
-\paragraph{Messaging Feature}
+\paragraph{Mesaging Feature}
 \begin{itemize}
-    \item \textbf{HTML and CSS:} The chat_window.html/dashboard.html files structure the message window page, displaying a chat window with messagess between you and a friend. The chat_window.html section css file styles the page, ensuring a consistent design with the rest of the application.
-    \item \textbf{JavaScript:} The loadChat() function ...
+    \item \textbf{HTML and CSS:} The chat-window.html files structures the message window page, displaying a chat window with messages between you and a friend. The chat-window.html section css file styles the page, ensuring a consistent design with the rest of the application.
+    \item \textbf{JavaScript:}The loadChat() function handles loading the chat messages for a specific friend. Updates the chat window title to the friend's name, also let you as user visit your friends world with the visit world button. The chat messages  are fetched from the server, processes them, and displays them in the chat window.
 \end{itemize}
-
 
 \subsubsection{Leaderboard Feature}
 \begin{itemize}
@@ -501,10 +500,18 @@ The friends and messaging features are central to fostering a community environm
     \item \textbf{JavaScript:} There is a JavaScript function: openBook() to open the cover of the book and a closeBook() to close the cover of the book. In addition, you have the goNextPage() function to go to the next page and the goPrevPage() function to go to the previous page. In addition to these functions, there are querySelectors for the covers, pages and buttons
 \end{itemize}
 
-\subsection{Settings}
+\subsubsection{Settings and Sound Feature}
+The settings and sound features are integral to creating an immersive and personalized gaming experience, enhancing user engagement and enjoyment within the game.
+\paragraph{Settings Feature}
 \begin{itemize}
-    \item \textbf{HTML and CSS:} The settings.html contain the HTML structure of the settings. This html file defines the structure of the buttons needed in the setting: logout, sound, zoom.  These sound buttons are designed for controlling the sound. The CSS file settings.css styles settings page, matching the design of other pages.
-    \item \textbf{JavaScript:} There is a JavaScript file, where the setting functions are implemented. There is a function is a function SoundDown() to physically bring the sound up. This function is connected to a sound function in sound.js .and SoundDown() that is responsible for bringing the sound down. This function is connected to a sound function in sound.js.
+    \item \textbf{HTML and CSS:} The settings.html contains the HTML structure of the settings. This html file creates the buttons needed in the settins: LOG-OUT, SOUND, ZOOM.  The CSS file settings.css styles settings page, matching the design of other pages.
+    \item \textbf{JavaScript:} There is a JavaScript file, where the setting functions are implemented. There is a function is a function SoundDown() to control the sound up. This function is connected to a sound function in sound.js. SoundDown()  is responsible for bringing the sound down. These functions are connected to functions in the sound javascript file.
+\end{itemize}
+
+\paragraph{Sound Feature}
+\begin{itemize}
+    \item \textbf{HTML and CSS:}
+    \item \textbf{JavaScript:}
 \end{itemize}
 
 
