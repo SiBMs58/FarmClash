@@ -63,6 +63,7 @@ export const defaultMapData2 = {
             level: 3,
             building_location: [5, 11]
         },
+
         field1: {
             self_key: "field1",
             general_information: "Field",
@@ -174,9 +175,6 @@ export const defaultMapData2 = {
                 [[2, 0], "Cowbarn.3.1"],
                 [[2, 1], "Cowbarn.3.2"],
                 [[2, 2], "Cowbarn.3.3"]
-
-
-
             ]
         },
         Goatbarn: {
@@ -577,6 +575,40 @@ export class BuildingMap extends BaseMap {
         this.ctx.clearRect(x_tile_screen, y_tile_screen, this.tileSize, this.tileSize);
     }
 
+    adjustFenceAsset(originalAssetName, yLocation, xLocation) {
+        debugger;
+        const splitAssetName = originalAssetName.split('.')
+        let baseAssetName = splitAssetName[0] + '.' + splitAssetName[1] + '.';
+
+        const assetN = this.tiles[yLocation - 1][xLocation] === "None" ? "None" : this.tiles[yLocation - 1][xLocation][0];
+        const assetO = this.tiles[yLocation][xLocation + 1] === "None" ? "None" : this.tiles[yLocation][xLocation + 1][0];
+        const assetZ = this.tiles[yLocation + 1][xLocation] === "None" ? "None" : this.tiles[yLocation + 1][xLocation][0];
+        const assetW = this.tiles[yLocation][xLocation - 1] === "None" ? "None" : this.tiles[yLocation][xLocation - 1][0];
+
+        let appendedDirection = false;
+        if (utils.getAssetDir(assetN) === "Fence") {
+            baseAssetName += "N";
+            appendedDirection = true;
+        }
+        if (utils.getAssetDir(assetO) === "Fence") {
+            baseAssetName += "O";
+            appendedDirection = true;
+        }
+        if (utils.getAssetDir(assetZ) === "Fence") {
+            baseAssetName += "Z";
+            appendedDirection = true;
+        }
+        if (utils.getAssetDir(assetW) === "Fence") {
+            baseAssetName += "W";
+            appendedDirection = true;
+        }
+
+        if (!appendedDirection) {
+            baseAssetName = baseAssetName.slice(0, -1);
+        }
+        return baseAssetName;
+    }
+
 
     /**
      * Draws a building.
@@ -591,7 +623,6 @@ export class BuildingMap extends BaseMap {
         const generalInfoKey = building.general_information;
         const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
 
-        //for (const tile of building.tile_rel_locations) {
         for (const tile of tile_rel_locations) {
             const screen_currTileLocY = screen_buildLocationY + tile[0][0];
             const screen_currTileLocX = screen_buildLocationX + tile[0][1];
@@ -603,6 +634,11 @@ export class BuildingMap extends BaseMap {
             let tileToDrawWithoutLevelReplaced = tile[1];
             const buildingLevel = building.level
             let tileToDrawName = tileToDrawWithoutLevelReplaced.replace(/@/g, buildingLevel);
+            if (utils.getAssetDir(tileToDrawName) === "Fence") {
+                const currTileLocY = building.building_location[0] + tile[0][0];
+                const currTileLocX = building.building_location[1] + tile[0][1];
+                tileToDrawName = this.adjustFenceAsset(tileToDrawName, currTileLocY, currTileLocX)
+            }
             const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tileToDrawName) + "/" + tileToDrawName + ".png"];
             if (img) {
                 this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
