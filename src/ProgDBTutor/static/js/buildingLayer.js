@@ -85,7 +85,7 @@ export const defaultMapData2 = {
         Cowbarn: {
             self_key: "Cowbarn",
             general_information: "Cowbarn",
-            level: 10,
+            level: 5,
             building_location: [10, 24]
         },
         Goatbarn: {
@@ -110,7 +110,7 @@ export const defaultMapData2 = {
             self_key: "Silo",
             general_information: "Silo",
             level: 10,
-            building_location: [5, 3]
+            building_location: [10, 3]
         }
     },
 
@@ -190,7 +190,7 @@ export const defaultMapData2 = {
             maxLevel: 10,
             tile_rel_locations: [
                 [[0, 0], "Goatbarn.L@.1.1"], // location relative to 'building_location'
-                [[0, 1], "Goatbarn.L10.1.2"], // [ rel_location ([y, x]), "Tile asset"]
+                [[0, 1], "Goatbarn.L@.1.2"], // [ rel_location ([y, x]), "Tile asset"]
                 [[0, 2], "Goatbarn.L@.1.3"], // All the '@' will be replaced with the correct level
                 [[1, 0], "Goatbarn.L@.2.1"],
                 [[1, 1], "Goatbarn.2.2"],
