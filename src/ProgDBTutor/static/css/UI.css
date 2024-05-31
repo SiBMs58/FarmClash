@@ -142,7 +142,6 @@ img:hover {
 }
 
 
-
 footer {
     cursor: url('../img/UI/pointer.png'), auto;
     position: absolute; /* Positions the footer absolutely relative to its positioned ancestor */
@@ -154,22 +153,31 @@ footer {
     font-size: 8px;
     justify-content: center;
 }
-
+/*
 #building-placement-warning {
     text-align: center;
-    font-size: 16px;
+    font-size: 20px;
     color: black;
-    display: none;
+    opacity: 0;
 }
+*/
 
-#building-placement-warning.show {
-    display: block;
+.warning-popup {
+    text-align: center;
+    position: absolute;
+    bottom: 10px;
+    font-size: 20px;
+    color: black;
+    display: inline-block;
+    background-color: rgba(255, 141, 141, 0.9);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 0;
 }
-
-#building-placement-warning.red {
- color: #e01010;
-}
-
 
 
 

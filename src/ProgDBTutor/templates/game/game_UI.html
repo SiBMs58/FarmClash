@@ -47,8 +47,11 @@
                 <img src="../../static/img/UI/market_btn.png" alt="🛒">
             </a>
         </button>
-        <p id="building-placement-warning">
+        <p id="building-placement-warning" class="warning-popup">
             Invalid position to place building
+        </p>
+        <p id="building-unlock-warning" class="warning-popup">
+            You haven't unlocked this building.<br>Upgrade your town hall to level <span id="building-unlock-warning-lvl-text">'undefined'</span>
         </p>
         <button id="attack-btn" class="attack-btn">
             <a href="{{ url_for('attack.visit_opponent') }}">

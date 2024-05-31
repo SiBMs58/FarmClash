@@ -3,11 +3,11 @@ export const defaultBuildingMapData = {
     map_height: 43,
 
     building_information: {
-        town_hall: {
-            self_key: "town_hall",
+        townhall: { // The key for town hall needs to be "townhall"! This is used in getTownHallLVL() in buildingLayer
+            self_key: "townhall",
             general_information: "Townhall",
-            level: 3,
-            unlock_level: 0,
+            level: 8,
+            unlock_level: 2,
             building_location:  [4, 19],
         },
 

@@ -81,7 +81,7 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
-        await this.fetchBuildingMapData();
+        //await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
@@ -366,6 +366,10 @@ export class BuildingMap extends BaseMap {
         return false;
     }
 
+    /*isOnGrassRectangle(yCoord, xCoord) {
+        return yCoord > 3 && yCoord < this.map_width - 4  &&  xCoord > 3 && xCoord < this.map_height - 4;
+    }*/
+
     /**
      *
      * @param rel_y
@@ -461,10 +465,8 @@ export class BuildingMap extends BaseMap {
         if (this.inBounds(rel_y, rel_x, buildingToMove)) {
             if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
                 console.log("Move successful");
-                this.hideWarning();
             } else {
                 console.log("Move not valid");
-                this.hideWarning()
             }
 
             buildingToMove.building_location[0] += rel_y;
@@ -485,9 +487,7 @@ export class BuildingMap extends BaseMap {
         }
     }
 
-    getTownHallLVL() {
-        const townHallBuilding = this.buildingInformation["town_hall"];
-    }
+
 
 
     /**
@@ -527,6 +527,11 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    getTownHallLVL() {
+        const townHallBuilding = this.buildingInformation["townhall"];
+        return townHallBuilding.level;
+    }
+
     /**
      * Gets called when user clicks.
      * @param client_x x click on screen
@@ -549,8 +554,11 @@ export class BuildingMap extends BaseMap {
         if (this.movingBuilding === false) {
             const buildingName = this.tiles[tileY][tileX][1];
             this.buildingClickedName = buildingName;
-
-            //if ()
+            // Check whether building is unlocked
+            if (this.buildingInformation[buildingName].unlock_level > this.getTownHallLVL()) {
+                this.showUnlockWarning(this.buildingInformation[buildingName]);
+                return true;
+            }
 
             // Check whether building is a harvestable field
             if (this.buildingInformation[buildingName].general_information === "Field") {
@@ -568,8 +576,8 @@ export class BuildingMap extends BaseMap {
             if (!this.username) {
                 this.movingBuilding = true;
                 this.ownNextClick = true;
+                return true;
             }
-
 
             return true;
         }
@@ -589,7 +597,7 @@ export class BuildingMap extends BaseMap {
                 //const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
                 //this.moveBuilding(revertRelY, revertRelX, buildingToMove);
                 console.error("invalid locatie om gebouw te plaatsen");
-                this.showWarning();
+                this.showLocationWarning();
 
             }
             // check of move valid is met rel_x, rel_y = 0
@@ -612,6 +620,10 @@ export class BuildingMap extends BaseMap {
         if (this.tiles[tileY][tileX] !== EMPTY_TILE) {
             console.log(`Right click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
             const buildingName = this.tiles[tileY][tileX][1];
+            if (this.buildingInformation[buildingName].unlock_level > this.getTownHallLVL()) {
+                this.showUnlockWarning(this.buildingInformation[buildingName]);
+                return true;
+            }
             openPopup(this.buildingInformation, this.buildingGeneralInformation, buildingName);
             return true;
         }
@@ -619,22 +631,40 @@ export class BuildingMap extends BaseMap {
 
     }
 
-    showWarning() {
+    showLocationWarning() {
         const warningElement = document.getElementById('building-placement-warning');
-        warningElement.classList.add('show');
-        warningElement.classList.remove('red');
+        // Show the element instantly
+        warningElement.style.opacity = '1';
+        warningElement.style.transition = 'none'; // Ensure no transition initially
+
+        // After 1 second, fade out
+        setTimeout(() => {
+            warningElement.style.transition = 'opacity 1.5s ease-out'; // Apply the transition for fading out
+            warningElement.style.opacity = '0';
+        }, 1500);
     }
 
-    hideWarning() {
+    hideLocationWarning() {
         const warningElement = document.getElementById('building-placement-warning');
         warningElement.classList.remove('show');
     }
 
-    showRedWarning() {
-        this.showWarning();
-        const warningElement = document.getElementById('building-placement-warning');
-        warningElement.classList.add('red');
+    showUnlockWarning(building) {
+        const warningElement = document.getElementById('building-unlock-warning');
+        const warningElementLvlText = document.getElementById('building-unlock-warning-lvl-text');
+        warningElementLvlText.innerText = building.unlock_level
+
+        // Show the element instantly
+        warningElement.style.transition = 'opacity 0.1s ease-in';
+        warningElement.style.opacity = '1';
+
+        // After 1 second, fade out
+        setTimeout(() => {
+            warningElement.style.transition = 'opacity 1.5s ease-out'; // Apply the transition for fading out
+            warningElement.style.opacity = '0';
+        }, 1500);
     }
+
 
     /**
      * converts js object to json

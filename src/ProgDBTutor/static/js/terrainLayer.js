@@ -1,5 +1,6 @@
 import { BaseMap } from "./baseMap.js";
 import { utils } from "./utils.js";
+//import {buildingMap} from "./canvas.js";
 
 
 export function getAssetDir(assetName) {
@@ -251,6 +252,10 @@ export class TerrainMap extends BaseMap {
                     if (assetDir !== "Water" && !this.isEdgeTile(currTile)) {
                         filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
                     }
+                    //debugger;
+                    //if (buildingMap.isOnGrassRectangle(i_map, j_map)) {
+                    //    filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
+                    //}
                 }
 
                 const img = this.terrainAssets[filePath];
