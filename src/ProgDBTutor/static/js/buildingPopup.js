@@ -14,20 +14,31 @@ export function togglePopup() {
 export let isPopupOpen = false;
 let prevBuildingName = "";
 
+let buildingName;
+let building
+
 
 // CHECKS FOR UPGRADE BUTTON
 let currOpenedBuildingInformation;
 //let currOpenedBuildingGeneralInformation;
 let isUpgradableBool = true;
+let currBuildingName;
+let currBuildingInfo;
 
-function isUpgradable(buildingInformation, buildingGeneralInformation, buildingName) {
+async function isUpgradable(buildingInformation, buildingGeneralInformation, buildingName) {
+    console.log(buildingName);
+    currBuildingName = buildingName;
+    currBuildingInfo = buildingInformation;
     // todo : check is max level, has resources, can be upgraded (level -1)
-    if (upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName)){
+    let test = await upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName);
+    console.log(test);
+    if ( test === true){
+        console.log("true up if");
         isUpgradableBool = true;
-        console.log("upgarde true");
+        console.log("isupgrade true");
         return true; // ook nog true returnen
     }
-    console.log("upgarde true");
+    console.log("upgrade true");
     isUpgradableBool = false;
     return false; // ook nog true returnen
 }
@@ -167,13 +178,20 @@ const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
 function pressUpgradeButton() {
     upgradeButton.style.display = 'none';
     upgradeButtonPressed.style.display = 'block';
+    console.log("press upgrade");
+    console.log(1);
+    console.log("silo");
+    console.log(2);
+    upgradeBuilding();
+
 }
-function releaseUpgradeButton() {
+async function releaseUpgradeButton() {
     if (isUpgradableBool) {
         upgradeButton.style.display = 'block';
         upgradeButtonPressed.style.display = 'none';
         // level += 1
         buildingMap.drawTiles();
+        await buildingMap.updateBuildingMapDB();
     }
 }
 
@@ -219,21 +237,29 @@ async function upgrade_checks(buildingInformation, buildingGeneralInformation, b
                 current_level = buildingInformation[key].level;
             }
             if ("townhall" === buildingInformation[key].self_key) {
-                building_type = buildingInformation[key].general_information;
+                console.log("th lvl " + buildingInformation[key].level);
                 townhall_level = buildingInformation[key].level;
 
             }
         }
     }
-
-    if (current_level>townhall_level){
+    console.log("curr lvl " + current_level);
+    console.log(building_type);
+    if (current_level>townhall_level && building_type !== "Townhall"){
+        console.log("th false");
         return false;
     }
+    if (current_level===10){
+        console.log("lvl false");
+        return false;
+    }
+    console.log("up true");
+    return true;
 
-    let current_resources = await fetchResources("Money");
-    let upgrade_cost;
+    /*let current_resources = await fetchResources("Money");
+    let upgrade_cost;*/
 
-    if (building_type && current_level !== undefined) {
+    /*if (building_type && current_level !== undefined) {
         // Second loop to check if the current level is the max level for this building type
         if (buildingGeneralInformation.hasOwnProperty(building_type)) {
             upgrade_cost = buildingGeneralInformation[building_type].upgrade_costs[current_level-1];
@@ -245,12 +271,26 @@ async function upgrade_checks(buildingInformation, buildingGeneralInformation, b
             } else {
                 return false;
             }
-        }
-    }
+        }*/
 
     // Return false if building type or current level is not found
-    return false;
 }
+
+/**
+     * Upgrades a given building.
+     * @returns {boolean} returns true if the upgrade was succesfull
+     */
+
+function upgradeBuilding(){
+    console.log(currBuildingName);
+    for (const key in currBuildingInfo) {
+        console.log(buildingName);
+        if (currBuildingName === currBuildingInfo[key].self_key) {
+            currBuildingInfo[key].level = currBuildingInfo[key].level+1;
+            console.log(currBuildingInfo[key].level);
+            }
+        }
+    }
 
 // ——————————————————
 // SET POPUP POSITION (min gap of 70px for the top)

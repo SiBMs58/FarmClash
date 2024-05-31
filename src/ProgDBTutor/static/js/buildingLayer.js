@@ -173,6 +173,7 @@ export class BuildingMap extends BaseMap {
             } else {
             // No buildings found
                 await this.updateBuildingMapDB();
+                console.log(mapData);
                 console.log("No buildings found.");
 
             }
