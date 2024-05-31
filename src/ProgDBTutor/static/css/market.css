@@ -106,5 +106,17 @@ img.crate-image {
     image-rendering: pixelated;
 }
 
+.crops {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+}
+
+.crops img {
+    image-rendering: pixelated;
+    height: 50px;
+}
 
 

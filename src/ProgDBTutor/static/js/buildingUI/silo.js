@@ -177,7 +177,6 @@ async function fetchSilo() {
 async function sendCropChange(quantity){
     let data = {};
     data[selectedCrop] = -quantity;
-    data['Money']= quantity;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-resources";
     try {

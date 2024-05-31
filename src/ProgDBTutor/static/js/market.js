@@ -28,6 +28,18 @@ function fetchCropPricesFromAPI() {
      });
      */
 }
+function displayCrops(){
+    let resourceHTML = '<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">';
+    for (let i = 0; i < market.crops.length; i++) {
+        resourceHTML += getAmountDisplay(market.quantities[i])
+        resourceHTML += getCropDisplay(market.crops[i]);
+        if (i < market.crops.length - 1) {
+            resourceHTML += '<img src="../../static/img/UI/display.extender.png" alt=" " draggable="false">'.repeat(5);
+        }
+    }
+    resourceHTML += '<img src="../../static/img/UI/display.right.short.png" alt="" draggable="false">'
+    document.getElementById('crops').innerHTML = resourceHTML;
+}
 function fetchCropQuantityFromAPI() {
      fetch('/api/resources')
      .then(response => response.json())
@@ -36,10 +48,12 @@ function fetchCropQuantityFromAPI() {
              if (!market.crops.includes(resource.resource_type)) return; // Skip non-crops
              market.quantities[market.crops.indexOf(resource.resource_type)] = resource.amount;
          });
+         displayCrops();
      })
      .catch(error => {
          console.error('Error fetching resources:', error);
      });
+
 }
 
 
@@ -181,4 +195,31 @@ function getAmountDisplay(amount){
 function displayUnpressedButton(index){
     document.getElementById(`plusImage${index + 1}`).src = "../../static/img/UI/plus_btn.png";
     document.getElementById(`minusImage${index + 1}`).src = "../../static/img/UI/minus_btn.png";
+}
+
+function getCropDisplay(resourceType) {
+    switch (resourceType) {
+        case 'Corn':
+            return '<img src="../../static/img/UI/display.corn.png" alt="🌽" draggable="false">';
+        case 'Carrot':
+            return '<img src="../../static/img/UI/display.carrot.png" alt="🥕" draggable="false">';
+        case 'Cauliflower':
+            return '<img src="../../static/img/UI/display.cauliflower.png" alt="⚪🥦" draggable="false">';
+        case 'Tomato':
+            return '<img src="../../static/img/UI/display.tomato.png" alt="🍅" draggable="false">';
+        case 'Eggplant':
+            return '<img src="../../static/img/UI/display.eggplant.png" alt="🍆" draggable="false">';
+        case 'Lettuce':
+            return '<img src="../../static/img/UI/display.lettuce.png" alt="🥬" draggable="false">';
+        case 'Wheat':
+            return '<img src="../../static/img/UI/display.wheat.png" alt="🌾" draggable="false">';
+        case 'Turnip':
+            return '<img src="../../static/img/UI/display.turnip.png" alt="🟣🌱" draggable="false">';
+        case 'Parsnip':
+            return '<img src="../../static/img/UI/display.parsnip.png" alt="⚪🌱" draggable="false">';
+        case 'Zucchini':
+            return '<img src="../../static/img/UI/display.zucchini.png" alt="🥒" draggable="false">';
+        default:
+            return '';
+    }
 }

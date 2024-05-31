@@ -41,7 +41,8 @@ header:active {
 .setting-btn:hover,
 .market-btn:hover,
 .attack-btn:hover,
-img:hover {
+img:hover,
+.animal-btn:hover {
     cursor: url('../img/UI/pointer_hover.png'), auto;
 }
 .leaderboard-btn:focus ,
@@ -50,7 +51,8 @@ img:hover {
 .setting-btn:focus ,
 .market-btn:focus ,
 .attack-btn:focus ,
-.attack-btn:focus {
+.attack-btn:focus,
+.animal-btn:focus{
     outline: none;
 }
 .leaderboard-btn {
@@ -89,6 +91,14 @@ img:hover {
     position: absolute;
     bottom: 10px;
     left: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+}
+.animal-btn {
+    position: absolute;
+    bottom: 10px;
+    left: 65px;
     background: none;
     border: none;
     padding: 0;
@@ -157,6 +167,25 @@ footer {
 
 
 
+.animal-overlay{
+    position: absolute;
+    bottom: 10px;
+    left: 120px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.animal-popup {
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: transparent;
+    border-radius: 10px;
+}
+.animal-popup img {
+    height: 60px;
+    vertical-align: middle;
+    image-rendering: pixelated;
+}
 
 
 

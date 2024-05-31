@@ -42,7 +42,6 @@ def get_stats_value(building_type, stats_type, level):
     return 0
 
 
-
 @api_blueprint.route('/users')
 @login_required
 def get_users():
@@ -64,15 +63,18 @@ def get_user_stats():
     Handles GET requests for the stats of the current user.
     :return: The stats of the current user, in json format
     """
-    level = 0
     atk = 0
     defn = 0
     coins = current_app.config.get('resource_data_access').get_resource_by_type(current_user.username, 'Money').amount
     buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(current_user.username)
     animals = current_app.config.get('animal_data_access').get_animals(current_user.username)
+    level = current_app.config.get('building_data_access').get_buildings_by_username_and_type(current_user.username,"Townhall")[0].level
     for building in buildings:
-        if building.building_type == "Townhall":
-            level = building.level
+        ## TODO add this if unlock level is implemented
+        """
+        if building.unlock_level > level:
+            continue
+        """
         atk += get_stats_value(building.building_type, 'Attack',
                                building.level) + building.augment_level * get_augmentation_value(
             building.building_type,
@@ -484,7 +486,8 @@ def start_exploration():
     data = request.get_json()
 
     if exploration_data_access.start_exploration(
-            Exploration(current_user.username, data['chickens'], data['goats'], data['pigs'], data['cows'], data['exploration_level'], data['augment_level'], data['remaining_time'])):
+            Exploration(current_user.username, data['chickens'], data['goats'], data['pigs'], data['cows'],
+                        data['exploration_level'], data['augment_level'], data['remaining_time'])):
         return jsonify({'status': 'success', 'message': 'Exploration started successfully.'})
     else:
         return jsonify({'status': 'error', 'message': 'Failed to start exploration.'}), 500
@@ -504,6 +507,27 @@ def stop_exploration():
     else:
         return jsonify({'status': 'error', 'message': 'Failed to stop exploration.'}), 500
 
+
+@api_blueprint.route('/update-augment-level/<string:building_id>', methods=['POST'])
+@login_required
+def augment_building_by_id(building_id):
+    """
+    Handles POST requests for updating a buildings augment level
+    """
+    building_data_access = current_app.config.get('building_data_access')
+    resource_data_access = current_app.config.get('resource_data_access')
+    data = request.get_json()
+
+    Money = resource_data_access.get_resource_by_type(current_user.username, 'Money').amount
+    if Money < data["cost"]:
+        return jsonify({'status': 'unsuccessful', 'message': 'Not enough money to augment building.'}), 200
+
+    if building_data_access.update_augment_level(building_id, data["augment_level"], current_user.username):
+        resource_data_access.update_by_adding_resource(Resource(current_user.username, 'Money', -data["cost"]),
+                                                       float('inf'))
+        return jsonify({'status': 'success', 'message': 'building successfully augmented.'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Failed to augment successfully.'}), 500
 
 
 def get_resource_category_limit(resource_type):

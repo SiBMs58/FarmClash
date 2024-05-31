@@ -16,9 +16,9 @@
       "L10": [["Money", 30000], ["Eggplant", 450], ["", 250],["",250]]
     },
     "ui": "townhall",
-    "other_stats": [["Defence",[0, 100, 200, 350, 550, 800, 1100, 1450, 1850, 2300, 2800]],
+    "other_stats": [["Defense",[0, 100, 200, 350, 550, 800, 1100, 1450, 1850, 2300, 2800]],
                     ["Attack", [0, 300, 400, 550, 750, 1000, 1300, 1650, 2050, 2500, 3000]]],
-    "augment": [["Defence",10],["Attack",20]]
+    "augment": [["Defense",10],["Attack",20]]
   },
 
 
@@ -36,10 +36,10 @@
       "L10": [["Money", 25000], ["Eggplant", 200], ["Truffle", 200],["Winter Truffle",50]]
     },
     "ui": "barn",
-    "other_stats": [["Defence",[0, 50, 100, 175, 275, 400, 550, 725, 925, 1150, 1400]],
+    "other_stats": [["Defense",[0, 50, 100, 175, 275, 400, 550, 725, 925, 1150, 1400]],
                     ["Attack", [0, 75, 150, 250, 375, 525, 700, 900, 1125, 1375, 1650]],
                     ["Limit",  [0, 800, 1600, 8000, 16000, 80000, 160000, 800000, 1600000, 8000000, "inf"]]],
-    "augment": [["Limit",150],["Defence",5],["Attack",10]]
+    "augment": [["Limit",150],["Defense",5],["Attack",10]]
   },
 
 
@@ -57,10 +57,10 @@
       "L10": [["Money", 25000], ["Eggplant", 300], ["Milk", 200],["Dolphin Wool",50]]
     },
     "ui": "silo",
-    "other_stats": [["Defence",[0, 75, 150, 250, 375, 525, 700, 900, 1125, 1375, 1650]],
+    "other_stats": [["Defense",[0, 75, 150, 250, 375, 525, 700, 900, 1125, 1375, 1650]],
                     ["Attack", [0, 50, 100, 175, 275, 400, 550, 725, 925, 1150, 1400]],
                     ["Limit",  [0, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, "inf"]]],
-    "augment": [["Limit",100],["Defence",10],["Attack",5]]
+    "augment": [["Limit",100],["Defense",10],["Attack",5]]
   },
 
 
@@ -80,9 +80,9 @@
     },
     "ui": "exploration",
     "other_stats": [["Risk",["100", "Risk/1", "Risk/2", "Risk/3","Risk/4", "Risk/5", "Risk/6", "Risk/7", "Risk/8", "Risk/9", "Risk/10"]],
-                    ["Defence",[0, 75, 150, 250, 375, 525, 700, 900, 1125, 1375, 1650]],
+                    ["Defense",[0, 75, 150, 250, 375, 525, 700, 900, 1125, 1375, 1650]],
                     ["Attack", [0, 50, 100, 175, 275, 400, 550, 725, 925, 1150, 1400]]],
-    "augment": [["Risk","-1+Log6(building.augment_level+1)"],["Defence",7],["Attack",5]]
+    "augment": [["Risk","-1+Log6(building.augment_level+1)"],["Defense",7],["Attack",5]]
   },
 
 
@@ -99,11 +99,11 @@
         "L9": [["Money", 10000], ["Parsnip", 150], ["Sapphire Egg", 35],["Log",25]],
         "L10": [["Money", 15000], ["Eggplant", 150], ["Sapphire Egg", 55],["Log",50]]
     },
-    "other_stats": [["Defence",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
+    "other_stats": [["Defense",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
                     ["Attack", [0, 150, 300, 450, 600, 750, 900, 1050, 1200, 1350, 1500]],
                     ["Eggs/hour", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
                     ["Chicken Limit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]],
-    "augment": [["Defence",20],["Attack",5]]
+    "augment": [["Defense",20],["Attack",5]]
   },
 
 
@@ -120,11 +120,11 @@
         "L9": [["Money", 10000], ["Parsnip", 150], ["Blueberry Milk", 35],["Ingot",25]],
         "L10": [["Money", 15000], ["Eggplant", 150], ["Blueberry Milk", 55],["Ingot",50]]
     },
-    "other_stats": [["Defence",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
+    "other_stats": [["Defense",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
                     ["Attack", [0, 150, 300, 450, 600, 750, 900, 1050, 1200, 1350, 1500]],
                     ["Milk/hour", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
                     ["Cow Limit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]],
-    "augment":[["Defence",15],["Attack",10]]
+    "augment":[["Defense",15],["Attack",10]]
   },
 
 
@@ -141,11 +141,11 @@
         "L9": [["Money", 10000], ["Parsnip", 150], ["Dolphin Wool", 35],["Log",25]],
         "L10": [["Money", 15000], ["Eggplant", 150], ["Dolphin Wool", 55],["Log",50]]
     },
-    "other_stats": [["Defence",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
+    "other_stats": [["Defense",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
                     ["Attack", [0, 150, 300, 450, 600, 750, 900, 1050, 1200, 1350, 1500]],
                     ["Wool/hour", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
                     ["Goat Limit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]],
-    "augment":[["Defence",10],["Attack",15]]
+    "augment":[["Defense",10],["Attack",15]]
   },
 
 
@@ -162,11 +162,11 @@
         "L9": [["Money", 10000], ["Parsnip", 150], ["Winter Truffle", 35],["Ingot",25]],
         "L10": [["Money", 15000], ["Eggplant", 150], ["Winter Truffle", 55],["Ingot",50]]
     },
-    "other_stats": [["Defence",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
+    "other_stats": [["Defense",[0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]],
                     ["Attack", [0, 150, 300, 450, 600, 750, 900, 1050, 1200, 1350, 1500]],
                     ["Truffles/hour", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
                     ["Pig Limit", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]],
-    "augment":[["Defence",5],["Attack",25]]
+    "augment":[["Defense",5],["Attack",25]]
   },
 
 
@@ -183,7 +183,7 @@
         "L9": [["Money", 80000], ["Parsnip", 100], ["Log", 45], ["Ingot",5]],
         "L10": [["Money", 160000], ["Eggplant", 100], ["Log", 60], ["Ingot", 25]]
     },
-    "other_stats": [["Defence",[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
+    "other_stats": [["Defense",[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
                     ["Attack", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
                     ["Crops",  [0, 4, 5, 6, 8, 10, 12, 14, 16, 18, 20]]]
   },
@@ -220,9 +220,9 @@
       "L9": [["Money",80000],["Parsnip",100],["Ingot",30],["Forest Truffle",50]],
       "L10":[["Money",160000],["Eggplant",100],["Ingot",50], ["Winter Truffle",50]]
     },
-    "other_stats": [["Defence",[0, 20, 40, 65, 95, 130, 170, 215, 265, 320, 380]],
+    "other_stats": [["Defense",[0, 20, 40, 65, 95, 130, 170, 215, 265, 320, 380]],
                     ["Attack", [0, 10, 20, 35, 55, 80, 110, 145, 185, 230, 280]]],
-    "augment":[["Defence",10],["Attack",5]]
+    "augment":[["Defense",10],["Attack",5]]
   },
   "Tree": {
     "explanation": "This is just a tree."

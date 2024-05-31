@@ -7,16 +7,19 @@ let cowbarns = 0;
 let chickencoops = 0;
 let goatbarns = 0;
 let LastUpdated = new Date();
+let LVL = 0;
 
 
 
 //_________________________ INITIALIZATION _________________________//
 initialize();
 function initialize(){
-    fetchBuildings().then(() => {
-        fetchLastUpdated().then(() => {
-            updateOfflineProduction();
-            scheduleNextHourExecution();
+    fetchUserStats().then(() => {
+        fetchBuildings().then(() => {
+            fetchLastUpdated().then(() => {
+                updateOfflineProduction();
+                scheduleNextHourExecution();
+            });
         });
     });
 }
@@ -169,10 +172,9 @@ async function fetchBuildingLevel(buildingType) {
         if (data.status === 'success') {
             for (const buildingID in data.building_information) {
                 const building = data.building_information[buildingID];
-                /*
-                TODO
-                if (!building.unlocked) {
-                    return;
+                /* TODO add this once the unlock level is implemented
+                if (!building.unlock_level < LVL ) {
+                    continue;
                 }
                  */
                 // Update the appropriate dictionary based on the building type
@@ -200,6 +202,17 @@ async function fetchBuildingLevel(buildingType) {
         }
     } catch (error) {
         console.error(`Error fetching ${buildingType} information:`, error);
+    }
+}
+async function fetchUserStats(){
+    try {
+        const response = await fetch('/api/get-user-stats')
+            .then(response => response.json())
+            .then(data => {
+                LVL = data.level;
+            });
+    } catch (error) {
+        console.error('Error fetching user stats:', error);
     }
 }
 async function fetchLastUpdated(){

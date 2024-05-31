@@ -130,7 +130,7 @@ export function actualOpenPopup(building, buildingID) {
         }
 
         // Display the upgrade cost
-        if (building.augment_level !== 10) {
+        if (building.level !== maxLevel) {
             const upgradeCost = buildingInfo.upgrade_costs[`L${building.level+1}`];
             let costDiv = document.getElementById('upgrade-cost');
             costDiv.innerHTML = 'Upgrade: ';
@@ -175,15 +175,20 @@ export function actualOpenPopup(building, buildingID) {
                 if(augments.hasOwnProperty(stat[name])){
                     augmentString = `${stat[name]}: ${baseStatValue}`;
                     augmentValue = augments[stat[name]];
+                    let nextAugmentValue = augmentValue;
                     if (augmentValue.includes('building.augment_level')) {
                         augmentValue = augmentValue.replace('building.augment_level', building.augment_level);
+                        nextAugmentValue = nextAugmentValue.replace('building.augment_level', building.augment_level+1);
                     }
-                    augmentValue = eval(augmentValue);
+                    augmentValue = parseFloat(eval(augmentValue));
+                    nextAugmentValue = parseFloat(eval(nextAugmentValue));
                     if (augmentValue % 1 !== 0) {
-                        augmentValue.toFixed(2);
+                        augmentValue = augmentValue.toFixed(2);
+                        nextAugmentValue = nextAugmentValue.toFixed(2);
                     }
-                    statString+= ` ${augmentValue}`;
-                    augmentString += ` ${augmentValue} (${augmentValue > 0 ? '+' : ''}${augmentValue})`;
+                    statString+= `-${augmentValue}`;
+                    augmentString += `-${augmentValue} (${nextAugmentValue})`;
+
                 }
                 if (building.level !== maxLevel){
                     statString+= ` (${stat[values][building.level+1]})`;
@@ -245,13 +250,36 @@ closeButtonPressed.addEventListener('mouseleave', softReleaseCloseButton);
 
 let mouseIsDown = false;
 
+async function sendAugmentLevel(level) {
+    let newLevel = level;
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = BASE_URL + "/api/update-augment-level/" + buildingID;
+    try {
+        const response = await fetch(fetchLink, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                augment_level: level,
+                cost: augmentCost(level-1)
+            }),
+        });
+        return response.json();
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
 function pressAugment() {
     document.getElementById('augment-image').src = "../../static/img/UI/augment_pbtn.png";
     mouseIsDown = true;
     buildingData.augment_level++;
-    //TODO redisplay stats
-    // send augment request
-    //actualOpenPopup(buildingData, buildingID);
+    sendAugmentLevel(buildingData.augment_level).then(() => {
+        if(data['status'] !== 'success'){
+            buildingData.augment_level--;
+        }
+    });
 }
 
 function releaseAugment() {
@@ -282,6 +310,7 @@ document.getElementById('augment-btn').addEventListener('mouseover', hoverAugmen
 document.getElementById('augment-btn').addEventListener('mouseup' ,()=>{
     document.getElementById('augment-image').src = "../../static/img/UI/augment_btn.png";
     mouseIsDown=false;
+    closePopup();
 });
 document.getElementById('augment-btn').addEventListener('mouseleave', leaveAugment);
 
@@ -372,3 +401,4 @@ function getResourceImg(resource) {
 function spaceTo_(input) {
     return input.replace(/ /g, '_');
 }
+

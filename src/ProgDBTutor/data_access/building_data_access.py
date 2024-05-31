@@ -5,6 +5,23 @@ class BuildingDataAccess:
     def __init__(self, db_connection):
         self.db_connection = db_connection
 
+    def update_augment_level(self, building_id, augment_level, username_owner):
+        """
+        Updates the augment level of the building with the given id
+        :param building_id: the id of the building aka the primary key
+        :param augment_level: the new augment level
+        :return: True if the augment level was updated successfully, False otherwise
+        """
+        cursor = self.db_connection.get_cursor()
+        try:
+            cursor.execute("UPDATE buildings SET augment_level = %s WHERE building_id = %s AND username_owner = %s",
+                           (augment_level, building_id, username_owner))
+            self.db_connection.conn.commit()
+            return True
+        except Exception as e:
+            print("Error:", e)
+            return False
+
     def get_building(self, building_id):
         """
         Fetches the building with the given id out of the database
