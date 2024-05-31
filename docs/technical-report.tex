@@ -50,7 +50,6 @@ FarmClash allows players to build and manage their farms, defend against attacks
     \item \textbf{Goatbarn}: Produces wool and allows breeding of goats. Higher levels yield more products and increases the limit of goats.
     \item \textbf{Pigpen}: Produces truffles and allows breeding of pigs. Higher levels yield more products and increases the limit of pigs.
     \item \textbf{Field}: Used for planting crops. Higher levels yield more harvest. (Passive upgrades increase farm time)
-    \item \textbf{Harvesthopper}: Harvests and replants crops in adjacent fields automatically. Higher level increases the harvest limit.
 \end{enumerate}
 
 \subsubsection{Defense Buildings}
@@ -274,7 +273,24 @@ In the silo, crops will be stored and in the barn, all other resources besides m
 In pigpens, cowbarns, chickencoops, and goatbarns, pigs, cows, chickens and goats will be stored.
 
 We can see what is in the silo and barn through the ui which can be viewed through their popups.
+\subsection{Upgrading vs augmenting}
+A building's level will increase by one when it is upgraded.
+Upgrading can be done with a combination of coins and resources.
+The building level can only be upgraded to level 10 because its expenses are pre-defined.
+When a building is upgraded, its stats are significantly increased and it also changes how the building appears on the map.
 
+
+Similarly, augmenting a will increase the augment level by 1.
+What's different is augmentation requires only money.
+The building's augment cost logarithmically increases with augment level,thus the augment level can reach infinite values up to 4 bytes (limit of integer).
+A building's look remains unchanged when it is augmented, and it also marginally increases a few (not all) of its stats.
+
+The reason why we have 2 ways of increasing a building's level is to balance the game.
+When two players own buildings at the same level, there could be an issue (i.e. they have the same attack and defense power).
+However, if a player upgrades his building, he will have an advantage over other players due to his increased attack and defense power.
+
+Additionally, since augmenting simply costs money, it may be done more frequently than upgrading.
+Upgrading a building requires the player to work hard for resources, but augmenting can already be done when enough money is available.
 
 \section{Technologies Used}
 \begin{itemize}
