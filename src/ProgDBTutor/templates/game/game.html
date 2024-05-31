@@ -31,10 +31,10 @@
             z-index: 0;
         }
 
-        #uiCanvas {
+        /*#uiCanvas {
             z-index: 4;
-            <!--border: solid red;-->
-        }
+            border: solid red;
+        }*/
 
         #cropCanvas {
             z-index: 3;
@@ -47,7 +47,7 @@
 
         #terrainCanvas {
             z-index: 1;
-            <!--border: solid black;-->
+            <!--border: solid red;-->
         }
 
         /* Loading screen styles */
@@ -106,7 +106,7 @@
     {% include 'game/pop-up.html' %}
 
     <div id="canvasContainer">
-        <canvas id="uiCanvas"></canvas>
+        <!--<canvas id="uiCanvas"></canvas>-->
         <canvas id="cropCanvas"></canvas>
         <canvas id="buildingCanvas"></canvas>
         <canvas id="terrainCanvas"></canvas>
@@ -118,6 +118,15 @@
         function hideLoadingScreen() {
             document.getElementById('loadingScreen').classList.add('hidden');
         }
+
+        document.addEventListener('click', function(event) {
+            let clickedElement = event.target;
+            if (clickedElement.id) {
+                console.log('Clicked element ID:', clickedElement.id);
+            } else {
+                console.log('Clicked element has no ID');
+            }
+        });
     </script>
 
 
@@ -145,6 +154,7 @@
             border-top-right-radius: 10px;
             z-index: 1001;
             font-size: 12px;
+            pointer-events: none;
         }
     </style>
 
@@ -198,7 +208,6 @@
             });
         })();
     </script>
-
 
 </body>
 </html>

@@ -52,7 +52,7 @@ export class BuildingMap extends BaseMap {
      * @param uiLayerInstance This instance is needed to draw the correct building UI.
      * @param username The username of the player. Used to fetch the right map data.
      */
-    constructor(mapData = defaultBuildingMapData, _tileSize, _ctx, terrainMapInstance, cropMapInstance, uiLayerInstance, username) {
+    constructor(mapData = defaultBuildingMapData, _tileSize, _ctx, terrainMapInstance, cropMapInstance, username) {
 
         super(mapData, _tileSize, username);
 
@@ -66,7 +66,6 @@ export class BuildingMap extends BaseMap {
 
         this.terrainMapInstance = terrainMapInstance;
         this.cropMapInstance = cropMapInstance;
-        this.uiLayerInstance = uiLayerInstance;
 
         // Variables to remember the click state
         this.movingBuilding = false;
@@ -307,7 +306,7 @@ export class BuildingMap extends BaseMap {
             const screen_currTileLocY = screen_buildLocationY + tile[0][0];
             const screen_currTileLocX = screen_buildLocationX + tile[0][1];
 
-            if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
+            if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth || screen_currTileLocY < 0 || screen_currTileLocX < 0) {
                 continue;
             }
 
@@ -366,9 +365,9 @@ export class BuildingMap extends BaseMap {
         return false;
     }
 
-    /*isOnGrassRectangle(yCoord, xCoord) {
-        return yCoord > 3 && yCoord < this.map_width - 4  &&  xCoord > 3 && xCoord < this.map_height - 4;
-    }*/
+    isOnGrassRectangle(yCoord, xCoord) {
+        return yCoord > 3 && yCoord < this.map_height - 4  &&  xCoord > 3 && xCoord < this.map_width - 4;
+    }
 
     /**
      *
@@ -419,7 +418,10 @@ export class BuildingMap extends BaseMap {
         for (const currTile of newLocations) {
             const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
             const terrainType = utils.getAssetDir(correspondingTerrainTile);
-            if (terrainType === "Water" || this.isEdgeTile(correspondingTerrainTile)) {
+            //if (terrainType === "Water" || this.isEdgeTile(correspondingTerrainTile)) {
+            //    return false;
+            //}
+            if (!this.isOnGrassRectangle(currTile[0], currTile[1])) {
                 return false;
             }
         }
@@ -557,6 +559,9 @@ export class BuildingMap extends BaseMap {
             // Check whether building is unlocked
             if (this.buildingInformation[buildingName].unlock_level > this.getTownHallLVL()) {
                 this.showUnlockWarning(this.buildingInformation[buildingName]);
+                return true;
+            }
+            if (this.buildingInformation[buildingName].general_information === "Bay") {
                 return true;
             }
 

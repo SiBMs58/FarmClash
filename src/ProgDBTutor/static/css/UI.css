@@ -177,6 +177,7 @@ footer {
     transform: translateX(-50%);
     white-space: nowrap;
     opacity: 0;
+    pointer-events: none;
 }
 
 

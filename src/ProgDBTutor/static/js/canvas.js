@@ -1,7 +1,7 @@
 import { TerrainMap } from './terrainLayer.js'
 import { BuildingMap } from "./buildingLayer.js";
 import { CropMap } from "./cropLayer.js";
-import { UICanvasLayer } from "./uiCanvasLayer.js";
+//import { UICanvasLayer } from "./uiCanvasLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
 import { UserInputHandler } from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
@@ -42,22 +42,23 @@ if (window.friend) {
 console.log(terrainMap);
 
 // Create UI canvas
-const uiCanvas = document.getElementById('uiCanvas');
-const uiCtx = uiCanvas.getContext('2d');
-const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
+//const uiCanvas = document.getElementById('uiCanvas');
+//const uiCtx = uiCanvas.getContext('2d');
+//const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
 
 // Create CropMap
 const cropCanvas = document.getElementById('cropCanvas');
 const cropCtx = cropCanvas.getContext('2d');
-export let cropMap;
-if (window.friend) {
-    // If friendData is available, use it in the constructor
-    console.log("Friend data is available", window.friend);
-    cropMap = new CropMap(undefined, tileSize, cropCtx, terrainMap, uiCanvasLayer, window.friend);
-} else {
-    // If friendData is not available, omit it from the constructor
-    cropMap = new CropMap(undefined, tileSize, cropCtx, terrainMap, uiCanvasLayer);
-}
+export const cropMap = new CropMap(undefined, tileSize, cropCtx);
+//export let cropMap;
+//if (window.friend) {
+//    // If friendData is available, use it in the constructor
+//    console.log("Friend data is available", window.friend);
+//    cropMap = new CropMap(undefined, tileSize, cropCtx, terrainMap, uiCanvasLayer, window.friend);
+//} else {
+//    // If friendData is not available, omit it from the constructor
+//    cropMap = new CropMap(undefined, tileSize, cropCtx, terrainMap, uiCanvasLayer);
+//}
 
 // Create building map
 const buildingCanvas = document.getElementById('buildingCanvas');
@@ -66,10 +67,10 @@ export let buildingMap;
 if (window.friend) {
     // If friendData is available, use it in the constructor
     console.log("Friend data is available", window.friend);
-    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, cropMap, uiCanvasLayer, window.friend);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, cropMap, window.friend);
 } else {
     // If friendData is not available, omit it from the constructor
-    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, cropMap, uiCanvasLayer);
+    buildingMap = new BuildingMap(undefined, tileSize, buildingCtx, terrainMap, cropMap);
 }
 
 // Add buildingMap instance to classes that need it
@@ -96,9 +97,9 @@ function resizeCanvas() {
     buildingCanvas.height = window.innerHeight;
     buildingCtx.imageSmoothingEnabled = false;
 
-    uiCanvas.width = window.innerWidth;
-    uiCanvas.height = window.innerHeight;
-    uiCtx.imageSmoothingEnabled = false;
+    //uiCanvas.width = window.innerWidth;
+    //uiCanvas.height = window.innerHeight;
+    //uiCtx.imageSmoothingEnabled = false;
 
     cropCanvas.width = window.innerWidth;
     cropCanvas.height = window.innerHeight;
