@@ -221,6 +221,8 @@ export class CropMap extends BaseMap {
 
     harvestField(fieldName, fieldLevel) {
         const field = this.cropInformation[fieldName];
+        let cropName = field.crop;
+        let amount = fieldLevel*4;
         field.phase = 1;
         field.crop = null;
         field.assetPhase = null;
@@ -228,8 +230,10 @@ export class CropMap extends BaseMap {
         this.updateCropMapDB();
         this.drawTiles();
 
-        // todo resources updaten
+        updateResources(cropName, amount);
     }
+
+
 
     plantCrop(cropType, fieldName) {
         const field = this.cropInformation[fieldName];
@@ -395,5 +399,33 @@ export class CropMap extends BaseMap {
         } catch (error) {
             console.error('Failed to update map in database:', error);
         }
+    }
+}
+
+
+async function updateResources(resource, count) {
+    const resources = {
+        [resource]: count // Use the resource as the key and the count as the value
+    };
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = `${BASE_URL}/api/add-resources`;
+
+    try {
+        const response = await fetch(fetchLink, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(resources) // Send the serialized resource data as the request body
+        });
+
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('Resources DB update successful:', jsonResponse);
+        } else {
+            console.error('Add-resources DB update failed with status:', response.status);
+        }
+    } catch (error) {
+        console.error('Failed to update resources:', error);
     }
 }
