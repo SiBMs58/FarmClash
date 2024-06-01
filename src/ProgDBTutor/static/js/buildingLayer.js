@@ -1,7 +1,7 @@
-import { BaseMap } from "./baseMap.js";
-import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
-import { utils } from "./utils.js";
-import { defaultBuildingMapData } from "./defaultBuildingMapData.js";
+import {BaseMap} from "./baseMap.js";
+import {closePopup, isPopupOpen, openPopup} from "./buildingPopup.js";
+import {utils} from "./utils.js";
+import {defaultBuildingMapData} from "./defaultBuildingMapData.js";
 
 /**
  * Sets the string value of
@@ -57,10 +57,12 @@ export class BuildingMap extends BaseMap {
 
         this.buildingInformation = mapData.building_information;
         this.buildingGeneralInformation = mapData.building_general_information
-        this.tiles = this.generateBuildingTileMap();
+        //this.tiles = this.generateBuildingTileMap();
+        this.tiles = null;
         this.ctx = _ctx;
 
         this.buildingAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
+        this.relativeLocations = {} // Contains the relative locations of all the buildings
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
         this.terrainMapInstance = terrainMapInstance;
@@ -87,18 +89,19 @@ export class BuildingMap extends BaseMap {
      */
     async initialize() {
         await this.fetchBuildingAssetList();
+        await this.fetchRelativeLocations();
         //await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
         //console.log("fetchBuildingLayerList() success"); // Don't remove this
         //localStorage.setItem('gameData', 'true');
-        hideLoadingScreen();
         this.generateBuildingUnlockLevelJson();
+        hideLoadingScreen();
+
     }
 
     generateBuildingUnlockLevelJson() {
-        debugger;
         // Initialize the buildingUnlockLevels object with keys 1 to 10
         const buildingUnlockLevels = {};
         for (let i = 1; i <= 10; i++) {
@@ -110,7 +113,6 @@ export class BuildingMap extends BaseMap {
         for (let i = 1; i <= 10; i++) {
             temp_dict[i] = {};
         }
-        debugger;
         // Iterate over the building information
         for (const key in this.buildingInformation) {
             if (key === "townhall") {  // Skip the townhall
@@ -134,9 +136,6 @@ export class BuildingMap extends BaseMap {
                 buildingUnlockLevels[level].push([temp_dict[level][general_info], general_info]);
             }
         }
-
-        debugger;
-
     }
 
     /**
@@ -164,8 +163,10 @@ export class BuildingMap extends BaseMap {
             const locationY = currBuilding.building_location[0];
             const locationX = currBuilding.building_location[1];
 
-            const generalInfoKey = currBuilding.general_information
-            const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations
+            //const generalInfoKey = currBuilding.general_information
+            //const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations
+            const tile_rel_locations = this.getRelativeLocations(currBuilding);
+            debugger;
             for (const currTile of tile_rel_locations) {
                 let tileToDrawWithoutLevelReplaced = currTile[1];
                 const buildingLevel = currBuilding.level
@@ -176,7 +177,6 @@ export class BuildingMap extends BaseMap {
                 toReturn[currMapLocationY][currMapLocationX] = newTileMapElement;
             }
         }
-
         return toReturn;
     }
 
@@ -194,6 +194,18 @@ export class BuildingMap extends BaseMap {
         }
 
         console.log("fetchBuildingAssetList() success");
+    }
+
+    async fetchRelativeLocations() {
+        try {
+            const response = await fetch('/static/img/assets/relativeLocation.json');
+            this.relativeLocations = await response.json();
+        } catch (error) {
+            console.error('fetchRelativeLocations() failed:', error);
+            throw error;
+        }
+
+        console.log("fetchRelativeLocations() success");
     }
 
     /**
@@ -339,6 +351,24 @@ export class BuildingMap extends BaseMap {
     }
 
 
+    getRelativeLocations(building_obj, frame=null) {
+        const generalInfoKey = building_obj.general_information;
+        if (generalInfoKey === "Fence") {
+            debugger;
+        }
+        const level = building_obj.level;
+
+        let locationsKey = generalInfoKey + ".L" + level;
+
+        if (generalInfoKey === "Silo") {
+            locationsKey += ".0%";
+        } else if (generalInfoKey === "Bay") {
+            locationsKey += ".F1";
+        }
+
+        return this.relativeLocations[locationsKey];
+    }
+
     /**
      * Draws a building.
      * @param building a building object of 'this.buildingInformation'
@@ -349,8 +379,11 @@ export class BuildingMap extends BaseMap {
         const screen_buildLocationY = building.building_location[0] - this.viewY;
         const screen_buildLocationX = building.building_location[1] - this.viewX;
 
-        const generalInfoKey = building.general_information;
-        const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+        //const generalInfoKey = building.general_information;
+        //const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+
+        debugger;
+        const tile_rel_locations = this.getRelativeLocations(building);
 
         for (const tile of tile_rel_locations) {
             const screen_currTileLocY = screen_buildLocationY + tile[0][0];

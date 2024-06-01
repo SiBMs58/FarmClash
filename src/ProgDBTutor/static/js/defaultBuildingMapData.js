@@ -1,3 +1,5 @@
+// todo fixen: general information naam van chickencoop en field zijn veranderd
+
 export const defaultBuildingMapData = {
     map_width: 58,
     map_height: 43,
@@ -13,7 +15,7 @@ export const defaultBuildingMapData = {
 
         chicken_coop: {
             self_key: "chicken_coop",
-            general_information: "Chicken_house",
+            general_information: "Chickencoop",
             level: 3,
             unlock_level: 3,
             building_location: [5, 11]
@@ -21,21 +23,21 @@ export const defaultBuildingMapData = {
 
         field1: {
             self_key: "field1",
-            general_information: "Field",
+            general_information: "Field3",
             level: 1,
             unlock_level: 3,
             building_location: [10, 8]
         },
         field2: {
             self_key: "field2",
-            general_information: "Field",
+            general_information: "Field3",
             level: 1,
             unlock_level: 3,
             building_location: [10, 12]
         },
         field3: {
             self_key: "field3",
-            general_information: "Field",
+            general_information: "Field3",
             level: 1,
             unlock_level: 3,
             building_location: [10, 16]
@@ -156,7 +158,7 @@ export const defaultBuildingMapData = {
 
 
     building_general_information: {
-        Chicken_house: {
+        Chickencoop: { // This needs to be the name of the asset folder
             display_name: "Chicken House", // Name to be displayed in the popup
             explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
                 "This vital building is where your feathered friends lay eggs, ready for " +
@@ -305,7 +307,7 @@ export const defaultBuildingMapData = {
                 [[3,3], "Field2.BR"],
             ]
         },*/
-        Field: {
+        Field3: {
             display_name: "Field",
             explanation: "This is a field.",
             upgrade_costs: [500, 1000, 2000, 3500],
