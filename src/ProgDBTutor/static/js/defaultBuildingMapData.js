@@ -15,14 +15,14 @@ export const defaultBuildingMapData = {
             general_information: "Silo",
             level: 1,
             unlock_level: 0,
-            building_location: [10, 3]
+            building_location: [16, 9]
         },
         Bay: {
             self_key: "Bay",
             general_information: "Bay",
             level: 10,
             unlock_level: 0,
-            building_location: [15, 3]
+            building_location: [15, 0]
         },
         Pigpen1: {
             self_key: "Pigpen1",
