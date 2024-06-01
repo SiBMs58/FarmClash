@@ -1,5 +1,6 @@
 import { buildingMap } from "./canvas.js";
 import { cropMap } from "./canvas.js";
+import { FIELD_GENERAL_INFO_NAME } from "./buildingLayer.js";
 
 /**
  * Toggles the pop-up. When pop-up is showing this function will hide it and vice-versa.
@@ -114,7 +115,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
     }
 
     // Check if field and in phase 1
-    if (buildingInformation[buildingName].general_information === "Field") {
+    if (buildingInformation[buildingName].general_information === FIELD_GENERAL_INFO_NAME) {
         const fieldName = buildingInformation[buildingName].self_key;
         if (cropMap.isFieldEmpty(fieldName)) {
             cropPopup.classList.add('show');

@@ -7,6 +7,7 @@ import {defaultBuildingMapData} from "./defaultBuildingMapData.js";
  * Sets the string value of
  */
 const EMPTY_TILE = "None";
+export const FIELD_GENERAL_INFO_NAME = "Field3";
 
 function getAssetDir(assetName) {
     return assetName.split('.')[0];
@@ -351,6 +352,13 @@ export class BuildingMap extends BaseMap {
     }
 
 
+    getSiloPercentage(building_obj) {
+        const key = building_obj.self_key;
+        // todo Percent implementeren als ge wilt
+        return "0%";
+    }
+
+
     getRelativeLocations(building_obj, frame=null) {
         const generalInfoKey = building_obj.general_information;
         if (generalInfoKey === "Fence") {
@@ -361,7 +369,7 @@ export class BuildingMap extends BaseMap {
         let locationsKey = generalInfoKey + ".L" + level;
 
         if (generalInfoKey === "Silo") {
-            locationsKey += ".0%";
+            locationsKey += "." + this.getSiloPercentage(building_obj);
         } else if (generalInfoKey === "Bay") {
             locationsKey += ".F1";
         }
@@ -649,7 +657,7 @@ export class BuildingMap extends BaseMap {
             }
 
             // Check whether building is a harvestable field
-            if (this.buildingInformation[buildingName].general_information === "Field") {
+            if (this.buildingInformation[buildingName].general_information === FIELD_GENERAL_INFO_NAME) {
                 const fieldName = this.buildingClickedName
                 if (this.cropMapInstance.isHarvestable(fieldName)) {
                     const fieldLevel = this.buildingInformation[buildingName].level

@@ -21,6 +21,14 @@ export const defaultBuildingMapData = {
             building_location: [5, 11]
         },
 
+        barn: {
+            self_key: "barn",
+            general_information: "Barn",
+            level: 3,
+            unlock_level: 3,
+            building_location: [15, 13]
+        },
+
         field1: {
             self_key: "field1",
             general_information: "Field3",
@@ -307,7 +315,7 @@ export const defaultBuildingMapData = {
                 [[3,3], "Field2.BR"],
             ]
         },*/
-        Field3: {
+        Field3: { // Don't change this name!
             display_name: "Field",
             explanation: "This is a field.",
             upgrade_costs: [500, 1000, 2000, 3500],
