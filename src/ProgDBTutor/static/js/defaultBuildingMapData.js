@@ -85,28 +85,28 @@ export const defaultBuildingMapData = {
             self_key: "fence1", // Must be the exact key of this sub-object
             general_information: "Fence", // Link to the general information of this building type
             level: 4, // Building level (set "None" if not relevant)
-            unlock_level: 3, // Set this to the town hall level when you want this building to be unlocked
+            unlock_level: 4, // Set this to the town hall level when you want this building to be unlocked
             building_location: [8, 8] // --> [y (height), x (width)], this needs to be the top-left corner of the building
         },
         fence2: {
             self_key: "fence2",
             general_information: "Fence",
             level: 4,
-            unlock_level: 3,
+            unlock_level: 4,
             building_location: [8, 9]
         },
         fence4: {
             self_key: "fence4",
             general_information: "Fence",
             level: 4,
-            unlock_level: 3,
+            unlock_level: 4,
             building_location: [8, 10]
         },
         fence5: {
             self_key: "fence5",
             general_information: "Fence",
             level: 4,
-            unlock_level: 3,
+            unlock_level: 4,
             building_location: [8, 11]
         },
         fence6: {
@@ -134,21 +134,21 @@ export const defaultBuildingMapData = {
             self_key: "fence9",
             general_information: "Fence",
             level: 8,
-            unlock_level: 3,
+            unlock_level: 5,
             building_location: [8, 15]
         },
         fence10: {
             self_key: "fence10",
             general_information: "Fence",
             level: 8,
-            unlock_level: 3,
+            unlock_level: 5,
             building_location: [8, 16]
         },
         fence11: {
             self_key: "fence11",
             general_information: "Fence",
             level: 8,
-            unlock_level: 3,
+            unlock_level: 5,
             building_location: [8, 17]
         },
 

@@ -49,7 +49,6 @@ export class BuildingMap extends BaseMap {
      * @param _ctx context needed for drawing on-screen.
      * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
      * @param cropMapInstance This is en instance that is needed in order to call the drawTiles function when a building moves
-     * @param uiLayerInstance This instance is needed to draw the correct building UI.
      * @param username The username of the player. Used to fetch the right map data.
      */
     constructor(mapData = defaultBuildingMapData, _tileSize, _ctx, terrainMapInstance, cropMapInstance, username) {
@@ -73,6 +72,14 @@ export class BuildingMap extends BaseMap {
 
         // To remember building following mouse movement
         this.prevMouseMoveBuildingLoc = null; // [y, x]
+
+        // @Faisel json with all levels and what buildings unlock at this level --> [Count, general_information]
+        // Example:
+        this.buildingUnlockLevels = {
+            1: [[2, "Field"], [1, "Goatbarn"]],
+        };
+
+
     }
 
     /**
@@ -87,6 +94,49 @@ export class BuildingMap extends BaseMap {
         //console.log("fetchBuildingLayerList() success"); // Don't remove this
         //localStorage.setItem('gameData', 'true');
         hideLoadingScreen();
+        this.generateBuildingUnlockLevelJson();
+    }
+
+    generateBuildingUnlockLevelJson() {
+        debugger;
+        // Initialize the buildingUnlockLevels object with keys 1 to 10
+        const buildingUnlockLevels = {};
+        for (let i = 1; i <= 10; i++) {
+            buildingUnlockLevels[i] = [];
+        }
+
+        // Temporary object to count general_information occurrences per unlock_level
+        const temp_dict = {};
+        for (let i = 1; i <= 10; i++) {
+            temp_dict[i] = {};
+        }
+        debugger;
+        // Iterate over the building information
+        for (const key in this.buildingInformation) {
+            if (key === "townhall") {  // Skip the townhall
+                continue;
+            }
+
+            const info = this.buildingInformation[key];
+            const unlock_level = info.unlock_level;
+            const general_info = info.general_information;
+
+            if (temp_dict[unlock_level][general_info]) {
+                temp_dict[unlock_level][general_info] += 1;
+            } else {
+                temp_dict[unlock_level][general_info] = 1;
+            }
+        }
+
+        // Populate the buildingUnlockLevels object
+        for (const level in temp_dict) {
+            for (const general_info in temp_dict[level]) {
+                buildingUnlockLevels[level].push([temp_dict[level][general_info], general_info]);
+            }
+        }
+
+        debugger;
+
     }
 
     /**
