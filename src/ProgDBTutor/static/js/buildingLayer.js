@@ -266,6 +266,9 @@ export class BuildingMap extends BaseMap {
         for (const buildingType in assetList) {
             totalCount += assetList[buildingType].length;
             assetList[buildingType].forEach(asset => {
+                if(asset === "Barn.L4.1.1") {
+                    debugger;
+                }
                 const currPath = "/static/img/assets/buildings/" + buildingType + "/" + asset + ".png";
                 const img = new Image();
                 img.src = currPath;
@@ -420,6 +423,7 @@ export class BuildingMap extends BaseMap {
      * @param topBuilding optional: Can be set if a building needs to be drawn on top of all other buildings.
      */
     drawTiles(topBuilding = null) {
+        this.tiles = this.generateBuildingTileMap();
         this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
         for (const buildingKey in this.buildingInformation) {
             if (!Object.hasOwnProperty.call(this.buildingInformation, buildingKey)) {

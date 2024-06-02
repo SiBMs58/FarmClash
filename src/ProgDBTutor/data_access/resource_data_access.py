@@ -2,6 +2,7 @@ from models.resource import Resource
 
 crops = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant']
 
+
 class ResourceDataAccess:
     def __init__(self, db_connection):
         self.db_connection = db_connection
@@ -41,7 +42,7 @@ class ResourceDataAccess:
         rows = cursor.fetchall()
         resources = []
         for row in rows:
-            resources.append(Resource( row['owner'], row['type'], row['quantity'], row['last_updated']))
+            resources.append(Resource(row['owner'], row['type'], row['quantity'], row['last_updated']))
         return resources
 
     def add_resource(self, resource):
@@ -77,20 +78,23 @@ class ResourceDataAccess:
         self.db_connection.conn.commit()
         return True
 
-
     def update_by_adding_resource(self, resource, limit):
         """
         update resource in the db by adding a value to the quantity
         :param resource: A resource object
         :return: True if added successfully, False otherwise
         """
+        if limit == float('inf'):
+            limit = 2147483646
 
         # get the total of crops or non-crops owned by the user to check if the limit is reached of their store building
         total = 0
         if resource.resource_type in crops:
-            total = self.get_crop_total(resource.username_owner)
+            total = min(limit, self.get_crop_total(resource.username_owner))
+        elif resource.resource_type == 'Money':
+            total = self.get_resource_by_type(resource.username_owner, 'Money').amount
         else:
-            total = self.get_noncrop_total(resource.username_owner)
+            total = min(limit, self.get_noncrop_total(resource.username_owner))
 
         # calculate the new quantity
         cursor = self.db_connection.get_cursor()
@@ -99,7 +103,7 @@ class ResourceDataAccess:
         new_quantity = cursor.fetchone()['quantity'] + resource.amount
         if new_quantity < 0:
             return False
-        if resource.resource_type != "Money" and total + resource.amount > limit:
+        if total + resource.amount > limit:
             new_quantity = limit - total
 
         # update the resource quantity
@@ -121,7 +125,8 @@ class ResourceDataAccess:
         :return: The total amount of crops owned by the user
         """
         cursor = self.db_connection.get_cursor()
-        cursor.execute('SELECT SUM(quantity) FROM resources WHERE owner = %s AND type IN %s', (username_owner, tuple(crops)))
+        cursor.execute('SELECT SUM(quantity) FROM resources WHERE owner = %s AND type IN %s',
+                       (username_owner, tuple(crops)))
         total = cursor.fetchone()
         return total['sum']
 
@@ -133,7 +138,8 @@ class ResourceDataAccess:
         """
         cropsAndMoney = crops + ['Money']
         cursor = self.db_connection.get_cursor()
-        cursor.execute('SELECT SUM(quantity) FROM resources WHERE owner = %s AND type NOT IN %s', (username_owner, tuple(cropsAndMoney)))
+        cursor.execute('SELECT SUM(quantity) FROM resources WHERE owner = %s AND type NOT IN %s',
+                       (username_owner, tuple(cropsAndMoney)))
         total = cursor.fetchone()
         return total['sum']
 

@@ -606,7 +606,6 @@ async function upgrade_checks(buildingInformation, info, buildingName) {
  */
 
 async function upgradeBuilding(){
-    debugger
     currOpenedBuildingInformation.level +=1;
     console.log(curr_level_cost);
     for (const cost of curr_level_cost){
