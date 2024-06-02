@@ -12771,7 +12771,7 @@
             "Chickencoop.3.2"
         ]
     ],
-    "Chickencoop.L9": [
+    "Chickencoop.L9":[
         [
             [
                 0,
@@ -12784,14 +12784,14 @@
                 1,
                 0
             ],
-            "Chickencoop.2.1"
+            "Chickencoop.L9.2.1"
         ],
         [
             [
                 2,
                 0
             ],
-            "Chickencoop.L9.3.1"
+            "Chickencoop.3.1"
         ],
         [
             [
@@ -13899,7 +13899,7 @@
             "Goatbarn.3.3"
         ]
     ],
-    "Goatbarn.L7": [
+    "Goatbarn.L7":  [
         [
             [
                 0,
@@ -13912,14 +13912,14 @@
                 1,
                 0
             ],
-            "Goatbarn.2.1"
+            "Goatbarn.L7.2.1"
         ],
         [
             [
                 2,
                 0
             ],
-            "Goatbarn.L7.3.1"
+            "Goatbarn.3.1"
         ],
         [
             [
@@ -13977,14 +13977,14 @@
                 1,
                 0
             ],
-            "Goatbarn.2.1"
+            "Goatbarn.L8.2.1"
         ],
         [
             [
                 2,
                 0
             ],
-            "Goatbarn.L8.3.1"
+            "Goatbarn.3.1"
         ],
         [
             [
@@ -14042,14 +14042,14 @@
                 1,
                 0
             ],
-            "Goatbarn.2.1"
+            "Goatbarn.L9.2.1"
         ],
         [
             [
                 2,
                 0
             ],
-            "Goatbarn.L9.3.1"
+            "Goatbarn.3.1"
         ],
         [
             [
