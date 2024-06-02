@@ -22,6 +22,7 @@ CREATE TABLE buildings (
     username_owner VARCHAR(255),
     building_type VARCHAR(255) NOT NULL,
     level INT DEFAULT 1,
+    unlock_level INT,
     x INT NOT NULL,
     y INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --TODO can be removed as all buildings are created at authentication time
