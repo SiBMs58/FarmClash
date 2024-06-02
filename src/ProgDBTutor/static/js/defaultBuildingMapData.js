@@ -23,7 +23,7 @@ export const defaultBuildingMapData = {
             self_key: "Bay",
             general_information: "Bay",
             level: 1,
-            unlock_level: 0,
+            unlock_level: 2,
             building_location: [15, 0]
         },
         Pigpen1: {
@@ -220,21 +220,21 @@ export const defaultBuildingMapData = {
             building_location: [8, 44]
         },
         field12: {
-            self_key: "fiel12",
+            self_key: "field12",
             general_information: "Field3",
             level: 1,
-            unlock_level: 3,
+            unlock_level: 0,
             building_location: [13, 11]
         },
         field13: {
             self_key: "field13",
             general_information: "Field3",
             level: 1,
-            unlock_level: 3,
+            unlock_level: 0,
             building_location: [13, 8]
         },
         field14: {
-            self_key: "field`14",
+            self_key: "field14",
             general_information: "Field3",
             level: 1,
             unlock_level: 6,

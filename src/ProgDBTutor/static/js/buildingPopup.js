@@ -293,7 +293,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
             list2.textContent = augmentString;
             augmentStats.appendChild(list2);
         }
-
+        debugger;
         // Check if field and in phase 1
         if (buildingInformation[buildingName].general_information === FIELD_GENERAL_INFO_NAME) {
             const fieldName = buildingInformation[buildingName].self_key;

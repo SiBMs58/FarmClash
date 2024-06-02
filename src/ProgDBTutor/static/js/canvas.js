@@ -120,7 +120,6 @@ function resizeCanvas() {
  */
 async function initializeGame() {
     try {
-        debugger;
         await terrainMap.initialize();
         await buildingMap.initialize();
         await cropMap.initialize();

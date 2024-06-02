@@ -92,7 +92,7 @@ export class BuildingMap extends BaseMap {
     async initialize() {
         await this.fetchBuildingAssetList();
         await this.fetchRelativeLocations();
-        await this.fetchBuildingMapData();
+        //await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
@@ -125,7 +125,6 @@ export class BuildingMap extends BaseMap {
             const unlock_level = info.unlock_level;
             const general_info = info.general_information;
 
-            debugger;
             if (temp_dict[unlock_level][general_info]) {
                 temp_dict[unlock_level][general_info] += 1;
             } else {
