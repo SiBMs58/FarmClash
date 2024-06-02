@@ -46,6 +46,7 @@ def choose_opponent_logic():
     friends_usernames = {friend.user2 if friend.user1 == current_user.username else friend.user1 for friend in friends}
 
     # Calculate scores for all users
+    # TODO/ Not on the resources but on user stats
     for user in users:
         resources = resource_data_access.get_resources(user.username)
         user_score = sum([resource.amount for resource in resources])
@@ -127,6 +128,7 @@ def choose_result_logic(player_score, opponent_score):
 
 
     # Get the opponent's resources
+    # TODO/ Not on the resources but on user stats
     resource_data_access = current_app.config.get('resource_data_access')
     opponent_resources = {resource.resource_type: resource.amount for resource in resource_data_access.get_resources(previously_searched[-1])}
     for resource in list(opponent_resources.keys()):
