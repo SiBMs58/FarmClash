@@ -92,7 +92,7 @@ export class BuildingMap extends BaseMap {
     async initialize() {
         await this.fetchBuildingAssetList();
         await this.fetchRelativeLocations();
-        //await this.fetchBuildingMapData();
+        await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
