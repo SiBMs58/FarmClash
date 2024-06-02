@@ -292,6 +292,14 @@ However, if a player upgrades his building, he will have an advantage over other
 Additionally, since augmenting simply costs money, it may be done more frequently than upgrading.
 Upgrading a building requires the player to work hard for resources, but augmenting can already be done when enough money is available.
 
+Both upgrading and augmenting require conditions which are check. For example the user need enough resources, for upgrading max level can't exceed 10 or the current town hall level. When upgrading or augmenting, the resource cost is decreased from the user using api/add-resources rout to update the database.
+
+\subsection{Farming}
+
+The user is able tho palant crops on fiels. the type of crop the user is able to plant and teh amount gaind when farming is based on the field level.
+
+When the user reaps his crops, the amount is again updated to the database using the add-resources api.
+
 \section{Technologies Used}
 \begin{itemize}
     \item \textbf{Flask:} Serves as the web server framework.
