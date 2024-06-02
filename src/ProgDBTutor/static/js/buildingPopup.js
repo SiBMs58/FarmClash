@@ -192,7 +192,7 @@ upgradeButtonPressed.addEventListener('mouseup', releaseUpgradeButton);
 upgradeButtonPressed.addEventListener('mouseleave', releaseUpgradeButton);
 
 // ——————————————
-// UPGRADE CHECKS
+// UPGRADE FUNCTIONS USED FOR UPGRADING AND CHECKS
 
 async function fetchResources() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
@@ -238,6 +238,15 @@ async function updateResources(resource, count) {
 
 let curr_level_cost;
 
+/**
+ *  checks the if the building can be upgraded, checks include:
+ *  max level, has enaugh resources and townhall level
+ * @param buildingInformation
+ * @param buildingGeneralInformation
+ * @param buildingName
+ * @returns {Promise<boolean>}
+ */
+
 async function upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName) {
     let building_type;
     let current_level;
@@ -258,14 +267,16 @@ async function upgrade_checks(buildingInformation, buildingGeneralInformation, b
         }
     }
 
+    // building can't be higher level then townhall
     if (current_level>townhall_level && building_type !== "Townhall"){
         return false;
     }
+    // can't exceed level 10
     if (current_level===10){
         return false;
     }
 
-    // Second loop to check if the current level is the max level for this building type
+    // Second loop to check if the user has enaugh resources
     if (buildingGeneralInformation.hasOwnProperty(building_type)) {
         let upgrade_cost = buildingGeneralInformation[building_type].upgrade_costs;
 
@@ -293,9 +304,10 @@ async function upgrade_checks(buildingInformation, buildingGeneralInformation, b
 }
 
 /**
-     * Upgrades a given building.
-     * @returns {boolean} returns true if the upgrade was succesfull
-     */
+ * Upgrades a given building.
+ * subtracts the cost from the user
+ * @returns {boolean} returns true if the upgrade was succesfull
+ */
 
 async function upgradeBuilding(){
     for (const key in currBuildingInfo) {

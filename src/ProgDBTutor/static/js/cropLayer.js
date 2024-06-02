@@ -403,6 +403,12 @@ export class CropMap extends BaseMap {
 }
 
 
+/**
+ * updates the resource to the db, is used when farming crops
+ * @param resource, name as string
+ * @param count, increase or decreas amount
+ * @returns {Promise<void>}
+ */
 async function updateResources(resource, count) {
     const resources = {
         [resource]: count // Use the resource as the key and the count as the value

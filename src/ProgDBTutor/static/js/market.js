@@ -190,7 +190,11 @@ function displayUnpressedButton(index){
 }
 
 
-// adds sale amount to database
+/** adds sale amount to database
+ *this is used to imapct the next price of the crop
+ * crop is the name of the crop as string, count is the sale amot as int, base_price is int
+ */
+
 async function updateSale(crop, count, base_price) {
     const market_data = {
         crop: crop,
@@ -218,6 +222,13 @@ async function updateSale(crop, count, base_price) {
     }
 }
 
+
+/**
+ * Updates the resource to the db, increases or decreases based on the specified amount for the given resource name
+ * @param resource string
+ * @param count int
+ * @returns {Promise<void>}
+ */
 async function updateResources(resource, count) {
     const resources = {
         [resource]: count // Use the resource as the key and the count as the value
