@@ -13,7 +13,7 @@
       "L7": [["Money", 15000], ["Turnip", 450], ["Log", 40],["Ingot",40]],
       "L8": [["Money", 20000], ["Zucchini", 450], ["Log", 70],["Ingot",70]],
       "L9": [["Money", 25000], ["Parsnip", 450], ["Stone", 150],["Ingot",100]],
-      "L10": [["Money", 30000], ["Eggplant", 450], ["", 250],["",250]]
+      "L10": [["Money", 30000], ["Eggplant", 450], ["Stone", 250],["Ingot",250]]
     },
     "ui": "townhall",
     "other_stats": [["Defense",[0, 100, 200, 350, 550, 800, 1100, 1450, 1850, 2300, 2800]],
@@ -94,7 +94,7 @@
         "L4": [["Money", 500], ["Corn", 150], ["Rustic Egg", 55],["Egg", 100]],
         "L5": [["Money", 1000], ["Lettuce", 150], ["Crimson Egg", 35],["Stick",25]],
         "L6": [["Money", 1750], ["Tomato", 150], ["Crimson Egg", 55],["Stick",50]],
-        "L7": [["Money", 3000], ["Turnip", 150], ["Emerald Milk", 35],["Plank",25]],
+        "L7": [["Money", 3000], ["Turnip", 150], ["Emerald Egg", 35],["Plank",25]],
         "L8": [["Money", 5500], ["Zucchini", 150], ["Emerald Egg", 55],["Plank",50]],
         "L9": [["Money", 10000], ["Parsnip", 150], ["Sapphire Egg", 35],["Log",25]],
         "L10": [["Money", 15000], ["Eggplant", 150], ["Sapphire Egg", 55],["Log",50]]

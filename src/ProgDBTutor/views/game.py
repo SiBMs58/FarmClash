@@ -156,20 +156,23 @@ def update_map():
         buildings = building_data_access.get_buildings_by_username_owner(username_owner)
 
         for building_info in building_information.values():
-            last_building = building_info
             building_type = building_info["general_information"]
             level = building_info["level"]
+            augment_level = building_info.get("augment_level", 0)  # Default to 0 if not provided
+            unlock_level = building_info.get("unlock_level", 0)  # Default to 0 if not provided
             created_at = datetime.now()
             x_value = building_info["building_location"][0]
             y_value = building_info["building_location"][1]
             building_id = building_info["self_key"]
 
-            building = building_user_exists(buildings, building_id)
+            building = next((b for b in buildings if b.building_id == building_id), None)
 
             if building:
                 # Update the existing building entry
                 building.building_type = building_type
                 building.level = level
+                building.augment_level = augment_level
+                building.unlock_level = unlock_level
                 building.created_at = created_at
                 building.x = x_value
                 building.y = y_value
@@ -177,9 +180,8 @@ def update_map():
 
             else:
                 # Insert a new building entry
-                new_building = Building(building_id, username_owner, building_type, level, x_value, y_value, created_at)
+                new_building = Building(building_id, username_owner, building_type, unlock_level, level, x_value, y_value, created_at, augment_level)
                 building_data_access.add_building(new_building)
-
 
         return jsonify({"status": "success", "message": "Data inserted successfully"})
     except Exception as e:

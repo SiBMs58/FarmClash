@@ -77,7 +77,7 @@ export class BuildingMap extends BaseMap {
         // To remember building following mouse movement
         this.prevMouseMoveBuildingLoc = null; // [y, x]
 
-        // @Faisel json with all levels and what buildings unlock at this level --> [Count, general_information]
+        // @Faisal json with all levels and what buildings unlock at this level --> [Count, general_information]
         // Example:
         this.buildingUnlockLevels = {
             1: [[2, "Field"], [1, "Goatbarn"]],
@@ -92,7 +92,7 @@ export class BuildingMap extends BaseMap {
     async initialize() {
         await this.fetchBuildingAssetList();
         await this.fetchRelativeLocations();
-        //await this.fetchBuildingMapData();
+        await this.fetchBuildingMapData();
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
@@ -267,6 +267,9 @@ export class BuildingMap extends BaseMap {
         for (const buildingType in assetList) {
             totalCount += assetList[buildingType].length;
             assetList[buildingType].forEach(asset => {
+                if(asset === "Barn.L4.1.1") {
+                    debugger;
+                }
                 const currPath = "/static/img/assets/buildings/" + buildingType + "/" + asset + ".png";
                 const img = new Image();
                 img.src = currPath;
@@ -421,6 +424,7 @@ export class BuildingMap extends BaseMap {
      * @param topBuilding optional: Can be set if a building needs to be drawn on top of all other buildings.
      */
     drawTiles(topBuilding = null) {
+        this.tiles = this.generateBuildingTileMap();
         this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
         for (const buildingKey in this.buildingInformation) {
             if (!Object.hasOwnProperty.call(this.buildingInformation, buildingKey)) {
