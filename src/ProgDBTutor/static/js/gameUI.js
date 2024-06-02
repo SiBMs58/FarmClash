@@ -15,7 +15,7 @@ function scheduleMoneyUpdates() {
             .catch(error => {
                 console.error('Error fetching resources:', error);
             });
-    }, 1000);
+    }, 250);
 }
 
 if (localStorage.getItem('backsoundButtonState') === null) {

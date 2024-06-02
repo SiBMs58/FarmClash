@@ -80,7 +80,7 @@ async function fetchBuildingPopupInformation() {
  */
 export function openPopup(buildingInformation, buildingGeneralInformation, buildingName) {
     buildingID = buildingName;
-    buildingData = buildingInformation;
+    buildingData = buildingInformation[buildingName];
     currOpenedBuildingInformation = buildingInformation[buildingName]
     if (isPopupOpen && (prevBuildingName !== buildingName)) {
         closePopup();
@@ -217,9 +217,9 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
         }
 
         // Display the upgrade cost
+        let costDiv = document.getElementById('upgrade-cost');
         if (building.level !== maxLevel) {
             const upgradeCost = buildingInfo.upgrade_costs[`L${building.level+1}`];
-            let costDiv = document.getElementById('upgrade-cost');
             costDiv.innerHTML = 'Upgrade: ';
             for (let i = 0; i < upgradeCost.length; i++) {
                 let value = document.createTextNode(upgradeCost[i][values]);
@@ -231,6 +231,8 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
                 let space = document.createTextNode('  ');
                 costDiv.appendChild(space);
             }
+        }else{
+            costDiv.innerHTML = 'Max Level';
         }
 
 
@@ -397,7 +399,6 @@ closeButtonPressed.addEventListener('mouseleave', softReleaseCloseButton);
 let mouseIsDown = false;
 
 async function sendAugmentLevel(level) {
-    let newLevel = level;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/update-augment-level/" + buildingID;
     try {
@@ -421,7 +422,7 @@ function pressAugment() {
     document.getElementById('augment-image').src = "../../static/img/UI/augment_pbtn.png";
     mouseIsDown = true;
     buildingData.augment_level++;
-    sendAugmentLevel(buildingData.augment_level).then(() => {
+    sendAugmentLevel(buildingData.augment_level).then(data => {
         if(data['status'] !== 'success'){
             buildingData.augment_level--;
         }
@@ -474,6 +475,7 @@ function pressUpgradeButton() {
     upgradeButton.style.display = 'none';
     upgradeButtonPressed.style.display = 'block';
     upgradeBuilding();
+    mouseIsDown = true;
 }
 async function releaseUpgradeButton() {
     if (isUpgradableBool) {
@@ -481,8 +483,12 @@ async function releaseUpgradeButton() {
         upgradeButtonPressed.style.display = 'none';
         buildingMap.drawTiles();
         await buildingMap.updateBuildingMapDB();
+
     }
-    closePopup();
+    if (mouseIsDown) {
+         closePopup();
+         mouseIsDown = false;
+    }
 }
 
 upgradeButton.addEventListener('mousedown', pressUpgradeButton);
@@ -699,7 +705,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     closeCropPopup()
                     const field = currOpenedBuildingInformation.self_key;
                     cropMap.plantCrop(cropType, field);
-                    debugger;
                 }
             }
         });
