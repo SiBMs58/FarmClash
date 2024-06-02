@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" type="text/css" href="../../static/css/UI.css">
-     <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/idle.js') }}"></script>
     <title>game UI</title>
 </head>
 <body>
@@ -42,6 +43,14 @@
         </button>
     </header>
     <footer>
+        <button id="animal-btn" class="animal-btn">
+            <img src="../../static/img/UI/paw_btn.png" alt="🐄">
+        </button>
+        <div class="animal-overlay" id="animal-overlay">
+            <div class="animal-popup">
+                <!-- The resource amounts of the user will be inserted here dynamically -->
+            </div>
+        </div>
         <button id="market-btn" class="market-btn">
             <a href="{{ url_for('market.market') }}">
                 <img src="../../static/img/UI/market_btn.png" alt="🛒">

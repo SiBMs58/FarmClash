@@ -8,8 +8,8 @@ fetchCropPricesFromAPI();
 fetchCropQuantityFromAPI();
 displayPrices();
 
-
-
+localStorage.getItem('muteButtonState')
+localStorage.getItem('backsoundButtonState')
 
 // API calls
 async function fetchCropPricesFromAPI(crop, base_price) {
@@ -33,6 +33,18 @@ async function fetchCropPricesFromAPI(crop, base_price) {
         return base_price; // Return the default base price in case of failure
     }
 }
+function displayCrops(){
+    let resourceHTML = '<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">';
+    for (let i = 0; i < market.crops.length; i++) {
+        resourceHTML += getAmountDisplay(market.quantities[i])
+        resourceHTML += getCropDisplay(market.crops[i]);
+        if (i < market.crops.length - 1) {
+            resourceHTML += '<img src="../../static/img/UI/display.extender.png" alt=" " draggable="false">'.repeat(5);
+        }
+    }
+    resourceHTML += '<img src="../../static/img/UI/display.right.short.png" alt="" draggable="false">'
+    document.getElementById('crops').innerHTML = resourceHTML;
+}
 function fetchCropQuantityFromAPI() {
      fetch('/api/resources')
      .then(response => response.json())
@@ -41,10 +53,12 @@ function fetchCropQuantityFromAPI() {
              if (!market.crops.includes(resource.resource_type)) return; // Skip non-crops
              market.quantities[market.crops.indexOf(resource.resource_type)] = resource.amount;
          });
+         displayCrops();
      })
      .catch(error => {
          console.error('Error fetching resources:', error);
      });
+
 }
 
 
@@ -146,7 +160,6 @@ async function sell() {
                 await updateSale(cropName, quantity, cropPrice);
                 await updateResources(cropName, -quantity);
                 await updateResources("Money", totalSalePrice);
-
             }
         }
 
@@ -223,12 +236,34 @@ async function updateSale(crop, count, base_price) {
 }
 
 
-/**
- * Updates the resource to the db, increases or decreases based on the specified amount for the given resource name
- * @param resource string
- * @param count int
- * @returns {Promise<void>}
- */
+// adds sale amount to database
+async function updateSale(crop, count, base_price) {
+    const market_data = {
+        crop: crop,
+        sale: count,
+        base_price: base_price,
+    }
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = BASE_URL + "/game/update-market";
+    try {
+        const response = await fetch(fetchLink, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(market_data) // Send the serialized map data as the request body
+        });
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('market_data DB update successful:', jsonResponse);
+        } else {
+            console.error('market_data DB update failed with status:', response.status);
+        }
+    } catch (error) {
+        console.error('Failed to update market in database:', error);
+    }
+}
+
 async function updateResources(resource, count) {
     const resources = {
         [resource]: count // Use the resource as the key and the count as the value
@@ -253,5 +288,33 @@ async function updateResources(resource, count) {
         }
     } catch (error) {
         console.error('Failed to update resources:', error);
+    }
+}
+
+
+function getCropDisplay(resourceType) {
+    switch (resourceType) {
+        case 'Corn':
+            return '<img src="../../static/img/UI/display.corn.png" alt="🌽" draggable="false">';
+        case 'Carrot':
+            return '<img src="../../static/img/UI/display.carrot.png" alt="🥕" draggable="false">';
+        case 'Cauliflower':
+            return '<img src="../../static/img/UI/display.cauliflower.png" alt="⚪🥦" draggable="false">';
+        case 'Tomato':
+            return '<img src="../../static/img/UI/display.tomato.png" alt="🍅" draggable="false">';
+        case 'Eggplant':
+            return '<img src="../../static/img/UI/display.eggplant.png" alt="🍆" draggable="false">';
+        case 'Lettuce':
+            return '<img src="../../static/img/UI/display.lettuce.png" alt="🥬" draggable="false">';
+        case 'Wheat':
+            return '<img src="../../static/img/UI/display.wheat.png" alt="🌾" draggable="false">';
+        case 'Turnip':
+            return '<img src="../../static/img/UI/display.turnip.png" alt="🟣🌱" draggable="false">';
+        case 'Parsnip':
+            return '<img src="../../static/img/UI/display.parsnip.png" alt="⚪🌱" draggable="false">';
+        case 'Zucchini':
+            return '<img src="../../static/img/UI/display.zucchini.png" alt="🥒" draggable="false">';
+        default:
+            return '';
     }
 }

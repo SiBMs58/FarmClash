@@ -55,3 +55,28 @@ class AnimalDataAccess:
             return True
         else:
             return False
+
+    def update_animal_by_adding(self, animal, limit):
+
+        #if animal.amount == 0:
+         #   return True
+
+        cursor = self.db_connection.get_cursor()
+        animal_amount = 0
+        cursor.execute("SELECT amount as animal_amount FROM animals WHERE owner = %s AND species = %s",
+                                        (animal.owner, animal.species))
+
+        if animal_amount + animal.amount > limit:
+            animal.amount = max(limit - animal_amount, 0)
+
+        if not animal.last_updated:
+            cursor.execute("UPDATE animals SET amount = %s WHERE owner = %s AND species = %s",
+                           (animal_amount + animal.amount, animal.owner, animal.species))
+        else:
+            cursor.execute("UPDATE animals SET amount = %s, last_updated = %s WHERE owner = %s AND species = %s",
+                           (animal_amount + animal.amount, animal.last_updated, animal.owner, animal.species))
+        self.db_connection.conn.commit()
+        if cursor.rowcount > 0:
+            return True
+        else:
+            return False

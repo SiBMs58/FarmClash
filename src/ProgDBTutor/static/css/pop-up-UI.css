@@ -47,6 +47,48 @@
     transform: translateX(-50%);
 }
 
+.view-btn{
+    position: absolute;
+    border: none;
+    background: none;
+    left: 77px;
+    bottom: 17px;
+    transform: translateX(-50%);
+    height: auto; /* Set height to auto */
+    width: auto; /* Set width to auto */
+    outline: none; /* Remove the default focus outline */
+    box-shadow: none; /* Remove any default box-shadow */
+}
+.view-btn img {
+    height: 50px;
+    image-rendering: pixelated;
+}
+.augment-button {
+    position: absolute;
+    border: none;
+    background: none;
+    right: 15px;
+    bottom: 17px;
+    transform: translateX(-50%);
+    height: auto; /* Set height to auto */
+    width: auto; /* Set width to auto */
+    outline: none; /* Remove the default focus outline */
+    box-shadow: none; /* Remove any default box-shadow */
+}
+.view-btn:active,
+.view-btn:focus,
+.augment-button:active,
+.augment-button:focus {
+    outline: none; /* Remove the outline when the button is focused or active */
+    box-shadow: none; /* Remove any box-shadow when the button is focused or active */
+}
+
+.augment-button img {
+    width: 50px;
+    image-rendering: pixelated;
+}
+
+
 .close-button {
     position: absolute;
     width: calc(0.0957 * var(--background-img-width)); /* To make sure pixel size matches */
@@ -83,7 +125,7 @@
     color: #8a5f5c;
 }
 
-#building-display-name {
+#display-name {
     width: 300px;
     z-index: 20;
     position: absolute;
@@ -95,7 +137,7 @@
     color: #8a5f5c;
 }
 
-#building-explanation {
+#explanation {
     width: 450px;
     z-index: 20;
     position: absolute;
@@ -109,7 +151,7 @@
     color: #8a5f5c;
 }
 
-#building-stats {
+.stats {
     width: 450px;
     z-index: 20;
     position: absolute;
@@ -122,33 +164,41 @@
     color: #8a5f5c;
     display: block;
     font-size: 15px;
+    list-style-type: none;
 }
-
-#building-stats li {
+#augment-stats{
+    display: none;
+}
+#stats{
+    display: block;
+}
+.stats li {
   margin-bottom: 10px;
   line-height: 1.5;
 }
 
-#building-stats {
-    list-style-type: none;
-}
 
-#building-upgrade-cost {
-    display: flex;
+
+.cost{
+    flex-wrap: wrap;
     align-items: center;
 }
-
-#building-upgrade-cost p {
+.cost p {
     margin-bottom: 0;
 }
-
-#building-upgrade-cost img {
+#upgrade-cost{
+    display: flex;
+}
+#upgrade-cost > *{
+    margin-right: 10px;
+}
+#cost img {
     height: 20px;
     top: 0;
     margin-bottom: 0;
-    margin-left: 7px;
+    margin-right: 7px;
+    image-rendering: pixelated;
 }
-
-
-/* Crop selector */
-
+#augment-cost{
+    display: none;
+}

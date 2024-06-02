@@ -225,7 +225,6 @@ function displayRewardItems(){
     let map = '';
     for (const reward in rewards) {
         for (const [key, value] of Object.entries(typeLoc)) {
-            console.log(value)
             if (value.includes(reward)) {
                 map = key;
                 break;
@@ -379,22 +378,14 @@ function fetchBuildingBayStats() {
  * @throws Will throw an error if the response from the API is not ok.
  */
 async function sendAnimalQuantity(numChickens, numGoats, numPigs, numCows) {
-    let diffCows = Barn.quantities[getIndex('Cow')] + numCows;
-    let diffPigs = Barn.quantities[getIndex('Pig')] + numPigs;
-    let diffGoats = Barn.quantities[getIndex('Goat')] + numGoats;
-    let diffChickens = Barn.quantities[getIndex('Chicken')] + numChickens;
-
     let animal_data = {
-        'update_type': 'explore',
-        'species':{
-            'Chicken': numChickens === 0 ? [false] : [true, diffChickens],
-            'Goat': numGoats === 0 ? [false] : [true, diffGoats],
-            'Pig': numPigs === 0 ? [false] : [true, diffPigs],
-            'Cow': numCows === 0 ? [false] : [true, diffCows],
-        }
+        'Chicken': numCows,
+        'Goat': numPigs,
+        'Pig': numGoats,
+        'Cow': numChickens,
     };
     try {
-        const response = await fetch('/api/update-animals', {
+        const response = await fetch('/api/add-animals', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -428,7 +419,7 @@ async function sendAnimalQuantity(numChickens, numGoats, numPigs, numCows) {
  */
 async function sendExploration() {
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-    const fetchLink = BASE_URL + "/exploration/start-exploration";
+    const fetchLink = BASE_URL + "/api/start-exploration";
     try {
         const response = await fetch(fetchLink, {
             method: 'POST',
@@ -450,7 +441,7 @@ async function sendExploration() {
 }
 async function sendStopExploration() {
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-    const fetchLink = BASE_URL + "/exploration/stop-exploration";
+    const fetchLink = BASE_URL + "/api/stop-exploration";
     try {
         const response = await fetch(fetchLink, {
             method: 'POST'
@@ -531,6 +522,10 @@ document.getElementById('open-btn').addEventListener('click', function() {
  * @listens click
  */
 document.getElementById('explore-btn').addEventListener('click', async function () {
+    if(buildingLevel === 0){
+        alert('You first need to level the building to level 1 to start an exploration');
+        return;
+    }
     let selectedTimeElement = document.getElementById('exploration-time');
     let selectedOption = selectedTimeElement.options[selectedTimeElement.selectedIndex];
     let exploreTime = selectedOption.value;

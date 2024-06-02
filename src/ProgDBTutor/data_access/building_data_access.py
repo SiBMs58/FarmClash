@@ -4,6 +4,23 @@ class BuildingDataAccess:
     def __init__(self, db_connection):
         self.db_connection = db_connection
 
+    def update_augment_level(self, building_id, augment_level, username_owner):
+        """
+        Updates the augment level of the building with the given id
+        :param building_id: the id of the building aka the primary key
+        :param augment_level: the new augment level
+        :return: True if the augment level was updated successfully, False otherwise
+        """
+        cursor = self.db_connection.get_cursor()
+        try:
+            cursor.execute("UPDATE buildings SET augment_level = %s WHERE building_id = %s AND username_owner = %s",
+                           (augment_level, building_id, username_owner))
+            self.db_connection.conn.commit()
+            return True
+        except Exception as e:
+            print("Error:", e)
+            return False
+
     def get_building(self, building_id):
         """
         Fetches the building with the given id out of the database
@@ -59,13 +76,14 @@ class BuildingDataAccess:
         :return: A list of Building objects belonging to the given username_owner and building_type, an empty list if none found
         """
         cursor = self.db_connection.get_cursor()
-        cursor.execute("SELECT * FROM buildings WHERE username_owner = %s AND building_type = %s", (username_owner, building_type))
+        cursor.execute("SELECT * FROM buildings WHERE username_owner = %s AND building_type = %s",
+                       (username_owner, building_type))
         results = cursor.fetchall()
 
         buildings = []
         for result in results:
             building = Building(result['building_id'], result['username_owner'], result['building_type'],
-                                result['level'], result['x'], result['y'],
+                                result['level'], result['x'], result['y'], result['tile_rel_locations'],
                                 result['created_at'], result['augment_level'])
             buildings.append(building)
 
@@ -90,7 +108,7 @@ class BuildingDataAccess:
                     SET building_type = %s, level = %s, x = %s, y = %s, created_at = %s, augment_level = %s
                     WHERE username_owner = %s AND building_id = %s;
                 """, (building.building_type, building.level, building.x, building.y,
-                      building.created_at, building.augment_level,
+                      building.tile_rel_locations, building.created_at, building.augment_level,
                       building.username_owner, building.building_id))
             else:
                 # Insert a new building entry
@@ -102,7 +120,8 @@ class BuildingDataAccess:
                         x = EXCLUDED.x, y = EXCLUDED.y,
                         created_at = EXCLUDED.created_at, augment_level = EXCLUDED.augment_level;
                 """, (building.building_id, building.username_owner, building.building_type,
-                      building.level, building.x, building.y, building.created_at, building.augment_level))
+                      building.level, building.x, building.y, building.tile_rel_locations, building.created_at,
+                      building.augment_level))
             self.db_connection.conn.commit()
             return True
         except Exception as e:

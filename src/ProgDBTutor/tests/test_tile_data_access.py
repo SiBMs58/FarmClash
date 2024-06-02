@@ -41,7 +41,7 @@ def test_get_tiles_by_map_id_returns_tiles_list(tile_data_access, mock_db_connec
     assert len(tiles) == 2
     assert all(isinstance(tile, Tile) for tile in tiles)
     assert tiles[0].terrain_type == 'grass'
-    assert tiles[1].x == 15
+    assert tiles[1].y == 15
 
 def test_add_tile_adds_successfully(tile_data_access, mock_db_connection):
     new_tile = Tile(None, 2, 30, 40, 'forest', None, datetime.now())

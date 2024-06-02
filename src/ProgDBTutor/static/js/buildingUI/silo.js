@@ -1,15 +1,15 @@
 let interval = null;
 let crops ={
-    'Wheat': 100,
-    'Carrot': 150,
-    'Corn': 150,
-    'Lettuce': 150,
-    'Tomato': 150,
-    'Turnip': 150,
-    'Zucchini': 150,
-    'Parsnip': 150,
-    'Cauliflower': 150,
-    'Eggplant': 150
+    'Wheat': 0,
+    'Carrot': 0,
+    'Corn': 0,
+    'Lettuce': 0,
+    'Tomato': 0,
+    'Turnip': 0,
+    'Zucchini': 0,
+    'Parsnip': 0,
+    'Cauliflower': 0,
+    'Eggplant': 0
 };
 let selectedCrop = ''
 let buildingAugmentLevel = 0;
@@ -18,20 +18,22 @@ let buildingLevel = 0;
 //___________________________ Page Initialization ___________________________//
 initialize();
 function initialize() {
+    fetchSilo().then(() => {
+         reload();
+    });
+}
+function reload(){
     fetchCrops()
     .then(updatedCrops => {
         crops = updatedCrops;
-        console.log(updatedCrops);
     }).then(() => {
         displayCrops();
-    })
-    .catch(error => {
-        // Handle error
-        console.error(error);
-    });
-    fetchSilo().then(() => {
+    }).then(() => {
         displayLimit();
         updateDescription()
+    })
+    .catch(error => {
+        console.error(error);
     });
 }
 
@@ -166,8 +168,6 @@ async function fetchSilo() {
             const silo = buildings[id];
             buildingAugmentLevel = silo.augment_level;
             buildingLevel = silo.level;
-            buildingAugmentLevel = 1; //TODO this is for debugging
-            buildingLevel = 1; //TODO this is for debugging
         }
     })
     .catch(error => {
@@ -177,7 +177,6 @@ async function fetchSilo() {
 async function sendCropChange(quantity){
     let data = {};
     data[selectedCrop] = -quantity;
-    data['Money']= quantity;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-resources";
     try {
@@ -298,11 +297,8 @@ document.getElementById('scrap-btn').addEventListener('click', () => {
                 alert(`Amount selected to scrap from ${selectedCrop} is ${quantity}`);
 
                 sendCropChange(quantity).then(r => {
-                    crops[selectedCrop] -= quantity;
-                    displayCrops();
-                    displayLimit();
+                    reload();
                     selectedCrop = '';
-                    updateDescription()
                     document.getElementById(`scrap-quantity`).value = 0;
                 });
                 // Notify Database with new amount

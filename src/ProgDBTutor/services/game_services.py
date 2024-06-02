@@ -74,9 +74,8 @@ class GameServices:
 
         ## 3 fences per cloud area
 
-        ## 6 farm fields per cloud area or one of 3 Pigpens, 3 Chicken Coops, 3 Cow Barns, 3 Goat Barns in total
-
-        ## 3 harvesthoppers in total
+        ## 4 fields per cloud area or one of 4 Pigpens, 4 Chicken Coops, 4 Cow Barns, 4 Goat Barns in total
+        ## 3 Pigpens, 3 Chicken Coops, 3 Cow Barns, 3 Goat Barns in total
         return True
 
     def initialize_resources(self, username):
@@ -85,64 +84,64 @@ class GameServices:
         :param username:  The username object of the user
         """
         # Money
-        self.resource_data_access.add_resource(Resource(None, username, "Money", 50))
+        self.resource_data_access.add_resource(Resource(username, "Money", 50))
 
         # Crops (can be stolen in an attack)
-        self.resource_data_access.add_resource(Resource(None, username, "Wheat", 100))
-        self.resource_data_access.add_resource(Resource(None, username, "Carrot", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Corn", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Lettuce", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Tomato", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Turnip", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Zucchini", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Parsnip", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Cauliflower", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Eggplant", 0))
+        self.resource_data_access.add_resource(Resource(username, "Wheat", 100))
+        self.resource_data_access.add_resource(Resource(username, "Carrot", 0))
+        self.resource_data_access.add_resource(Resource(username, "Corn", 0))
+        self.resource_data_access.add_resource(Resource(username, "Lettuce", 0))
+        self.resource_data_access.add_resource(Resource(username, "Tomato", 0))
+        self.resource_data_access.add_resource(Resource(username, "Turnip", 0))
+        self.resource_data_access.add_resource(Resource(username, "Zucchini", 0))
+        self.resource_data_access.add_resource(Resource(username, "Parsnip", 0))
+        self.resource_data_access.add_resource(Resource(username, "Cauliflower", 0))
+        self.resource_data_access.add_resource(Resource(username, "Eggplant", 0))
 
         # From Chickens
-        self.resource_data_access.add_resource(Resource(None, username, "Egg", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Rustic Egg", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Crimson Egg", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Emerald Egg", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Sapphire Egg", 0))
+        self.resource_data_access.add_resource(Resource(username, "Egg", 0))
+        self.resource_data_access.add_resource(Resource(username, "Rustic Egg", 0))
+        self.resource_data_access.add_resource(Resource(username, "Crimson Egg", 0))
+        self.resource_data_access.add_resource(Resource(username, "Emerald Egg", 0))
+        self.resource_data_access.add_resource(Resource(username, "Sapphire Egg", 0))
 
         # From Cows
-        self.resource_data_access.add_resource(Resource(None, username, "Milk", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Chocolate Milk", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Strawberry Milk", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Soy Milk", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Blueberry Milk", 0))
+        self.resource_data_access.add_resource(Resource(username, "Milk", 0))
+        self.resource_data_access.add_resource(Resource(username, "Chocolate Milk", 0))
+        self.resource_data_access.add_resource(Resource(username, "Strawberry Milk", 0))
+        self.resource_data_access.add_resource(Resource(username, "Soy Milk", 0))
+        self.resource_data_access.add_resource(Resource(username, "Blueberry Milk", 0))
 
         # From Goats
-        self.resource_data_access.add_resource(Resource(None, username, "Wool", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Alpaca Wool", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Cashmere Wool", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Dolphin Wool", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Irish Wool", 0))
+        self.resource_data_access.add_resource(Resource(username, "Wool", 0))
+        self.resource_data_access.add_resource(Resource(username, "Alpaca Wool", 0))
+        self.resource_data_access.add_resource(Resource(username, "Cashmere Wool", 0))
+        self.resource_data_access.add_resource(Resource(username, "Dolphin Wool", 0))
+        self.resource_data_access.add_resource(Resource(username, "Irish Wool", 0))
 
         # From Pigs
-        self.resource_data_access.add_resource(Resource(None, username, "Truffle", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Bronze Truffle", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Gold Truffle", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Forest Truffle", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Winter Truffle", 0))
+        self.resource_data_access.add_resource(Resource(username, "Truffle", 0))
+        self.resource_data_access.add_resource(Resource(username, "Bronze Truffle", 0))
+        self.resource_data_access.add_resource(Resource(username, "Gold Truffle", 0))
+        self.resource_data_access.add_resource(Resource(username, "Forest Truffle", 0))
+        self.resource_data_access.add_resource(Resource(username, "Winter Truffle", 0))
 
         # From exploring (can also be stolen in an attack)
-        self.resource_data_access.add_resource(Resource(None, username, "Stick", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Stone", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Plank", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Log", 0))
-        self.resource_data_access.add_resource(Resource(None, username, "Ingot", 0))
+        self.resource_data_access.add_resource(Resource(username, "Stick", 0))
+        self.resource_data_access.add_resource(Resource(username, "Stone", 0))
+        self.resource_data_access.add_resource(Resource(username, "Plank", 0))
+        self.resource_data_access.add_resource(Resource(username, "Log", 0))
+        self.resource_data_access.add_resource(Resource(username, "Ingot", 0))
 
     def initialize_animals(self, username):
         """
         Initialize default, starting animals when a user registers
         :param username:  The username object of the user
         """
-        self.animal_data_access.add_animal(Animal("Chicken", username, 0, None))
-        self.animal_data_access.add_animal(Animal("Cow", username, 0, None))
-        self.animal_data_access.add_animal(Animal("Pig", username, 0, None))
-        self.animal_data_access.add_animal(Animal("Goat", username, 0, None))
+        self.animal_data_access.add_animal(Animal(username, "Chicken", 0))
+        self.animal_data_access.add_animal(Animal(username, "Cow", 0))
+        self.animal_data_access.add_animal(Animal(username, "Pig", 0))
+        self.animal_data_access.add_animal(Animal(username, "Goat", 0))
 
     def reformat_terrain_map(self, tile_data, map_width, map_height):
         """

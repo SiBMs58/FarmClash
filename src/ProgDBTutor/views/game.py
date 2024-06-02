@@ -55,6 +55,13 @@ def townhall():
     """
     return render_template('townhall.html', app_data=config_data)
 
+@game_blueprint.route('/exploration')
+@login_required
+def exploration():
+    """
+    Renders the EXPLORATION  view.
+    """
+    return render_template('exploration/exploration.html', app_data=config_data)
 
 @game_blueprint.route('/gifts')
 @login_required
@@ -214,6 +221,7 @@ def update_market():
         json_data = request.json
         crop_name = json_data["crop"]
         sale = json_data["sale"]
+        base_price = json_data["base_price"]
 
         # Get current market data
         market_data_access = current_app.config.get('market_data_access')
@@ -229,7 +237,7 @@ def update_market():
                 last_count = market.prev_quantity_crop
                 current_count = market.current_quantity_crop
                 last_price = market.current_price
-                new_price = update_price(last_count, current_count, last_price)
+                new_price = update_price(last_count, current_count, last_price, base_price)
 
                 # Update prev_quantity_crop and reset current_quantity_crop
 
@@ -245,7 +253,7 @@ def update_market():
             market_data_access.add_market_data(market)
         else:
             # No existing market data found, create a new entry with crop's base price
-            new_market = Market(crop_name, 10, sale, 0, datetime.now())
+            new_market = Market(crop_name, base_price, sale, 0, datetime.now())
             market_data_access.add_market_data(new_market)
 
         return jsonify({"status": "success", "message": "Market data updated successfully"})
@@ -260,6 +268,10 @@ def fetch_crop_price():
     try:
         # Get the crop name from the query parameters
         crop_name = request.args.get('crop')
+        base_price = request.args.get('base_price')
+        if not isinstance(base_price, int):
+            base_price = int(request.args.get('base_price'))
+
 
         # Query the database to fetch the price of the crop from the market
         market_data_access = current_app.config.get('market_data_access')
@@ -273,7 +285,7 @@ def fetch_crop_price():
                 last_count = market.prev_quantity_crop
                 current_count = market.current_quantity_crop
                 last_price = market.current_price
-                new_price = update_price(last_count, current_count, last_price)
+                new_price = update_price(last_count, current_count, last_price, base_price)
 
                 # change the price based on sales and random variable
                 market.current_price = new_price
@@ -282,7 +294,11 @@ def fetch_crop_price():
             return jsonify({"price": market.current_price})
         else:
             # If market data doesn't exist, return an error message
-            return jsonify({"error": "Market data not found for the crop"}), 404
+            # No existing market data found, create a new entry with crop's base price
+
+            new_market = Market(crop_name, base_price, 0, 0, datetime.now())
+            market_data_access.add_market_data(new_market)
+            return jsonify({"error": "Market data not found for the crop", "crop": crop_name, "base_price":base_price}), 404
 
     except Exception as e:
         # If any error occurs, return an error response
