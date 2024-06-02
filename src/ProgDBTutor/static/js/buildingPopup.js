@@ -291,6 +291,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
 
     popup.classList.add('show');
     isPopupOpen = true;
+}
 
 function cropPopupPreparation() {
     const buttons = document.querySelectorAll(".crop-buttons-grid img");
@@ -745,4 +746,3 @@ function getResourceImg(resource) {
 function spaceTo_(input) {
     return input.replace(/ /g, '_');
 }
-

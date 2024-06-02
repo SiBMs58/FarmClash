@@ -417,8 +417,7 @@ def fetch_building_information_by_type(building_type):
                 "general_information": building.building_type,
                 "level": building.level,
                 "augment_level": building.augment_level,
-                "building_location": [building.x, building.y],
-                "tile_rel_locations": building.tile_rel_locations
+                "building_location": [building.x, building.y]
             }
             building_information[building.building_id] = building_info
 
@@ -471,21 +470,6 @@ def fetch_building_information_for_user(username):
 
         return jsonify(json_response)
 
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-
-@api_blueprint.route('/animals', methods=['GET'])
-@login_required
-def get_animals():
-    """
-    Handles GET requests for all animals. This will return a list of all animals, for the current user
-    :return: A list of all animals, in json format
-    """
-    try:
-        animal_data_access = current_app.config.get('animal_data_access')
-        animals = animal_data_access.get_animals(current_user.username)
-        return jsonify([animal.to_dict() for animal in animals])
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
