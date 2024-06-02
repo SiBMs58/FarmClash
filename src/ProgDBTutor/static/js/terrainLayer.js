@@ -1,5 +1,6 @@
 import { BaseMap } from "./baseMap.js";
 import { utils } from "./utils.js";
+import { EMPTY_TILE} from "./buildingLayer.js";
 
 
 export function getAssetDir(assetName) {
@@ -62,7 +63,7 @@ export class TerrainMap extends BaseMap {
         this.time = 0; // amount of frames passed
         this.cycle = 2; // animation part
 
-        this.buildingMapInstace = null;
+        this.buildingMapInstance = null;
 
     }
 
@@ -77,7 +78,7 @@ export class TerrainMap extends BaseMap {
     }
 
     addBuildingMapInstance(buildingMapInstance) {
-        this.buildingMapInstace = buildingMapInstance;
+        this.buildingMapInstance = buildingMapInstance;
     }
 
     /**
@@ -187,7 +188,20 @@ export class TerrainMap extends BaseMap {
         }
     }
 
-    getBuildingTileLocations(buildingInformation, buildingGeneralInformation) {
+    getBuildingTileLocations() {
+        let buildingTileLocations = [];
+        const tileArray = this.buildingMapInstance.tiles;
+        for (let i = 0; i < tileArray.length; i++) {  // Iterate over rows
+            for (let j = 0; j < tileArray[i].length; j++) {  // Iterate over columns
+                if (tileArray[i][j] === EMPTY_TILE) {
+                    continue;
+                }
+                buildingTileLocations.push([i, j]);
+            }
+        }
+        return buildingTileLocations;
+
+        /*
         let buildingTileLocations = [];
         for (let key in buildingInformation) {
              if (!Object.hasOwnProperty.call(buildingInformation, key)) {
@@ -204,6 +218,8 @@ export class TerrainMap extends BaseMap {
              }
         }
         return buildingTileLocations;
+
+         */
     }
 
     isEdgeTile(tileName) {
@@ -220,10 +236,10 @@ export class TerrainMap extends BaseMap {
      */
     drawTiles() {
         // getAll building locations
-        const buildingInformation = this.buildingMapInstace.buildingInformation;
-        const buildingGeneralInformation = this.buildingMapInstace.buildingGeneralInformation;
+        //const buildingInformation = this.buildingMapInstace.buildingInformation;
+        //const buildingGeneralInformation = this.buildingMapInstace.buildingGeneralInformation;
 
-        const buildingTileLocations = this.getBuildingTileLocations(buildingInformation, buildingGeneralInformation);
+        const buildingTileLocations = this.getBuildingTileLocations();
 
         const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
         const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
@@ -251,7 +267,7 @@ export class TerrainMap extends BaseMap {
                     //if (assetDir !== "Water" && !this.isEdgeTile(currTile)) {
                     //    filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
                     //}
-                    if (this.buildingMapInstace.isOnGrassRectangle(i_map, j_map)) {
+                    if (this.buildingMapInstance.isOnGrassRectangle(i_map, j_map)) {
                         filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
                     }
                 }

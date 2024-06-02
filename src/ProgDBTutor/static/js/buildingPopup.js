@@ -718,6 +718,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function augmentCost(level) {
     return 50 * Math.pow(2, level) + 50;
 }
+
 function getResourceImg(resource) {
     const typeDir = {
         '': ['Money'],

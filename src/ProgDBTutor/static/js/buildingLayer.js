@@ -6,7 +6,7 @@ import {defaultBuildingMapData} from "./defaultBuildingMapData.js";
 /**
  * Sets the string value of
  */
-const EMPTY_TILE = "None";
+export const EMPTY_TILE = "None";
 export const FIELD_GENERAL_INFO_NAME = "Field3";
 
 function getAssetDir(assetName) {
