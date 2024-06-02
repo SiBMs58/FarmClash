@@ -473,12 +473,12 @@ const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
 function pressUpgradeButton() {
     upgradeButton.style.display = 'none';
     upgradeButtonPressed.style.display = 'block';
+    upgradeBuilding();
 }
 async function releaseUpgradeButton() {
     if (isUpgradableBool) {
         upgradeButton.style.display = 'block';
         upgradeButtonPressed.style.display = 'none';
-        upgradeBuilding();
         buildingMap.drawTiles();
         await buildingMap.updateBuildingMapDB();
     }
