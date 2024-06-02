@@ -14,6 +14,7 @@ function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
+
 /**
  * Example of the generated grid will look like:
  * This will be used to check for overlap and possibly by other classes to check the building layout.
@@ -43,8 +44,6 @@ const defaultMapData = {
  —
  y
  */
-
-
 export class BuildingMap extends BaseMap {
     /**
      * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
@@ -180,6 +179,7 @@ export class BuildingMap extends BaseMap {
                 toReturn[currMapLocationY][currMapLocationX] = newTileMapElement;
             }
         }
+
         return toReturn;
     }
 
