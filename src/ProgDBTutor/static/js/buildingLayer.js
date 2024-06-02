@@ -8,6 +8,7 @@ import {defaultBuildingMapData} from "./defaultBuildingMapData.js";
  */
 export const EMPTY_TILE = "None";
 export const FIELD_GENERAL_INFO_NAME = "Field3";
+export const BAY_GENERAL_INFO_NAME = "Bay";
 
 function getAssetDir(assetName) {
     return assetName.split('.')[0];
@@ -649,7 +650,7 @@ export class BuildingMap extends BaseMap {
                 this.showUnlockWarning(this.buildingInformation[buildingName]);
                 return true;
             }
-            if (this.buildingInformation[buildingName].general_information === "Bay") {
+            if (this.buildingInformation[buildingName].general_information === BAY_GENERAL_INFO_NAME) {
                 return true;
             }
 
