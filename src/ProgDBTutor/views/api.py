@@ -403,6 +403,7 @@ def fetch_building_information():
                 "level": building.level,
                 "augment_level": building.augment_level,
                 "building_location": [building.x, building.y],
+                "unlock_level": building.unlock_level
             }
             building_information[building.building_id] = building_info
 
@@ -435,7 +436,8 @@ def fetch_building_information_by_type(building_type):
                 "general_information": building.building_type,
                 "level": building.level,
                 "augment_level": building.augment_level,
-                "building_location": [building.x, building.y]
+                "building_location": [building.x, building.y],
+                "unlock_level": building.unlock_level
             }
             building_information[building.building_id] = building_info
 
@@ -478,7 +480,7 @@ def fetch_building_information_for_user(username):
                 "level": building.level,
                 "augment_level": building.augment_level,
                 "building_location": [building.x, building.y],
-                "tile_rel_locations": building.tile_rel_locations
+                "unlock_level": building.unlock_level
             }
             building_information[building.building_id] = building_info
 
