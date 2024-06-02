@@ -68,7 +68,7 @@ def get_resource_quantity():
     quantity = resource_data_access.get_resource_quantity(current_user.username, resource_type)
 
     if quantity is not None:
-        return jsonify({"resource_type": resource_type, "quantity": quantity})
+        return jsonify({"resource_type": resource_type, "quantity": quantity}), 200
     else:
         return jsonify({"resource_type": "resource not found", "quantity": 0}), 404
 

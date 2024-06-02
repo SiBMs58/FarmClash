@@ -34,12 +34,9 @@ async function isUpgradable(buildingInformation, buildingGeneralInformation, bui
     let test = await upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName);
     console.log(test);
     if ( test === true){
-        console.log("true up if");
         isUpgradableBool = true;
-        console.log("isupgrade true");
         return true; // ook nog true returnen
     }
-    console.log("upgrade true");
     isUpgradableBool = false;
     return false; // ook nog true returnen
 }
@@ -179,18 +176,12 @@ const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
 function pressUpgradeButton() {
     upgradeButton.style.display = 'none';
     upgradeButtonPressed.style.display = 'block';
-    console.log("press upgrade");
-    console.log(1);
-    console.log("silo");
-    console.log(2);
-    upgradeBuilding();
-
 }
 async function releaseUpgradeButton() {
     if (isUpgradableBool) {
         upgradeButton.style.display = 'block';
         upgradeButtonPressed.style.display = 'none';
-        // level += 1
+        upgradeBuilding();
         buildingMap.drawTiles();
         await buildingMap.updateBuildingMapDB();
     }
@@ -203,27 +194,49 @@ upgradeButtonPressed.addEventListener('mouseleave', releaseUpgradeButton);
 // ——————————————
 // UPGRADE CHECKS
 
-async function fetchResources(resourceType) {
-    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-    try {
-        let fetchLink = `${BASE_URL}/api/single-resource-quantity?resource_type=${resourceType}`;
-        console.log("fetchResources() fetchLink: ", fetchLink);
-        const response = await fetch(fetchLink);
+async function fetchResources() {
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        try {
+            let fetchLink = BASE_URL + "/api/resources";
+            console.log("fetchResources() fetchLink: ", fetchLink);
+            const response = await fetch(fetchLink);
+            console.log("fetchResources() success");
+            return await response.json();
 
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status} ${response.statusText}`);
+        } catch(error) {
+            console.error('fetchResources() failed:', error);
+            throw error;
         }
+    }
 
-        const resourceData = await response.json();
-        console.log("Resource Data: ", resourceData);
+async function updateResources(resource, count) {
+    const resources = {
+        [resource]: count // Use the resource as the key and the count as the value
+    };
+    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+    const fetchLink = `${BASE_URL}/api/add-resources`;
 
-        // Process the resource data as needed
-        return resourceData.quantity;
+    try {
+        const response = await fetch(fetchLink, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(resources) // Send the serialized resource data as the request body
+        });
+
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            console.log('Resources DB update successful:', jsonResponse);
+        } else {
+            console.error('Add-resources DB update failed with status:', response.status);
+        }
     } catch (error) {
-        console.error('fetchResources() failed:', error);
-        throw error;
+        console.error('Failed to update resources:', error);
     }
 }
+
+let curr_level_cost;
 
 async function upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName) {
     let building_type;
@@ -244,37 +257,39 @@ async function upgrade_checks(buildingInformation, buildingGeneralInformation, b
             }
         }
     }
-    console.log("curr lvl " + current_level);
-    console.log(building_type);
+
     if (current_level>townhall_level && building_type !== "Townhall"){
-        console.log("th false");
         return false;
     }
     if (current_level===10){
-        console.log("lvl false");
         return false;
+    }
+
+    // Second loop to check if the current level is the max level for this building type
+    if (buildingGeneralInformation.hasOwnProperty(building_type)) {
+        let upgrade_cost = buildingGeneralInformation[building_type].upgrade_costs;
+
+        let next_level_key = `L${current_level + 1}`;
+        let next_level_cost = upgrade_cost[next_level_key];
+        curr_level_cost = upgrade_cost[next_level_key];
+
+        let resourcesQuantity = await fetchResources();
+
+        for (const resource of resourcesQuantity) {
+            for (const cost of next_level_cost){
+                // this comment gives the user the requered upgrade cost
+                /*if (cost[0] === resource.resource_type){
+                    await updateResources(resource.resource_type, cost[1]);
+                }*/
+                if (cost[0] === resource.resource_type && cost[1]>resource.amount){
+                    return false;
+                }
+            }
+        }
     }
     console.log("up true");
     return true;
 
-    /*let current_resources = await fetchResources("Money");
-    let upgrade_cost;*/
-
-    /*if (building_type && current_level !== undefined) {
-        // Second loop to check if the current level is the max level for this building type
-        if (buildingGeneralInformation.hasOwnProperty(building_type)) {
-            upgrade_cost = buildingGeneralInformation[building_type].upgrade_costs[current_level-1];
-            if (current_resources<upgrade_cost){
-                return false;
-            }
-            if (current_level === buildingGeneralInformation[building_type].maxLevel) {
-                return true;
-            } else {
-                return false;
-            }
-        }*/
-
-    // Return false if building type or current level is not found
 }
 
 /**
@@ -282,12 +297,14 @@ async function upgrade_checks(buildingInformation, buildingGeneralInformation, b
      * @returns {boolean} returns true if the upgrade was succesfull
      */
 
-function upgradeBuilding(){
-    console.log(currBuildingName);
+async function upgradeBuilding(){
     for (const key in currBuildingInfo) {
-        console.log(buildingName);
         if (currBuildingName === currBuildingInfo[key].self_key) {
             currBuildingInfo[key].level = currBuildingInfo[key].level+1;
+            console.log(curr_level_cost);
+            for (const cost of curr_level_cost){
+                await updateResources(cost[0], -cost[1]);
+            }
             console.log(currBuildingInfo[key].level);
             }
         }
