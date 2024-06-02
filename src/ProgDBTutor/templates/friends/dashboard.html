@@ -4,6 +4,8 @@
     <title>Dashboard - {{ app_data['app_name'] }}</title>
     <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/header&footer.css') }}">
+
     {% include 'head.html' %}
 
     <style>
@@ -19,7 +21,18 @@
     </style>
 </head>
 <body>
-    {% include 'header&footer.html' %}
+    <header>
+        <button id="back-btn" class="back-btn">
+            <a href="{{ url_for('main') }}">
+                <img src="{{ url_for('static', filename='img/UI/back_btn.png') }}" alt="Back">
+            </a>
+        </button>
+        <button id="back-btn" class="farmclash-btn">
+            <a href="{{ request.path }}">
+                <img src="{{ url_for('static', filename='img/UI/FarmClash_btn.png') }}" alt="{{ app_data['app_name'] }}">
+            </a>
+        </button>
+    </header>
 
   <div class="container-fluid mt-5">
     <div class="row justify-content-center">
