@@ -106,13 +106,13 @@ export class BuildingMap extends BaseMap {
     generateBuildingUnlockLevelJson() {
         // Initialize the buildingUnlockLevels object with keys 1 to 10
         const buildingUnlockLevels = {};
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 0; i <= 10; i++) {
             buildingUnlockLevels[i] = [];
         }
 
         // Temporary object to count general_information occurrences per unlock_level
         const temp_dict = {};
-        for (let i = 1; i <= 10; i++) {
+        for (let i = 0; i <= 10; i++) {
             temp_dict[i] = {};
         }
         // Iterate over the building information
@@ -125,6 +125,7 @@ export class BuildingMap extends BaseMap {
             const unlock_level = info.unlock_level;
             const general_info = info.general_information;
 
+            debugger;
             if (temp_dict[unlock_level][general_info]) {
                 temp_dict[unlock_level][general_info] += 1;
             } else {
