@@ -55,6 +55,13 @@ def townhall():
     """
     return render_template('townhall.html', app_data=config_data)
 
+@game_blueprint.route('/exploration')
+@login_required
+def exploration():
+    """
+    Renders the EXPLORATION  view.
+    """
+    return render_template('exploration/exploration.html', app_data=config_data)
 
 @game_blueprint.route('/gifts')
 @login_required
@@ -149,33 +156,32 @@ def update_map():
         buildings = building_data_access.get_buildings_by_username_owner(username_owner)
 
         for building_info in building_information.values():
-            last_building = building_info
             building_type = building_info["general_information"]
             level = building_info["level"]
+            augment_level = building_info.get("augment_level", 0)  # Default to 0 if not provided
+            unlock_level = building_info.get("unlock_level", 0)  # Default to 0 if not provided
             created_at = datetime.now()
-            tile_rel_locations_json = json.dumps(building_info["tile_rel_locations"])  # Serialize to JSON
             x_value = building_info["building_location"][0]
             y_value = building_info["building_location"][1]
             building_id = building_info["self_key"]
 
-            building = building_user_exists(buildings, building_id)
+            building = next((b for b in buildings if b.building_id == building_id), None)
 
             if building:
                 # Update the existing building entry
                 building.building_type = building_type
                 building.level = level
+                building.augment_level = augment_level
+                building.unlock_level = unlock_level
                 building.created_at = created_at
                 building.x = x_value
                 building.y = y_value
-                building.tile_rel_locations = tile_rel_locations_json
                 building_data_access.add_building(building)
 
             else:
                 # Insert a new building entry
-                new_building = Building(building_id, username_owner, building_type, level, x_value, y_value,
-                                        tile_rel_locations_json, created_at)
+                new_building = Building(building_id, username_owner, building_type, unlock_level, level, x_value, y_value, created_at, augment_level)
                 building_data_access.add_building(new_building)
-
 
         return jsonify({"status": "success", "message": "Data inserted successfully"})
     except Exception as e:
@@ -185,9 +191,9 @@ def update_map():
 """
 Markt fetch and update functions
 """
-def update_price(last_count, current_count, last_price):
-    if last_price == 10 or current_count == 30:
-        last_price = 20
+def update_price(last_count, current_count, last_price, base_price):
+    if last_price == base_price or current_count == base_price*3:
+        last_price = base_price*2
     # Calculate the ratio of current count to last count
     count_ratio = current_count / last_count if last_count != 0 else 1
     if count_ratio >= 1:
@@ -201,7 +207,7 @@ def update_price(last_count, current_count, last_price):
     new_price = last_price * random_factor
 
     # Ensure the price is within the specified range
-    new_price = max(10, min(30, round(new_price)))
+    new_price = max(base_price, min(base_price*3, round(new_price)))
 
     # return jsonify({"count_ratio": count_ratio, "random_factor" : random_factor, "new_price" : new_price})
     return new_price
@@ -217,6 +223,7 @@ def update_market():
         json_data = request.json
         crop_name = json_data["crop"]
         sale = json_data["sale"]
+        base_price = json_data["base_price"]
 
         # Get current market data
         market_data_access = current_app.config.get('market_data_access')
@@ -232,7 +239,7 @@ def update_market():
                 last_count = market.prev_quantity_crop
                 current_count = market.current_quantity_crop
                 last_price = market.current_price
-                new_price = update_price(last_count, current_count, last_price)
+                new_price = update_price(last_count, current_count, last_price, base_price)
 
                 # Update prev_quantity_crop and reset current_quantity_crop
 
@@ -248,7 +255,7 @@ def update_market():
             market_data_access.add_market_data(market)
         else:
             # No existing market data found, create a new entry with crop's base price
-            new_market = Market(crop_name, 10, sale, 0, datetime.now())
+            new_market = Market(crop_name, base_price, sale, 0, datetime.now())
             market_data_access.add_market_data(new_market)
 
         return jsonify({"status": "success", "message": "Market data updated successfully"})
@@ -263,6 +270,10 @@ def fetch_crop_price():
     try:
         # Get the crop name from the query parameters
         crop_name = request.args.get('crop')
+        base_price = request.args.get('base_price')
+        if not isinstance(base_price, int):
+            base_price = int(request.args.get('base_price'))
+
 
         # Query the database to fetch the price of the crop from the market
         market_data_access = current_app.config.get('market_data_access')
@@ -276,7 +287,7 @@ def fetch_crop_price():
                 last_count = market.prev_quantity_crop
                 current_count = market.current_quantity_crop
                 last_price = market.current_price
-                new_price = update_price(last_count, current_count, last_price)
+                new_price = update_price(last_count, current_count, last_price, base_price)
 
                 # change the price based on sales and random variable
                 market.current_price = new_price
@@ -285,7 +296,11 @@ def fetch_crop_price():
             return jsonify({"price": market.current_price})
         else:
             # If market data doesn't exist, return an error message
-            return jsonify({"error": "Market data not found for the crop"}), 404
+            # No existing market data found, create a new entry with crop's base price
+
+            new_market = Market(crop_name, base_price, 0, 0, datetime.now())
+            market_data_access.add_market_data(new_market)
+            return jsonify({"error": "Market data not found for the crop", "crop": crop_name, "base_price":base_price}), 404
 
     except Exception as e:
         # If any error occurs, return an error response

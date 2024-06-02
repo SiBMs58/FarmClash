@@ -7,6 +7,7 @@ from data_access.building_data_access import BuildingDataAccess
 from data_access.market_data_access import MarketDataAccess
 from data_access.crops_data_access import CropsDataAccess
 from data_access.map_data_access import MapDataAccess
+from data_access.field_data_access import FieldDataAccess
 from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
 from data_access.friendship_data_access import FriendshipDataAccess
@@ -14,7 +15,6 @@ from data_access.chatmessage_data_access import ChatMessageDataAccess
 from data_access.exploration_data_access import ExplorationDataAccess
 from data_access.animal_data_access import AnimalDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
-from views.exploration import exploration_blueprint
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
@@ -44,6 +44,8 @@ friendship_data_access = FriendshipDataAccess(connection)
 app.config['friendship_data_access'] = friendship_data_access
 chatmessage_data_access = ChatMessageDataAccess(connection)
 app.config['chatmessage_data_access'] = chatmessage_data_access
+field_data_access = FieldDataAccess(connection)
+app.config['field_data_access'] = field_data_access
 building_data_access = BuildingDataAccess(connection)
 app.config['building_data_access'] = building_data_access
 market_data_access = MarketDataAccess(connection)
@@ -72,7 +74,6 @@ app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
-app.register_blueprint(exploration_blueprint, url_prefix='/exploration')
 app.register_blueprint(attack_blueprint, url_prefix='/attack')
 
 DEBUG = True

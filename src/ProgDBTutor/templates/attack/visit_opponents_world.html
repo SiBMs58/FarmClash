@@ -91,12 +91,19 @@
 
     <div id="canvasContainer">
         <canvas id="uiCanvas"></canvas>
+        <canvas id="cropCanvas"></canvas>
         <canvas id="buildingCanvas"></canvas>
         <canvas id="terrainCanvas"></canvas>
     </div>
 
     <!-- When visiting a opponent's world -->
     <script id="dataScript" type="module" data-opponent="{{ opponent['username'] | string }}" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
+
+    <script>
+        // Attach friend to the window object to make it globally accessible
+        window.friend = document.getElementById('dataScript').getAttribute('data-opponent');
+        console.log(window.friend);
+    </script>
 
     <script>
         function hideLoadingScreen() {

@@ -39,6 +39,7 @@ export class UserInputHandler {
         // To check whether to register click or drag
         let clickStartPosition = null;
         document.getElementById("canvasContainer").addEventListener('mousedown', (event) => {
+            console.log("mousedown");
             switch(event.button) {
                 case 0:
                     clickStartPosition = { x: event.clientX - rect.left, y: event.clientY - rect.top};
@@ -51,6 +52,7 @@ export class UserInputHandler {
 
         });
         document.getElementById("canvasContainer").addEventListener('mouseup', (event) => {
+            console.log("mouseup");
             switch (event.button) {
                 case 0:
                     this.handleScrollInput(event);

@@ -1,20 +1,25 @@
-import { BaseMap } from "./baseMap.js";
-import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
-import { utils } from "./utils.js";
+import {BaseMap} from "./baseMap.js";
+import {closePopup, isPopupOpen, openPopup} from "./buildingPopup.js";
+import {utils} from "./utils.js";
+import {defaultBuildingMapData} from "./defaultBuildingMapData.js";
 
 /**
  * Sets the string value of
  */
-const EMPTY_TILE = "None";
+export const EMPTY_TILE = "None";
+export const FIELD_GENERAL_INFO_NAME = "Field3";
+export const BAY_GENERAL_INFO_NAME = "Bay";
 
 function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
+
 /**
  * Example of the generated grid will look like:
  * This will be used to check for overlap and possibly by other classes to check the building layout.
  */
+/*
 const defaultMapData = {
     map_width: 50,
     map_height: 50,
@@ -29,130 +34,7 @@ const defaultMapData = {
         ["None","None","None","None","None","None","None","None","None","None",["Fences.3.2", "fence5"],["Fences.4.3", "fence5"],["Fences.3.4", "fence5"],"None"],
         ["None","None","None","None","None","None","None","None","None","None","None","None","None","None"],
     ]
-}
-
-/**
- * Here's an example of what the buildMap json needs to look like.
- */
-export const defaultMapData2 = {
-    map_width: 58,
-    map_height: 43,
-
-    building_information: {
-        fence1: {
-            self_key: "fence1", // Must be the exact key of this sub-object
-            general_information: "fence", // Link to the general information of this building type
-            level: 4, // Building level (set "None" if not relevant)
-            building_location: [5, 4], // --> [y (height), x (width)], it's best practice to take the top-left corner of the building
-            tile_rel_locations: [ // location relative to 'building_location'
-                [[0, 0], "Fence.L4"], // [ rel_location ([y, x]), "Tile asset"]
-            ]
-        },
-        fence2: {
-            self_key: "fence2",
-            general_information: "fence",
-            level: 3,
-            building_location: [5, 7],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L5"],
-            ]
-        },
-        fence3: {
-            self_key: "fence3",
-            general_information: "fence",
-            level: 2,
-            building_location: [8, 8],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L3"],
-            ]
-        },
-        fences_lv1: {
-            self_key: "fences_lv1",
-            general_information: "fence",
-            level: 1,
-            building_location: [6, 11],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L1.OZ"],
-                [[0, 1], "Fence.L1.OW"],
-                [[0, 2], "Fence.L1.ZW"],
-                [[1, 2], "Fence.L1.NZ"],
-                [[2, 2], "Fence.L1.NW"],
-                [[2, 1], "Fence.L1.OW"],
-                [[2, 0], "Fence.L1.NO"],
-                [[1, 0], "Fence.L1.NZ"],
-            ]
-        },
-        fences_lv9: {
-            self_key: "fences_lv9",
-            general_information: "fence",
-            level: 9,
-            building_location: [6, 15],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L9.OZ"],
-                [[0, 1], "Fence.L9.OW"],
-                [[0, 2], "Fence.L9.ZW"],
-                [[1, 2], "Fence.L9.NZ"],
-                [[2, 2], "Fence.L9.NW"],
-                [[2, 1], "Fence.L9.OW"],
-                [[2, 0], "Fence.L9.NO"],
-                [[1, 0], "Fence.L9.NZ"],
-            ]
-        },
-        fences_lv10: {
-            self_key: "fences_lv10",
-            general_information: "fence",
-            level: 10,
-            building_location: [6, 19],
-            tile_rel_locations: [
-                [[0, 0], "Fence.L10.OZ"],
-                [[0, 1], "Fence.L10.OW"],
-                [[0, 2], "Fence.L10.ZW"],
-                [[1, 2], "Fence.L10.NZ"],
-                [[2, 2], "Fence.L10.NW"],
-                [[2, 1], "Fence.L10.OW"],
-                [[2, 0], "Fence.L10.NO"],
-                [[1, 0], "Fence.L10.NZ"],
-            ]
-        },
-        chicken_coop: {
-            self_key: "chicken_coop",
-            general_information: "chicken_house",
-            level: 5,
-            building_location: [12, 11],
-            tile_rel_locations: [
-                [[0, 0], "Chickencoop.L1.1.1"],
-                [[0, 1], "Chickencoop.L1.1.2"],
-                [[1, 0], "Chickencoop.L1.2.1"],
-                [[1, 1], "Chickencoop.L1.2.2"],
-                [[2, 0], "Chickencoop.3.1"],
-                [[2, 1], "Chickencoop.3.2"],
-            ]
-        }
-    },
-
-    building_general_information: {
-        chicken_house: {
-            display_name: "Chicken House", // Name to be displayed in the popup
-            explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
-                "This vital building is where your feathered friends lay eggs, ready for " +
-                "market sale. Upgrade to boost production. Every egg sold brings you one " +
-                "step closer to agricultural dominance.",
-            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000], // All costs per level starting from level 2 (in this case level1 -> level2 costs 500 coins)
-            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]] // All other stats specific for this building. ["Stat name display", [array of all values per level]]
-        },
-        fence: {
-            display_name: "Fence",
-            explanation: "Strategically place your fences in order to defend you farm from intruders as effectively as possible.",
-            upgrade_costs: [500, 1000, 2000, 3500],
-            other_stats: [["Defence", [50, 100, 150, 200, 400]]]
-        },
-        tree: {
-            display_name: "Tree",
-            explanation: "This is just a tree."
-        }
-    }
-}
-
+}*/
 
 /** Tile coördinaten: (y,x)
  0 1 2 3 | x
@@ -162,32 +44,31 @@ export const defaultMapData2 = {
  —
  y
  */
-
-
 export class BuildingMap extends BaseMap {
     /**
      * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
      * @param _tileSize The tile size to be displayed on screen.
      * @param _ctx context needed for drawing on-screen.
      * @param terrainMapInstance This is an instance that is needed for certain checks (for example to make sure a building isn't being placed on water)
-     * @param uiLayerInstance This instance is needed to draw the correct building UI.
+     * @param cropMapInstance This is en instance that is needed in order to call the drawTiles function when a building moves
      * @param username The username of the player. Used to fetch the right map data.
      */
-    constructor(mapData = defaultMapData2, _tileSize, _ctx, terrainMapInstance, uiLayerInstance, username) {
+    constructor(mapData = defaultBuildingMapData, _tileSize, _ctx, terrainMapInstance, cropMapInstance, username) {
 
         super(mapData, _tileSize, username);
 
         this.buildingInformation = mapData.building_information;
         this.buildingGeneralInformation = mapData.building_general_information
-        this.tiles = this.generateBuildingTileMap();
+        //this.tiles = this.generateBuildingTileMap();
+        this.tiles = null;
         this.ctx = _ctx;
 
         this.buildingAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
+        this.relativeLocations = {} // Contains the relative locations of all the buildings
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
         this.terrainMapInstance = terrainMapInstance;
-        this.uiLayerInstance = uiLayerInstance;
-
+        this.cropMapInstance = cropMapInstance;
 
         // Variables to remember the click state
         this.movingBuilding = false;
@@ -195,6 +76,68 @@ export class BuildingMap extends BaseMap {
 
         // To remember building following mouse movement
         this.prevMouseMoveBuildingLoc = null; // [y, x]
+
+        // @Faisal json with all levels and what buildings unlock at this level --> [Count, general_information]
+        // Example:
+        this.buildingUnlockLevels = {
+            1: [[2, "Field"], [1, "Goatbarn"]],
+        };
+
+
+    }
+
+    /**
+     * Initialises the building layer. Fetches everything that needs to be fetched from the server, and stores it.
+     */
+    async initialize() {
+        await this.fetchBuildingAssetList();
+        await this.fetchRelativeLocations();
+        //await this.fetchBuildingMapData();
+        this.tiles = this.generateBuildingTileMap();
+        await new Promise((resolve) => this.preloadBuildingAssets(resolve));
+        // Safe to call stuff here
+        //console.log("fetchBuildingLayerList() success"); // Don't remove this
+        //localStorage.setItem('gameData', 'true');
+        this.generateBuildingUnlockLevelJson();
+        hideLoadingScreen();
+
+    }
+
+    generateBuildingUnlockLevelJson() {
+        // Initialize the buildingUnlockLevels object with keys 1 to 10
+        const buildingUnlockLevels = {};
+        for (let i = 0; i <= 10; i++) {
+            buildingUnlockLevels[i] = [];
+        }
+
+        // Temporary object to count general_information occurrences per unlock_level
+        const temp_dict = {};
+        for (let i = 0; i <= 10; i++) {
+            temp_dict[i] = {};
+        }
+        // Iterate over the building information
+        for (const key in this.buildingInformation) {
+            if (key === "townhall") {  // Skip the townhall
+                continue;
+            }
+
+            const info = this.buildingInformation[key];
+            const unlock_level = info.unlock_level;
+            const general_info = info.general_information;
+
+            if (temp_dict[unlock_level][general_info]) {
+                temp_dict[unlock_level][general_info] += 1;
+            } else {
+                temp_dict[unlock_level][general_info] = 1;
+            }
+        }
+
+        // Populate the buildingUnlockLevels object
+        for (const level in temp_dict) {
+            for (const general_info in temp_dict[level]) {
+                buildingUnlockLevels[level].push([temp_dict[level][general_info], general_info]);
+            }
+        }
     }
 
     /**
@@ -222,8 +165,15 @@ export class BuildingMap extends BaseMap {
             const currBuilding = this.buildingInformation[buildingKey];
             const locationY = currBuilding.building_location[0];
             const locationX = currBuilding.building_location[1];
-            for (const currTile of currBuilding.tile_rel_locations) {
-                const newTileMapElement = [currTile[1], buildingKey];
+
+            //const generalInfoKey = currBuilding.general_information
+            //const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations
+            const tile_rel_locations = this.getRelativeLocations(currBuilding);
+            for (const currTile of tile_rel_locations) {
+                let tileToDrawWithoutLevelReplaced = currTile[1];
+                const buildingLevel = currBuilding.level
+                let tileToDrawName = tileToDrawWithoutLevelReplaced.replace(/@/g, buildingLevel);
+                const newTileMapElement = [tileToDrawName, buildingKey];
                 const currMapLocationY = locationY + currTile[0][0];
                 const currMapLocationX = locationX + currTile[0][1];
                 toReturn[currMapLocationY][currMapLocationX] = newTileMapElement;
@@ -231,20 +181,6 @@ export class BuildingMap extends BaseMap {
         }
 
         return toReturn;
-    }
-
-    /**
-     * Initialises the building layer. Fetches everything that needs to be fetched from the server, and stores it.
-     */
-    async initialize() {
-        await this.fetchBuildingAssetList();
-        await this.fetchBuildingMapData();
-        this.tiles = this.generateBuildingTileMap();
-        await new Promise((resolve) => this.preloadBuildingAssets(resolve));
-        // Safe to call stuff here
-        //debugger;
-        console.log("fetchBuildingLayerList() success");
-        hideLoadingScreen();
     }
 
     /**
@@ -256,12 +192,23 @@ export class BuildingMap extends BaseMap {
             const responseJson = await response.json();
             this.buildingAssetList = responseJson.buildings;
         } catch (error) {
-            debugger;
             console.error('fetchBuildingAssetList() failed:', error);
             throw error;
         }
 
-        console.log("fetchBuildingAssetList() success, buildingAssetList: ", this.buildingAssetList);
+        console.log("fetchBuildingAssetList() success");
+    }
+
+    async fetchRelativeLocations() {
+        try {
+            const response = await fetch('/static/img/assets/relativeLocation.json');
+            this.relativeLocations = await response.json();
+        } catch (error) {
+            console.error('fetchRelativeLocations() failed:', error);
+            throw error;
+        }
+
+        console.log("fetchRelativeLocations() success");
     }
 
     /**
@@ -279,18 +226,18 @@ export class BuildingMap extends BaseMap {
             const mapData = await response.json();
 
             // Check if mapData contains building_information
-            //debugger;
 
             if ("building_information" in mapData) {
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
                 this.buildingInformation = mapData.building_information;
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
-                console.log("fetchBuildingMapData() success, BuildingMapData: ", this.tiles);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
+                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.tiles);
             } else {
             // No buildings found
                 await this.updateBuildingMapDB();
+                console.log(mapData);
                 console.log("No buildings found.");
 
             }
@@ -353,39 +300,81 @@ export class BuildingMap extends BaseMap {
         this.ctx.clearRect(x_tile_screen, y_tile_screen, this.tileSize, this.tileSize);
     }
 
-    /**
-     * Old draw function. Draws using the generated 'this.tiles'.
-     */
-    /*
-    drawTiles2() {
-        this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
-
-        const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
-        const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
-
-        for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
-            for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
-                let filePath;
-                if (this.tiles[i_map] && this.tiles[i_map][j_map]) {
-                    const currTile = this.tiles[i_map][j_map];
-                    if (currTile === EMPTY_TILE) {
-                        this.clearTile(x_screen * this.tileSize, y_screen * this.tileSize);
-                        continue;
-                    }
-                    filePath = "/static/img/assets/buildings/" + getAssetDir(currTile[0]) + "/" + currTile[0] + ".png"; // currTile[0] want dit bestaat uit ["tileAsset", "buildingName"]
-                } else { // Out-of bounds
-                    continue;
-                }
-                const img = this.buildingAssets[filePath];
-                if (img) {
-                    this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
-                } else {
-                    console.error("BuildingMap.drawTiles(): image does not exist")
-                }
-            }
-        }
+    getFenceLevel(assetString) {
+        const levelString = assetString.split('.')[1].slice(1);
+        return Number(levelString);
     }
-     */
+
+    adjustFenceAsset(originalAssetName, yLocation, xLocation) {
+        const splitAssetName = originalAssetName.split('.')
+        let baseAssetName = splitAssetName[0] + '.' + splitAssetName[1] + '.';
+
+        let assetN = "None";
+        let assetO = "None";
+        let assetZ = "None";
+        let assetW = "None";
+
+        if (yLocation > 0) {
+            assetN = this.tiles[yLocation - 1][xLocation] === "None" ? "None" : this.tiles[yLocation - 1][xLocation][0];
+        }
+        if (xLocation < this.map_width - 1) {
+            assetO = this.tiles[yLocation][xLocation + 1] === "None" ? "None" : this.tiles[yLocation][xLocation + 1][0];
+        }
+        if (yLocation < this.map_height - 1) {
+            assetZ = this.tiles[yLocation + 1][xLocation] === "None" ? "None" : this.tiles[yLocation + 1][xLocation][0];
+        }
+        if (xLocation > 0) {
+            assetW = this.tiles[yLocation][xLocation - 1] === "None" ? "None" : this.tiles[yLocation][xLocation - 1][0];
+        }
+
+        const currFenceLvl = this.getFenceLevel(originalAssetName);
+
+        let appendedDirection = false;
+        if (utils.getAssetDir(assetN) === "Fence" && currFenceLvl === this.getFenceLevel(assetN)) {
+            baseAssetName += "N";
+            appendedDirection = true;
+        }
+        if (utils.getAssetDir(assetO) === "Fence" && currFenceLvl === this.getFenceLevel(assetO)) {
+            baseAssetName += "O";
+            appendedDirection = true;
+        }
+        if (utils.getAssetDir(assetZ) === "Fence" && currFenceLvl === this.getFenceLevel(assetZ)) {
+            baseAssetName += "Z";
+            appendedDirection = true;
+        }
+        if (utils.getAssetDir(assetW) === "Fence" && currFenceLvl === this.getFenceLevel(assetW)) {
+            baseAssetName += "W";
+            appendedDirection = true;
+        }
+
+        if (!appendedDirection) {
+            baseAssetName = baseAssetName.slice(0, -1);
+        }
+        return baseAssetName;
+    }
+
+
+    getSiloPercentage(building_obj) {
+        const key = building_obj.self_key;
+        // todo Percent implementeren als ge wilt
+        return "0%";
+    }
+
+
+    getRelativeLocations(building_obj, frame=null) {
+        const generalInfoKey = building_obj.general_information;
+        const level = building_obj.level;
+
+        let locationsKey = generalInfoKey + ".L" + level;
+
+        if (generalInfoKey === "Silo") {
+            locationsKey += "." + this.getSiloPercentage(building_obj);
+        } else if (generalInfoKey === "Bay") {
+            locationsKey += ".F1";
+        }
+
+        return this.relativeLocations[locationsKey];
+    }
 
     /**
      * Draws a building.
@@ -397,33 +386,28 @@ export class BuildingMap extends BaseMap {
         const screen_buildLocationY = building.building_location[0] - this.viewY;
         const screen_buildLocationX = building.building_location[1] - this.viewX;
 
-        for (const tile of building.tile_rel_locations) {
+        //const generalInfoKey = building.general_information;
+        //const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+
+        const tile_rel_locations = this.getRelativeLocations(building);
+
+        for (const tile of tile_rel_locations) {
             const screen_currTileLocY = screen_buildLocationY + tile[0][0];
             const screen_currTileLocX = screen_buildLocationX + tile[0][1];
 
-            /* This works but very buggy, also doesnt take in to account water and buildings beneath
-            const grassImg = new Image();
-            grassImg.src = "/static/img/assets/terrain/Grass/Grass.1.png";
-            grassImg.onload = () => {
-                this.ctx.drawImage(grassImg, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
-                 if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
+            if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth || screen_currTileLocY < 0 || screen_currTileLocX < 0) {
                 continue;
             }
 
-            const img = this.buildingAssets["/static/img/assets/buildings/" + getAssetType(tile[1]) + "/" + tile[1] + ".png"];
-            if (img) {
-                this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
-            } else {
-                console.error("BuildingMap.drawTiles(): image does not exist")
+            let tileToDrawWithoutLevelReplaced = tile[1];
+            const buildingLevel = building.level
+            let tileToDrawName = tileToDrawWithoutLevelReplaced.replace(/@/g, buildingLevel);
+            if (utils.getAssetDir(tileToDrawName) === "Fence") {
+                const currTileLocY = building.building_location[0] + tile[0][0];
+                const currTileLocX = building.building_location[1] + tile[0][1];
+                tileToDrawName = this.adjustFenceAsset(tileToDrawName, currTileLocY, currTileLocX)
             }
-            };
-             */
-
-            if (screen_currTileLocY > windowTileHeight || screen_currTileLocX > windowTileWidth) {
-                continue;
-            }
-
-            const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tile[1]) + "/" + tile[1] + ".png"];
+            const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tileToDrawName) + "/" + tileToDrawName + ".png"];
             if (img) {
                 this.ctx.drawImage(img, screen_currTileLocX * this.tileSize, screen_currTileLocY * this.tileSize, this.tileSize, this.tileSize);
             } else {
@@ -437,6 +421,7 @@ export class BuildingMap extends BaseMap {
      * @param topBuilding optional: Can be set if a building needs to be drawn on top of all other buildings.
      */
     drawTiles(topBuilding = null) {
+        this.tiles = this.generateBuildingTileMap();
         this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
         for (const buildingKey in this.buildingInformation) {
             if (!Object.hasOwnProperty.call(this.buildingInformation, buildingKey)) {
@@ -450,7 +435,8 @@ export class BuildingMap extends BaseMap {
         if (topBuilding !== null) {
             this.drawBuilding(topBuilding);
         }
-
+        this.terrainMapInstance.drawTiles();
+        this.cropMapInstance.drawTiles();
     }
 
     /**
@@ -458,6 +444,19 @@ export class BuildingMap extends BaseMap {
      */
     tick() {
         //console.log("building layer tick");
+    }
+
+    isEdgeTile(tileName) {
+        if (utils.getAssetDir(tileName) === "Grass") {
+            let str = String(tileName);
+            const targetLetters = ['N', 'O', 'W', 'Z'];
+            return targetLetters.some(letter => str.includes(letter));
+        }
+        return false;
+    }
+
+    isOnGrassRectangle(yCoord, xCoord) {
+        return yCoord > 3 && yCoord < this.map_height - 4  &&  xCoord > 3 && xCoord < this.map_width - 4;
     }
 
     /**
@@ -474,7 +473,10 @@ export class BuildingMap extends BaseMap {
         delete buildingInfoCopy[buildingToMove.self_key];
         // Finding all forbidden tiles
         for (const building of Object.values(buildingInfoCopy)) {
-            for (const currTile of building.tile_rel_locations) {
+            const generalInfoKey = building.general_information;
+            const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+            for (const currTile of tile_rel_locations) {
+            //for (const currTile of building.tile_rel_locations) {
                 const currYValue = building.building_location[0] + currTile[0][0];
                 const currXValue = building.building_location[1] + currTile[0][1];
                 forbiddenTiles.push([currYValue, currXValue]);
@@ -483,7 +485,10 @@ export class BuildingMap extends BaseMap {
 
         // Finding all new tile locations
         let newLocations = [];
-        for (const currTile of buildingToMove.tile_rel_locations) {
+        const generalInfoKey = buildingToMove.general_information;
+        const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+        for (const currTile of tile_rel_locations) {
+        //for (const currTile of buildingToMove.tile_rel_locations) {
             const currNewYValue = buildingToMove.building_location[0] + rel_y + currTile[0][0];
             const currNewXValue = buildingToMove.building_location[1] + rel_x + currTile[0][1];
             newLocations.push([currNewYValue, currNewXValue]);
@@ -503,7 +508,10 @@ export class BuildingMap extends BaseMap {
         for (const currTile of newLocations) {
             const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
             const terrainType = utils.getAssetDir(correspondingTerrainTile);
-            if (terrainType === "Water") {
+            //if (terrainType === "Water" || this.isEdgeTile(correspondingTerrainTile)) {
+            //    return false;
+            //}
+            if (!this.isOnGrassRectangle(currTile[0], currTile[1])) {
                 return false;
             }
         }
@@ -521,7 +529,10 @@ export class BuildingMap extends BaseMap {
     inBounds(rel_y, rel_x, buildingToMove) {
         // Finding all new tile locations
         let newLocations = [];
-        for (const currTile of buildingToMove.tile_rel_locations) {
+        const generalInfoKey = buildingToMove.general_information;
+        const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+        for (const currTile of tile_rel_locations) {
+        //for (const currTile of buildingToMove.tile_rel_locations) {
             const currNewYValue = buildingToMove.building_location[0] + rel_y + currTile[0][0];
             const currNewXValue = buildingToMove.building_location[1] + rel_x + currTile[0][1];
             newLocations.push([currNewYValue, currNewXValue]);
@@ -546,10 +557,8 @@ export class BuildingMap extends BaseMap {
         if (this.inBounds(rel_y, rel_x, buildingToMove)) {
             if (this.checkValidMoveLocation(rel_y, rel_x, buildingToMove)) {
                 console.log("Move successful");
-                // zet ui op groen
             } else {
                 console.log("Move not valid");
-                // zet ui op rood
             }
 
             buildingToMove.building_location[0] += rel_y;
@@ -570,9 +579,8 @@ export class BuildingMap extends BaseMap {
         }
     }
 
-    hoveringOverBuilding(tileX, tileY) {
 
-    }
+
 
     /**
      * Gets called by the 'UserInputHandler' class every time the mouse moves.
@@ -584,10 +592,12 @@ export class BuildingMap extends BaseMap {
         let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
 
         if (!this.movingBuilding) {
+            /*
             if (this.hoveringOverBuilding(tileX, tileY)) {
                 const buildingHoverName = this.tiles[tileY][tileX][1];
                 this.uiLayerInstance.drawHoverUI(buildingHoverName, this.viewX, this.viewY);
             }
+             */
             return;
         }
 
@@ -607,6 +617,11 @@ export class BuildingMap extends BaseMap {
             this.prevMouseMoveBuildingLoc[0] = tileY;
             this.prevMouseMoveBuildingLoc[1] = tileX;
         }
+    }
+
+    getTownHallLVL() {
+        const townHallBuilding = this.buildingInformation["townhall"];
+        return townHallBuilding.level;
     }
 
     /**
@@ -629,10 +644,36 @@ export class BuildingMap extends BaseMap {
 
         // Click on building and not yet moving
         if (this.movingBuilding === false) {
-            this.movingBuilding = true;
-            this.ownNextClick = true;
-            this.buildingClickedName = this.tiles[tileY][tileX][1];
-            this.currBuildingOrgLocation = Array.from(this.buildingInformation[this.buildingClickedName].building_location);
+            const buildingName = this.tiles[tileY][tileX][1];
+            this.buildingClickedName = buildingName;
+            // Check whether building is unlocked
+            if (this.buildingInformation[buildingName].unlock_level > this.getTownHallLVL()) {
+                this.showUnlockWarning(this.buildingInformation[buildingName]);
+                return true;
+            }
+            if (this.buildingInformation[buildingName].general_information === BAY_GENERAL_INFO_NAME) {
+                return true;
+            }
+
+            // Check whether building is a harvestable field
+            if (this.buildingInformation[buildingName].general_information === FIELD_GENERAL_INFO_NAME) {
+                const fieldName = this.buildingClickedName
+                if (this.cropMapInstance.isHarvestable(fieldName)) {
+                    const fieldLevel = this.buildingInformation[buildingName].level
+                    this.cropMapInstance.harvestField(fieldName, fieldLevel);
+                    return true; // moet gebeuren
+                }
+            }
+
+            // TODO: (Siebe) check of friend aan het bezoeken
+            // Ge moet hier true returnen omdat er op een gebouw is geklikt. De twee lijnen hier onder mogen gewoon niet gebeuren (zie hierboven als voorbeeld)
+             // If the username is set it means you are visitiing someone else's farm meaning you can't move buildings
+            if (!this.username) {
+                this.movingBuilding = true;
+                this.ownNextClick = true;
+                return true;
+            }
+
             return true;
         }
 
@@ -651,6 +692,7 @@ export class BuildingMap extends BaseMap {
                 //const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
                 //this.moveBuilding(revertRelY, revertRelX, buildingToMove);
                 console.error("invalid locatie om gebouw te plaatsen");
+                this.showLocationWarning();
 
             }
             // check of move valid is met rel_x, rel_y = 0
@@ -673,12 +715,51 @@ export class BuildingMap extends BaseMap {
         if (this.tiles[tileY][tileX] !== EMPTY_TILE) {
             console.log(`Right click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
             const buildingName = this.tiles[tileY][tileX][1];
+            if (this.buildingInformation[buildingName].unlock_level > this.getTownHallLVL()) {
+                this.showUnlockWarning(this.buildingInformation[buildingName]);
+                return true;
+            }
             openPopup(this.buildingInformation, this.buildingGeneralInformation, buildingName);
             return true;
         }
         return false;
 
     }
+
+    showLocationWarning() {
+        const warningElement = document.getElementById('building-placement-warning');
+        // Show the element instantly
+        warningElement.style.opacity = '1';
+        warningElement.style.transition = 'none'; // Ensure no transition initially
+
+        // After 1 second, fade out
+        setTimeout(() => {
+            warningElement.style.transition = 'opacity 1.5s ease-out'; // Apply the transition for fading out
+            warningElement.style.opacity = '0';
+        }, 1500);
+    }
+
+    hideLocationWarning() {
+        const warningElement = document.getElementById('building-placement-warning');
+        warningElement.classList.remove('show');
+    }
+
+    showUnlockWarning(building) {
+        const warningElement = document.getElementById('building-unlock-warning');
+        const warningElementLvlText = document.getElementById('building-unlock-warning-lvl-text');
+        warningElementLvlText.innerText = building.unlock_level
+
+        // Show the element instantly
+        warningElement.style.transition = 'opacity 0.1s ease-in';
+        warningElement.style.opacity = '1';
+
+        // After 1 second, fade out
+        setTimeout(() => {
+            warningElement.style.transition = 'opacity 1.5s ease-out'; // Apply the transition for fading out
+            warningElement.style.opacity = '0';
+        }, 1500);
+    }
+
 
     /**
      * converts js object to json
@@ -700,7 +781,7 @@ export class BuildingMap extends BaseMap {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         const fetchLink = BASE_URL + "/game/update-building-map";
         const mapDataJson = this.toJSON(); // Serialize the map data to JSON
-        console.log('BuildingMap DB ', mapDataJson);
+        //console.log('BuildingMap DB ', mapDataJson);
         try {
             const response = await fetch(fetchLink, {
                 method: 'POST',

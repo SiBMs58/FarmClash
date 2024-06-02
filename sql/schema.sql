@@ -22,9 +22,9 @@ CREATE TABLE buildings (
     username_owner VARCHAR(255),
     building_type VARCHAR(255) NOT NULL,
     level INT DEFAULT 1,
+    unlock_level INT,
     x INT NOT NULL,
     y INT NOT NULL,
-    tile_rel_locations JSONB, --TODO These are same for all users so read it from the static/img/assets/oldRelativeLocation.json file instead
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --TODO can be removed as all buildings are created at authentication time
     augment_level INT DEFAULT 0,
     PRIMARY KEY (username_owner, building_id),  -- Adding a primary key constraint
@@ -69,10 +69,11 @@ CREATE TABLE market (
 
 -- Resources Table to track user resources like money, crops, etc.
 CREATE TABLE resources (
-    resource_id SERIAL PRIMARY KEY,
     owner VARCHAR(255) REFERENCES users(username),
     type VARCHAR(255) NOT NULL,
-    quantity INT DEFAULT 0
+    quantity INT DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (owner,type)
 );
 
 -- Attacks Table (If implementing the attack feature)
@@ -110,6 +111,17 @@ CREATE TABLE game_maps (
     -- terrain_data TEXT, -- This could be JSON or another format to describe terrain types across the map
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE fields (
+    building_name VARCHAR(255),
+    username_owner VARCHAR(255),
+    crop VARCHAR(255),
+    phase INT,
+    asset_phase INT,
+    time_planted INT,
+    PRIMARY KEY (building_name, username_owner)  -- Primary key constraint
+);
+
 
 CREATE TABLE map_tiles (
     tile_id SERIAL PRIMARY KEY,

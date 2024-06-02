@@ -1,22 +1,33 @@
 const slider = document.getElementById('slider');
 const slides = document.querySelectorAll('.slide');
 const statsContainer = document.getElementById('stats-container');
-let LVL = 5;
-let ATK = 55360;
-let DEF = 993422;
-let COINS = 903935;
+let LVL = 0;
+let ATK = 0;
+let DEF = 0;
+let COINS = 0;
 
 
-initialize()
+initialize();
 
-
-function initialize() {
+async function initialize() {
     slides.forEach(slide => {
         slide.style.display = slide.dataset.level === LVL.toString() ? 'block' : 'none';
     });
+    await fetchStats(); // Wait for fetchStats to complete
+    displayStats();     // Call displayStats after fetchStats has resolved
     slider.value = LVL;
-    displayStats();
 }
+
+
+async function fetchStats() {
+    const response = await fetch('/api/get-user-stats');
+    const data = await response.json();
+    LVL = data.level;
+    ATK = data.attack;
+    DEF = data.defense;
+    COINS = data.coins;
+}
+
 
 
 

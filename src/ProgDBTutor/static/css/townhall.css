@@ -85,7 +85,6 @@ body {
     width: auto; /* Ensures width is proportional to height */
     image-rendering: pixelated; /* Prevents pixelation */
 }
-
 .gifts {
     position: absolute;
     left: 50%;
@@ -99,4 +98,5 @@ body {
 }
 .gift-button img{
     height: 75px;
+    image-rendering: pixelated;
 }
