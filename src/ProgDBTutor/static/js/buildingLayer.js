@@ -149,6 +149,28 @@ export const defaultMapData2 = {
         tree: {
             display_name: "Tree",
             explanation: "This is just a tree."
+        },
+        Bay:{
+            display_name: "Bay",
+            explanation: "This is a bay"
+        },
+        Townhall:{
+            display_name: "Townhall",
+            explanation: "This is a townhall",
+            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000],
+            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]]
+        },
+        Barn:{
+            display_name: "Barn",
+            explanation: "This is a barn",
+            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000],
+            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]]
+        },
+        Silo:{
+            display_name: "Silo",
+            explanation: "This is a silo",
+            upgrade_costs: [500, 1000, 2000, 3500, 5000, 7000],
+            other_stats: [["Eggs/hour", [1, 2, 3, 4, 5, 6, 7]], ["Defence", [50, 100, 150, 200, 400, 470, 550]]]
         }
     }
 }

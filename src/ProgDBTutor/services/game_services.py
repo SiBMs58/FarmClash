@@ -40,7 +40,6 @@ class GameServices:
         map = self.map_data_access.get_map_by_username_owner(username)
         for row in range(len(terrain_tiles)):
             for col in range(len(terrain_tiles[row])):
-                print(row, col, terrain_tiles[row][col])
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
 
         self.create_building_map(username, terrain_tiles)
@@ -53,34 +52,25 @@ class GameServices:
         with open(file_path) as f:
             data = json.load(f)
 
-        ## These are base buildings should be started here
-        self.building_data_access.add_building(Building("bay", username, "Bay", x=0, y=15, level=0,
-                                                        tile_rel_locations=json.dumps(data["Bay.L1.F1"])))
-        self.building_data_access.add_building(Building("townhall", username, "Townhall", x=6, y=15, level=0,
+        self.building_data_access.add_building(
+            Building("bay", username, "Bay", y=0, x=15, level=0, tile_rel_locations=json.dumps(data["Bay.L1.F1"])))
+        self.building_data_access.add_building(Building("townhall", username, "Townhall", y=6, x=15, level=0,
                                                         tile_rel_locations=json.dumps(data["Townhall.L0"])))
-        self.building_data_access.add_building(Building("barn", username, "Barn", x=4, y=10, level=1,
-                                                        tile_rel_locations=json.dumps(data["Barn.L1"])))  # TODO position
-        self.building_data_access.add_building(Building("silo", username, "Silo", x=6, y=21, level=1,
-                                                        tile_rel_locations=json.dumps(data["Silo.L1.0%"])))  # TODO position
-        pigCounter = 1
-        cowCounter = 1
-        goatCounter = 1
-        chickenCounter = 1
-        self.building_data_access.add_building(Building(f"chickencoop{chickenCounter}", username, "Chickencoop", x=10, y=21, level=1,
-                                                        tile_rel_locations=json.dumps(data["Chickencoop.L1"])))
-        self.building_data_access.add_building(Building(f"goatbarn{chickenCounter}", username, "Goatbarn", x=10, y=21, level=1,
-                                                        tile_rel_locations=json.dumps(data["Goatbarn.L1"])))
-        self.building_data_access.add_building(Building(f"cowbarn{chickenCounter}", username, "Cowbarn", x=10, y=21, level=1,
-                                                        tile_rel_locations=json.dumps(data["Cowbarn.L1"])))
-        self.building_data_access.add_building(Building(f"pigpen{chickenCounter}", username, "Pigpen", x=10, y=21, level=1,
-                                                        tile_rel_locations=json.dumps(data["Pigpen.L1"])))
-
-
+        self.building_data_access.add_building(Building("barn", username, "Barn", y=4, x=10, level=1,
+                                                        tile_rel_locations=json.dumps(
+                                                            data["Barn.L1"])))  # TODO position
+        self.building_data_access.add_building(Building("silo", username, "Silo", y=6, x=21, level=1,
+                                                        tile_rel_locations=json.dumps(
+                                                            data["Silo.L1.0%"])))  # TODO position
 
         # concatenate name with counter for building_id
-        fenceCounter = 1
-        fieldCounter = 1
-
+        fenceCounter = 0
+        fieldCounter = 0
+        pigCounter = 0
+        cowCounter = 0
+        goatCounter = 0
+        chickenCounter = 0
+        harvestHopperCounter = 0
 
         ## 3 fences per cloud area
 

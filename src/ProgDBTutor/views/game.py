@@ -125,9 +125,9 @@ def update_map():
 """
 Markt fetch and update functions
 """
-def update_price(last_count, current_count, last_price):
-    if last_price == 10 or current_count == 30:
-        last_price = 20
+def update_price(last_count, current_count, last_price, base_price):
+    if last_price == base_price or current_count == base_price*3:
+        last_price = base_price*2
     # Calculate the ratio of current count to last count
     count_ratio = current_count / last_count if last_count != 0 else 1
     if count_ratio >= 1:
@@ -141,7 +141,7 @@ def update_price(last_count, current_count, last_price):
     new_price = last_price * random_factor
 
     # Ensure the price is within the specified range
-    new_price = max(10, min(30, round(new_price)))
+    new_price = max(base_price, min(base_price*3, round(new_price)))
 
     # return jsonify({"count_ratio": count_ratio, "random_factor" : random_factor, "new_price" : new_price})
     return new_price
@@ -157,6 +157,7 @@ def update_market():
         json_data = request.json
         crop_name = json_data["crop"]
         sale = json_data["sale"]
+        base_price = json_data["base_price"]
 
         # Get current market data
         market_data_access = current_app.config.get('market_data_access')
@@ -172,7 +173,7 @@ def update_market():
                 last_count = market.prev_quantity_crop
                 current_count = market.current_quantity_crop
                 last_price = market.current_price
-                new_price = update_price(last_count, current_count, last_price)
+                new_price = update_price(last_count, current_count, last_price, base_price)
 
                 # Update prev_quantity_crop and reset current_quantity_crop
 
@@ -188,7 +189,7 @@ def update_market():
             market_data_access.add_market_data(market)
         else:
             # No existing market data found, create a new entry with crop's base price
-            new_market = Market(crop_name, 10, sale, 0, datetime.now())
+            new_market = Market(crop_name, base_price, sale, 0, datetime.now())
             market_data_access.add_market_data(new_market)
 
         return jsonify({"status": "success", "message": "Market data updated successfully"})
@@ -203,6 +204,10 @@ def fetch_crop_price():
     try:
         # Get the crop name from the query parameters
         crop_name = request.args.get('crop')
+        base_price = request.args.get('base_price')
+        if not isinstance(base_price, int):
+            base_price = int(request.args.get('base_price'))
+
 
         # Query the database to fetch the price of the crop from the market
         market_data_access = current_app.config.get('market_data_access')
@@ -216,7 +221,7 @@ def fetch_crop_price():
                 last_count = market.prev_quantity_crop
                 current_count = market.current_quantity_crop
                 last_price = market.current_price
-                new_price = update_price(last_count, current_count, last_price)
+                new_price = update_price(last_count, current_count, last_price, base_price)
 
                 # change the price based on sales and random variable
                 market.current_price = new_price
@@ -225,7 +230,11 @@ def fetch_crop_price():
             return jsonify({"price": market.current_price})
         else:
             # If market data doesn't exist, return an error message
-            return jsonify({"error": "Market data not found for the crop"}), 404
+            # No existing market data found, create a new entry with crop's base price
+
+            new_market = Market(crop_name, base_price, 0, 0, datetime.now())
+            market_data_access.add_market_data(new_market)
+            return jsonify({"error": "Market data not found for the crop", "crop": crop_name, "base_price":base_price}), 404
 
     except Exception as e:
         # If any error occurs, return an error response
