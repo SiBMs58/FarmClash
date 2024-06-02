@@ -49,6 +49,7 @@ async function isUpgradable(buildingInformation, buildingGeneralInformation, bui
  * @param buildingName The unique name of the building.
  */
 export function openPopup(buildingInformation, buildingGeneralInformation, buildingName) {
+    currOpenedBuildingInformation = buildingInformation[buildingName]
     if (isPopupOpen && (prevBuildingName !== buildingName)) {
         closePopup();
         setTimeout(function() { // Wait 200 ms
@@ -59,7 +60,6 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
         actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName);
     }
     prevBuildingName = buildingName;
-    currOpenedBuildingInformation = buildingInformation[buildingName]
     //currOpenedBuildingGeneralInformation = buildingGeneralInformation[buil]
 }
 
@@ -115,6 +115,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
     if (buildingInformation[buildingName].general_information === FIELD_GENERAL_INFO_NAME) {
         const fieldName = buildingInformation[buildingName].self_key;
         if (cropMap.isFieldEmpty(fieldName)) {
+            cropPopupPreparation();
             cropPopup.classList.add('show');
         }
     }
@@ -122,6 +123,48 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
     popup.classList.add('show');
     isPopupOpen = true;
 }
+
+function cropPopupPreparation() {
+    const buttons = document.querySelectorAll(".crop-buttons-grid img");
+    const fieldLevel = currOpenedBuildingInformation.level;
+
+    const cropUnlockLevels = {
+        "Wheat": 1,
+        "Carrot": 2,
+        "Corn": 3,
+        "Lettuce": 4,
+        "Tomato": 5,
+        "Turnip": 6,
+        "Zucchini": 7,
+        "Parsnip": 8,
+        "Cauliflower": 9,
+        "Eggplant": 10
+    };
+
+    buttons.forEach(button => {
+        debugger;
+        let originalSrc = button.src;
+        let pressedSrc;
+        if (originalSrc.includes("PressedButton.png")) {
+            pressedSrc = originalSrc;
+            originalSrc = pressedSrc.replace("PressedButton.png", "Button.png");
+        } else {
+            pressedSrc = originalSrc.replace("Button.png", "PressedButton.png");
+        }
+
+        const buttonId = button.id;
+        const buttonCropName = buttonId.replace("-button-selector", "");
+        const cropUnlockLevel = cropUnlockLevels[buttonCropName];
+
+        if (cropUnlockLevel > fieldLevel) {
+            button.src = pressedSrc;
+        } else {
+            button.src = originalSrc;
+        }
+    });
+}
+
+
 
 /**
  * Closes the pop-up and the possible crop popup
@@ -349,42 +392,75 @@ window.onload = adjustPopupPosition;
 window.onresize = adjustPopupPosition;
 
 
-const buttons = document.querySelectorAll(".crop-buttons-grid img");
+//const buttons = document.querySelectorAll(".crop-buttons-grid img");
+
+// ——————————————————
+// CROP POPUP LOGIC
 
 function getCropName(url) {
     const filename = url.substring(url.lastIndexOf('/') + 1);
     return filename.split('Button')[0];
 }
 
+
+
 document.addEventListener("DOMContentLoaded", function() {
     const buttons = document.querySelectorAll(".crop-buttons-grid img");
+
+    const cropUnlockLevels = {
+        "Wheat": 1,
+        "Carrot": 2,
+        "Corn": 3,
+        "Lettuce": 4,
+        "Tomato": 5,
+        "Turnip": 6,
+        "Zucchini": 7,
+        "Parsnip": 8,
+        "Cauliflower": 9,
+        "Eggplant": 10
+    };
 
     buttons.forEach(button => {
         const originalSrc = button.src;
         const pressedSrc = originalSrc.replace("Button.png", "PressedButton.png");
+        const buttonId = button.id;
+        const buttonCropName = buttonId.replace("-button-selector", "");
+        const cropUnlockLevel = cropUnlockLevels[buttonCropName];
 
         // Add mousedown event to change the src to the pressed version
         button.addEventListener("mousedown", function() {
-            button.src = pressedSrc;
+            const fieldLevel = currOpenedBuildingInformation.level;
+            if (cropUnlockLevel <= fieldLevel) {
+                console.log("mouse down on allowed crop");
+                button.src = pressedSrc;
+            } else {
+                console.log("mouse down on not an allowed crop");
+            }
         });
 
         // Add mouseup event to revert src and handle hard release
         button.addEventListener("mouseup", function() {
-            if (button.src === pressedSrc) {
-                button.src = originalSrc;
-                const cropType = getCropName(originalSrc);
-                console.log(cropType + " has been pressed");
-                closeCropPopup()
-                const field = currOpenedBuildingInformation.self_key;
-                cropMap.plantCrop(cropType, field);
-                debugger;
+            const fieldLevel = currOpenedBuildingInformation.level;
+            if (cropUnlockLevel <= fieldLevel) {
+                if (button.src === pressedSrc) {
+                    button.src = originalSrc;
+                    const cropType = getCropName(originalSrc);
+                    console.log(cropType + " has been pressed");
+                    closeCropPopup()
+                    const field = currOpenedBuildingInformation.self_key;
+                    cropMap.plantCrop(cropType, field);
+                    debugger;
+                }
             }
         });
 
         // Add mouseleave event to revert src and handle soft release
         button.addEventListener("mouseleave", function() {
-            if (button.src === pressedSrc) {
-                button.src = originalSrc;
+            const fieldLevel = currOpenedBuildingInformation.level;
+            if (cropUnlockLevel <= fieldLevel) {
+                if (button.src === pressedSrc) {
+                    button.src = originalSrc;
+                }
             }
         });
     });

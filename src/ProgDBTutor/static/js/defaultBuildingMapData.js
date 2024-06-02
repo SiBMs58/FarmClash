@@ -32,21 +32,21 @@ export const defaultBuildingMapData = {
         field1: {
             self_key: "field1",
             general_information: "Field3",
-            level: 1,
+            level: 2,
             unlock_level: 3,
             building_location: [10, 8]
         },
         field2: {
             self_key: "field2",
             general_information: "Field3",
-            level: 1,
+            level: 4,
             unlock_level: 3,
             building_location: [10, 12]
         },
         field3: {
             self_key: "field3",
             general_information: "Field3",
-            level: 1,
+            level: 6,
             unlock_level: 3,
             building_location: [10, 16]
         },

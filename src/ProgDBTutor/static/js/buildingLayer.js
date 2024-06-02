@@ -167,7 +167,6 @@ export class BuildingMap extends BaseMap {
             //const generalInfoKey = currBuilding.general_information
             //const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations
             const tile_rel_locations = this.getRelativeLocations(currBuilding);
-            debugger;
             for (const currTile of tile_rel_locations) {
                 let tileToDrawWithoutLevelReplaced = currTile[1];
                 const buildingLevel = currBuilding.level
@@ -361,9 +360,6 @@ export class BuildingMap extends BaseMap {
 
     getRelativeLocations(building_obj, frame=null) {
         const generalInfoKey = building_obj.general_information;
-        if (generalInfoKey === "Fence") {
-            debugger;
-        }
         const level = building_obj.level;
 
         let locationsKey = generalInfoKey + ".L" + level;
@@ -390,7 +386,6 @@ export class BuildingMap extends BaseMap {
         //const generalInfoKey = building.general_information;
         //const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
 
-        debugger;
         const tile_rel_locations = this.getRelativeLocations(building);
 
         for (const tile of tile_rel_locations) {
