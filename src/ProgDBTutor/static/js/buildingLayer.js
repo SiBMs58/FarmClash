@@ -267,9 +267,6 @@ export class BuildingMap extends BaseMap {
         for (const buildingType in assetList) {
             totalCount += assetList[buildingType].length;
             assetList[buildingType].forEach(asset => {
-                if(asset === "Barn.L4.1.1") {
-                    debugger;
-                }
                 const currPath = "/static/img/assets/buildings/" + buildingType + "/" + asset + ".png";
                 const img = new Image();
                 img.src = currPath;
