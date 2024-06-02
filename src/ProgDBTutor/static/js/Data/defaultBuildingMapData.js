@@ -10,19 +10,19 @@ export const defaultBuildingMapData = {
             unlock_level: 0,
             building_location:  [8, 16],
         },
-        Barn: {
-            self_key: "Barn",
-            general_information: "Barn",
-            level: 1,
-            unlock_level: 0,
-            building_location: [8, 26]
-        },
         Silo: {
             self_key: "Silo",
             general_information: "Silo",
             level: 1,
             unlock_level: 0,
             building_location: [16, 9]
+        },
+        Barn: {
+            self_key: "Barn",
+            general_information: "Barn",
+            level: 1,
+            unlock_level: 0,
+            building_location: [21, 15]
         },
         Bay: {
             self_key: "Bay",
@@ -31,119 +31,128 @@ export const defaultBuildingMapData = {
             unlock_level: 1,
             building_location: [15, 0]
         },
+
+
         Pigpen1: {
             self_key: "Pigpen1",
             general_information: "Pigpen",
             level: 1,
             unlock_level: 0,
-            building_location: [4, 7]
+            building_location: [5, 5]
         },
         Pigpen2: {
             self_key: "Pigpen2",
             general_information: "Pigpen",
-            level: 1,
+            level: 2,
             unlock_level: 3,
-            building_location: [20, 25]
+            building_location: [5, 26]
         },
         Pigpen3: {
             self_key: "Pigpen3",
             general_information: "Pigpen",
-            level: 1,
+            level: 3,
             unlock_level: 6,
-            building_location: [13, 45]
+            building_location: [17, 40]
         },
         Pigpen4: {
             self_key: "Pigpen4",
             general_information: "Pigpen",
-            level: 1,
+            level: 4,
             unlock_level: 9,
             building_location: [32, 40]
         },
+
 
         chicken_coop1: {
             self_key: "chicken_coop1",
             general_information: "Chickencoop",
             level: 1,
-            unlock_level: 3,
-            building_location: [22, 10]
+            unlock_level: 0,
+            building_location: [5, 15]
         },
         chicken_coop2: {
             self_key: "chicken_coop2",
             general_information: "Chickencoop",
-            level: 1,
-            unlock_level: 6,
-            building_location: [4, 42]
+            level: 2,
+            unlock_level: 3,
+            building_location: [9, 26]
         },
         chicken_coop3: {
             self_key: "chicken_coop3",
             general_information: "Chickencoop",
-            level: 1,
-            unlock_level: 9,
-            building_location: [35, 24]
+            level: 3,
+            unlock_level: 6,
+            building_location: [33, 10]
         },
         chicken_coop4: {
             self_key: "chicken_coop4",
             general_information: "Chickencoop",
-            level: 1,
-            unlock_level: 0,
-            building_location: [5, 15]
+            level: 4,
+            unlock_level: 9,
+            building_location: [35, 36]
         },
+
         Cowbarn1: {
             self_key: "Cowbarn1",
-            general_information: "Cowbarn",
-            level: 1,
-            unlock_level: 3,
-            building_location: [28, 15]
-        },
-        Cowbarn2: {
-            self_key: "Cowbarn2",
-            general_information: "Cowbarn",
-            level: 1,
-            unlock_level: 6,
-            building_location: [17, 36]
-        },
-        Cowbarn3: {
-            self_key: "Cowbarn3",
             general_information: "Cowbarn",
             level: 1,
             unlock_level: 0,
             building_location: [16, 17]
         },
+        Cowbarn2: {
+            self_key: "Cowbarn2",
+            general_information: "Cowbarn",
+            level: 2,
+            unlock_level: 4,
+            building_location: [28, 9]
+        },
+        Cowbarn3: {
+            self_key: "Cowbarn3",
+            general_information: "Cowbarn",
+            level: 3,
+            unlock_level: 6,
+            building_location: [17, 36]
+        },
         Cowbarn4: {
             self_key: "Cowbarn4",
             general_information: "Cowbarn",
-            level: 1,
+            level: 4,
             unlock_level: 9,
-            building_location: [25, 49]
+            building_location: [26, 49]
         },
+
+
         Goatbarn1: {
             self_key: "Goatbarn1",
             general_information: "Goatbarn",
             level: 1,
             unlock_level: 0,
-            building_location: [10, 36]
+            building_location: [5, 10]
         },
         Goatbarn2: {
             self_key: "Goatbarn2",
             general_information: "Goatbarn",
-            level: 1,
-            unlock_level: 6,
+            level: 2,
+            unlock_level: 4,
             building_location: [28, 5]
-        },
-        Goatbarn3: {
-            self_key: "Goatbarn3",
-            general_information: "Goatbarn",
-            level: 1,
-            unlock_level: 9,
-            building_location: [25, 38]
         },
         Goatbarn4: {
             self_key: "Goatbarn4",
             general_information: "Goatbarn",
-            level: 1,
-            unlock_level: 3,
+            level: 3,
+            unlock_level: 7,
             building_location: [4, 49]
         },
+        Goatbarn3: {
+            self_key: "Goatbarn3",
+            general_information: "Goatbarn",
+            level: 4,
+            unlock_level: 9,
+            building_location: [32, 45]
+        },
+
+
+
 
         field1: {
             self_key: "field1",
@@ -159,157 +168,213 @@ export const defaultBuildingMapData = {
             unlock_level: 0,
             building_location: [10, 11]
         },
+        field50: {
+            self_key: "field50",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 0,
+            building_location: [10, 5]
+        },
+
+
         field3: {
             self_key: "field3",
             general_information: "Field3",
             level: 1,
-            unlock_level: 8,
-            building_location: [36, 41]
+            unlock_level: 1,
+            building_location: [13, 11]
         },
         field4: {
             self_key: "field4",
             general_information: "Field3",
             level: 1,
-            unlock_level: 8,
-            building_location: [36, 44]
-        },
-        field5: {
-            self_key: "field5",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 8,
-            building_location: [36, 47]
-        },
-        field6: {
-            self_key: "field6",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 4,
-            building_location: [20, 50]
-        },
-        field7: {
-            self_key: "field7",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 4,
-            building_location: [20, 47]
-        },
-        field8: {
-            self_key: "field8",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 3,
-            building_location: [11, 41]
-        },
-        field9: {
-            self_key: "field9",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 3,
-            building_location: [11, 44]
-        },
-        field10: {
-            self_key: "field10",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 3,
-            building_location: [8, 41]
-        },
-        field11: {
-            self_key: "field11",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 3,
-            building_location: [8, 44]
-        },
-        field12: {
-            self_key: "field12",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 0,
-            building_location: [13, 11]
-        },
-        field13: {
-            self_key: "field13",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 0,
+            unlock_level: 1,
             building_location: [13, 8]
         },
-        field14: {
-            self_key: "field14",
+        field49: {
+            self_key: "field49",
             general_information: "Field3",
             level: 1,
-            unlock_level: 6,
-            building_location: [37, 4]
+            unlock_level: 1,
+            building_location: [13, 5]
         },
-        field15: {
-            self_key: "field15",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 6,
-            building_location: [37, 7]
-        },
-        field16: {
-            self_key: "field16",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 6,
-            building_location: [37, 10]
-        },
-        field17: {
-            self_key: "field17",
+
+
+
+        field5: {
+            self_key: "field5",
             general_information: "Field3",
             level: 1,
             unlock_level: 2,
             building_location: [11, 22]
         },
-        field18: {
-            self_key: "field18",
+        field6: {
+            self_key: "field6",
             general_information: "Field3",
             level: 1,
             unlock_level: 2,
             building_location: [14, 22]
         },
-        field19: {
-            self_key: "field19",
+        field7: {
+            self_key: "field7",
             general_information: "Field3",
             level: 1,
             unlock_level: 2,
-            building_location: [17, 22]
+            building_location: [22, 10]
         },
-        field20: {
-            self_key: "field20",
+        field8: {
+            self_key: "field8",
             general_information: "Field3",
             level: 1,
-            unlock_level: 5,
-            building_location: [31, 25]
+            unlock_level: 2,
+            building_location: [22, 4]
         },
+        field9: {
+            self_key: "field9",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 2,
+            building_location: [22, 7]
+        },
+
+
+        field14: {
+            self_key: "field14",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 3,
+            building_location: [25, 4]
+        },
+        field15: {
+            self_key: "field15",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 3,
+            building_location: [25, 7]
+        },
+        field16: {
+            self_key: "field16",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 3,
+            building_location: [25, 10]
+        },
+        field17: {
+            self_key: "field17",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 3,
+            building_location: [8, 22]
+        },
+        field18: {
+            self_key: "field18",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 3,
+            building_location: [5, 22]
+        },
+
+
         field21: {
             self_key: "field21",
             general_information: "Field3",
             level: 1,
-            unlock_level: 7,
-            building_location: [20, 44]
+            unlock_level: 4,
+            building_location: [14, 25]
         },
         field22: {
             self_key: "field22",
             general_information: "Field3",
             level: 1,
-            unlock_level: 6,
-            building_location: [31, 22]
+            unlock_level: 4,
+            building_location: [14, 28]
         },
         field23: {
             self_key: "field23",
             general_information: "Field3",
             level: 1,
-            unlock_level: 6,
+            unlock_level: 4,
+            building_location: [14, 31]
+        },
+        field41: {
+            self_key: "field41",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 4,
+            building_location: [17, 28]
+        },
+        field45: {
+            self_key: "field45",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 4,
+            building_location: [17, 25]
+        },
+
+
+
+        field31: {
+            self_key: "field31",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 5,
+            building_location: [37, 4]
+        },
+        field32: {
+            self_key: "field32",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 5,
+            building_location: [37, 7]
+        },
+        field33: {
+            self_key: "field33",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 5,
+            building_location: [37, 10]
+        },
+        field43: {
+            self_key: "field43",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 5,
+            building_location: [37, 13]
+        },
+        field35: {
+            self_key: "field35",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 5,
+            building_location: [31, 22]
+        },
+        field42: {
+            self_key: "field42",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 5,
+            building_location: [34, 22]
+        },
+        field36: {
+            self_key: "field36",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 5,
             building_location: [28, 22]
         },
+
+
         field24: {
             self_key: "field24",
             general_information: "Field3",
-            level: 5,
+            level: 1,
+            unlock_level: 6,
+            building_location: [31, 25]
+        },
+        field34: {
+            self_key: "field34",
+            general_information: "Field3",
+            level: 1,
             unlock_level: 6,
             building_location: [28, 25]
         },
@@ -317,100 +382,155 @@ export const defaultBuildingMapData = {
             self_key: "field25",
             general_information: "Field3",
             level: 1,
-            unlock_level: 3,
-            building_location: [25, 4]
+            unlock_level: 6,
+            building_location: [24, 33]
         },
         field26: {
             self_key: "field26",
             general_information: "Field3",
             level: 1,
-            unlock_level: 3,
-            building_location: [25, 7]
+            unlock_level: 6,
+            building_location: [27, 33]
         },
         field27: {
             self_key: "field27",
             general_information: "Field3",
             level: 1,
-            unlock_level: 3,
-            building_location: [25, 10]
+            unlock_level: 6,
+            building_location: [30, 33]
+        },
+        field44: {
+            self_key: "field44",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 6,
+            building_location: [33, 33]
+        },
+
+
+        field19: {
+            self_key: "field19",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 7,
+            building_location: [8, 47]
+        },
+        field20: {
+            self_key: "field20",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 7,
+            building_location: [11, 47]
+        },
+        field10: {
+            self_key: "field10",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 7,
+            building_location: [11, 41]
+        },
+        field11: {
+            self_key: "field11",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 7,
+            building_location: [11, 44]
+        },
+        field12: {
+            self_key: "field12",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 7,
+            building_location: [8, 41]
+        },
+        field13: {
+            self_key: "field13",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 7,
+            building_location: [8, 44]
+        },
+
+
+         field46: {
+            self_key: "field46",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 8,
+            building_location: [17, 44]
+        },
+         field37: {
+            self_key: "field37",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 8,
+            building_location: [20, 44]
         },
         field28: {
             self_key: "field28",
             general_information: "Field3",
             level: 1,
-            unlock_level: 3,
-            building_location: [8, 22]
+            unlock_level: 8,
+            building_location: [23, 44]
         },
         field29: {
             self_key: "field29",
             general_information: "Field3",
             level: 1,
-            unlock_level: 3,
-            building_location: [5, 22]
+            unlock_level: 8,
+            building_location: [26, 44]
         },
         field30: {
             self_key: "field30",
             general_information: "Field3",
             level: 1,
-            unlock_level: 5,
-            building_location: [24, 33]
-        },
-        field31: {
-            self_key: "field31",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 5,
-            building_location: [27, 33]
-        },
-        field32: {
-            self_key: "field32",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 5,
-            building_location: [30, 33]
-        },
-        field33: {
-            self_key: "field33",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 6,
-            building_location: [23, 44]
-        },
-        field34: {
-            self_key: "field34",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 6,
-            building_location: [26, 44]
-        },
-        field35: {
-            self_key: "field35",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 6,
+            unlock_level: 8,
             building_location: [29, 44]
         },
-        field36: {
-            self_key: "field36",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 4,
-            building_location: [14, 25]
-        },
-        field37: {
-            self_key: "field37",
-            general_information: "Field3",
-            level: 1,
-            unlock_level: 4,
-            building_location: [14, 28]
-        },
+
+
+
         field38: {
             self_key: "field38",
             general_information: "Field3",
             level: 1,
-            unlock_level: 4,
-            building_location: [14, 31]
+            unlock_level: 9,
+            building_location: [36, 41]
         },
+        field39: {
+            self_key: "field39",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 9,
+            building_location: [36, 44]
+        },
+        field40: {
+            self_key: "field40",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 9,
+            building_location: [36, 47]
+        },
+        field47: {
+            self_key: "field47",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 9,
+            building_location: [36, 51]
+        },
+        field48: {
+            self_key: "field48",
+            general_information: "Field3",
+            level: 1,
+            unlock_level: 9,
+            building_location: [33, 51]
+        },
+
+
+
+
+
+
 
 
 
@@ -419,11 +539,11 @@ export const defaultBuildingMapData = {
         Always Place fences at the BOTTOM of the building information!
          */
         fence1: {
-            self_key: "fence1", // Must be the exact key of this sub-object
-            general_information: "Fence", // Link to the general information of this building type
-            level: 1, // Building level (set "None" if not relevant)
-            unlock_level: 0, // Set this to the town hall level when you want this building to be unlocked
-            building_location: [8, 8] // --> [y (height), x (width)], this needs to be the top-left corner of the building
+            self_key: "fence1",
+            general_information: "Fence",
+            level: 1,
+            unlock_level: 0,
+            building_location: [8, 8]
         },
         fence2: {
             self_key: "fence2",
@@ -467,34 +587,10 @@ export const defaultBuildingMapData = {
             unlock_level: 0,
             building_location: [8, 14]
         },
-        fence9: {
-            self_key: "fence9",
-            general_information: "Fence",
-            level: 1,
-            unlock_level: 7,
-            building_location: [35, 44]
-        },
-        fence10: {
-            self_key: "fence10",
-            general_information: "Fence",
-            level: 1,
-            unlock_level: 7,
-            building_location: [35, 45]
-        },
-        fence11: {
-            self_key: "fence11",
-            general_information: "Fence",
-            level: 1,
-            unlock_level: 7,
-            building_location: [35, 46]
-        },
-        fence12: {
-            self_key: "fence12",
-            general_information: "Fence",
-            level: 1,
-            unlock_level: 7,
-            building_location: [35, 47]
-        },
+
+
+
+
         fence13: {
             self_key: "fence13",
             general_information: "Fence",
@@ -562,42 +658,42 @@ export const defaultBuildingMapData = {
             self_key: "fence22",
             general_information: "Fence",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 6,
             building_location: [18, 46]
         },
         fence23: {
             self_key: "fence23",
             general_information: "Fence",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 6,
             building_location: [18, 47]
         },
         fence24: {
             self_key: "fence24",
             general_information: "Fence",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 6,
             building_location: [18, 48]
         },
         fence25: {
             self_key: "fence25",
             general_information: "Fence",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 6,
             building_location: [18, 49]
         },
         fence26: {
             self_key: "fence26",
             general_information: "Fence",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 6,
             building_location: [18, 50]
         },
         fence27: {
             self_key: "fence27",
             general_information: "Fence",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 6,
             building_location: [18, 51]
         },
         fence28: {
@@ -646,21 +742,21 @@ export const defaultBuildingMapData = {
             self_key: "fence34",
             general_information: "Fence",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 10,
             building_location: [38, 46]
         },
         fence35: {
             self_key: "fence35",
             general_information: "Fence",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 10,
             building_location: [38, 47]
         },
         fence36: {
             self_key: "fence36",
             general_information: "Fence",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 10,
             building_location: [38, 48]
         },
         fence37: {
@@ -779,28 +875,28 @@ export const defaultBuildingMapData = {
             self_key: "fence53",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 7,
             building_location: [30, 50]
         },
         fence54: {
             self_key: "fence54",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 7,
             building_location: [30, 51]
         },
         fence55: {
             self_key: "fence55",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 7,
             building_location: [30, 52]
         },
         fence56: {
             self_key: "fence56",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 7,
             building_location: [30, 49]
         },
         fence57: {
@@ -810,20 +906,7 @@ export const defaultBuildingMapData = {
             unlock_level: 9,
             building_location: [35, 48]
         },
-        fence58: {
-            self_key: "fence58",
-            general_information: "Fence",
-            level: 1,
-            unlock_level: 9,
-            building_location: [38, 49]
-        },
-        fence59: {
-            self_key: "fence59",
-            general_information: "Fence",
-            level: 1,
-            unlock_level: 9,
-            building_location: [37, 49]
-        },
+
         fence60: {
             self_key: "fence60",
             general_information: "Fence",
@@ -842,65 +925,97 @@ export const defaultBuildingMapData = {
             self_key: "fence62",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 7,
             building_location: [9, 50]
         },
         fence63: {
             self_key: "fence63",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 7,
             building_location: [9, 51]
         },
         fence64: {
             self_key: "fence64",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 7,
             building_location: [9, 52]
         },
         fence65: {
             self_key: "fence65",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 7,
             building_location: [9, 53]
+        },
+
+
+        fence9: {
+            self_key: "fence9",
+            general_information: "Fence",
+            level: 1,
+            unlock_level: 8,
+            building_location: [35, 44]
+        },
+        fence10: {
+            self_key: "fence10",
+            general_information: "Fence",
+            level: 1,
+            unlock_level: 8,
+            building_location: [35, 45]
+        },
+        fence11: {
+            self_key: "fence11",
+            general_information: "Fence",
+            level: 1,
+            unlock_level: 8,
+            building_location: [35, 46]
+        },
+        fence12: {
+            self_key: "fence12",
+            general_information: "Fence",
+            level: 1,
+            unlock_level: 8,
+            building_location: [35, 47]
         },
         fence66: {
             self_key: "fence66",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 8,
             building_location: [35, 43]
         },
         fence67: {
             self_key: "fence67",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 8,
             building_location: [35, 42]
         },
         fence68: {
             self_key: "fence68",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 8,
             building_location: [35, 41]
         },
         fence69: {
             self_key: "fence69",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 8,
             building_location: [35, 40]
         },
         fence70: {
             self_key: "fence70",
             general_information: "Fence",
             level: 1,
-            unlock_level: 9,
+            unlock_level: 8,
             building_location: [36, 40]
         },
+
+
         fence71: {
             self_key: "fence71",
             general_information: "Fence",
@@ -952,10 +1067,20 @@ export const defaultBuildingMapData = {
         },
 
 
-
-
-
-
+        fence58: {
+            self_key: "fence58",
+            general_information: "Fence",
+            level: 1,
+            unlock_level: 10,
+            building_location: [38, 49]
+        },
+        fence59: {
+            self_key: "fence59",
+            general_information: "Fence",
+            level: 1,
+            unlock_level: 10,
+            building_location: [37, 49]
+        },
     },
 
 
