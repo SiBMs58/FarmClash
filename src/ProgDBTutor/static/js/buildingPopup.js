@@ -178,7 +178,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
             isPopupOpen = true;
             return;
         }
-        isUpgradable(buildingInformation, buildingGeneralInformation, buildingName).then((result) => {
+        isUpgradable(buildingInformation, info, buildingName).then((result) => {
             if (result) {
                 upgradeButton.style.display = "block";
                 document.getElementById('upgrade-button-pressed').style.display = "none";
@@ -482,6 +482,7 @@ async function releaseUpgradeButton() {
         buildingMap.drawTiles();
         await buildingMap.updateBuildingMapDB();
     }
+    closePopup();
 }
 
 upgradeButton.addEventListener('mousedown', pressUpgradeButton);
@@ -539,12 +540,12 @@ let curr_level_cost;
  *  checks the if the building can be upgraded, checks include:
  *  max level, has enaugh resources and townhall level
  * @param buildingInformation
- * @param buildingGeneralInformation
+ * @param info
  * @param buildingName
  * @returns {Promise<boolean>}
  */
 
-async function upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName) {
+async function upgrade_checks(buildingInformation, info, buildingName) {
     let building_type;
     let current_level;
     let townhall_level;
@@ -559,45 +560,43 @@ async function upgrade_checks(buildingInformation, buildingGeneralInformation, b
             if ("townhall" === buildingInformation[key].self_key) {
                 console.log("th lvl " + buildingInformation[key].level);
                 townhall_level = buildingInformation[key].level;
-
             }
         }
     }
 
-    // building can't be higher level then townhall
-    if (current_level>townhall_level && building_type !== "Townhall"){
-        return false;
-    }
-    // can't exceed level 10
-    if (current_level===10){
+    // Check constraints: building level can't be higher than townhall level (except townhall itself)
+    if (current_level > townhall_level && building_type !== "Townhall") {
         return false;
     }
 
-    // Second loop to check if the user has enaugh resources
-    if (buildingGeneralInformation.hasOwnProperty(building_type)) {
-        let upgrade_cost = buildingGeneralInformation[building_type].upgrade_costs;
+    // Check max level constraint
+    if (current_level === 10) {
+        return false;
+    }
 
+    // Check if the user has enough resources for the next level upgrade
+    if (info.hasOwnProperty(building_type)) {
+        let upgrade_cost = info[building_type].upgrade_costs;
         let next_level_key = `L${current_level + 1}`;
         let next_level_cost = upgrade_cost[next_level_key];
-        curr_level_cost = upgrade_cost[next_level_key];
+        curr_level_cost = next_level_cost;
+
 
         let resourcesQuantity = await fetchResources();
 
-        for (const resource of resourcesQuantity) {
-            for (const cost of next_level_cost){
-                // this comment gives the user the requered upgrade cost
-                /*if (cost[0] === resource.resource_type){
-                    await updateResources(resource.resource_type, cost[1]);
-                }*/
-                if (cost[0] === resource.resource_type && cost[1]>resource.amount){
-                    return false;
-                }
+        for (const cost of next_level_cost) {
+            const resourceType = cost[0];
+            const requiredAmount = cost[1];
+            const availableResource = resourcesQuantity.find(resource => resource.resource_type === resourceType);
+
+            if (!availableResource || availableResource.amount < requiredAmount) {
+                return false;
             }
         }
     }
+
     console.log("up true");
     return true;
-
 }
 
 /**
@@ -607,17 +606,15 @@ async function upgrade_checks(buildingInformation, buildingGeneralInformation, b
  */
 
 async function upgradeBuilding(){
-    for (const key in currBuildingInfo) {
-        if (currBuildingName === currBuildingInfo[key].self_key) {
-            currBuildingInfo[key].level = currBuildingInfo[key].level+1;
-            console.log(curr_level_cost);
-            for (const cost of curr_level_cost){
-                await updateResources(cost[0], -cost[1]);
-            }
-            console.log(currBuildingInfo[key].level);
-            }
-        }
+    debugger
+    currOpenedBuildingInformation.level +=1;
+    console.log(curr_level_cost);
+    for (const cost of curr_level_cost){
+        await updateResources(cost[0], -cost[1]);
     }
+    console.log(currOpenedBuildingInformation.level);
+}
+
 
 // ——————————————————
 // SET POPUP POSITION (min gap of 70px for the top)

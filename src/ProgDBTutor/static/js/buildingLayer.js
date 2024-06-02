@@ -77,7 +77,7 @@ export class BuildingMap extends BaseMap {
         // To remember building following mouse movement
         this.prevMouseMoveBuildingLoc = null; // [y, x]
 
-        // @Faisel json with all levels and what buildings unlock at this level --> [Count, general_information]
+        // @Faisal json with all levels and what buildings unlock at this level --> [Count, general_information]
         // Example:
         this.buildingUnlockLevels = {
             1: [[2, "Field"], [1, "Goatbarn"]],

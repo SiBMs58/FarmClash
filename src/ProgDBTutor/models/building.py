@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 class Building:
-    def __init__(self, building_id, username_owner, building_type,unlock_level, level=1, x=None, y=None,
+    def __init__(self, building_id, username_owner, building_type, unlock_level=0, level=1, x=None, y=None,
                  created_at=None, augment_level=0):
         self.building_id = building_id
         self.username_owner = username_owner

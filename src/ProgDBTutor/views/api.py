@@ -192,8 +192,7 @@ def add_resources():
 
             updated_resource = Resource(current_user.username, resource_type, amount, None if Idle else False)
             rollback.append(resource_data_access.get_resource_by_type(current_user.username, resource_type))
-            update_status = resource_data_access.update_by_adding_resource(updated_resource,
-                                                                           get_resource_category_limit(resource_type))
+            update_status = resource_data_access.update_by_adding_resource(updated_resource, get_resource_category_limit(resource_type))
 
             if not update_status:
                 for resource in rollback:
@@ -619,14 +618,10 @@ def get_resource_category_limit(resource_type):
         return float('inf')
 
     if resource_type in crops:
-        building = \
-            current_app.config.get('building_data_access').get_buildings_by_username_and_type(current_user.username,
-                                                                                              "Silo")[0]
+        building = current_app.config.get('building_data_access').get_buildings_by_username_and_type(current_user.username,"Silo")[0]
         return get_silo_limit(building.level, building.augment_level)
 
-    building = \
-        current_app.config.get('building_data_access').get_buildings_by_username_and_type(current_user.username,
-                                                                                          "Barn")[0]
+    building = current_app.config.get('building_data_access').get_buildings_by_username_and_type(current_user.username,"Barn")[0]
     return get_barn_limit(building.level, building.augment_level)
 
 
