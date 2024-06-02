@@ -8,8 +8,9 @@ export const defaultBuildingMapData = {
         townhall: { // The key for town hall needs to be "townhall"! This is used in getTownHallLVL() in buildingLayer
             self_key: "townhall",
             general_information: "Townhall",
-            level: 8,
+            level: 10,
             unlock_level: 2,
+            augment_level: 0,
             building_location:  [4, 19],
         },
 
@@ -18,6 +19,7 @@ export const defaultBuildingMapData = {
             general_information: "Chickencoop",
             level: 3,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [5, 11]
         },
 
@@ -26,6 +28,7 @@ export const defaultBuildingMapData = {
             general_information: "Barn",
             level: 3,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [15, 13]
         },
 
@@ -34,6 +37,7 @@ export const defaultBuildingMapData = {
             general_information: "Field3",
             level: 2,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [10, 8]
         },
         field2: {
@@ -41,6 +45,7 @@ export const defaultBuildingMapData = {
             general_information: "Field3",
             level: 4,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [10, 12]
         },
         field3: {
@@ -48,6 +53,7 @@ export const defaultBuildingMapData = {
             general_information: "Field3",
             level: 6,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [10, 16]
         },
 
@@ -56,6 +62,7 @@ export const defaultBuildingMapData = {
             general_information: "Cowbarn",
             level: 5,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [10, 24]
         },
         Goatbarn: {
@@ -63,6 +70,7 @@ export const defaultBuildingMapData = {
             general_information: "Goatbarn",
             level: 10,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [15, 24]
         },
         Bay: {
@@ -70,13 +78,15 @@ export const defaultBuildingMapData = {
             general_information: "Bay",
             level: 10,
             unlock_level: 3,
-            building_location: [15, 3]
+            augment_level: 0,
+            building_location: [15, 0]
         },
         Pigpen: {
             self_key: "Pigpen",
             general_information: "Pigpen",
             level: 10,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [5, 3]
         },
         Silo: {
@@ -84,6 +94,7 @@ export const defaultBuildingMapData = {
             general_information: "Silo",
             level: 10,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [10, 3]
         },
 
@@ -96,6 +107,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence", // Link to the general information of this building type
             level: 4, // Building level (set "None" if not relevant)
             unlock_level: 4, // Set this to the town hall level when you want this building to be unlocked
+            augment_level: 0,
             building_location: [8, 8] // --> [y (height), x (width)], this needs to be the top-left corner of the building
         },
         fence2: {
@@ -103,6 +115,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence",
             level: 4,
             unlock_level: 4,
+            augment_level: 0,
             building_location: [8, 9]
         },
         fence4: {
@@ -110,6 +123,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence",
             level: 4,
             unlock_level: 4,
+            augment_level: 0,
             building_location: [8, 10]
         },
         fence5: {
@@ -117,6 +131,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence",
             level: 4,
             unlock_level: 4,
+            augment_level: 0,
             building_location: [8, 11]
         },
         fence6: {
@@ -124,6 +139,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence",
             level: 8,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [8, 12]
         },
         fence7: {
@@ -131,6 +147,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence",
             level: 8,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [8, 13]
         },
         fence8: {
@@ -138,6 +155,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence",
             level: 8,
             unlock_level: 3,
+            augment_level: 0,
             building_location: [8, 14]
         },
         fence9: {
@@ -145,6 +163,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence",
             level: 8,
             unlock_level: 5,
+            augment_level: 0,
             building_location: [8, 15]
         },
         fence10: {
@@ -152,6 +171,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence",
             level: 8,
             unlock_level: 5,
+            augment_level: 0,
             building_location: [8, 16]
         },
         fence11: {
@@ -159,6 +179,7 @@ export const defaultBuildingMapData = {
             general_information: "Fence",
             level: 8,
             unlock_level: 5,
+            augment_level: 0,
             building_location: [8, 17]
         },
 

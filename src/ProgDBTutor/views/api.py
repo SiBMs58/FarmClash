@@ -57,19 +57,21 @@ def get_users():
     return jsonify([user.to_dict() for user in users])  # Convert users to dicts
 
 
-@api_blueprint.route('/get-user-stats', methods=['GET'])
-@login_required
-def get_user_stats():
+def user_stats(username):
     """
-    Handles GET requests for the stats of the current user.
-    :return: The stats of the current user, in json format
+    the stats of a user.
+    :param username: The username of the user whose stats are being requested.
+    :return: The stats of a user, in json format
     """
     atk = 0
     defn = 0
-    coins = current_app.config.get('resource_data_access').get_resource_by_type(current_user.username, 'Money').amount
-    buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(current_user.username)
-    animals = current_app.config.get('animal_data_access').get_animals(current_user.username)
-    level = current_app.config.get('building_data_access').get_buildings_by_username_and_type(current_user.username,"Townhall")[0].level
+    level = 0
+    coins = current_app.config.get('resource_data_access').get_resource_by_type(username, 'Money').amount
+    buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(username)
+    animals = current_app.config.get('animal_data_access').get_animals(username)
+    townhallList = current_app.config.get('building_data_access').get_buildings_by_username_and_type(username, "Townhall")
+    if len(townhallList) != 0:
+        level = townhallList[0].level
     for building in buildings:
         ## TODO add this if unlock level is implemented
         """
@@ -98,12 +100,22 @@ def get_user_stats():
             defn += animal.amount * get_augmentation_value('Goatbarn', 'Defense')
             atk += animal.amount * get_augmentation_value('Goatbarn', 'Attack')
 
-    return jsonify({
+    return {
         "level": level,
         "attack": atk,
         "defense": defn,
         "coins": coins
-    })
+    }
+
+
+@api_blueprint.route('/get-user-stats', methods=['GET'])
+@login_required
+def get_user_stats():
+    """
+    Handles GET requests for the stats of the current user.
+    :return: The stats of the current user, in json format
+    """
+    return jsonify(user_stats(current_user.username))
 
 
 @api_blueprint.route('/maps')
@@ -119,6 +131,7 @@ def get_maps():
     maps = map_data_access.get_all_maps()  # Assuming this method exists
     return jsonify([map.to_dict() for map in maps])
 
+
 @api_blueprint.route('/resources')
 @login_required
 def get_all_resources():
@@ -130,6 +143,7 @@ def get_all_resources():
     # Fetch resources for the specified username instead of the current user
     resources = resource_data_access.get_resources(current_user.username)
     return jsonify([resource.to_dict() for resource in resources])
+
 
 @api_blueprint.route('/api/single-resource-quantity', methods=['GET'])
 @login_required
@@ -272,6 +286,7 @@ def get_terrain_map():
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
+
 @api_blueprint.route('/terrain-map/<string:friend_username>')
 @login_required
 def get_friend_terrain_map(friend_username):
@@ -313,6 +328,7 @@ def get_friends():
             list_of_friends.append(friend.user1)
     return jsonify(list_of_friends)
 
+
 @api_blueprint.route('/messages/<string:friend_name>')
 @login_required
 def get_messages(friend_name):
@@ -328,6 +344,7 @@ def get_messages(friend_name):
         return jsonify([message.to_dict() for message in messages])
     else:
         return jsonify({"message": "No messages found"}), 200  # Consider returning an empty list with a 200 OK
+
 
 @api_blueprint.route('/leaderboard')
 @login_required
@@ -364,6 +381,7 @@ def get_leaderboard():
     ranked_users = [{'place': i + 1, 'username': user.username, 'score': scores[user.username]}
                     for i, user in enumerate(unique_users)]
     return jsonify(ranked_users)
+
 
 @api_blueprint.route('/fetch-building-information', methods=['GET'])
 def fetch_building_information():
@@ -493,7 +511,8 @@ def update_animals():
         for specie in data['species']:
             update_success = True
             if data['species'][specie][0] or Idle:
-                updated_animal = Animal(specie, current_user.username, data[specie][1] if len(data[specie]) == 2 else None, None if Idle else False)
+                updated_animal = Animal(specie, current_user.username,
+                                        data[specie][1] if len(data[specie]) == 2 else None, None if Idle else False)
                 update_success = animal_data_access.update_animal(updated_animal)
 
             if not update_success:
@@ -629,7 +648,6 @@ def get_animal_limit(animal):
     return limit
 
 
-
 @api_blueprint.route('/update-fields', methods=['POST'])
 @login_required
 def update_field_map():
@@ -642,9 +660,10 @@ def update_field_map():
         field_data_access = current_app.config.get('field_data_access')
 
         for field_key, field_data in data['crop_information'].items():
-            field = Field(field_data['building_name'],current_user.username, field_data['phase'], field_data['crop'], field_data['assetPhase'], field_data['time_planted'])
+            field = Field(field_data['building_name'], current_user.username, field_data['phase'], field_data['crop'],
+                          field_data['assetPhase'], field_data['time_planted'])
 
-            #return jsonify({"status": "success", "filed": field_data}), 200
+            # return jsonify({"status": "success", "filed": field_data}), 200
             update_success = field_data_access.add_or_update_field(field)
 
             if not update_success:

@@ -39,18 +39,25 @@ let currBuildingName;
 let currBuildingInfo;
 
 async function isUpgradable(buildingInformation, buildingGeneralInformation, buildingName) {
-    console.log(buildingName);
-    currBuildingName = buildingName;
-    currBuildingInfo = buildingInformation;
-    // todo : check is max level, has resources, can be upgraded (level -1)
-    let test = await upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName);
-    console.log(test);
-    if ( test === true){
-        isUpgradableBool = true;
-        return true; // ook nog true returnen
+    // Check if the building is already at max level
+    if (buildingInformation[buildingName].level === maxLevel) {
+        isUpgradableBool = false;
+        return false;
     }
-    isUpgradableBool = false;
-    return false; // ook nog true returnen
+
+    console.log(buildingName);
+
+    // Perform upgrade checks asynchronously
+    try {
+        const canUpgrade = await upgrade_checks(buildingInformation, buildingGeneralInformation, buildingName);
+        console.log(canUpgrade);
+        isUpgradableBool = canUpgrade;
+        return canUpgrade;
+    } catch (error) {
+        console.error('Error during upgrade checks:', error);
+        isUpgradableBool = false;
+        return false;
+    }
 }
 
 
@@ -97,7 +104,6 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
 export function actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName) {
     const popup = document.querySelector('.information-popup');
     const cropPopup = document.querySelector('.cropSelector');
-
     /**
      document.getElementById('building-display-name').innerText = generalInformation.display_name;
     document.getElementById('building-explanation').innerText = generalInformation.explanation;
@@ -135,10 +141,11 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
      */
 
     fetchBuildingPopupInformation().then((info) => {
+        const building = buildingInformation[buildingName];
         const buildingInfo = info[building.general_information];
 
         // Set the building name and description
-        document.getElementById('display-name').innerText = building.general_information;
+        document.getElementById('display-name').innerText = buildingGeneralInformation[building.general_information].display_name;
         if (buildingInfo.hasOwnProperty('explanation')) {
             document.getElementById('explanation').innerText = buildingInfo.explanation;
         }
@@ -171,7 +178,15 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
             isPopupOpen = true;
             return;
         }
-        upgradeButton.style.display = (building.level === maxLevel) ? "none" : "block";
+        isUpgradable(buildingInformation, buildingGeneralInformation, buildingName).then((result) => {
+            if (result) {
+                upgradeButton.style.display = "block";
+                document.getElementById('upgrade-button-pressed').style.display = "none";
+            } else {
+                upgradeButton.style.display = "none";
+                document.getElementById('upgrade-button-pressed').style.display = "block";
+            }
+        });
         buildingStats.style.display = "block";
 
 
@@ -244,7 +259,10 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
             }else{
                 statString = `${stat[name]}: ${baseStatValue}`;
                 augmentString = '';
-                if(augments.hasOwnProperty(stat[name])){
+                if (baseStatValue === 'inf'){
+                    statString = `${stat[name]}: Ꝏ`;
+                    augmentString = `${stat[name]}: Ꝏ`;
+                }else if(augments.hasOwnProperty(stat[name])){
                     augmentString = `${stat[name]}: ${baseStatValue}`;
                     augmentValue = augments[stat[name]];
                     let nextAugmentValue = augmentValue;
@@ -254,12 +272,10 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
                     }
                     augmentValue = parseFloat(eval(augmentValue));
                     nextAugmentValue = parseFloat(eval(nextAugmentValue));
-                    if (augmentValue % 1 !== 0) {
-                        augmentValue = augmentValue.toFixed(2);
-                        nextAugmentValue = nextAugmentValue.toFixed(2);
-                    }
-                    statString+= `-${augmentValue}`;
-                    augmentString += `-${augmentValue} (${nextAugmentValue})`;
+                    augmentValue = (augmentValue % 1 !== 0) ? augmentValue.toFixed(2) : augmentValue;
+                    nextAugmentValue = (nextAugmentValue % 1 !== 0) ? nextAugmentValue.toFixed(2) : nextAugmentValue;
+                    statString+= ` ${augmentValue}`;
+                    augmentString += ` ${augmentValue} (${nextAugmentValue})`;
 
                 }
                 if (building.level !== maxLevel){
@@ -276,21 +292,18 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
             augmentStats.appendChild(list2);
         }
 
+        // Check if field and in phase 1
+        if (buildingInformation[buildingName].general_information === FIELD_GENERAL_INFO_NAME) {
+            const fieldName = buildingInformation[buildingName].self_key;
+            if (cropMap.isFieldEmpty(fieldName)) {
+                cropPopupPreparation();
+                cropPopup.classList.add('show');
+            }
+        }
+
         popup.classList.add('show');
         isPopupOpen = true;
     });
-
-    // Check if field and in phase 1
-    if (buildingInformation[buildingName].general_information === FIELD_GENERAL_INFO_NAME) {
-        const fieldName = buildingInformation[buildingName].self_key;
-        if (cropMap.isFieldEmpty(fieldName)) {
-            cropPopupPreparation();
-            cropPopup.classList.add('show');
-        }
-    }
-
-    popup.classList.add('show');
-    isPopupOpen = true;
 }
 
 function cropPopupPreparation() {
@@ -311,7 +324,6 @@ function cropPopupPreparation() {
     };
 
     buttons.forEach(button => {
-        debugger;
         let originalSrc = button.src;
         let pressedSrc;
         if (originalSrc.includes("PressedButton.png")) {

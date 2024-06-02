@@ -52,16 +52,10 @@ class GameServices:
         with open(file_path) as f:
             data = json.load(f)
 
-        self.building_data_access.add_building(
-            Building("bay", username, "Bay", y=0, x=15, level=0, tile_rel_locations=json.dumps(data["Bay.L1.F1"])))
-        self.building_data_access.add_building(Building("townhall", username, "Townhall", y=6, x=15, level=0,
-                                                        tile_rel_locations=json.dumps(data["Townhall.L0"])))
-        self.building_data_access.add_building(Building("barn", username, "Barn", y=4, x=10, level=1,
-                                                        tile_rel_locations=json.dumps(
-                                                            data["Barn.L1"])))  # TODO position
-        self.building_data_access.add_building(Building("silo", username, "Silo", y=6, x=21, level=1,
-                                                        tile_rel_locations=json.dumps(
-                                                            data["Silo.L1.0%"])))  # TODO position
+        self.building_data_access.add_building(Building("bay", username, "Bay", y=0, x=15, level=0))
+        self.building_data_access.add_building(Building("townhall", username, "Townhall", y=6, x=15, level=0))
+        self.building_data_access.add_building(Building("barn", username, "Barn", y=4, x=10, level=1,))  # TODO position
+        self.building_data_access.add_building(Building("silo", username, "Silo", y=6, x=21, level=1,))  # TODO position
 
         # concatenate name with counter for building_id
         fenceCounter = 0
