@@ -170,7 +170,7 @@
   },
 
 
-  "Field": {
+  "Field3": {
     "explanation": "Welcome to the Harvest Haven. This fertile soil is used as a canvas for planting and cultivating a bountiful harvest. Upgrading the field enhances the crop yield",
     "upgrade_costs": {
         "L2": [["Money", 100], ["Wheat", 100], ["Wool", 5]],

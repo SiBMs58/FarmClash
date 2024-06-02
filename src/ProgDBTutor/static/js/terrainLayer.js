@@ -251,7 +251,10 @@ export class TerrainMap extends BaseMap {
                     //if (assetDir !== "Water" && !this.isEdgeTile(currTile)) {
                     //    filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
                     //}
-                    if (this.buildingMapInstace.isOnGrassRectangle(i_map, j_map)) {
+                    if(j_map < 3){
+                        //TODO bay building relative positions
+                        filePath = "/static/img/assets/terrain/Water/Water.1.1.png";
+                    }else if (this.buildingMapInstace.isOnGrassRectangle(i_map, j_map)) {
                         filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
                     }
                 }
