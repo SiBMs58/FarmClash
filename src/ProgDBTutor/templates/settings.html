@@ -82,6 +82,21 @@
                 <button class="sound-image-button" id="zoomUpButton"><img src="../static/img/UI/plus_btn.png" id="zoomupimg"></button>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col">
+                BOOK (GAME ASPECTS)
+            </div>
+            <div class="col-auto">
+                <div class="game-aspects-btn"></div>
+                <button class="sound-image-button">
+                    <a href="{{ url_for('book') }}">
+                        <img src="../static/img/UI/question_btn.png" alt="Book" id="game-aspects-button">
+                    </a>
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
