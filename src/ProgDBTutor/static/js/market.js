@@ -107,11 +107,14 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField, i
         let maxLimit = market.quantities[index]; // Get the maximum limit from the 'quantities' array
 
         // Check if the current value is within the allowed range
-        if (isNaN(currentValue) || currentValue < 0) {
+        if (isNaN(currentValue) || currentValue <= 0) {
             event.target.value = 0; // Set value to the minimum limit
         } else if (currentValue > maxLimit) {
             event.target.value = maxLimit; // Set value to the maximum limit
+        }else{
+            event.target.value = currentValue;
         }
+
     });
 });
 
@@ -167,6 +170,7 @@ async function sell() {
 
         if (anySold) {
             soldMessage += `\nTotal Sale Price: $${totalSalePrice}`;
+            displayCrops();
             alert(soldMessage);
         } else {
             alert("No market sold.");
