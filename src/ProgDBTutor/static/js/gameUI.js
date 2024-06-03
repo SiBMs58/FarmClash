@@ -11,12 +11,12 @@ function scheduleResourceUpdate() {
         fetchCropsAndMoney()
             .then(() => {
                 updateMoneyDisplay();
-                updateCropDisplay()
+                if (clickedResourceButton) updateCropDisplay()
             })
             .catch(error => {
                 console.error('Error fetching resources:', error);
             });
-    }, 250);
+    }, 1000);
 }
 
 if (localStorage.getItem('backsoundButtonState') === null) {
@@ -107,13 +107,10 @@ function fetchAnimals(){
 
 
 function updateMoneyDisplay() {
-    const moneyDisplay = document.querySelector('.money-display');
-
-    if (moneyDisplay) {
-        moneyDisplay.innerHTML = '<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">';
-        moneyDisplay.innerHTML += getAmountDisplay(resources.money, 'money');
-        moneyDisplay.innerHTML += '<img src="../../static/img/UI/display.money.right.png" alt="🪙" draggable="false">'
-    }
+    document.querySelector('.money-display').innerHTML =
+        '<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">' +
+        getAmountDisplay(resources.money, 'money') +
+        '<img src="../../static/img/UI/display.money.right.png" alt="🪙" draggable="false">';
 }
 function updateAnimalDisplay() {
     const popupDiv = document.querySelector('.animal-popup');
@@ -129,17 +126,31 @@ function updateAnimalDisplay() {
     popupDiv.innerHTML = animalHTML;
 }
 function updateCropDisplay() {
-    const popupDiv = document.querySelector('.popup');
+    // Build the HTML display for the crops
     let resourceHTML = '<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">';
     for (let i = 0; i < resources.crops.length; i++) {
-        resourceHTML += getAmountDisplay(resources.crops[i][1], resources.crops[i][0])
+        resourceHTML += getAmountDisplay(resources.crops[i][1], resources.crops[i][0]);
         resourceHTML += getCropDisplay(resources.crops[i][0]);
         if (i < resources.crops.length - 1) {
             resourceHTML += '<img src="../../static/img/UI/display.extender.png" alt=" " draggable="false">'.repeat(5);
         }
     }
-    resourceHTML += '<img src="../../static/img/UI/display.right.short.png" alt="" draggable="false">'
-    popupDiv.innerHTML = resourceHTML;
+    resourceHTML += '<img src="../../static/img/UI/display.right.short.png" alt="" draggable="false">';
+
+    // Assign it to a document fragment to avoid reflow (Optimization)
+    const fragment = document.createDocumentFragment();
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = resourceHTML;
+    while (tempDiv.firstChild) {
+        fragment.appendChild(tempDiv.firstChild);
+    }
+
+    // Use requestAnimationFrame to ensure optimal rendering
+    requestAnimationFrame(() => {
+        const popupDiv = document.querySelector('.popup');
+        popupDiv.innerHTML = '';
+        popupDiv.appendChild(fragment);
+    });
 }
 
 
