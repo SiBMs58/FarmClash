@@ -9,6 +9,11 @@
 </head>
 <body>
     {% include 'header&footer.html' %}
+    <button class="back-btn">
+    <a href="{{ url_for('settings') }}">
+        <img src="../static/img/UI/back_btn.png" alt="Logout" usemap="#logoutMap" id="image-button">
+    </a>
+    </button>
 
     <div class="container">
         <div class="row">
