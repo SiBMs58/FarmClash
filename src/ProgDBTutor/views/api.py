@@ -354,10 +354,15 @@ def get_leaderboard():
     resource_data_access = current_app.config.get('resource_data_access')
 
     users = user_data_access.get_all_users()
+    users = [user for user in users if user.username != 'admin']     # Filter out the admin user
     scores = {}
     for user in users:
-        recources = resource_data_access.get_resources(user.username)
-        user_score = sum([resource.amount for resource in recources])
+        user_stats_result = user_stats(user.username)  # Calculate stats using user_stats function
+        # Example scoring formula: level * 10 + attack + defense + coins
+        user_score = (user_stats_result['level'] * 10 +
+                      user_stats_result['attack'] +
+                      user_stats_result['defense'] +
+                      user_stats_result['coins'])
         scores[user.username] = user_score
     # Sort users based on their scores stored in the scores dictionary
     sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
@@ -372,6 +377,7 @@ def get_leaderboard():
     for leaderboard_user in leaderboard_users:
         if leaderboard_user.username == current_user.username:
             break
+    else:
         leaderboard_users.append(current_user)
     # Remove duplicates and create ranked list
     unique_users = list({user.username: user for user in leaderboard_users}.values())

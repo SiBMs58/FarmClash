@@ -8,7 +8,7 @@ from .api import user_stats
 
 attack_blueprint = Blueprint('attack', __name__, template_folder='templates')
 
-previously_searched = ['admin']
+previously_searched = []
 threshold = 2000
 scores = {}
 
@@ -24,7 +24,6 @@ def visit_opponent():
 
     if not opponent:
         previously_searched.clear()
-        previously_searched.append('admin')
         return render_template('attack/no_opponent.html', app_data=config_data)
 
     return render_template('attack/visit_opponents_world.html', opponent=opponent, app_data=config_data)
@@ -42,6 +41,8 @@ def choose_opponent_logic():
 
     # Get all users and current user object
     users = user_data_access.get_all_users()
+    # Filter out the admin user
+    users = [user for user in users if user.username != 'admin']
     current_user_object = user_data_access.get_user(current_user.username)
 
     # Retrieve friends of the current user
@@ -49,14 +50,12 @@ def choose_opponent_logic():
     friends_usernames = {friend.user2 if friend.user1 == current_user.username else friend.user1 for friend in friends}
 
     # Calculate scores for all users
-    # TODO/ Not on the resources but on user stats
     for user in users:
-        if current_user.username == user.username:
+        if current_user_object == user:
             user_score = user_stats(user.username)["attack"]
-            scores[user.username] = user_score
         else:
             user_score = user_stats(user.username)["defense"]
-            scores[user.username] = user_score
+        scores[user.username] = user_score
 
     # Filter users based on the conditions
     eligible_users = []
@@ -93,8 +92,7 @@ def attack_result():
     Renders the attack result view.
     """
     opponent = previously_searched[-1]
-    result, resources = choose_result_logic(scores[opponent], scores[
-        current_user.username])  # Unpack the tuple returned by choose_result_logic
+    result, resources = choose_result_logic(scores[opponent], scores[current_user.username])  # Unpack the tuple returned by choose_result_logic
 
     # Update the resources in the database
     resource_data_access = current_app.config.get('resource_data_access')
@@ -133,7 +131,6 @@ def choose_result_logic(player_score, opponent_score):
         outcome = 'Win' if random.choice([0, 1]) == 1 else 'Lose'
 
     # Get the opponent's resources
-    # TODO/ Not on the resources but on user stats
     resource_data_access = current_app.config.get('resource_data_access')
     opponent_resources = {resource.resource_type: resource.amount for resource in
                           resource_data_access.get_resources(previously_searched[-1])}
