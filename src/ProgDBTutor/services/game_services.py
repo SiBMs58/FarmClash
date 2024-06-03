@@ -42,31 +42,6 @@ class GameServices:
             for col in range(len(terrain_tiles[row])):
                 self.tile_data_access.add_tile(Tile(None, map.map_id, col, row, terrain_tiles[row][col], None))
 
-        self.create_building_map(username, terrain_tiles)
-
-    def create_building_map(self, username, terrain_map):
-
-
-        #self.building_data_access.add_building(Building("bay", username, "Bay", y=0, x=15, level=0))
-        #self.building_data_access.add_building(Building("townhall", username, "Townhall", y=6, x=15, level=0))
-        #self.building_data_access.add_building(Building("barn", username, "Barn", y=4, x=10, level=1,))  # TODO position
-        #self.building_data_access.add_building(Building("silo", username, "Silo", y=6, x=21, level=1,))  # TODO position
-
-        # concatenate name with counter for building_id
-        fenceCounter = 0
-        fieldCounter = 0
-        pigCounter = 0
-        cowCounter = 0
-        goatCounter = 0
-        chickenCounter = 0
-        harvestHopperCounter = 0
-
-        ## 3 fences per cloud area
-
-        ## 4 fields per cloud area or one of 4 Pigpens, 4 Chicken Coops, 4 Cow Barns, 4 Goat Barns in total
-        ## 3 Pigpens, 3 Chicken Coops, 3 Cow Barns, 3 Goat Barns in total
-        return True
-
     def initialize_resources(self, username):
         """
         Initialize default, starting resources when a user registers

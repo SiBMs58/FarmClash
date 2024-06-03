@@ -48,7 +48,7 @@ def register():
             gameservices.create_default_map(username)
             gameservices.initialize_resources(username)
             gameservices.initialize_animals(username)
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.welcome'))
         else:
             error_message = 'Failed to register user, try a different username.'
 
@@ -60,3 +60,8 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
+
+
+@auth_blueprint.route('/welcome')
+def welcome():
+    return render_template('auth/welcome_screen.html', app_name=config_data)

@@ -8,9 +8,9 @@ export const defaultBuildingMapData = {
         townhall: { // The key for town hall needs to be "townhall"! This is used in getTownHallLVL() in buildingLayer
             self_key: "townhall",
             general_information: "Townhall",
-            level: 1,
+            level: 0,
             unlock_level: 0,
-            building_location:  [8, 25],
+            building_location:  [9, 14],
         },
         Silo: {
             self_key: "Silo",
@@ -22,8 +22,8 @@ export const defaultBuildingMapData = {
         Bay: {
             self_key: "Bay",
             general_information: "Bay",
-            level: 1,
-            unlock_level: 2,
+            level: 0,
+            unlock_level: 1,
             building_location: [15, 0]
         },
         Pigpen1: {
@@ -51,7 +51,7 @@ export const defaultBuildingMapData = {
             self_key: "Pigpen4",
             general_information: "Pigpen",
             level: 1,
-            unlock_level: 7,
+            unlock_level: 9,
             building_location: [32, 40]
         },
 
@@ -66,28 +66,28 @@ export const defaultBuildingMapData = {
             self_key: "chicken_coop2",
             general_information: "Chickencoop",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 6,
             building_location: [4, 42]
         },
         chicken_coop3: {
             self_key: "chicken_coop3",
             general_information: "Chickencoop",
             level: 1,
-            unlock_level: 7,
+            unlock_level: 9,
             building_location: [35, 24]
         },
         chicken_coop4: {
             self_key: "chicken_coop4",
             general_information: "Chickencoop",
             level: 1,
-            unlock_level: 1,
+            unlock_level: 0,
             building_location: [5, 15]
         },
         Cowbarn1: {
             self_key: "Cowbarn1",
             general_information: "Cowbarn",
             level: 1,
-            unlock_level: 4,
+            unlock_level: 3,
             building_location: [28, 15]
         },
         Cowbarn2: {
@@ -101,46 +101,44 @@ export const defaultBuildingMapData = {
             self_key: "Cowbarn3",
             general_information: "Cowbarn",
             level: 1,
-            unlock_level: 1,
+            unlock_level: 0,
             building_location: [16, 17]
         },
         Cowbarn4: {
             self_key: "Cowbarn4",
             general_information: "Cowbarn",
             level: 1,
-            unlock_level: 8,
+            unlock_level: 9,
             building_location: [25, 49]
         },
         Goatbarn1: {
-            self_key: "Goatbarn",
+            self_key: "Goatbarn1",
             general_information: "Goatbarn",
             level: 1,
-            unlock_level: 2,
+            unlock_level: 0,
             building_location: [10, 36]
         },
         Goatbarn2: {
-            self_key: "Goatbarn",
+            self_key: "Goatbarn2",
             general_information: "Goatbarn",
             level: 1,
-            unlock_level: 5,
+            unlock_level: 6,
             building_location: [28, 5]
         },
         Goatbarn3: {
-            self_key: "Goatbarn",
+            self_key: "Goatbarn3",
             general_information: "Goatbarn",
             level: 1,
-            unlock_level: 7,
+            unlock_level: 9,
             building_location: [25, 38]
         },
         Goatbarn4: {
-            self_key: "Goatbarn",
+            self_key: "Goatbarn4",
             general_information: "Goatbarn",
             level: 1,
-            unlock_level: 4,
+            unlock_level: 3,
             building_location: [4, 49]
         },
-
-
 
         field1: {
             self_key: "field1",
@@ -958,7 +956,7 @@ export const defaultBuildingMapData = {
 
     building_general_information: {
         Chickencoop: { // This needs to be the name of the asset folder
-            display_name: "Chicken House", // Name to be displayed in the popup
+            display_name: "Chicken coop", // Name to be displayed in the popup
             explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
                 "This vital building is where your feathered friends lay eggs, ready for " +
                 "market sale. Upgrade to boost production. Every egg sold brings you one " +
@@ -997,7 +995,7 @@ export const defaultBuildingMapData = {
             ]
         },
         Cowbarn: {
-            display_name: "Cowbarn", // Name to be displayed in the popup
+            display_name: "Cow barn", // Name to be displayed in the popup
             explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
                 "This vital building is where your feathered friends lay eggs, ready for " +
                 "market sale. Upgrade to boost production. Every egg sold brings you one " +

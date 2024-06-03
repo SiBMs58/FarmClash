@@ -124,6 +124,16 @@ def attack():
         return redirect(url_for('admin'))
     return render_template('attack.html', app_data=app_data)
 
+@app.route('/book')
+@login_required
+def book():
+    """
+    Renders the book view.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('book.html', app_data=app_data)
+
 
 @app.route('/admin')
 @login_required
