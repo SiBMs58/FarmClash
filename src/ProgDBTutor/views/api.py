@@ -361,7 +361,6 @@ def get_leaderboard():
     """
     try:
         user_data_access = current_app.config.get('user_data_access')
-        resource_data_access = current_app.config.get('resource_data_access')
 
         users = user_data_access.get_all_users()
         users = [user for user in users if user.username != 'admin']     # Filter out the admin user
@@ -377,7 +376,6 @@ def get_leaderboard():
                 scores[user.username] = user_score
             except Exception as e:
                 print(f"Error calculating score for user {user.username}: {str(e)}")
-                continue # Skip this user if an error occurs
         # Sort users based on their scores stored in the scores dictionary
         sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
         # Get the top 3 users
