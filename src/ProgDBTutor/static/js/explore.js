@@ -198,10 +198,10 @@ function displaySurvivors() {
 
         let html = '';
         if (animal1) {
-            html += `${animal1.quantity} x <img src="../../static/img/assets/animals/${animal1.type}/${animal1.type}.1.png" alt="${animal1.type}" title="${animal1.type}" draggable="false">`;
+            html += `${animal1.quantity} x <img src="../../static/img/animals/${animal1.type}/${animal1.type}.1.png" alt="${animal1.type}" title="${animal1.type}" draggable="false">`;
         }
         if (animal2) {
-            html += `${animal2.quantity} x <img src="../../static/img/assets/animals/${animal2.type}/${animal2.type}.1.png" alt="${animal2.type}" title="${animal2.type}" draggable="false">`;
+            html += `${animal2.quantity} x <img src="../../static/img/animals/${animal2.type}/${animal2.type}.1.png" alt="${animal2.type}" title="${animal2.type}" draggable="false">`;
         }
 
         animalPairDiv.innerHTML = html;
@@ -353,7 +353,6 @@ function fetchBuildingBayStats() {
             const bay = buildings[id];
             buildingAugmentLevel = bay.augment_level;
             buildingLevel = bay.level;
-            buildingLevel = 1; //TODO this is for debugging
         }
     })
     .catch(error => {
@@ -854,7 +853,7 @@ function spaceTo_(input) {
 function generateRewards() {
     const rewardBoxes = ['coinCrate', 'cropCrate', 'animalCrate', 'rawCrate', 'emptyCrate'];
     const probabilities = [0.25, 0.25, 0.25, 0.15, 0.10];
-    const multiplier = Math.sqrt(exploration.duration / 60);
+    const multiplier = Math.sqrt(exploration.duration * 3/ 60);
     const means = [100*buildingLevel * multiplier, 100*buildingLevel * multiplier, 50*buildingLevel * multiplier, 25*buildingLevel * multiplier, 0];
     const stdevs = [10*buildingLevel, 10*buildingLevel, 5*buildingLevel, 2*buildingLevel, 0]
     let rindex = 0;
