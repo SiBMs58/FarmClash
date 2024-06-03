@@ -322,6 +322,8 @@ def get_friends():
             list_of_friends.append(friend.user2)
         elif friend.user2 == current_user.username:
             list_of_friends.append(friend.user1)
+    # Be sure to remove duplicates
+    list_of_friends = list(set(list_of_friends))
     return jsonify(list_of_friends)
 
 
