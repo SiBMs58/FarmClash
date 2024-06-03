@@ -365,7 +365,7 @@ def get_leaderboard():
         users = [user for user in users if user.username != 'admin']     # Filter out the admin user
         scores = {}
         for user in users:
-            user_stats_result = user_stats(user.username)  # Calculate stats using user_stats function
+            user_stats_result = jsonify(user_stats(user.username)) # Calculate stats using user_stats function
             # Example scoring formula: level * 10 + attack + defense + coins
             user_score = (user_stats_result['level'] * 10 +
                           user_stats_result['attack'] +
