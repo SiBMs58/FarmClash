@@ -4,6 +4,7 @@ import {BaseMap} from "./baseMap.js";
 //import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
 import { utils } from "./utils.js";
 import { buildingMap } from "./canvas.js";
+import { defaultCropData } from "./Data/defaultCropData.js";
 
 /**
  * Sets the string value of
@@ -19,67 +20,6 @@ import { buildingMap } from "./canvas.js";
  y
  */
 
-const defaultCropData = {
-    map_width: 58,
-    map_height: 43,
-    // 3 phases: empty (1), growth (2), harvest (3)
-    crop_information: {
-        field1: { // moet dezelfde naam hebben als 'building_name'
-            building_name: "field1", // to link to the field building
-            phase: 1, // growth phase
-            crop: null, // can be null
-            assetPhase: null, // asset phases 1-4. Set's the correct growth phase of the asset
-            time_planted: null, // time in seconds since random day (can be null)
-        },
-        field2: {
-            building_name: "field2", // to link to the field building
-            phase: 1, // empty phase
-            crop: null, // can be null
-            assetPhase: null,
-            time_planted: null, // can be null
-        },
-        field3: {
-            building_name: "field3",
-            phase: 1,
-            crop: null,
-            assetPhase: null,
-            time_planted: null
-        }
-    },
-    crop_general_information: {
-        Wheat: {
-            growth_time: 30
-        },
-        Carrot: {
-            growth_time: 30
-        },
-        Corn: {
-            growth_time: 30
-        },
-        Lettuce: {
-            growth_time: 30
-        },
-        Tomato: {
-            growth_time: 30
-        },
-        Turnip: {
-            growth_time: 30
-        },
-        Zucchini: {
-            growth_time: 30
-        },
-        Parsnip: {
-            growth_time: 30
-        },
-        Cauliflower: {
-            growth_time: 30
-        },
-        Eggplant: {
-            growth_time: 30
-        },
-
-    }
-}
 
 
 export class CropMap extends BaseMap {

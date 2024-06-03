@@ -1,7 +1,7 @@
 import {BaseMap} from "./baseMap.js";
 import {closePopup, isPopupOpen, openPopup} from "./buildingPopup.js";
 import {utils} from "./utils.js";
-import {defaultBuildingMapData} from "./defaultBuildingMapData.js";
+import {defaultBuildingMapData} from "./Data/defaultBuildingMapData.js";
 
 /**
  * Sets the string value of
@@ -83,6 +83,13 @@ export class BuildingMap extends BaseMap {
             1: [[2, "Field"], [1, "Goatbarn"]],
         };
 
+        // Used for the soft unlock warning
+        this.showingUnlockWarning = false;
+        this.lastMousePosition = { x: 0, y: 0 };
+        // Capture mouse position on mouse move
+        document.addEventListener('mousemove', (event) => {
+            this.lastMousePosition = { x: event.pageX, y: event.pageY };
+        });
 
     }
 
@@ -579,7 +586,11 @@ export class BuildingMap extends BaseMap {
         }
     }
 
-
+    hoveringOverBuilding(tileX, tileY) {
+        if (this.tiles[tileY][tileX] !== EMPTY_TILE) {
+            return true;
+        }
+    }
 
 
     /**
@@ -592,12 +603,18 @@ export class BuildingMap extends BaseMap {
         let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
 
         if (!this.movingBuilding) {
-            /*
-            if (this.hoveringOverBuilding(tileX, tileY)) {
+            // Check if building is unlocked
+            if (this.hoveringOverBuilding(tileX, tileY) && !isPopupOpen) {
                 const buildingHoverName = this.tiles[tileY][tileX][1];
-                this.uiLayerInstance.drawHoverUI(buildingHoverName, this.viewX, this.viewY);
+                if (!this.isBuildingUnlocked(buildingHoverName)) {
+                    // Building is not unlocked
+                    this.showSoftUnlockWarning();
+                } else {
+                    this.hideSoftUnlockWarning();
+                }
+            } else {
+                this.hideSoftUnlockWarning();
             }
-             */
             return;
         }
 
@@ -622,6 +639,10 @@ export class BuildingMap extends BaseMap {
     getTownHallLVL() {
         const townHallBuilding = this.buildingInformation["townhall"];
         return townHallBuilding.level;
+    }
+
+    isBuildingUnlocked(buildingName) {
+        return this.buildingInformation[buildingName].unlock_level <= this.getTownHallLVL();
     }
 
     /**
@@ -745,6 +766,8 @@ export class BuildingMap extends BaseMap {
     }
 
     showUnlockWarning(building) {
+        this.showingUnlockWarning = true;
+        this.hideSoftUnlockWarning();
         const warningElement = document.getElementById('building-unlock-warning');
         const warningElementLvlText = document.getElementById('building-unlock-warning-lvl-text');
         warningElementLvlText.innerText = building.unlock_level
@@ -753,13 +776,76 @@ export class BuildingMap extends BaseMap {
         warningElement.style.transition = 'opacity 0.1s ease-in';
         warningElement.style.opacity = '1';
 
-        // After 1 second, fade out
+        // After 1.5 seconds, fade out
         setTimeout(() => {
             warningElement.style.transition = 'opacity 1.5s ease-out'; // Apply the transition for fading out
             warningElement.style.opacity = '0';
+            setTimeout(() => {
+                this.showingUnlockWarning = false;
+            }, 1500);
         }, 1500);
     }
 
+
+    showSoftUnlockWarning() {
+        if (!this.showingUnlockWarning) {
+            const warningElement = document.getElementById('soft-building-unlock-warning');
+            warningElement.classList.add('show');
+        }
+    }
+
+    hideSoftUnlockWarning() {
+        const warningElement = document.getElementById('soft-building-unlock-warning');
+        warningElement.classList.remove('show');
+    }
+
+
+/*
+    showSoftUnlockWarning() {
+        debugger;
+        const warningElement = document.getElementById('soft-building-unlock-warning');
+        warningElement.classList.add('show');
+        this.updatePosition(warningElement);
+    }
+
+    hideSoftUnlockWarning() {
+        const warningElement = document.getElementById('soft-building-unlock-warning');
+        warningElement.classList.remove('show');
+    }
+
+    updatePosition(warningElement) {
+        const offsetX = 10; // Offset by 10 pixels to the right
+        const offsetY = 10; // Offset by 10 pixels to the bottom
+        warningElement.style.left = (this.lastMousePosition.x + offsetX) + 'px';
+        warningElement.style.top = (this.lastMousePosition.y + offsetY) + 'px';
+    }
+*/
+
+
+    /*
+    showSoftUnlockWarning() {
+        const warningElement = document.getElementById('soft-building-unlock-warning');
+        if (!warningElement.classList.contains('show')) {
+            warningElement.classList.add('show');
+            document.addEventListener('mousemove', this.mouseMoveHandler);
+        }
+    }
+
+    hideSoftUnlockWarning() {
+        const warningElement = document.getElementById('soft-building-unlock-warning');
+        if (warningElement.classList.contains('show')) {
+            warningElement.classList.remove('show');
+            document.removeEventListener('mousemove', this.mouseMoveHandler);
+        }
+    }
+
+    updatePosition(event) {
+        const offsetX = 10; // Offset by 10 pixels to the right
+        const offsetY = 10; // Offset by 10 pixels to the bottom
+        this.warningElement.style.left = (event.pageX + offsetX) + 'px';
+        this.warningElement.style.top = (event.pageY + offsetY) + 'px';
+    }
+    */
 
     /**
      * converts js object to json

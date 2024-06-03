@@ -102,6 +102,7 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
  * @param buildingName The unique name of the building.
  */
 export function actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName) {
+    debugger;
     const popup = document.querySelector('.information-popup');
     const cropPopup = document.querySelector('.cropSelector');
     /**

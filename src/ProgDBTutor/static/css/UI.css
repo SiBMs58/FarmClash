@@ -190,6 +190,26 @@ footer {
     pointer-events: none;
 }
 
+#soft-building-unlock-warning {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    color: black;
+    white-space: nowrap;
+    pointer-events: none;
+    font-size: 16px;
+    background-color: rgba(202, 224, 149, 0.9);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    display: none;
+}
+
+#soft-building-unlock-warning.show {
+    display: inline-block;
+}
+
 .animal-overlay{
     position: absolute;
     bottom: 10px;
