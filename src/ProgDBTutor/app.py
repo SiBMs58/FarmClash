@@ -1,6 +1,5 @@
 from flask import Flask, redirect, url_for, render_template, request
 from flask_login import current_user, login_required
-from flask_session import Session
 from config import config_data
 from data_access.dbconnection import DBConnection
 from data_access.user_data_access import UserDataAccess
@@ -28,7 +27,6 @@ from extensions import login_manager
 
 # Initialize the Flask application
 app = Flask('FarmClash')
-Session(app)
 app.secret_key = config_data['secret_key']
 app_data = dict()
 app_data['app_name'] = config_data['app_name']
