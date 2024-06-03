@@ -36,28 +36,32 @@ def test_get_user_returns_user(user_data_access, mock_db_connection):
     username = "testuser"
     hashed_password = generate_password_hash("testpass")
     mock_db_connection.get_cursor().fetchone.return_value = {
-        'username': username, 'password': hashed_password, 'email': 'test@example.com', 'created_at': datetime.now()
+        'username': username, 'password': hashed_password, 'email': 'test@example.com', 'created_at': datetime.now(), 'last_gift': datetime.now()
     }
 
     user = user_data_access.get_user(username)
 
     assert user is not None
     assert user.username == username
-    # Direct comparison, since we're fetching and not hashing here
     assert user.password == hashed_password
-
+    assert user.email == 'test@example.com'
+    assert isinstance(user.created_at, datetime)
+    assert isinstance(user.last_gift, datetime)
 
 def test_get_all_users_returns_users_list(user_data_access, mock_db_connection):
     mock_db_connection.get_cursor().fetchall.return_value = [
-        {'username': 'user1', 'password': generate_password_hash('pass1'), 'email': 'user1@example.com',
-         'created_at': datetime.now()},
-        {'username': 'user2', 'password': generate_password_hash('pass2'), 'email': 'user2@example.com',
-         'created_at': datetime.now()}
+        {'username': 'user1', 'password': generate_password_hash('pass1'), 'email': 'user1@example.com', 'created_at': datetime.now(), 'last_gift': datetime.now()},
+        {'username': 'user2', 'password': generate_password_hash('pass2'), 'email': 'user2@example.com', 'created_at': datetime.now(), 'last_gift': datetime.now()}
     ]
 
     users = user_data_access.get_all_users()
     assert len(users) == 2
     assert all(isinstance(user, User) for user in users)
     assert users[0].username == 'user1'
+    assert users[0].email == 'user1@example.com'
+    assert users[1].username == 'user2'
     assert users[1].email == 'user2@example.com'
-    # We could add additional assertions here to verify the integrity of the password hashes, similar to the add_user test
+    assert isinstance(users[0].created_at, datetime)
+    assert isinstance(users[0].last_gift, datetime)
+    assert isinstance(users[1].created_at, datetime)
+    assert isinstance(users[1].last_gift, datetime)

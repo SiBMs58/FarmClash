@@ -297,6 +297,32 @@ The attack feature allows users to visit opponents' worlds and simulate an attac
     \item \textbf{Response} The attack view is rendered using the `visit\_opponents\_world.html` template, displaying the opponent's world and the result of the attack.
 \end{itemize}
 
+\subsubsection{Gifts Feature}
+The gifts feature allows users to receive random gifts based on their last login time and the duration they have been playing the game.
+\begin{itemize}
+\item \textbf{Endpoint} The route /gifts (methods=['GET']) handles the gift requests.
+\item \textbf{Gift Availability} When a user visits the endpoint, the system checks if the user is eligible for a gift based on their last gift time.
+\begin{itemize}
+\item The user is eligible for a gift if their last gift time is more than an hour ago.
+\item If eligible, the system calculates bonuses based on the time the user has been playing the game and the time since their last login.
+\end{itemize}
+\item \textbf{Bonus Calculation} The bonuses are determined as follows:
+\begin{itemize}
+\item \textbf{Time Played Bonus} - One bonus point is awarded for each month the user has been playing the game.
+\item \textbf{Recent Login Bonus} - Up to 60 bonus points are awarded based on how recently the user logged in, with one point subtracted for each minute since the last login.
+\end{itemize}
+\item \textbf{Gift Selection} If the user is eligible, a random gift is chosen from a predefined list of gifts.
+\begin{itemize}
+\item The amount of the gift is calculated by adding the base value of the gift to the time played bonus and the recent login bonus.
+\end{itemize}
+\item \textbf{Database Update} Once a gift is determined:
+\begin{itemize}
+\item The chosen gift and its amount are updated in the database for the current user.
+\item The last gift time for the user is updated to the current time.
+\end{itemize}
+\item \textbf{Response} The gifts view is rendered using the gifts.html template, displaying the randomly selected gift and its amount, or a message indicating no gifts are available if the user is not eligible.
+\end{itemize}
+
 
 
 \subsection{Frontend Interface}
@@ -452,6 +478,33 @@ The friends and messaging features are central to fostering a community environm
 \begin{itemize}
     \item \textbf{HTML and CSS:} The bookChat.html and bookMarket.html contain the HTML structure of the books, covers and pages (front and back), along with the content for the chat and the market respectively.
     \item \textbf{JavaScript:} There is a JavaScript function: openBook() to open the cover of the book and a closeBook() to close the cover of the book. In addition, you have the goNextPage() function to go to the next page and the goPrevPage() function to go to the previous page. In addition to these functions, there are querySelectors for the covers, pages and buttons
+\end{itemize}
+
+\subsubsection{Gifts Feature}
+\begin{itemize}
+\item \textbf{HTML and CSS:}
+\begin{itemize}
+\item \textbf{gifts.html:} This file provides the structure for the gifts view. It includes the necessary HTML and inline CSS to display the gift information centered on the page. The content adjusts based on whether a gift is available or not.
+\end{itemize}
+\item \textbf{HTML Structure:}
+\begin{itemize}
+\item \textbf{Head Section:}
+\begin{itemize}
+\item Includes the head.html template which typically contains metadata and links to stylesheets.
+\item A <style> block defines the .container and .content CSS classes to center the content both vertically and horizontally.
+\end{itemize}
+\item \textbf{Body Section:}
+\begin{itemize}
+\item Includes the header&footer.html template to provide consistent header and footer across the site.
+\item A div with the class container is used to center the content.
+\item Within this container, a div with the class content holds the main content, which includes a heading (<h1>) and conditional content.
+\item \textbf{Conditional Content:}
+\begin{itemize}
+\item If a gift is available, it displays a congratulatory message and details of the gift within a list.
+\item If no gift is available, it displays a message indicating this and encourages the user to check back later.
+\end{itemize}
+\end{itemize}
+\end{itemize}
 \end{itemize}
 
 \section{Challenges and Solutions}

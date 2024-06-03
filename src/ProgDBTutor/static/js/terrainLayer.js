@@ -1,5 +1,6 @@
 import { BaseMap } from "./baseMap.js";
 import { utils } from "./utils.js";
+import { EMPTY_TILE} from "./buildingLayer.js";
 
 
 export function getAssetDir(assetName) {
@@ -62,6 +63,8 @@ export class TerrainMap extends BaseMap {
         this.time = 0; // amount of frames passed
         this.cycle = 2; // animation part
 
+        this.buildingMapInstance = null;
+
     }
 
     /**
@@ -72,6 +75,10 @@ export class TerrainMap extends BaseMap {
         await this.fetchTerrainMapData();
         await new Promise((resolve) => this.preloadTerrainAssets(resolve));
         // Safe to call stuff here
+    }
+
+    addBuildingMapInstance(buildingMapInstance) {
+        this.buildingMapInstance = buildingMapInstance;
     }
 
     /**
@@ -94,7 +101,6 @@ export class TerrainMap extends BaseMap {
     /**
      * Fetches the terrainMapData json which stores the layout and other information needed.
      */
-
     async fetchTerrainMapData() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         //debugger;
@@ -182,16 +188,71 @@ export class TerrainMap extends BaseMap {
         }
     }
 
+    getBuildingTileLocations() {
+        let buildingTileLocations = [];
+        const tileArray = this.buildingMapInstance.tiles;
+        for (let i = 0; i < tileArray.length; i++) {  // Iterate over rows
+            for (let j = 0; j < tileArray[i].length; j++) {  // Iterate over columns
+                if (tileArray[i][j] === EMPTY_TILE) {
+                    continue;
+                }
+                buildingTileLocations.push([i, j]);
+            }
+        }
+        return buildingTileLocations;
+
+        /*
+        let buildingTileLocations = [];
+        for (let key in buildingInformation) {
+             if (!Object.hasOwnProperty.call(buildingInformation, key)) {
+                 continue;
+             }
+             const currBuilding = buildingInformation[key];
+             const absoluteLocation = currBuilding.building_location
+             const generalInfoKey = currBuilding.general_information;
+             const tile_rel_locations = buildingGeneralInformation[generalInfoKey].tile_rel_locations;
+             for (let index in tile_rel_locations) {
+                 const tileRelLocation = tile_rel_locations[index][0];
+                 const finalLocation = [tileRelLocation[0] + absoluteLocation[0], tileRelLocation[1] + absoluteLocation[1]]
+                 buildingTileLocations.push(finalLocation);
+             }
+        }
+        return buildingTileLocations;
+
+         */
+    }
+
+    isEdgeTile(tileName) {
+        if (utils.getAssetDir(tileName) === "Grass") {
+            let str = String(tileName);
+            const targetLetters = ['N', 'O', 'W', 'Z'];
+            return targetLetters.some(letter => str.includes(letter));
+        }
+        return false;
+    }
+
     /**
      * Draws the tiles on screen using the 'this.tiles' map.
      */
     drawTiles() {
+        // getAll building locations
+        //const buildingInformation = this.buildingMapInstace.buildingInformation;
+        //const buildingGeneralInformation = this.buildingMapInstace.buildingGeneralInformation;
+
+        const buildingTileLocations = this.getBuildingTileLocations();
+
         const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
         const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
 
         for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
             for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
+                const currentMapCoord = [i_map, j_map];
+                const isBuildingLocation = buildingTileLocations.some(coord =>
+                    coord[0] === currentMapCoord[0] && coord[1] === currentMapCoord[1]
+                );
+
                 let filePath;
+
                 if (this.tiles[i_map] && this.tiles[i_map][j_map]) {
                     const currTile = this.tiles[i_map][j_map];
                     filePath = "/static/img/assets/terrain/" + utils.getAssetDir(currTile) + "/" + currTile + ".png";
@@ -199,6 +260,21 @@ export class TerrainMap extends BaseMap {
                     // Out-of bounds
                     filePath = "/static/img/assets/terrain/Water/Water.1.1.png";
                 }
+
+                if (isBuildingLocation) {
+                    const currTile = this.tiles[i_map][j_map];
+                    const assetDir = utils.getAssetDir(currTile)
+                    //if (assetDir !== "Water" && !this.isEdgeTile(currTile)) {
+                    //    filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
+                    //}
+                    if (j_map < 3){
+                        //TODO bay building relative positions
+                        filePath = "/static/img/assets/terrain/Water/Water.1.1.png";
+                    } else if (this.buildingMapInstance.isOnGrassRectangle(i_map, j_map)) {
+                        filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
+                    }
+                }
+
                 const img = this.terrainAssets[filePath];
                 if (img) {
                     this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
