@@ -281,7 +281,7 @@ def fetch_crop_price():
 
         if market:
             # If market data exists for the crop, return its price
-            if  datetime.now() - market.last_update > timedelta(minutes=1):
+            if  datetime.now() - market.last_update > timedelta(minutes=4):
                 market.last_update = datetime.now()
 
                 last_count = market.prev_quantity_crop
