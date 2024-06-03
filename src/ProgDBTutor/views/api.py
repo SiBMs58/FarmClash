@@ -325,7 +325,7 @@ def get_friends():
     return jsonify(list_of_friends)
 
 
-@api_blueprint.route('/messages/<string:friend_name>')
+@api_blueprint.route('/messages/<string:friend_name>', methods=['GET'])
 @login_required
 def get_messages(friend_name):
     """
@@ -342,7 +342,7 @@ def get_messages(friend_name):
         return jsonify({"message": "No messages found"}), 200  # Consider returning an empty list with a 200 OK
 
 
-@api_blueprint.route('/leaderboard')
+@api_blueprint.route('/leaderboard', methods=['GET'])
 @login_required
 def get_leaderboard():
     """
