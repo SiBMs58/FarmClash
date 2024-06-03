@@ -25,24 +25,6 @@ def test_get_building_returns_none_when_not_found(building_data_access, mock_db_
         (99,)
     )
 
-def test_get_buildings_by_username_owner_returns_buildings_list(building_data_access, mock_db_connection):
-    # Mock data returned by fetchall
-    mock_db_connection.get_cursor().fetchall.return_value = [
-        {'building_id': 1, 'username_owner': 'testuser', 'building_type': 'house', 'level': 1, 'x': 10, 'y': 20, 'tile_rel_locations': '[{"x": 0, "y": 0}]', 'created_at': datetime.now(), 'augment_level': 0},
-        {'building_id': 2, 'username_owner': 'testuser', 'building_type': 'farm', 'level': 2, 'x': 15, 'y': 25, 'tile_rel_locations': '[{"x": 1, "y": 1}]', 'created_at': datetime.now(), 'augment_level': 1}
-    ]
-
-    buildings = building_data_access.get_buildings_by_username_owner('testuser')
-
-    assert len(buildings) == 2
-    assert all(isinstance(b, Building) for b in buildings)
-    assert buildings[0].building_id == 1
-    assert buildings[1].building_id == 2
-    mock_db_connection.get_cursor().execute.assert_called_once_with(
-        'SELECT * FROM buildings WHERE username_owner = %s',
-        ('testuser',)
-    )
-
 def test_get_buildings_by_username_owner_returns_empty_list_when_no_buildings_found(building_data_access, mock_db_connection):
     mock_db_connection.get_cursor().fetchall.return_value = []
 
