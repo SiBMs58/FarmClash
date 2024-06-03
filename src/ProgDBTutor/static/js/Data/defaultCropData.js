@@ -269,6 +269,90 @@ export const defaultCropData = {
             assetPhase: null,
             time_planted: null
         },
+        field39: {
+            building_name: "field39",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field40: {
+            building_name: "field40",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field41: {
+            building_name: "field41",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field42: {
+            building_name: "field42",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field43: {
+            building_name: "field43",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field44: {
+            building_name: "field44",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field45: {
+            building_name: "field45",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field46: {
+            building_name: "field46",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field47: {
+            building_name: "field47",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field48: {
+            building_name: "field48",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field49: {
+            building_name: "field49",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
+        field50: {
+            building_name: "field50",
+            phase: 1,
+            crop: null,
+            assetPhase: null,
+            time_planted: null
+        },
     },
     crop_general_information: {
         Wheat: {

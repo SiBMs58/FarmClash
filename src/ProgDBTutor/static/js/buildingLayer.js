@@ -421,7 +421,6 @@ export class BuildingMap extends BaseMap {
                 tileToDrawName = this.adjustFenceAsset(tileToDrawName, currTileLocY, currTileLocX)
             }
             if (utils.getAssetDir(tileToDrawName) === "Field3") {
-                debugger;
                 tileToDrawName = this.adjustFieldAsset(tileToDrawName, building.self_key);
             }
             const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tileToDrawName) + "/" + tileToDrawName + ".png"];
@@ -445,7 +444,6 @@ export class BuildingMap extends BaseMap {
                 continue;
             }
             const currBuilding = this.buildingInformation[buildingKey];
-
             this.drawBuilding(currBuilding);
         }
         // Draw top again
