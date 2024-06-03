@@ -73,7 +73,7 @@ def user_stats(username):
 
     buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(username) or []
     animals = current_app.config.get('animal_data_access').get_animals(username) or []
-    townhallList = current_app.config.get('building_data_data_access').get_buildings_by_username_and_type(username, "Townhall") or []
+    townhallList = current_app.config.get('building_data_access').get_buildings_by_username_and_type(username, "Townhall") or []
 
     if townhallList:
         level = townhallList[0].level or 0
