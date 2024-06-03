@@ -235,35 +235,6 @@ async function updateSale(crop, count, base_price) {
     }
 }
 
-
-// adds sale amount to database
-async function updateSale(crop, count, base_price) {
-    const market_data = {
-        crop: crop,
-        sale: count,
-        base_price: base_price,
-    }
-    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-    const fetchLink = BASE_URL + "/game/update-market";
-    try {
-        const response = await fetch(fetchLink, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(market_data) // Send the serialized map data as the request body
-        });
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            console.log('market_data DB update successful:', jsonResponse);
-        } else {
-            console.error('market_data DB update failed with status:', response.status);
-        }
-    } catch (error) {
-        console.error('Failed to update market in database:', error);
-    }
-}
-
 async function updateResources(resource, count) {
     const resources = {
         [resource]: count // Use the resource as the key and the count as the value
