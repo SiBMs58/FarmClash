@@ -8,7 +8,9 @@ from .api import user_stats
 
 attack_blueprint = Blueprint('attack', __name__, template_folder='templates')
 
+#previously_searched = []
 threshold = 2000
+#scores = {}
 
 
 @attack_blueprint.route('/visit_oppenents_world')
@@ -17,17 +19,15 @@ def visit_opponent():
     """
     Renders the attack view. This will render the opponent's world.
     """
-    # Initialize session variables if not already set
     if 'previously_searched' not in session:
         session['previously_searched'] = []
     if 'scores' not in session:
         session['scores'] = {}
-
-    opponent = choose_opponent_logic()
+    # Example logic to choose an opponent
+    opponent = choose_opponent_logic()  # This function needs to be implemented based on your app logic
 
     if not opponent:
         session['previously_searched'].clear()
-        session['scores'].clear()
         return render_template('attack/no_opponent.html', app_data=config_data)
 
     return render_template('attack/visit_opponents_world.html', opponent=opponent, app_data=config_data)
@@ -39,22 +39,21 @@ def choose_opponent_logic():
     which has not been searched before, has a score difference less than 1000, and is not a friend.
     :return:
     """
-    # Ensure session variables are initialized
-    if 'scores' not in session:
-        session['scores'] = {}
-
-    # Access data sources configured in the current_app
     user_data_access = current_app.config.get('user_data_access')
+    resource_data_access = current_app.config.get('resource_data_access')
     friendship_data_access = current_app.config.get('friendship_data_access')
 
+    # Get all users and current user object
     users = user_data_access.get_all_users()
+    # Filter out the admin user
     users = [user for user in users if user.username != 'admin']
     current_user_object = user_data_access.get_user(current_user.username)
 
+    # Retrieve friends of the current user
     friends = friendship_data_access.get_friends(current_user_object)
-    friends_usernames = {friend.user2 if friend.user1 == current_user.username else friend.user1 for friend in
-                         friends}
+    friends_usernames = {friend.user2 if friend.user1 == current_user.username else friend.user1 for friend in friends}
 
+    # Calculate scores for all users
     for user in users:
         if current_user_object == user:
             user_score = user_stats(user.username)["attack"]
@@ -62,12 +61,18 @@ def choose_opponent_logic():
             user_score = user_stats(user.username)["defense"]
         session['scores'][user.username] = user_score
 
-    eligible_users = [user for user in users if user.username not in session[
-        'previously_searched'] and user.username != current_user.username and user.username not in friends_usernames and abs(
-        session['scores'][current_user.username] - session['scores'][user.username]) < threshold]
+    # Filter users based on the conditions
+    eligible_users = []
+    for user in users:
+        if user.username not in session['previously_searched'] and user.username != current_user.username and user.username not in friends_usernames:
+            difference_in_score = abs(session['scores'][current_user.username] - session['scores'][user.username])
+            if difference_in_score < threshold:
+                eligible_users.append(user)
 
+    # Sort eligible users by their scores in descending order
     sorted_eligible_users = sorted(eligible_users, key=lambda user: session['scores'][user.username], reverse=True)
 
+    # Select the top eligible user if available
     if sorted_eligible_users:
         session['previously_searched'].append(sorted_eligible_users[0].username)
         return sorted_eligible_users[0]
@@ -90,18 +95,19 @@ def attack_result():
     """
     Renders the attack result view.
     """
-    if 'previously_searched' not in session or not session['previously_searched']:
-        return render_template('attack/no_opponent.html', app_data=config_data)
-
     opponent = session['previously_searched'][-1]
-    result, resources = choose_result_logic(session['scores'][opponent], session['scores'][current_user.username])
+    result, resources = choose_result_logic(session['scores'][opponent], session['scores'][current_user.username])  # Unpack the tuple returned by choose_result_logic
 
+    # Update the resources in the database
     resource_data_access = current_app.config.get('resource_data_access')
-    for resource, amount in resources.items():
+    for resource, amount in resources.items():  # For the current user
         resource_data_access.update_resource(current_user.username, resource, amount)
+    for resource, amount in resources.items():  # For the opponent
         resource_data_access.update_resource(opponent, resource, -amount)
 
+    # Pass the result and resources to the template
     return render_template('attack/attack_result.html', result=result, resources=resources, app_data=config_data)
+
 
 import random
 
@@ -130,25 +136,25 @@ def choose_result_logic(player_score, opponent_score):
 
     # Get the opponent's resources
     resource_data_access = current_app.config.get('resource_data_access')
-    opponent_username = session['previously_searched'][-1]
     opponent_resources = {resource.resource_type: resource.amount for resource in
-                          resource_data_access.get_resources(opponent_username)}
-
-    # Cleanup resources that are zero or negative
-    valid_resources = {res: amt for res, amt in opponent_resources.items() if amt > 0}
+                          resource_data_access.get_resources(session['previously_searched'][-1])}
+    for resource in list(opponent_resources.keys()):
+        if opponent_resources[resource] <= 0:
+            opponent_resources.pop(resource)
+        else:
+            print(f'{resource}: {opponent_resources[resource]}')
 
     # Determine the percentage of resources to adjust based on the outcome
     percentage = random.uniform(0.05, 0.10)  # Random percentage between 5% and 10%
 
-    # Calculate resource amounts based on the outcome
+    # Calculate resource amounts based on the outcome and the opponent's resources
     resources = {}
-    for resource, quantity in valid_resources.items():
-        if outcome == 'Win':
+    if outcome == 'Win':
+        for resource, quantity in opponent_resources.items():
             resources[resource] = int(quantity * percentage * 1.25)
-        else:  # 'Lose' condition
+    elif outcome == 'Lose':
+        for resource, quantity in opponent_resources.items():
             resources[resource] = -int(quantity * percentage)
+    resources = {resource: amount for resource, amount in resources.items() if not amount == 0}
 
-    # Ensure no zero-amount adjustments are made
-    final_resources = {res: amt for res, amt in resources.items() if amt != 0}
-
-    return (outcome, final_resources)
+    return (outcome, resources)
