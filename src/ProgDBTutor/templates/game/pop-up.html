@@ -1,33 +1,69 @@
-<div class="test-popup">
+<div class="information-popup">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pop-up-UI.css') }}">
     <div id="Popup-text">
         <p id="building-info-title">Building Info</p>
-        <p id="building-display-name">Chicken House</p>
+        <p id="display-name"></p>
 
-        <p id="building-explanation">
+        <p id="explanation">
             Dive into the heart of your farm's egg production with the Chicken House.
             This vital building is where your feathered friends lay eggs, ready for
             market sale. Upgrade to boost production. Every egg sold brings you one
             step closer to agricultural dominance.
         </p>
 
-        <ul id="building-stats">
-            <li id="level-stat">Level: 4</li>
+
+
+        <ul id="stats" class="stats">
+            <li id="level-stat"></li>
             <li>———————————</li>
             <li>
-                <div id="building-upgrade-cost">
-                    <p>Upgrade cost: <span id="building-upgrade-cost-number">500</span></p> <!-- This will be updated dynamically -->
-                    <img src="{{ url_for('static', filename='img/resources/Coin.png') }}" alt="🪙">
+                <div id="upgrade-cost" class="cost">
+
                 </div>
             </li>
-            <li>Eggs/hour: 3 (upgrade +1)</li>
+        </ul>
+        <ul id="augment-stats" class="stats">
+            <li id="augment-level-stat"></li>
+            <li>———————————</li>
+            <li>
+                <div id="augment-cost" class="cost">
+
+                </div>
+            </li>
         </ul>
     </div>
     <img id="background-img" class="popup-background" src="{{ url_for('static', filename='img/ui_Elements/popupBackground.png') }}" alt="popup background">
 
+    <button id="view-btn" class="view-btn" alt="View">
+        <a href="" id="view-UI">
+            <img src="../../static/img/UI/menu_btn.png" alt="View">
+        </a>
+    </button>
+
+    <button id="augment-btn" class="augment-button">
+        <img src="../../static/img/UI/augment_btn.png" alt="+" id="augment-image" draggable="false">
+    </button>
     <img id="close-button" class="close-button" src="{{ url_for('static', filename='img/ui_Elements/closeButton.png') }}" alt="close button">
     <img id="close-button-pressed" class="close-button" src="{{ url_for('static', filename='img/ui_Elements/closeButtonPressed.png') }}" alt="close button pressed">
 
     <img id="upgrade-button" class="upgrade-button" src="{{ url_for('static', filename='img/ui_Elements/upgradeButton.png') }}" alt="upgrade button">
     <img id="upgrade-button-pressed" class="upgrade-button" src="{{ url_for('static', filename='img/ui_Elements/upgradeButtonPressed.png') }}" alt="upgrade button pressed">
+</div>
+
+
+<div class="cropSelector">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/cropPopup.css') }}">
+    <img id="cropPopup-background" class="popup-background" src="{{ url_for('static', filename='img/ui_Elements/CropPopupBackground.png') }}" alt="crop-popup background">
+    <div class="crop-buttons-grid">
+        <img id="Wheat-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/WheatButton.png') }}" alt="wheat button">
+        <img id="Carrot-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/CarrotButton.png') }}" alt="carrot button">
+        <img id="Corn-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/CornButton.png') }}" alt="corn button">
+        <img id="Lettuce-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/LettuceButton.png') }}" alt="lettuce button">
+        <img id="Tomato-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/TomatoButton.png') }}" alt="tomato button">
+        <img id="Turnip-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/TurnipButton.png') }}" alt="turnip button">
+        <img id="Zucchini-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/ZucchiniButton.png') }}" alt="zucchini button">
+        <img id="Parsnip-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/ParsnipButton.png') }}" alt="parsnip button">
+        <img id="Cauliflower-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/CauliflowerButton.png') }}" alt="cauliflower button">
+        <img id="Eggplant-button-selector" src="{{ url_for('static', filename='img/ui_Elements/cropButtons/EggplantButton.png') }}" alt="eggplant button">
+    </div>
 </div>

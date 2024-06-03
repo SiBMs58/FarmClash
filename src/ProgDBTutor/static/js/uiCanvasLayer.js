@@ -1,5 +1,4 @@
 import { BaseMap } from "./baseMap.js";
-import { defaultMapData2 } from "./buildingLayer.js";
 
 const IDLE = "IDLE";
 const HOVER = "HOVER";

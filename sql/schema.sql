@@ -2,8 +2,9 @@
 CREATE TABLE users (
     username VARCHAR(255) PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    email VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_gift TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Farms Table
@@ -21,10 +22,11 @@ CREATE TABLE buildings (
     username_owner VARCHAR(255),
     building_type VARCHAR(255) NOT NULL,
     level INT DEFAULT 1,
+    unlock_level INT,
     x INT NOT NULL,
     y INT NOT NULL,
-    tile_rel_locations JSONB,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --TODO can be removed as all buildings are created at authentication time
+    augment_level INT DEFAULT 0,
     PRIMARY KEY (username_owner, building_id),  -- Adding a primary key constraint
     CONSTRAINT unique_building_username_building_id UNIQUE (username_owner, building_id) -- Adding a unique constraint
 );
@@ -40,10 +42,11 @@ CREATE TABLE crops (
 
 -- Animal Table
 CREATE TABLE animals (
-    crop_id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    growth_time INT NOT NULL, -- Time in hours
-    sell_price INT NOT NULL -- base sell price
+    owner VARCHAR(255) REFERENCES users(username),
+    species VARCHAR(255) NOT NULL,
+    amount INT NOT NULL,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (owner,species)
 );
 
 -- Planted Crops Table to track crops planted on a farm
@@ -66,10 +69,11 @@ CREATE TABLE market (
 
 -- Resources Table to track user resources like money, crops, etc.
 CREATE TABLE resources (
-    resource_id SERIAL PRIMARY KEY,
     owner VARCHAR(255) REFERENCES users(username),
     type VARCHAR(255) NOT NULL,
-    quantity INT DEFAULT 0
+    quantity INT DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (owner,type)
 );
 
 -- Attacks Table (If implementing the attack feature)
@@ -108,6 +112,17 @@ CREATE TABLE game_maps (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE fields (
+    building_name VARCHAR(255),
+    username_owner VARCHAR(255),
+    crop VARCHAR(255),
+    phase INT,
+    asset_phase INT,
+    time_planted INT,
+    PRIMARY KEY (building_name, username_owner)  -- Primary key constraint
+);
+
+
 CREATE TABLE map_tiles (
     tile_id SERIAL PRIMARY KEY,
     map_id INT REFERENCES game_maps(map_id),
@@ -116,4 +131,26 @@ CREATE TABLE map_tiles (
     terrain_type VARCHAR(255) NOT NULL, -- e.g., Grassland, Forest, Water
     occupant_id INT, -- Optional, to link to whatever occupies the tile (a building, resource, etc.)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- explorations Table to track user ongoing explorations.
+CREATE TABLE explorations (
+    owner VARCHAR(255) PRIMARY KEY REFERENCES users(username),
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    duration INT NOT NULL  , -- in minutes
+    chickens INT,
+    goats INT,
+    pigs INT,
+    cows INT,
+    -- the exploration level refers to the building level and augment level to the buildings augment level, but this needs to be stored as building levels can change during exploration
+    exploration_level INT,
+    augment_level INT,
+    -- refetching the exploration from database can regenerate the actual rewarded items but the amount of surviving animals and crates should be constant
+    surviving_goats INT,
+    rewards_of_goats INT,
+    surviving_chickens INT,
+    surviving_pigs INT,
+    surviving_cows INT,
+    rewards_of_cows INT,
+    base_rewards INT
 );

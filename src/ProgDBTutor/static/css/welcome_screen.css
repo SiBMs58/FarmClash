@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Changed from center to flex-start */
+    height: 100vh;
+    margin: 0;
+    position: relative;
+    overflow: auto; /* Added to handle overflow */
+    padding-top: 20px; /* Added padding to create space for the button */
+}
+
+.start-btn {
+    display: inline-block;
+    width: 112px;
+    height: 112px;
+    background-size: 100% 100%;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    text-decoration: none;
+    background-color: white;
+}
+
+.start-btn img {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+}
+
+.container {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+ul li {
+    margin-bottom: 15px; /* Adjust this value to control the spacing */
+}

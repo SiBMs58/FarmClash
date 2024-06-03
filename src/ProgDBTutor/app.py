@@ -7,16 +7,20 @@ from data_access.building_data_access import BuildingDataAccess
 from data_access.market_data_access import MarketDataAccess
 from data_access.crops_data_access import CropsDataAccess
 from data_access.map_data_access import MapDataAccess
+from data_access.field_data_access import FieldDataAccess
 from data_access.tile_data_access import TileDataAccess
 from data_access.resource_data_access import ResourceDataAccess
 from data_access.friendship_data_access import FriendshipDataAccess
 from data_access.chatmessage_data_access import ChatMessageDataAccess
+from data_access.exploration_data_access import ExplorationDataAccess
+from data_access.animal_data_access import AnimalDataAccess
 from extensions import login_manager, werkzeug_generate_password_hash
 from views.auth import auth_blueprint
 from views.game import game_blueprint
 from views.api import api_blueprint
 from views.friends import friends_blueprint
 from views.market import market_blueprint
+from views.attack import attack_blueprint
 from models.user import User
 from models.building import Building
 from extensions import login_manager
@@ -40,13 +44,21 @@ friendship_data_access = FriendshipDataAccess(connection)
 app.config['friendship_data_access'] = friendship_data_access
 chatmessage_data_access = ChatMessageDataAccess(connection)
 app.config['chatmessage_data_access'] = chatmessage_data_access
+field_data_access = FieldDataAccess(connection)
+app.config['field_data_access'] = field_data_access
 building_data_access = BuildingDataAccess(connection)
 app.config['building_data_access'] = building_data_access
 market_data_access = MarketDataAccess(connection)
 app.config['market_data_access'] = market_data_access
 crops_data_access = CropsDataAccess(connection)
 app.config['crops_data_access'] = crops_data_access
+exploration_data_access = ExplorationDataAccess(connection)
+app.config['exploration_data_access'] = exploration_data_access
+animal_data_access = AnimalDataAccess(connection)
+app.config['animal_data_access'] = animal_data_access
 
+animal_data_access = AnimalDataAccess(connection)
+app.config['animal_data_access'] = animal_data_access
 
 # Insert the admin user
 user_data_access.add_user(
@@ -62,6 +74,7 @@ app.register_blueprint(game_blueprint, url_prefix='/game')
 app.register_blueprint(api_blueprint, url_prefix='/api')
 app.register_blueprint(market_blueprint, url_prefix='/market')
 app.register_blueprint(friends_blueprint, url_prefix='/friends')
+app.register_blueprint(attack_blueprint, url_prefix='/attack')
 
 DEBUG = True
 HOST = "127.0.0.1" if DEBUG else "0.0.0.0"
@@ -83,6 +96,7 @@ def main():
 def friends():
     """
     Renders the dashboard view, for a user.
+    TODO: Verify if this along with the friends.html template is used, i don't think so
     """
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
@@ -109,6 +123,16 @@ def attack():
     if current_user.username == 'admin':
         return redirect(url_for('admin'))
     return render_template('attack.html', app_data=app_data)
+
+@app.route('/book')
+@login_required
+def book():
+    """
+    Renders the book view.
+    """
+    if current_user.username == 'admin':
+        return redirect(url_for('admin'))
+    return render_template('book.html', app_data=app_data)
 
 
 @app.route('/admin')

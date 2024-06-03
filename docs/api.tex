@@ -241,4 +241,79 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
         \item {Response:} A JSON object containing building information.
     \end{itemize}
 
+
+\section{Animals}
+\subsection{General Animal Information}
+\begin{itemize}
+    \item Endpoint: \texttt{/animals}
+    \item Method: GET
+    \item Description: Retrieves a comprehensive list of animals for a user.
+    \item Access: Requires logged in user privileges
+    \item Response: A JSON array of objects, each representing an animal. Each object includes the animal's specie, amount, owner's username, and a when it was last updated by the an 'idle' update. Example of a generalized response:
+    \begin{verbatim}
+[
+  {
+    "species": "specie_of_animal",
+    "owner": "username_of_owner",
+    "amount": "quantity_of_animal",
+    "last_updated": "isoformat_of_datetime"
+  },
+  ... // Additional animal objects
+]
+    \end{verbatim}
+\end{itemize}
+
+\subsection{General Animal Update Information}
+\begin{itemize}
+    \item Endpoint: \texttt{/update-animals}
+    \item Method: POST
+    \item Description:updated list of animals for a user. This endpoint is used to update the quantity of animals owned by a user.
+    \item Access: Requires logged-in user privileges.
+    \item Request: A JSON object with general information about the update.
+    The object includes an update type which describes why the amount was updated (Useful for Idle updates) and a species JSON object which includes an array for each animal. The first element represents wheter or not the amount was updated from the one stored in the database and the second element containing the new value if it was updated (It is done like this remove redundent update DB calls and to not have to call fetches for each animal apart. Here are a few examples.
+    \begin{verbatim}
+{
+    "update_type": 'idle'
+    "species":
+    {
+	       "Pig": [False]
+	       "Cow": [True, 14]
+	       "Chicken": [True, 12]
+	       "Goat": [True,17]
+    }
+}
+ ...// 'idle' is used when last_updated needs to be reset aswell this is to make the idle animal increments from their appropriate buildings easier
+{
+    "update_type": 'explore'
+    "species":
+    {
+	       "Pig": [True, 11]
+	       "Cow": [False]
+	       "Chicken": [False]
+	       "Goat": [True,17]
+    }
+
+}
+
+{
+    "update_type": 'attack'
+    "species":
+    {
+	       "Pig": [True, 5]
+	       "Cow": [False]
+	       "Chicken": [False]
+	       "Goat": [True,8]
+    }
+
+}
+    \end{verbatim}
+    \item Response: A JSON object indicating the status of the update operation.
+    \begin{verbatim}
+{
+  "status": "success/error",
+  "message": "Description of the outcome of the operation"
+}
+    \end{verbatim}
+\end{itemize}
+
 \end{document}

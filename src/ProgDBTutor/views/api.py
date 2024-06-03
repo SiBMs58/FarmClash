@@ -1,9 +1,48 @@
-from flask import Blueprint, current_app, jsonify, abort
+import json
+import os
+
+from flask import Blueprint, current_app, jsonify, abort, request
 from flask_login import login_required, current_user
 
-from services.game_services import GameServices
+from src.ProgDBTutor.services.game_services import GameServices
+
+
+from src.ProgDBTutor.models.animal import Animal
+from src.ProgDBTutor.models.resource import Resource
+from src.ProgDBTutor.models.exploration import Exploration
+from src.ProgDBTutor.models.field import Field
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
+
+crops = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant']
+
+
+def read_json_file(file_path):
+    with open(file_path, 'r') as file:
+        return json.load(file)
+
+
+def get_augmentation_value(building_type, augmentation_type):
+    buildingData = read_json_file(os.path.join(current_app.root_path, "static", "img", "assets", "building.json"))
+    augmentation = buildingData[building_type].get('augment', False)
+    if not augmentation:
+        return 0
+    for aug_type, value in augmentation:
+        if aug_type == augmentation_type:
+            return value
+    return 0
+
+
+def get_stats_value(building_type, stats_type, level):
+    buildingData = read_json_file(os.path.join(current_app.root_path, "static", "img", "assets", "building.json"))
+    stats = buildingData[building_type].get('other_stats', False)
+    if not stats:
+        return 0
+    for stat_type, values in stats:
+        if stat_type == stats_type:
+            return values[level]
+    return 0
+
 
 @api_blueprint.route('/users')
 @login_required
@@ -18,6 +57,65 @@ def get_users():
     users = user_data_access.get_all_users()  # Assuming this is a method you have
     return jsonify([user.to_dict() for user in users])  # Convert users to dicts
 
+
+def user_stats(username):
+    """
+    the stats of a user.
+    :param username: The username of the user whose stats are being requested.
+    :return: The stats of a user, in json format
+    """
+    atk = 0
+    defn = 0
+    level = 0
+    coins = current_app.config.get('resource_data_access').get_resource_by_type(username, 'Money').amount
+    buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(username)
+    animals = current_app.config.get('animal_data_access').get_animals(username)
+    townhallList = current_app.config.get('building_data_access').get_buildings_by_username_and_type(username, "Townhall")
+    if len(townhallList) != 0:
+        level = townhallList[0].level
+    for building in buildings:
+        if building.unlock_level > level:
+            continue
+        atk += get_stats_value(building.building_type, 'Attack',
+                               building.level) + building.augment_level * get_augmentation_value(
+            building.building_type,
+            'Attack')
+        defn += get_stats_value(building.building_type, 'Defense',
+                                building.level) + building.augment_level * get_augmentation_value(
+            building.building_type, 'Defense')
+
+    for animal in animals:
+        if animal.species == "Chicken":
+            defn += animal.amount * get_augmentation_value('Chickencoop', 'Defense')
+            atk += animal.amount * get_augmentation_value('Chickencoop', 'Attack')
+        elif animal.species == "Cow":
+            defn += animal.amount * get_augmentation_value('Cowbarn', 'Defense')
+            atk += animal.amount * get_augmentation_value('Cowbarn', 'Attack')
+        elif animal.species == "Pig":
+            defn += animal.amount * get_augmentation_value('Pigpen', 'Defense')
+            atk += animal.amount * get_augmentation_value('Pigpen', 'Attack')
+        elif animal.species == "Goat":
+            defn += animal.amount * get_augmentation_value('Goatbarn', 'Defense')
+            atk += animal.amount * get_augmentation_value('Goatbarn', 'Attack')
+
+    return {
+        "level": level,
+        "attack": atk,
+        "defense": defn,
+        "coins": coins
+    }
+
+
+@api_blueprint.route('/get-user-stats', methods=['GET'])
+@login_required
+def get_user_stats():
+    """
+    Handles GET requests for the stats of the current user.
+    :return: The stats of the current user, in json format
+    """
+    return jsonify(user_stats(current_user.username))
+
+
 @api_blueprint.route('/maps')
 @login_required
 def get_maps():
@@ -31,6 +129,7 @@ def get_maps():
     maps = map_data_access.get_all_maps()  # Assuming this method exists
     return jsonify([map.to_dict() for map in maps])
 
+
 @api_blueprint.route('/resources')
 @login_required
 def get_all_resources():
@@ -42,6 +141,68 @@ def get_all_resources():
     # Fetch resources for the specified username instead of the current user
     resources = resource_data_access.get_resources(current_user.username)
     return jsonify([resource.to_dict() for resource in resources])
+
+
+@api_blueprint.route('/api/single-resource-quantity', methods=['GET'])
+@login_required
+def get_resource_quantity():
+    """
+    Handles GET requests for the quantity of a specific resource.
+    This will return the quantity of the requested resource for the current logged-in user.
+    :return: The quantity of the resource in JSON format
+    """
+    # TODO: Apply concurrency lock
+    resource_data_access = current_app.config.get('resource_data_access')
+
+    # Get resource type from query parameters
+    resource_type = request.args.get('resource_type')
+
+    if not resource_type:
+        return jsonify({"error": "resource_type query parameter is required"}), 400
+
+    # Fetch resource quantity for the current user
+    quantity = resource_data_access.get_resource_quantity(current_user.username, resource_type)
+
+    if quantity is not None:
+        return jsonify({"resource_type": resource_type, "quantity": quantity}), 200
+    else:
+        return jsonify({"resource_type": "resource not found", "quantity": 0}), 404
+
+
+@api_blueprint.route('/add-resources', methods=['POST'])
+@login_required
+def add_resources():
+    """
+    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
+    use this for
+    :return: Status of the update operation, in json format
+    """
+    try:
+        data = request.get_json()
+        resource_data_access = current_app.config.get('resource_data_access')
+        update_status = True
+        rollback = []
+        Idle = data.get('idle', False)  # Get the value of 'idle' key, default to False if not present
+
+        for resource_type, amount in data.items():
+            if resource_type == 'idle':
+                continue
+
+            updated_resource = Resource(current_user.username, resource_type, amount, None if Idle else False)
+            rollback.append(resource_data_access.get_resource_by_type(current_user.username, resource_type))
+            update_status = resource_data_access.update_by_adding_resource(updated_resource, get_resource_category_limit(resource_type))
+
+            if not update_status:
+                for resource in rollback:
+                    resource.amount = -resource.amount
+                    resource_data_access.update_by_adding_resource(resource)
+                return jsonify({"status": "error", "message": "resources updated cancelled and rollbacked"}), 500
+
+        return jsonify({"status": "success", "message": "resources updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @api_blueprint.route('/resources/<string:username>')
 @login_required
@@ -57,6 +218,48 @@ def get_resources(username):
 
     return jsonify([resource.to_dict() for resource in resources])
 
+
+@api_blueprint.route('/animals', methods=['GET'])
+@login_required
+def get_animals():
+    """
+    Handles GET requests for all animals. This will return a list of all animals, for the current user
+    :return: A list of all animals, in json format
+    """
+    try:
+        animal_data_access = current_app.config.get('animal_data_access')
+        animals = animal_data_access.get_animals(current_user.username)
+        return jsonify([animal.to_dict() for animal in animals])
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/add-animals', methods=['POST'])
+@login_required
+def add_animals():
+    """
+    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
+    use this for
+    :return: Status of the update operation, in json format
+    """
+    try:
+        data = request.get_json()
+        animal_data_access = current_app.config.get('animal_data_access')
+
+        Idle = data.get('idle', False)  # Get the value of 'idle' key, default to False if not present
+        for specie in data:
+            if specie == 'idle':
+                continue
+
+            updated_animal = Animal(current_user.username, specie, data.get(specie, 0), None if Idle else False)
+            update_success = animal_data_access.update_animal_by_adding(updated_animal, get_animal_limit(specie))
+
+        return jsonify({"status": "success", "message": "Animal updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
 @api_blueprint.route('/terrain-map')
 @login_required
 def get_terrain_map():
@@ -65,15 +268,21 @@ def get_terrain_map():
     :return: The terrain map, in json format
     """
     map_data_access = current_app.config.get('map_data_access')
-    map = map_data_access.get_map_by_username_owner(current_user.username) # TODO: Handle more maps than one
+    map = map_data_access.get_map_by_username_owner(current_user.username)  # TODO: Handle more maps than one
     if map is None:
         return "No maps found", 404
     # for map in maps:
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'))
+    game_services = GameServices(current_app.config.get('user_data_access'),
+                                 current_app.config.get('map_data_access'),
+                                 current_app.config.get('tile_data_access'),
+                                 current_app.config.get('resource_data_access'),
+                                 current_app.config.get('animal_data_access'),
+                                 current_app.config.get('building_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
+
 
 @api_blueprint.route('/terrain-map/<string:friend_username>')
 @login_required
@@ -88,7 +297,12 @@ def get_friend_terrain_map(friend_username):
         return "No maps found", 404
     tile_data_access = current_app.config.get('tile_data_access')
     tiles = tile_data_access.get_tiles_by_map_id(map.map_id)
-    game_services = GameServices(current_app.config.get('user_data_access'), current_app.config.get('map_data_access'), current_app.config.get('tile_data_access'), current_app.config.get('resource_data_access'))
+    game_services = GameServices(current_app.config.get('user_data_access'),
+                                 current_app.config.get('map_data_access'),
+                                 current_app.config.get('tile_data_access'),
+                                 current_app.config.get('resource_data_access'),
+                                 current_app.config.get('animal_data_access'),
+                                 current_app.config.get('building_data_access'))
     formatted_terrain_map = game_services.reformat_terrain_map(tiles, map.width, map.height)
     return jsonify(formatted_terrain_map)
 
@@ -111,6 +325,7 @@ def get_friends():
             list_of_friends.append(friend.user1)
     return jsonify(list_of_friends)
 
+
 @api_blueprint.route('/messages/<string:friend_name>')
 @login_required
 def get_messages(friend_name):
@@ -127,6 +342,7 @@ def get_messages(friend_name):
     else:
         return jsonify({"message": "No messages found"}), 200  # Consider returning an empty list with a 200 OK
 
+
 @api_blueprint.route('/leaderboard')
 @login_required
 def get_leaderboard():
@@ -138,10 +354,15 @@ def get_leaderboard():
     resource_data_access = current_app.config.get('resource_data_access')
 
     users = user_data_access.get_all_users()
+    users = [user for user in users if user.username != 'admin']     # Filter out the admin user
     scores = {}
     for user in users:
-        recources = resource_data_access.get_resources(user.username)
-        user_score = sum([resource.amount for resource in recources])
+        user_stats_result = user_stats(user.username)  # Calculate stats using user_stats function
+        # Example scoring formula: level * 10 + attack + defense + coins
+        user_score = (user_stats_result['level'] * 10 +
+                      user_stats_result['attack'] +
+                      user_stats_result['defense'] +
+                      user_stats_result['coins'])
         scores[user.username] = user_score
     # Sort users based on their scores stored in the scores dictionary
     sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
@@ -156,12 +377,14 @@ def get_leaderboard():
     for leaderboard_user in leaderboard_users:
         if leaderboard_user.username == current_user.username:
             break
+    else:
         leaderboard_users.append(current_user)
     # Remove duplicates and create ranked list
     unique_users = list({user.username: user for user in leaderboard_users}.values())
     ranked_users = [{'place': i + 1, 'username': user.username, 'score': scores[user.username]}
                     for i, user in enumerate(unique_users)]
     return jsonify(ranked_users)
+
 
 @api_blueprint.route('/fetch-building-information', methods=['GET'])
 def fetch_building_information():
@@ -181,8 +404,9 @@ def fetch_building_information():
                 "self_key": building.building_id,
                 "general_information": building.building_type,
                 "level": building.level,
+                "augment_level": building.augment_level,
                 "building_location": [building.x, building.y],
-                "tile_rel_locations": building.tile_rel_locations
+                "unlock_level": building.unlock_level
             }
             building_information[building.building_id] = building_info
 
@@ -194,6 +418,44 @@ def fetch_building_information():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/fetch-building-information-by-type/<string:building_type>', methods=['GET'])
+def fetch_building_information_by_type(building_type):
+    try:
+        building_data_access = current_app.config.get('building_data_access')
+        # Fetch building information based on username and building type
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, building_type)
+
+        # If no buildings found, return appropriate JSON response
+        if not buildings:
+            return jsonify({"status": "No buildings", "type": building_type, "user": current_user.username})
+
+        # Construct the final JSON response
+        building_information = {}
+        for building in buildings:
+            building_info = {
+                "self_key": building.building_id,
+                "general_information": building.building_type,
+                "level": building.level,
+                "augment_level": building.augment_level,
+                "building_location": [building.x, building.y],
+                "unlock_level": building.unlock_level
+            }
+            building_information[building.building_id] = building_info
+
+        json_response = {
+            "status": "success",
+            "user": current_user.username,
+            "type": building_type,
+            "building_information": building_information
+        }
+
+        return jsonify(json_response)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @api_blueprint.route('/fetch-building-information/<string:username>', methods=['GET'])
 @login_required
@@ -219,8 +481,9 @@ def fetch_building_information_for_user(username):
                 "self_key": building.building_id,
                 "general_information": building.building_type,
                 "level": building.level,
+                "augment_level": building.augment_level,
                 "building_location": [building.x, building.y],
-                "tile_rel_locations": building.tile_rel_locations
+                "unlock_level": building.unlock_level
             }
             building_information[building.building_id] = building_info
 
@@ -229,6 +492,214 @@ def fetch_building_information_for_user(username):
         }
 
         return jsonify(json_response)
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/update-animals', methods=['POST'])
+@login_required
+def update_animals():
+    """
+    Handles POST requests to update animals. This will update animals for the current user if a change in amount has been made
+    use this for
+    :return: Status of the update operation, in json format
+    """
+    try:
+        # TODO for FERHAT: add logica to limit the animal specie to the sum of levels of the appropiate buildings
+        #  i.e if the user has 3 unlocked pigpens one of level 2, one of level 6, and one level 10, pigs are limited to 18
+
+        data = request.get_json()
+        Idle = data['update_type'] == 'idle'
+        animal_data_access = current_app.config.get('animal_data_access')
+
+        for specie in data['species']:
+            update_success = True
+            if data['species'][specie][0] or Idle:
+                updated_animal = Animal(specie, current_user.username,
+                                        data[specie][1] if len(data[specie]) == 2 else None, None if Idle else False)
+                update_success = animal_data_access.update_animal(updated_animal)
+
+            if not update_success:
+                return jsonify({"status": "error", "message": f"Failed to update animal {specie}"}), 500
+
+        return jsonify({"status": "success", "message": "Animal updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/exploration', methods=['GET'])
+@login_required
+def get_exploration():
+    """
+    Handles GET requests for explorations. This will return a list of all explorations, for the current user
+    :return: explorations, in json format
+    """
+    try:
+        exploration_data_access = current_app.config.get('exploration_data_access')
+        exploration = exploration_data_access.get_exploration(current_user.username)
+        if exploration:
+            exploration_dict = exploration.to_dict()
+            exploration_dict["ongoing"] = True
+            return jsonify(exploration_dict)
+        else:
+            return jsonify({"ongoing": False})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/start-exploration', methods=['POST'])
+@login_required
+def start_exploration():
+    """
+    Handles POST requests for starting an exploration
+    """
+    exploration_data_access = current_app.config.get('exploration_data_access')
+    data = request.get_json()
+
+    if exploration_data_access.start_exploration(
+            Exploration(current_user.username, data['chickens'], data['goats'], data['pigs'], data['cows'],
+                        data['exploration_level'], data['augment_level'], data['remaining_time'])):
+        return jsonify({'status': 'success', 'message': 'Exploration started successfully.'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Failed to start exploration.'}), 500
+
+
+@api_blueprint.route('/stop-exploration', methods=['POST'])
+@login_required
+def stop_exploration():
+    """
+    Handles POST requests for stopping an exploration
+    """
+    exploration_data_access = current_app.config.get('exploration_data_access')
+
+    # Remove the exploration from the database
+    if exploration_data_access.stop_exploration(current_user.username):
+        return jsonify({'status': 'success', 'message': 'Exploration stopped successfully.'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Failed to stop exploration.'}), 500
+
+
+@api_blueprint.route('/update-augment-level/<string:building_id>', methods=['POST'])
+@login_required
+def augment_building_by_id(building_id):
+    """
+    Handles POST requests for updating a buildings augment level
+    """
+    building_data_access = current_app.config.get('building_data_access')
+    resource_data_access = current_app.config.get('resource_data_access')
+    data = request.get_json()
+
+    Money = resource_data_access.get_resource_by_type(current_user.username, 'Money').amount
+    if Money < data["cost"]:
+        return jsonify({'status': 'unsuccessful', 'message': 'Not enough money to augment building.'}), 200
+
+    if building_data_access.update_augment_level(building_id, data["augment_level"], current_user.username):
+        resource_data_access.update_by_adding_resource(Resource(current_user.username, 'Money', -data["cost"]),
+                                                       float('inf'))
+        return jsonify({'status': 'success', 'message': 'building successfully augmented.'})
+    else:
+        return jsonify({'status': 'error', 'message': 'Failed to augment successfully.'}), 500
+
+
+def get_resource_category_limit(resource_type):
+    def get_barn_limit(building_level, building_augment_level):
+        barn_limit = get_stats_value('Barn', 'Limit', building_level)
+        if barn_limit == "inf":
+            return float('inf')
+        return barn_limit + building_augment_level * get_augmentation_value('Barn', 'Limit')
+
+    def get_silo_limit(building_level, building_augment_level):
+        silo_limit = get_stats_value('Silo', 'Limit', building_level)
+        if silo_limit == "inf":
+            return float('inf')
+        return silo_limit + building_augment_level * get_augmentation_value('Silo', 'Limit')
+
+    limit = 0
+    if resource_type == 'Money':
+        return float('inf')
+
+    if resource_type in crops:
+        building = current_app.config.get('building_data_access').get_buildings_by_username_and_type(current_user.username,"Silo")[0]
+        return get_silo_limit(building.level, building.augment_level)
+
+    building = current_app.config.get('building_data_access').get_buildings_by_username_and_type(current_user.username,"Barn")[0]
+    return get_barn_limit(building.level, building.augment_level)
+
+
+def get_animal_limit(animal):
+    buildings = []
+    building_data_access = current_app.config.get('building_data_access')
+    if animal == 'Chicken':
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, "Chickencoop")
+    elif animal == 'Cow':
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, "Cowbarn")
+    elif animal == 'Goat':
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, "Goatbarn")
+    elif animal == 'Pig':
+        buildings = building_data_access.get_buildings_by_username_and_type(current_user.username, "Pigpen")
+    else:
+        return 0
+
+    limit = 0
+    for building in buildings:
+        limit += building.level * 2
+    return limit
+
+
+@api_blueprint.route('/update-fields', methods=['POST'])
+@login_required
+def update_field_map():
+    """
+        Handles POST requests to update fields. This will update fields for the current user.
+        :return: Status of the update operation, in JSON format.
+        """
+    try:
+        data = request.get_json()
+        field_data_access = current_app.config.get('field_data_access')
+
+        for field_key, field_data in data['crop_information'].items():
+            field = Field(field_data['building_name'], current_user.username, field_data['phase'], field_data['crop'],
+                          field_data['assetPhase'], field_data['time_planted'])
+
+            # return jsonify({"status": "success", "filed": field_data}), 200
+            update_success = field_data_access.add_or_update_field(field)
+
+            if not update_success:
+                return jsonify({"status": "error", "message": f"Failed to update field {field_key}"}), 500
+
+        return jsonify({"status": "success", "message": "Fields updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@api_blueprint.route('/fetch-crop-information', methods=['GET'])
+@login_required
+def fetch_crop_information():
+    """
+    Handles GET requests to fetch crop information for the current user.
+    :return: Crop information in JSON format.
+    """
+    try:
+        field_data_access = current_app.config.get('field_data_access')
+        username_owner = current_user.username
+        fields = field_data_access.get_fields_by_username_owner(username_owner)
+
+        crop_information = {
+            field.building_name: {
+                'building_name': field.building_name,
+                'phase': field.phase,
+                'crop': field.crop,
+                'assetPhase': field.asset_phase,
+                'time_planted': field.time_planted
+            }
+            for field in fields
+        }
+
+        return jsonify({'crop_information': crop_information}), 200
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
