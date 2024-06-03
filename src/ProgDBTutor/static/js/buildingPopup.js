@@ -209,7 +209,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
             image.draggable = false;
             let textNode = document.createTextNode(augmentCost(building.augment_level));
             let augmentCostDiv = document.getElementById('augment-cost');
-            augmentCostDiv.innerHTML = 'Augment: ';
+            augmentCostDiv.innerHTML = 'Augment cost: ';
 
             augmentCostDiv.appendChild(textNode);
             augmentCostDiv.appendChild(image);
