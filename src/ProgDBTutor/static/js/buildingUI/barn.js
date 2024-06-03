@@ -133,24 +133,32 @@ function displayLimit() {
 
     // Calculate percentage
     let percentage = (total / limit) * 100;
-    if (limit === -1) {
-        percentage = 0;
+     if (limit === -1) {
+        limit = 2147483646;
+        percentage = (total / limit) * 100;
         limit = '∞';
     }
+    percentage = Math.floor(percentage);
+    percentage = parseInt(percentage);
 
     // Create progress bar HTML
    const progressBarHTML = `
     <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: ${percentage}%" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100">
-            ${percentage.toFixed(2)}%
+            <span>${percentage}%</span>
         </div>
     </div>
     <p>Capacity: ${total} / ${limit}</p>`;
-    // Get limitContainer
     const limitContainer = document.getElementById('limit');
-
-    // Update limitContainer with progress bar HTML
     limitContainer.innerHTML = progressBarHTML;
+
+
+    const spanElement = limitContainer.querySelector('.progress-bar span');
+    if (percentage <= 6) {
+        spanElement.style.marginLeft = '30px';
+    }else{
+        spanElement.style.marginLeft = '0px';
+    }
 }
 // Update description based on the initial state or any other changes
 function updateDescription() {
