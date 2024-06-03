@@ -83,14 +83,6 @@ export class BuildingMap extends BaseMap {
             1: [[2, "Field"], [1, "Goatbarn"]],
         };
 
-        // Used for the soft unlock warning
-        this.showingUnlockWarning = false;
-        this.lastMousePosition = { x: 0, y: 0 };
-        // Capture mouse position on mouse move
-        document.addEventListener('mousemove', (event) => {
-            this.lastMousePosition = { x: event.pageX, y: event.pageY };
-        });
-
     }
 
     /**
@@ -360,6 +352,19 @@ export class BuildingMap extends BaseMap {
         return baseAssetName;
     }
 
+    adjustFieldAsset(originalAssetName, fieldName) {
+        if (this.cropMapInstance.isHarvestable(fieldName)) {
+            if (!originalAssetName.includes(".Done")) {
+                return originalAssetName + ".Done";
+            }
+        } else {
+            if (originalAssetName.includes(".Done")) {
+                return originalAssetName.replace(".Done", "");
+            }
+        }
+        return originalAssetName;
+    }
+
 
     getSiloPercentage(building_obj) {
         const key = building_obj.self_key;
@@ -406,13 +411,18 @@ export class BuildingMap extends BaseMap {
                 continue;
             }
 
-            let tileToDrawWithoutLevelReplaced = tile[1];
-            const buildingLevel = building.level
-            let tileToDrawName = tileToDrawWithoutLevelReplaced.replace(/@/g, buildingLevel);
+            //let tileToDrawWithoutLevelReplaced = tile[1];
+            //const buildingLevel = building.level
+            //let tileToDrawName = tileToDrawWithoutLevelReplaced.replace(/@/g, buildingLevel);
+            let tileToDrawName = tile[1];
             if (utils.getAssetDir(tileToDrawName) === "Fence") {
                 const currTileLocY = building.building_location[0] + tile[0][0];
                 const currTileLocX = building.building_location[1] + tile[0][1];
                 tileToDrawName = this.adjustFenceAsset(tileToDrawName, currTileLocY, currTileLocX)
+            }
+            if (utils.getAssetDir(tileToDrawName) === "Field3") {
+                debugger;
+                tileToDrawName = this.adjustFieldAsset(tileToDrawName, building.self_key);
             }
             const img = this.buildingAssets["/static/img/assets/buildings/" + utils.getAssetDir(tileToDrawName) + "/" + tileToDrawName + ".png"];
             if (img) {
@@ -766,7 +776,6 @@ export class BuildingMap extends BaseMap {
     }
 
     showUnlockWarning(building) {
-        this.showingUnlockWarning = true;
         this.hideSoftUnlockWarning();
         const warningElement = document.getElementById('building-unlock-warning');
         const warningElementLvlText = document.getElementById('building-unlock-warning-lvl-text');
@@ -780,15 +789,30 @@ export class BuildingMap extends BaseMap {
         setTimeout(() => {
             warningElement.style.transition = 'opacity 1.5s ease-out'; // Apply the transition for fading out
             warningElement.style.opacity = '0';
-            setTimeout(() => {
-                this.showingUnlockWarning = false;
-            }, 1500);
         }, 1500);
     }
 
+    isShowingUnlockWarning() {
+    const warningPopups = document.getElementsByClassName('warning-popup');
+    // Iterate through the warning popups
+    for (let i = 0; i < warningPopups.length; i++) {
+        const computedStyle = window.getComputedStyle(warningPopups[i]);
+        const opacity = computedStyle.getPropertyValue('opacity');
+
+        // Check if the opacity is not 0
+        if (opacity !== '0') {
+            return true;
+        }
+    }
+
+    // If no element has non-zero opacity, return false
+    return false;
+}
+
+
 
     showSoftUnlockWarning() {
-        if (!this.showingUnlockWarning) {
+        if (!this.isShowingUnlockWarning()) {
             const warningElement = document.getElementById('soft-building-unlock-warning');
             warningElement.classList.add('show');
         }
@@ -800,52 +824,6 @@ export class BuildingMap extends BaseMap {
     }
 
 
-/*
-    showSoftUnlockWarning() {
-        debugger;
-        const warningElement = document.getElementById('soft-building-unlock-warning');
-        warningElement.classList.add('show');
-        this.updatePosition(warningElement);
-    }
-
-    hideSoftUnlockWarning() {
-        const warningElement = document.getElementById('soft-building-unlock-warning');
-        warningElement.classList.remove('show');
-    }
-
-    updatePosition(warningElement) {
-        const offsetX = 10; // Offset by 10 pixels to the right
-        const offsetY = 10; // Offset by 10 pixels to the bottom
-        warningElement.style.left = (this.lastMousePosition.x + offsetX) + 'px';
-        warningElement.style.top = (this.lastMousePosition.y + offsetY) + 'px';
-    }
-*/
-
-
-    /*
-    showSoftUnlockWarning() {
-        const warningElement = document.getElementById('soft-building-unlock-warning');
-        if (!warningElement.classList.contains('show')) {
-            warningElement.classList.add('show');
-            document.addEventListener('mousemove', this.mouseMoveHandler);
-        }
-    }
-
-    hideSoftUnlockWarning() {
-        const warningElement = document.getElementById('soft-building-unlock-warning');
-        if (warningElement.classList.contains('show')) {
-            warningElement.classList.remove('show');
-            document.removeEventListener('mousemove', this.mouseMoveHandler);
-        }
-    }
-
-    updatePosition(event) {
-        const offsetX = 10; // Offset by 10 pixels to the right
-        const offsetY = 10; // Offset by 10 pixels to the bottom
-        this.warningElement.style.left = (event.pageX + offsetX) + 'px';
-        this.warningElement.style.top = (event.pageY + offsetY) + 'px';
-    }
-    */
 
     /**
      * converts js object to json

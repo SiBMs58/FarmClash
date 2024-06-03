@@ -1,5 +1,3 @@
-// todo fixen: general information naam van chickencoop en field zijn veranderd
-
 export const defaultBuildingMapData = {
     map_width: 58,
     map_height: 43,
@@ -10,7 +8,14 @@ export const defaultBuildingMapData = {
             general_information: "Townhall",
             level: 0,
             unlock_level: 0,
-            building_location:  [9, 14],
+            building_location:  [8, 16],
+        },
+        Barn: {
+            self_key: "Barn",
+            general_information: "Barn",
+            level: 1,
+            unlock_level: 0,
+            building_location: [8, 26]
         },
         Silo: {
             self_key: "Silo",
@@ -974,7 +979,7 @@ export const defaultBuildingMapData = {
             ]
         },
         Pigpen: {
-            display_name: "Pigpen", // Name to be displayed in the popup
+            display_name: "Pig pen", // Name to be displayed in the popup
             explanation: "Dive into the heart of your farm's egg production with the Chicken House. " +
                 "This vital building is where your feathered friends lay eggs, ready for " +
                 "market sale. Upgrade to boost production. Every egg sold brings you one " +
@@ -1038,8 +1043,8 @@ export const defaultBuildingMapData = {
         },
 
         Townhall: {
-            display_name: "Townhall", // Name to be displayed in the popup
-            explanation: "This is the Townhall",
+            display_name: "Town hall", // Name to be displayed in the popup
+            explanation: "This is the Town hall",
             other_stats: [["Defence", [50, 100, 150, 200, 400, 470, 550]]], // All other stats specific for this building. ["Stat name display", [array of all values per level]]
             maxLevel: 10,
             tile_rel_locations: [

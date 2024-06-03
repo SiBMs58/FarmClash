@@ -482,7 +482,11 @@
             "Field3.BL",
             "Field3.BR",
             "Field3.TL",
-            "Field3.TR"
+            "Field3.TR",
+            "Field3.BL.Done",
+            "Field3.BR.Done",
+            "Field3.TL.Done",
+            "Field3.TR.Done"
         ],
         "Goatbarn": [
             "Goatbarn.2.2",

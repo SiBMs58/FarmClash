@@ -33,3 +33,7 @@ body {
     padding: 20px;
     box-sizing: border-box;
 }
+
+ul li {
+    margin-bottom: 15px; /* Adjust this value to control the spacing */
+}

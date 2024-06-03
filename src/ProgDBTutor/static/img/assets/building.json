@@ -210,15 +210,15 @@
   "Fence": {
     "explanation": "Not just a barrier for defense, but also a charming addition to your surroundings. Upgrade your fence to enhance your defense capabilities and beautify your farm with decorative flair.",
     "upgrade_costs": {
-      "L2": [["Money",100],["Wheat",100]],
-      "L3": [["Money",800],["Carrot",100]],
-      "L4": [["Money",2000],["Corn",100]],
-      "L5": [["Money",5000],["Lettuce",100]],
-      "L6": [["Money",10000],["Tomato",100]],
-      "L7": [["Money",20000],["Turnip",100]],
-      "L8": [["Money",40000],["Zucchini",100]],
-      "L9": [["Money",80000],["Parsnip",100]],
-      "L10":[["Money",160000],["Eggplant",100]]
+      "L2": [["Money",50],["Wheat",50]],
+      "L3": [["Money",100],["Carrot",50]],
+      "L4": [["Money",200],["Corn",50]],
+      "L5": [["Money",300],["Lettuce",50]],
+      "L6": [["Money",400],["Tomato",50]],
+      "L7": [["Money",500],["Turnip",50]],
+      "L8": [["Money",600],["Zucchini",50]],
+      "L9": [["Money",800],["Parsnip",50]],
+      "L10":[["Money",1000],["Eggplant",50]]
     },
     "other_stats": [["Defense",[0, 20, 40, 65, 95, 130, 170, 215, 265, 320, 380]],
                     ["Attack", [0, 10, 20, 35, 55, 80, 110, 145, 185, 230, 280]]],

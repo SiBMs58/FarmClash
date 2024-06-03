@@ -169,6 +169,7 @@ export class CropMap extends BaseMap {
         field.time_planted =  null;
         this.updateCropMapDB();
         this.drawTiles();
+        this.buildingMapInstace.drawTiles();
 
         updateResources(cropName, amount);
     }
@@ -210,6 +211,7 @@ export class CropMap extends BaseMap {
             }
             if (prevAssetPhase !== currField.assetPhase) {
                 this.drawTiles();
+                this.buildingMapInstace.drawTiles();
             }
         }
     }
@@ -243,7 +245,7 @@ export class CropMap extends BaseMap {
             return;
         }
 
-        const screen_buildLocationY = linkedBuilding.building_location[0] - this.viewY; // todo check of ' - this.viewY' klopt
+        const screen_buildLocationY = linkedBuilding.building_location[0] - this.viewY;
         const screen_buildLocationX = linkedBuilding.building_location[1] - this.viewX;
 
         const assetName = field.crop + "." + field.assetPhase
@@ -261,7 +263,6 @@ export class CropMap extends BaseMap {
 
             const img = this.buildingAssets["/static/img/assets/crops/" + utils.getAssetDir(assetName) + "/" + assetName + ".png"];
             if (img) {
-                // todo de exacte plant locatie een beetje meer random maken
                 if (field.crop === "Wheat") {
                     this.ctx.drawImage(img, cropCoord[1] * this.tileSize, (cropCoord[0] - 1 - 2/16) * this.tileSize, this.tileSize, this.tileSize * 2);
                 } else {
