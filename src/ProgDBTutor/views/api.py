@@ -66,7 +66,6 @@ def user_stats(username):
     atk = 0
     defn = 0
     level = 0
-
     # Safely retrieve Money resource
     money_resource = current_app.config.get('resource_data_access').get_resource_by_type(username, 'Money')
     coins = money_resource.amount if money_resource and money_resource.amount is not None else 0
@@ -101,6 +100,25 @@ def user_stats(username):
         if species_building:
             defn += animal.amount * (get_augmentation_value(species_building, 'Defense') or 0)
             atk += animal.amount * (get_augmentation_value(species_building, 'Attack') or 0)
+
+    # Before returning the stats, check that they are not none, or negative
+    if not atk:
+        atk = 0
+    if not defn:
+        defn = 0
+    if not coins:
+        coins = 0
+    if not level:
+        level = 0
+    if atk < 0:
+        atk = 0
+    if defn < 0:
+        defn = 0
+    if coins < 0:
+        coins = 0
+    if level < 0:
+        level = 0
+
 
     return {
         "level": level,
