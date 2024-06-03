@@ -239,7 +239,7 @@ footer {
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(76, 175, 80, 0.2);
-    color: rgba(0, 0, 1, 0.5);
+    color: rgba(0, 0, 0, 0.90);
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

@@ -194,9 +194,12 @@ async function displayPrices(){
         }
     }
 }
-function getAmountDisplay(amount){
+function getAmountDisplay(amount, type){
     let value = amount.toString();
-
+    if(amount > 999999 && type !== 'money'){
+        return `<img src="../../static/img/UI/display.9.png" alt="9" draggable="false">`.repeat(6)
+            +`<img src="../../static/img/UI/display.+.png" alt="." draggable="false">`;
+    }
     let HTML = ''
     for (let i = 0; i < value.length; i++) {
         HTML += `<img src="../../static/img/UI/display.${value[i]}.png" alt="${value[i]}" draggable="false">`;
