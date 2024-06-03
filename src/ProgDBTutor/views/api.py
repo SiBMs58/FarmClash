@@ -365,13 +365,17 @@ def get_leaderboard():
         users = [user for user in users if user.username != 'admin']     # Filter out the admin user
         scores = {}
         for user in users:
-            user_stats_result = jsonify(user_stats(user.username)) # Calculate stats using user_stats function
-            # Example scoring formula: level * 10 + attack + defense + coins
-            user_score = (user_stats_result['level'] * 10 +
-                          user_stats_result['attack'] +
-                          user_stats_result['defense'] +
-                          user_stats_result['coins'])
-            scores[user.username] = user_score
+            try:
+                user_stats_result = user_stats(user.username)  # Calculate stats using user_stats function
+                # Example scoring formula: level * 10 + attack + defense + coins
+                user_score = (user_stats_result['level'] * 10 +
+                              user_stats_result['attack'] +
+                              user_stats_result['defense'] +
+                              user_stats_result['coins'])
+                scores[user.username] = user_score
+            except Exception as e:
+                print(f"Error calculating score for user {user.username}: {str(e)}")
+                continue # Skip this user if an error occurs
         # Sort users based on their scores stored in the scores dictionary
         sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
         # Get the top 3 users
