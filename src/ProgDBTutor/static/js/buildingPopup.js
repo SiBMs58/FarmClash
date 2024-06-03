@@ -102,45 +102,8 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
  * @param buildingName The unique name of the building.
  */
 export function actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName) {
-    debugger;
     const popup = document.querySelector('.information-popup');
     const cropPopup = document.querySelector('.cropSelector');
-    /**
-     document.getElementById('building-display-name').innerText = generalInformation.display_name;
-    document.getElementById('building-explanation').innerText = generalInformation.explanation;
-    const buildingStats = document.getElementById('building-stats');
-    const upgradeButton = document.getElementById('upgrade-button');
-    const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
-    if (building.level === -1) {
-        buildingStats.style.display = "none";
-        upgradeButton.style.display = "none";
-    } else {
-        buildingStats.style.display = "block";
-        if (isUpgradable(buildingInformation, buildingGeneralInformation, buildingName)) {
-            upgradeButton.style.display = "block";
-        } else {
-            upgradeButton.style.display = "none";
-            upgradeButtonPressed.style.display = "block";
-        }
-        document.getElementById('level-stat').innerText = "Level: " + building.level;
-        document.getElementById('building-upgrade-cost-number').innerText = generalInformation.upgrade_costs[building.level-1]
-        const list = document.getElementById('building-stats');
-        const listLength = list.children.length;
-        for (let i = listLength-1; i > 2; i--) {
-            //debugger;
-            list.removeChild(list.children[i]);
-        }
-        for (let i = 0; i < generalInformation.other_stats.length; i++) {
-            const currStat = generalInformation.other_stats[i];
-            const upgradeDifference = currStat[1][building.level] - currStat[1][building.level-1];
-            const statString = currStat[0] + ": " +  currStat[1][building.level-1] + " (+" + upgradeDifference + ")";
-            const listItem = document.createElement('li');
-            listItem.textContent = statString;
-            list.appendChild(listItem);
-        }
-    }
-     */
-
     fetchBuildingPopupInformation().then((info) => {
         const building = buildingInformation[buildingName];
         const buildingInfo = info[building.general_information];

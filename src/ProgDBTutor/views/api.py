@@ -322,6 +322,8 @@ def get_friends():
             list_of_friends.append(friend.user2)
         elif friend.user2 == current_user.username:
             list_of_friends.append(friend.user1)
+    # Be sure to remove duplicates
+    list_of_friends = list(set(list_of_friends))
     return jsonify(list_of_friends)
 
 
@@ -605,16 +607,16 @@ def augment_building_by_id(building_id):
 
 def get_resource_category_limit(resource_type):
     def get_barn_limit(building_level, building_augment_level):
-        barn_limit = get_stats_value('Barn', 'Limit', building_level)
+        barn_limit = get_stats_value('Barn', 'Capacity', building_level)
         if barn_limit == "inf":
             return float('inf')
-        return barn_limit + building_augment_level * get_augmentation_value('Barn', 'Limit')
+        return barn_limit + building_augment_level * get_augmentation_value('Barn', 'Capacity')
 
     def get_silo_limit(building_level, building_augment_level):
-        silo_limit = get_stats_value('Silo', 'Limit', building_level)
+        silo_limit = get_stats_value('Silo', 'Capacity', building_level)
         if silo_limit == "inf":
             return float('inf')
-        return silo_limit + building_augment_level * get_augmentation_value('Silo', 'Limit')
+        return silo_limit + building_augment_level * get_augmentation_value('Silo', 'Capacity')
 
     limit = 0
     if resource_type == 'Money':

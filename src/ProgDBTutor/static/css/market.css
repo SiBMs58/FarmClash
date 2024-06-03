@@ -24,11 +24,15 @@ body {
 button:active,
 body:active {
     cursor: url('../img/UI/pointer_click.png'), auto;
+    outline: none;
 }
 button:hover {
     cursor: url('../img/UI/pointer_hover.png'), auto;
 }
-
+.sell-btn:focus,
+.quantity-button:focus {
+    outline: none;
+}
 
 .marketplace {
     position: absolute;
