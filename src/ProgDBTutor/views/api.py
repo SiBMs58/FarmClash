@@ -4,13 +4,12 @@ import os
 from flask import Blueprint, current_app, jsonify, abort, request
 from flask_login import login_required, current_user
 
-from src.ProgDBTutor.services.game_services import GameServices
+from services.game_services import GameServices
 
-
-from src.ProgDBTutor.models.animal import Animal
-from src.ProgDBTutor.models.resource import Resource
-from src.ProgDBTutor.models.exploration import Exploration
-from src.ProgDBTutor.models.field import Field
+from models.animal import Animal
+from models.resource import Resource
+from models.exploration import Exploration
+from models.field import Field
 
 api_blueprint = Blueprint('api', __name__, template_folder='templates')
 
