@@ -66,66 +66,50 @@ def user_stats(username):
     atk = 0
     defn = 0
     level = 0
-    # Safely retrieve Money resource
-    money_resource = current_app.config.get('resource_data_access').get_resource_by_type(username, 'Money')
-    coins = money_resource.amount if money_resource and money_resource.amount is not None else 0
+    try:
+        # Safely retrieve Money resource
+        money_resource = current_app.config.get('resource_data_access').get_resource_by_type(username, 'Money')
+        coins = money_resource.amount if money_resource and money_resource.amount is not None else 0
 
-    buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(username) or []
-    animals = current_app.config.get('animal_data_access').get_animals(username) or []
-    townhallList = current_app.config.get('building_data_access').get_buildings_by_username_and_type(username, "Townhall") or []
+        buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(username) or []
+        animals = current_app.config.get('animal_data_access').get_animals(username) or []
+        townhallList = current_app.config.get('building_data_access').get_buildings_by_username_and_type(username, "Townhall") or []
 
-    if townhallList:
-        level = townhallList[0].level or 0
+        if townhallList:
+            level = townhallList[0].level or 0
 
-    for building in buildings:
-        if building.unlock_level > level:
-            continue
-        atk_value = get_stats_value(building.building_type, 'Attack', building.level) or 0
-        atk_augment = get_augmentation_value(building.building_type, 'Attack') or 0
-        defn_value = get_stats_value(building.building_type, 'Defense', building.level) or 0
-        defn_augment = get_augmentation_value(building.building_type, 'Defense') or 0
-        atk += atk_value + building.augment_level * atk_augment
-        defn += defn_value + building.augment_level * defn_augment
+        for building in buildings:
+            if building.unlock_level > level:
+                continue
+            atk_value = get_stats_value(building.building_type, 'Attack', building.level) or 0
+            atk_augment = get_augmentation_value(building.building_type, 'Attack') or 0
+            defn_value = get_stats_value(building.building_type, 'Defense', building.level) or 0
+            defn_augment = get_augmentation_value(building.building_type, 'Defense') or 0
+            atk += atk_value + building.augment_level * atk_augment
+            defn += defn_value + building.augment_level * defn_augment
 
-    for animal in animals:
-        if animal.amount is None:
-            continue
-        species_augments = {
-            "Chicken": 'Chickencoop',
-            "Cow": 'Cowbarn',
-            "Pig": 'Pigpen',
-            "Goat": 'Goatbarn'
+        for animal in animals:
+            if animal.amount is None:
+                continue
+            species_augments = {
+                "Chicken": 'Chickencoop',
+                "Cow": 'Cowbarn',
+                "Pig": 'Pigpen',
+                "Goat": 'Goatbarn'
+            }
+            species_building = species_augments.get(animal.species)
+            if species_building:
+                defn += animal.amount * (get_augmentation_value(species_building, 'Defense') or 0)
+                atk += animal.amount * (get_augmentation_value(species_building, 'Attack') or 0)
+
+        return {
+            "level": level,
+            "attack": atk,
+            "defense": defn,
+            "coins": coins
         }
-        species_building = species_augments.get(animal.species)
-        if species_building:
-            defn += animal.amount * (get_augmentation_value(species_building, 'Defense') or 0)
-            atk += animal.amount * (get_augmentation_value(species_building, 'Attack') or 0)
-
-    # Before returning the stats, check that they are not none, or negative
-    if not atk:
-        atk = 0
-    if not defn:
-        defn = 0
-    if not coins:
-        coins = 0
-    if not level:
-        level = 0
-    if atk < 0:
-        atk = 0
-    if defn < 0:
-        defn = 0
-    if coins < 0:
-        coins = 0
-    if level < 0:
-        level = 0
-
-
-    return {
-        "level": level,
-        "attack": atk,
-        "defense": defn,
-        "coins": coins
-    }
+    except Exception as e:
+        return {"error": str(e)}
 
 
 
