@@ -1,3 +1,6 @@
+/**
+ * Global variables for the game state
+ */
 let pigpenLevel = 0;
 let cowbarnLevel = 0;
 let chickencoopLevel = 0;
@@ -12,6 +15,10 @@ let LVL = 0;
 
 
 //_________________________ INITIALIZATION _________________________//
+/**
+ * Initializes the game state by fetching user level, buildings, and last updated time.
+ * Then, it updates the offline production and schedules the next hour execution.
+ */
 initialize();
 function initialize(){
     fetchUserLevel().then(level => {
@@ -34,6 +41,11 @@ function initialize(){
 
 
 //_________________________ UPDATE FOR OFFLINE TIME _________________________//
+/**
+ * Updates the game state based on the time the user was offline.
+ * It calculates the hours passed, generates animal products and animals, and sends these quantities.
+ * Finally, it displays a popup message to the user.
+ */
 function updateOfflineProduction(){
     const now = new Date();
     const hours = (now - LastUpdated) / 1000 / 60 / 60;
@@ -46,10 +58,11 @@ function updateOfflineProduction(){
     sendAnimalQuantity(animals);
     sendResourceQuantity(product);
 
+    const total = Object.keys(animals).length + Object.keys(product).length;
     const productMessage = formatItems(product);
     const animalsMessage = formatItems(animals);
-    const message = `You received ${productMessage} and ${animalsMessage} while away.`;
-    displayPopup(message);
+    const message = `You received ${productMessage} and ${animalsMessage} while away. If you have no place to store them, they will be lost.`;
+    displayPopup(message, total);
 }
 
 
@@ -61,6 +74,10 @@ function updateOfflineProduction(){
 
 
 //_________________________ SCHEDULING FUNCTIONS _________________________//
+/**
+ * Schedules the next update of the game state.
+ * It calculates the milliseconds until the next hour and sets a timeout to setup the next hour.
+ */
 function scheduleNextHourExecution() {
     function millisecondsUntilNextHour() {
         const now = new Date();
@@ -71,6 +88,12 @@ function scheduleNextHourExecution() {
         setupNextHour();
     }, millisecondsUntilNextHour());
 }
+/**
+ * Sets up the game state for the next hour.
+ * It resets the levels and quantities of the buildings, fetches the buildings, generates animal products and animals,
+ * sends these quantities, and displays a popup message to the user.
+ * Finally, it schedules the next hour execution.
+ */
 function setupNextHour(){
     pigpenLevel = 0;
     cowbarnLevel= 0;
@@ -105,6 +128,11 @@ function setupNextHour(){
 
 
 //_________________________ GENERATION FUNCTIONS _________________________//
+/**
+ * Generates the number of animals based on the amount of time passed.
+ * @param {number} amount - The amount of time passed
+ * @returns {Object} - The number of each type of animal generated
+ */
 function generateAnimals(amount){
     return {
         "Pig": amount * pigpens,
@@ -113,6 +141,11 @@ function generateAnimals(amount){
         "Goat": amount * goatbarns
     };
 }
+/**
+ * Generates the animal products based on the amount of time passed.
+ * @param {number} amount - The amount of time passed
+ * @returns {Object} - The animal products generated
+ */
 function generateAnimalProduct(amount){
     const producedTruffles = pigpenLevel * amount;
     const producedMilk = cowbarnLevel * amount;
@@ -172,12 +205,21 @@ function generateAnimalProduct(amount){
 
 
 //_________________________ API REQUESTS _________________________//
+/**
+ * Fetches the buildings from the server by fetching the level of each type of building.
+ * @returns {Promise} - A promise that resolves when all building data has been fetched
+ */
 async function fetchBuildings(){
     await fetchBuildingLevel('Pigpen');
     await fetchBuildingLevel('Cowbarn');
     await fetchBuildingLevel('Chickencoop');
     await fetchBuildingLevel('Goatbarn');
 }
+/**
+ * Fetches the level of a specific type of building from the server.
+ * @param {string} buildingType - The type of building to fetch
+ * @returns {Promise} - A promise that resolves when the building data has been fetched
+ */
 async function fetchBuildingLevel(buildingType) {
     try {
         const response = await fetch(`/api/fetch-building-information-by-type/${buildingType}`);
@@ -215,6 +257,10 @@ async function fetchBuildingLevel(buildingType) {
         console.error(`Error fetching ${buildingType} information:`, error);
     }
 }
+/**
+ * Fetches the user's level from the server.
+ * @returns {Promise<number>} - A promise that resolves to the user's level
+ */
 async function fetchUserLevel(){
     try {
         const response = await fetch('/api/get-user-stats');
@@ -225,6 +271,10 @@ async function fetchUserLevel(){
         return 0;
     }
 }
+/**
+ * Fetches the last updated time from the server.
+ * @returns {Promise} - A promise that resolves when the last updated time has been fetched
+ */
 async function fetchLastUpdated(){
     try {
         const response = await fetch('/api/animals');
@@ -249,6 +299,11 @@ async function fetchLastUpdated(){
         console.error('Error fetching animal:', error);
     }
 }
+/**
+ * Sends the quantity of resources to the server.
+ * @param {Object} data - The quantity of each type of resource
+ * @returns {Promise} - A promise that resolves when the server has acknowledged the data
+ */
 async function sendResourceQuantity(data){
     let copy = { ...data };
     copy["idle"] = true;
@@ -273,6 +328,11 @@ async function sendResourceQuantity(data){
         console.error('Error occurred while updating resources:', error);
     }
 }
+/**
+ * Sends the quantity of animals to the server.
+ * @param {Object} data - The quantity of each type of animal
+ * @returns {Promise} - A promise that resolves when the server has acknowledged the data
+ */
 async function sendAnimalQuantity(data){
     let copy = { ...data };
     copy["idle"] = true;
@@ -302,7 +362,14 @@ async function sendAnimalQuantity(data){
 
 
 //_________________________ Display _________________________//
-function displayPopup(message) {
+/**
+ * Displays a popup message to the user.
+ * @param {string} message - The message to display
+ * @param total
+ */
+function displayPopup(message, total = 5) {
+    const msPerItem = 350;
+    const displayTime = msPerItem * total + 1000;
     const popup = document.getElementById('idle-popup');
     popup.innerHTML = message;
     popup.style.display = 'block';
@@ -314,17 +381,22 @@ function displayPopup(message) {
     // Set a timeout to fade out the popup after 3 seconds
     setTimeout(() => {
         popup.classList.add('fade-out');
-    }, 2000);
+    }, displayTime);
 
     // Set another timeout to hide the popup completely after the fade out animation
     setTimeout(() => {
         popup.style.opacity = 0;
-    }, 2250);
+    }, displayTime + 300);
 
     setTimeout(() => {
         popup.style.display = 'none';
-    }, 2500);
+    }, displayTime + 600);
 }
+/**
+ * Formats a list of items for display.
+ * @param {Object} items - The items to format
+ * @returns {string} - The formatted string
+ */
 function formatItems(items) {
     return Object.entries(items).map(([key, value]) => `${value} ${key}`).join(', ');
 }
