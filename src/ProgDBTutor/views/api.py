@@ -354,6 +354,7 @@ def get_leaderboard():
     resource_data_access = current_app.config.get('resource_data_access')
 
     users = user_data_access.get_all_users()
+    users = [user for user in users if user.username != 'admin']     # Filter out the admin user
     scores = {}
     for user in users:
         user_stats_result = user_stats(user.username)  # Calculate stats using user_stats function
