@@ -59,43 +59,48 @@ def get_users():
 
 def user_stats(username):
     """
-    the stats of a user.
+    Calculate the stats of a user.
     :param username: The username of the user whose stats are being requested.
-    :return: The stats of a user, in json format
+    :return: The stats of a user, in JSON format
     """
     atk = 0
     defn = 0
     level = 0
-    coins = current_app.config.get('resource_data_access').get_resource_by_type(username, 'Money').amount
-    buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(username)
-    animals = current_app.config.get('animal_data_access').get_animals(username)
-    townhallList = current_app.config.get('building_data_access').get_buildings_by_username_and_type(username, "Townhall")
-    if len(townhallList) != 0:
-        level = townhallList[0].level
+
+    # Safely retrieve Money resource
+    money_resource = current_app.config.get('resource_data_access').get_resource_by_type(username, 'Money')
+    coins = money_resource.amount if money_resource and money_resource.amount is not None else 0
+
+    buildings = current_app.config.get('building_data_access').get_buildings_by_username_owner(username) or []
+    animals = current_app.config.get('animal_data_access').get_animals(username) or []
+    townhallList = current_app.config.get('building_data_access').get_buildings_by_username_and_type(username, "Townhall") or []
+
+    if townhallList:
+        level = townhallList[0].level or 0
+
     for building in buildings:
         if building.unlock_level > level:
             continue
-        atk += get_stats_value(building.building_type, 'Attack',
-                               building.level) + building.augment_level * get_augmentation_value(
-            building.building_type,
-            'Attack')
-        defn += get_stats_value(building.building_type, 'Defense',
-                                building.level) + building.augment_level * get_augmentation_value(
-            building.building_type, 'Defense')
+        atk_value = get_stats_value(building.building_type, 'Attack', building.level) or 0
+        atk_augment = get_augmentation_value(building.building_type, 'Attack') or 0
+        defn_value = get_stats_value(building.building_type, 'Defense', building.level) or 0
+        defn_augment = get_augmentation_value(building.building_type, 'Defense') or 0
+        atk += atk_value + building.augment_level * atk_augment
+        defn += defn_value + building.augment_level * defn_augment
 
     for animal in animals:
-        if animal.species == "Chicken":
-            defn += animal.amount * get_augmentation_value('Chickencoop', 'Defense')
-            atk += animal.amount * get_augmentation_value('Chickencoop', 'Attack')
-        elif animal.species == "Cow":
-            defn += animal.amount * get_augmentation_value('Cowbarn', 'Defense')
-            atk += animal.amount * get_augmentation_value('Cowbarn', 'Attack')
-        elif animal.species == "Pig":
-            defn += animal.amount * get_augmentation_value('Pigpen', 'Defense')
-            atk += animal.amount * get_augmentation_value('Pigpen', 'Attack')
-        elif animal.species == "Goat":
-            defn += animal.amount * get_augmentation_value('Goatbarn', 'Defense')
-            atk += animal.amount * get_augmentation_value('Goatbarn', 'Attack')
+        if animal.amount is None:
+            continue
+        species_augments = {
+            "Chicken": 'Chickencoop',
+            "Cow": 'Cowbarn',
+            "Pig": 'Pigpen',
+            "Goat": 'Goatbarn'
+        }
+        species_building = species_augments.get(animal.species)
+        if species_building:
+            defn += animal.amount * (get_augmentation_value(species_building, 'Defense') or 0)
+            atk += animal.amount * (get_augmentation_value(species_building, 'Attack') or 0)
 
     return {
         "level": level,
@@ -103,6 +108,7 @@ def user_stats(username):
         "defense": defn,
         "coins": coins
     }
+
 
 
 @api_blueprint.route('/get-user-stats', methods=['GET'])
@@ -351,40 +357,48 @@ def get_leaderboard():
     Handles GET requests for the leaderboard. This will return a list of all users, sorted by score
     :return: A list of all users, in json format
     """
-    user_data_access = current_app.config.get('user_data_access')
-    resource_data_access = current_app.config.get('resource_data_access')
+    try:
+        user_data_access = current_app.config.get('user_data_access')
+        resource_data_access = current_app.config.get('resource_data_access')
 
-    users = user_data_access.get_all_users()
-    users = [user for user in users if user.username != 'admin']     # Filter out the admin user
-    scores = {}
-    for user in users:
-        user_stats_result = user_stats(user.username)  # Calculate stats using user_stats function
-        # Example scoring formula: level * 10 + attack + defense + coins
-        user_score = (user_stats_result['level'] * 10 +
-                      user_stats_result['attack'] +
-                      user_stats_result['defense'] +
-                      user_stats_result['coins'])
-        scores[user.username] = user_score
-    # Sort users based on their scores stored in the scores dictionary
-    sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
-    # Get the top 3 users
-    top_three = sorted_users[:3]
-    # Get two friends (implementation depends on your data model)
-    friends_response = get_friends().json
-    friends = friends_response[:2]  # Assume the response is a list of usernames and we need the first two
-    # Ensure current user is included
-    friend_objects = [user_data_access.get_user(friend) for friend in friends]
-    leaderboard_users = top_three + friend_objects
-    for leaderboard_user in leaderboard_users:
-        if leaderboard_user.username == current_user.username:
-            break
-    else:
-        leaderboard_users.append(current_user)
-    # Remove duplicates and create ranked list
-    unique_users = list({user.username: user for user in leaderboard_users}.values())
-    ranked_users = [{'place': i + 1, 'username': user.username, 'score': scores[user.username]}
-                    for i, user in enumerate(unique_users)]
-    return jsonify(ranked_users)
+        users = user_data_access.get_all_users()
+        users = [user for user in users if user.username != 'admin']     # Filter out the admin user
+        scores = {}
+        for user in users:
+            try:
+                user_stats_result = user_stats(user.username)  # Calculate stats using user_stats function
+                # Example scoring formula: level * 10 + attack + defense + coins
+                user_score = (user_stats_result['level'] * 10 +
+                              user_stats_result['attack'] +
+                              user_stats_result['defense'] +
+                              user_stats_result['coins'])
+                scores[user.username] = user_score
+            except Exception as e:
+                print(f"Error calculating score for user {user.username}: {str(e)}")
+                continue # Skip this user if an error occurs
+        # Sort users based on their scores stored in the scores dictionary
+        sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
+        # Get the top 3 users
+        top_three = sorted_users[:3]
+        # Get two friends (implementation depends on your data model)
+        friendship_data_access = current_app.config.get('friendship_data_access')
+        friends_response = friendship_data_access.get_friends(current_user)
+        friends = friends_response[:2]  # Assume the response is a list of usernames and we need the first two
+        # Ensure current user is included
+        friend_objects = [user_data_access.get_user(friend) for friend in friends]
+        leaderboard_users = top_three + friend_objects
+        for leaderboard_user in leaderboard_users:
+            if leaderboard_user.username == current_user.username:
+                break
+        else:
+            leaderboard_users.append(current_user)
+        # Remove duplicates and create ranked list
+        unique_users = list({user.username: user for user in leaderboard_users}.values())
+        ranked_users = [{'place': i + 1, 'username': user.username, 'score': scores[user.username]}
+                        for i, user in enumerate(unique_users)]
+        return jsonify(ranked_users)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @api_blueprint.route('/fetch-building-information', methods=['GET'])
