@@ -351,41 +351,44 @@ def get_leaderboard():
     Handles GET requests for the leaderboard. This will return a list of all users, sorted by score
     :return: A list of all users, in json format
     """
-    user_data_access = current_app.config.get('user_data_access')
-    resource_data_access = current_app.config.get('resource_data_access')
+    try:
+        user_data_access = current_app.config.get('user_data_access')
+        resource_data_access = current_app.config.get('resource_data_access')
 
-    users = user_data_access.get_all_users()
-    users = [user for user in users if user.username != 'admin']     # Filter out the admin user
-    scores = {}
-    for user in users:
-        user_stats_result = user_stats(user.username)  # Calculate stats using user_stats function
-        # Example scoring formula: level * 10 + attack + defense + coins
-        user_score = (user_stats_result['level'] * 10 +
-                      user_stats_result['attack'] +
-                      user_stats_result['defense'] +
-                      user_stats_result['coins'])
-        scores[user.username] = user_score
-    # Sort users based on their scores stored in the scores dictionary
-    sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
-    # Get the top 3 users
-    top_three = sorted_users[:3]
-    # Get two friends (implementation depends on your data model)
-    friendship_data_access = current_app.config.get('friendship_data_access')
-    friends_response = friendship_data_access.get_friends(current_user)
-    friends = friends_response[:2]  # Assume the response is a list of usernames and we need the first two
-    # Ensure current user is included
-    friend_objects = [user_data_access.get_user(friend) for friend in friends]
-    leaderboard_users = top_three + friend_objects
-    for leaderboard_user in leaderboard_users:
-        if leaderboard_user.username == current_user.username:
-            break
-    else:
-        leaderboard_users.append(current_user)
-    # Remove duplicates and create ranked list
-    unique_users = list({user.username: user for user in leaderboard_users}.values())
-    ranked_users = [{'place': i + 1, 'username': user.username, 'score': scores[user.username]}
-                    for i, user in enumerate(unique_users)]
-    return jsonify(ranked_users)
+        users = user_data_access.get_all_users()
+        users = [user for user in users if user.username != 'admin']     # Filter out the admin user
+        scores = {}
+        for user in users:
+            user_stats_result = user_stats(user.username)  # Calculate stats using user_stats function
+            # Example scoring formula: level * 10 + attack + defense + coins
+            user_score = (user_stats_result['level'] * 10 +
+                          user_stats_result['attack'] +
+                          user_stats_result['defense'] +
+                          user_stats_result['coins'])
+            scores[user.username] = user_score
+        # Sort users based on their scores stored in the scores dictionary
+        sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
+        # Get the top 3 users
+        top_three = sorted_users[:3]
+        # Get two friends (implementation depends on your data model)
+        friendship_data_access = current_app.config.get('friendship_data_access')
+        friends_response = friendship_data_access.get_friends(current_user)
+        friends = friends_response[:2]  # Assume the response is a list of usernames and we need the first two
+        # Ensure current user is included
+        friend_objects = [user_data_access.get_user(friend) for friend in friends]
+        leaderboard_users = top_three + friend_objects
+        for leaderboard_user in leaderboard_users:
+            if leaderboard_user.username == current_user.username:
+                break
+        else:
+            leaderboard_users.append(current_user)
+        # Remove duplicates and create ranked list
+        unique_users = list({user.username: user for user in leaderboard_users}.values())
+        ranked_users = [{'place': i + 1, 'username': user.username, 'score': scores[user.username]}
+                        for i, user in enumerate(unique_users)]
+        return jsonify(ranked_users)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @api_blueprint.route('/fetch-building-information', methods=['GET'])
