@@ -8,9 +8,19 @@ from .api import user_stats
 
 attack_blueprint = Blueprint('attack', __name__, template_folder='templates')
 
-previously_searched = []
 threshold = 2000
-scores = {}
+
+# Global dictionaries to hold user-specific data
+user_specific_data = {}
+
+def get_user_data(user_name):
+    if user_name not in user_specific_data:
+        # Initialize default values for new users
+        user_specific_data[user_name] = {
+            'previously_searched': [],
+            'scores': {}
+        }
+    return user_specific_data[user_name]
 
 
 @attack_blueprint.route('/visit_oppenents_world')
@@ -23,7 +33,7 @@ def visit_opponent():
     opponent = choose_opponent_logic()  # This function needs to be implemented based on your app logic
 
     if not opponent:
-        previously_searched.clear()
+        get_user_data(current_user.username)['previously_searched'].clear()
         return render_template('attack/no_opponent.html', app_data=config_data)
 
     return render_template('attack/visit_opponents_world.html', opponent=opponent, app_data=config_data)
@@ -55,22 +65,22 @@ def choose_opponent_logic():
             user_score = user_stats(user.username)["attack"]
         else:
             user_score = user_stats(user.username)["defense"]
-        scores[user.username] = user_score
+        get_user_data(current_user.username)['scores'][user.username] = user_score
 
     # Filter users based on the conditions
     eligible_users = []
     for user in users:
-        if user.username not in previously_searched and user.username != current_user.username and user.username not in friends_usernames:
-            difference_in_score = abs(scores[current_user.username] - scores[user.username])
+        if user.username not in get_user_data(current_user.username)['previously_searched'] and user.username != current_user.username and user.username not in friends_usernames:
+            difference_in_score = abs(get_user_data(current_user.username)['scores'][current_user.username] - get_user_data(current_user.username)['scores'][user.username])
             if difference_in_score < threshold:
                 eligible_users.append(user)
 
     # Sort eligible users by their scores in descending order
-    sorted_eligible_users = sorted(eligible_users, key=lambda user: scores[user.username], reverse=True)
+    sorted_eligible_users = sorted(eligible_users, key=lambda user: get_user_data(current_user.username)['scores'][user.username], reverse=True)
 
     # Select the top eligible user if available
     if sorted_eligible_users:
-        previously_searched.append(sorted_eligible_users[0].username)
+        get_user_data(current_user.username)['previously_searched'].append(sorted_eligible_users[0].username)
         return sorted_eligible_users[0]
     else:
         return None
@@ -91,8 +101,8 @@ def attack_result():
     """
     Renders the attack result view.
     """
-    opponent = previously_searched[-1]
-    result, resources = choose_result_logic(scores[opponent], scores[current_user.username])  # Unpack the tuple returned by choose_result_logic
+    opponent = get_user_data(current_user.username)['previously_searched'][-1]
+    result, resources = choose_result_logic(get_user_data(current_user.username)['scores'][opponent], get_user_data(current_user.username)['scores'][current_user.username])  # Unpack the tuple returned by choose_result_logic
 
     # Update the resources in the database
     resource_data_access = current_app.config.get('resource_data_access')
@@ -133,7 +143,7 @@ def choose_result_logic(player_score, opponent_score):
     # Get the opponent's resources
     resource_data_access = current_app.config.get('resource_data_access')
     opponent_resources = {resource.resource_type: resource.amount for resource in
-                          resource_data_access.get_resources(previously_searched[-1])}
+                          resource_data_access.get_resources(get_user_data(current_user.username)['previously_searched'][-1])}
     for resource in list(opponent_resources.keys()):
         if opponent_resources[resource] <= 0:
             opponent_resources.pop(resource)
