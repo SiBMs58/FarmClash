@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>welcome screen</title>
     <link rel="stylesheet" href="../../static/css/welcome_screen.css">
-    <title>Video Pagina</title>
+    {% include 'head.html' %}
 </head>
 <body>
-<button class="start-button">
-    <a href="{{ url_for('auth.login') }}">
-        <img src="../../static/img/UI/cancel_btn.png" alt="Logout" usemap="#logoutMap" id="image-button">
-    </a>
-</button>
+    <button class="start-btn">
+        <a href="{{ url_for('auth.login') }}">
+            <img src="../../static/img/UI/cancel_btn.png" alt="Logout" usemap="#logoutMap" id="image-button">
+        </a>
+    </button>
 <div class="container">
     <div class="row">
         <div class="col">
