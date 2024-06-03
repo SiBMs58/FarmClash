@@ -31,7 +31,6 @@
         fetch('/api/leaderboard', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token') // Retrieve the authentication token
             }
         })
