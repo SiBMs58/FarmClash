@@ -2,7 +2,7 @@
   "comment": "if UI has a value make sure the popup has a button to display that ui (img/UI/view_btn).    if augmentation is has a list then starting from 100 coins (and increasing per augment), you can increase the building's stats with this amount. (img/UI/augment_btn & img/UI/augment_pbtn)",
 
   "Townhall": {
-    "explanation": "Welcome to the Farm Hall, the heart of your farm's progress! It determines your user level, unlocks crops, and reveals more of the map. Fortify it for defense and research for attack levels. Upgrading boosts defense and attack. In here you can keep track of your farm information" ,
+    "explanation": "This the heart of your farm's progress! By upgrading this building you can increase your user level, unlock crops, unlock buildings throughout the map and as with all buildings, increase your attack and defense stats. Check out the menu for more information about your farm." ,
     "upgrade_costs": {
       "L1": [["Money",50],["Wheat", 50]],
       "L2": [["Money", 250], ["Wheat", 450]],
@@ -23,7 +23,7 @@
 
 
   "Barn": {
-    "explanation": "This is where you store animal products and raw materials. Keep track of your resources here and upgrade to expand its capacity.",
+    "explanation": "Here, the animal products and raw materials are stored. Keep track of your resources in the menu and upgrade to expand its capacity.",
     "upgrade_costs":{
       "L2": [["Money", 250], ["Wheat", 200]],
       "L3": [["Money", 1000], ["Carrot", 200]],
@@ -44,7 +44,7 @@
 
 
   "Silo": {
-    "explanation": "This is where you store your crops. Keep track of your crops here and upgrade to expand its capacity.",
+    "explanation": "This is where you store your crops. Keep track of your crops in the menu and upgrade to expand its capacity.",
     "upgrade_costs":{
       "L2": [["Money", 250], ["Wheat", 300]],
       "L3": [["Money", 1000], ["Carrot", 300], ["Stone", 25]],
@@ -65,7 +65,7 @@
 
 
   "Bay": {
-    "explanation": "Welcome to the Bunny Bay! This is where your explorations begin and where you claim found treasures. The bunny of the bay will embark on explorations with the animals you select for a duration of your choosing.",
+    "explanation": "Welcome to the Bunny Bay! This is where your explorations begin and where you can claim found treasures. The bunny of the bay will embark on explorations with the animals you select for a duration of your choosing.",
     "upgrade_costs":{
       "L1": [["Money",200]],
       "L2": [["Money", 500], ["Wheat", 150]],
@@ -87,7 +87,7 @@
 
 
   "Chickencoop": {
-    "explanation": "This cozy 'Cluck' Cabin is the perfect home for your feathered friends. It's not just an egg production facility but also a hub for breeding chickens. Upgrade the coop to boost egg production and expand the flock size",
+    "explanation": "This cozy 'cluck' cabin is the perfect home for your feathered friends. Upgrade the coop to boost egg production and expand the flock size. Each chicken coop spawns 1 chicken/hour.",
     "upgrade_costs": {
         "L2": [["Money", 100], ["Wheat", 150],["Egg", 50]],
         "L3": [["Money", 250], ["Carrot", 150],["Egg", 75]],
@@ -108,7 +108,7 @@
 
 
   "Cowbarn": {
-    "explanation": "Welcome to your 'Moo' Manor! This spacious abode is home to your beloved cows and serves as your milk production center. Upgrade the barn to increase milk production and the herd size.",
+    "explanation": "Welcome to your 'Moo' Manor! This spacious abode is home to your beloved cows and serves as your milk production center. Upgrade the barn to increase milk production and the herd size. Each cow barn spawns 1 cow/hour.",
     "upgrade_costs": {
         "L2": [["Money", 100], ["Wheat", 150],["Milk", 50]],
         "L3": [["Money", 250], ["Carrot", 150],["Milk", 75]],
@@ -129,7 +129,7 @@
 
 
   "Goatbarn": {
-    "explanation": "Step into the charming 'Baa Baa' Barn, where wool production meets goat breeding! Upgrade the barn to enhance wool production and expand the herd size.",
+    "explanation": "Step into the charming 'Baa Baa' Barn, where wool production meets goat breeding! Upgrade the barn to enhance wool production and expand the herd size. Each goat barn spawns 1 goat/hour.",
     "upgrade_costs": {
         "L2": [["Money", 100], ["Wheat", 150]],
         "L3": [["Money", 250], ["Carrot", 150],["Wool", 75]],
@@ -150,7 +150,7 @@
 
 
   "Pigpen": {
-    "explanation": "Let's take a look at the 'Oinker' Oasis, where our porcine pals live in luxury and sniff out savory truffles! Upgrade the oasis to increase truffle production and expand your pack size.",
+    "explanation": "Let's take a look at the 'oinker' oasis, where our porcine pals live in luxury and sniff out savory truffles! Upgrade the oasis to increase truffle production and expand your pack size. Each pigpen spawns 1 pig/hour.",
     "upgrade_costs": {
         "L2": [["Money", 100], ["Wheat", 150]],
         "L3": [["Money", 250], ["Carrot", 150],["Truffle", 75]],
@@ -171,7 +171,7 @@
 
 
   "Field3": {
-    "explanation": "Welcome to the Harvest Haven. This fertile soil is used as a canvas for planting and cultivating a bountiful harvest. Upgrading the field enhances the crop yield",
+    "explanation": "Welcome to the harvest haven. This fertile soil is used as a canvas for planting and cultivating a bountiful harvest. Upgrading the field enhances the crop yield",
     "upgrade_costs": {
         "L2": [["Money", 100], ["Wheat", 100]],
         "L3": [["Money", 800], ["Carrot", 100], ["Wheat", 200]],
