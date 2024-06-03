@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, session
 from flask_login import login_required, current_user
 
 from config import config_data
@@ -8,9 +8,9 @@ from .api import user_stats
 
 attack_blueprint = Blueprint('attack', __name__, template_folder='templates')
 
-previously_searched = []
+#previously_searched = []
 threshold = 2000
-scores = {}
+#scores = {}
 
 
 @attack_blueprint.route('/visit_oppenents_world')
@@ -19,11 +19,15 @@ def visit_opponent():
     """
     Renders the attack view. This will render the opponent's world.
     """
+    if 'previously_searched' not in session:
+        session['previously_searched'] = []
+    if 'scores' not in session:
+        session['scores'] = {}
     # Example logic to choose an opponent
     opponent = choose_opponent_logic()  # This function needs to be implemented based on your app logic
 
     if not opponent:
-        previously_searched.clear()
+        session['previously_searched'].clear()
         return render_template('attack/no_opponent.html', app_data=config_data)
 
     return render_template('attack/visit_opponents_world.html', opponent=opponent, app_data=config_data)
@@ -55,22 +59,22 @@ def choose_opponent_logic():
             user_score = user_stats(user.username)["attack"]
         else:
             user_score = user_stats(user.username)["defense"]
-        scores[user.username] = user_score
+        session['scores'][user.username] = user_score
 
     # Filter users based on the conditions
     eligible_users = []
     for user in users:
-        if user.username not in previously_searched and user.username != current_user.username and user.username not in friends_usernames:
-            difference_in_score = abs(scores[current_user.username] - scores[user.username])
+        if user.username not in session['previously_searched'] and user.username != current_user.username and user.username not in friends_usernames:
+            difference_in_score = abs(session['scores'][current_user.username] - session['scores'][user.username])
             if difference_in_score < threshold:
                 eligible_users.append(user)
 
     # Sort eligible users by their scores in descending order
-    sorted_eligible_users = sorted(eligible_users, key=lambda user: scores[user.username], reverse=True)
+    sorted_eligible_users = sorted(eligible_users, key=lambda user: session['scores'][user.username], reverse=True)
 
     # Select the top eligible user if available
     if sorted_eligible_users:
-        previously_searched.append(sorted_eligible_users[0].username)
+        session['previously_searched'].append(sorted_eligible_users[0].username)
         return sorted_eligible_users[0]
     else:
         return None
@@ -91,8 +95,8 @@ def attack_result():
     """
     Renders the attack result view.
     """
-    opponent = previously_searched[-1]
-    result, resources = choose_result_logic(scores[opponent], scores[current_user.username])  # Unpack the tuple returned by choose_result_logic
+    opponent = session['previously_searched'][-1]
+    result, resources = choose_result_logic(session['scores'][opponent], session['scores'][current_user.username])  # Unpack the tuple returned by choose_result_logic
 
     # Update the resources in the database
     resource_data_access = current_app.config.get('resource_data_access')
@@ -133,7 +137,7 @@ def choose_result_logic(player_score, opponent_score):
     # Get the opponent's resources
     resource_data_access = current_app.config.get('resource_data_access')
     opponent_resources = {resource.resource_type: resource.amount for resource in
-                          resource_data_access.get_resources(previously_searched[-1])}
+                          resource_data_access.get_resources(session['previously_searched'][-1])}
     for resource in list(opponent_resources.keys()):
         if opponent_resources[resource] <= 0:
             opponent_resources.pop(resource)
