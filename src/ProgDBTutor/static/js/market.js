@@ -1,7 +1,7 @@
 const market = {};
 market.quantities = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 market.intervals = new Array(10).fill(null);
-market.prices = [1, 3, 5, 10, 15, 12, 17, 17, 20, 25];
+market.prices = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512];
 market.crops = ["Wheat", "Carrot", "Corn", "Lettuce", "Tomato", "Turnip", "Zucchini", "Parsnip", "Cauliflower", "Eggplant"];
 
 fetchCropPricesFromAPI();
@@ -159,7 +159,7 @@ async function sell() {
                 // Reset the input value
                 inputValues[index].value = 0;
 
-                await updateSale(cropName, quantity, cropPrice);
+                await updateSale(cropName, quantity, market.prices[index]);
                 await updateResources(cropName, -quantity);
                 await updateResources("Money", totalSalePrice);
             }
