@@ -46,7 +46,6 @@ def choose_opponent_logic():
     :return:
     """
     user_data_access = current_app.config.get('user_data_access')
-    resource_data_access = current_app.config.get('resource_data_access')
     friendship_data_access = current_app.config.get('friendship_data_access')
 
     # Get all users and current user object
