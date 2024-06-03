@@ -64,6 +64,7 @@ function fetchCropQuantityFromAPI() {
 
 // These actions are called when pressing the increase and resp decrease button so the interval so it can be increased and resp decreased for an interval
 function startIncrease(index) {
+    increaseQuantity(index);
     clearInterval(market.intervals[index - 1]);
     document.getElementById(`plusImage${index}`).src = "../../static/img/UI/plus_pbtn.png";
     market.intervals[index - 1] = setInterval(function () {
@@ -71,6 +72,7 @@ function startIncrease(index) {
     }, 100);
 }
 function startDecrease(index) {
+    decreaseQuantity(index);
     clearInterval(market.intervals[index - 1]);
     document.getElementById(`minusImage${index}`).src = "../../static/img/UI/minus_pbtn.png";
     market.intervals[index - 1] = setInterval(function () {

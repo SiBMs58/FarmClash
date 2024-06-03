@@ -6,11 +6,12 @@ let animals = [["Cow",0], ["Chicken",0], ["Pig",0], ["Goat",0]];
 let clickedResourceButton = false;
 let clickedAnimalButton = false;
 
-function scheduleMoneyUpdates() {
+function scheduleResourceUpdate() {
     setInterval(() => {
         fetchCropsAndMoney()
             .then(() => {
                 updateMoneyDisplay();
+                updateCropDisplay()
             })
             .catch(error => {
                 console.error('Error fetching resources:', error);
@@ -35,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchAnimals().then(() => {
         updateAnimalDisplay();
     })
-    scheduleMoneyUpdates();
+    scheduleResourceUpdate();
     document.getElementById("animal-btn").addEventListener("click", function() {
         if (!clickedAnimalButton) {
              fetchAnimals().then(() => {

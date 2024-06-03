@@ -107,10 +107,12 @@ img.crate-image {
 }
 
 .crops {
+    width: 100vw;
     position: absolute;
     bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
+    display: flex;
+    justify-content: center; /* Centers child elements horizontally */
+    align-items: center;     /* Centers child elements vertically */
     z-index: 999;
 }
 

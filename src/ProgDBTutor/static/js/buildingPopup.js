@@ -8,6 +8,11 @@ const name = 0;
 const maxLevel = 10;
 let buildingID= "";
 let buildingData ={};
+export let isPopupOpen = false;
+let prevBuildingName = "";
+
+//let currOpenedBuildingGeneralInformation;
+let isUpgradableBool = true;
 
 function Log6(x) {
     return Math.log(x) / Math.log(6);
@@ -24,19 +29,7 @@ export function togglePopup() {
     cropPopup.classList.toggle('show');
 }
 
-export let isPopupOpen = false;
-let prevBuildingName = "";
 
-let buildingName;
-let building
-
-
-// CHECKS FOR UPGRADE BUTTON
-let currOpenedBuildingInformation;
-//let currOpenedBuildingGeneralInformation;
-let isUpgradableBool = true;
-let currBuildingName;
-let currBuildingInfo;
 
 async function isUpgradable(buildingInformation, buildingGeneralInformation, buildingName) {
     // Check if the building is already at max level
@@ -81,7 +74,7 @@ async function fetchBuildingPopupInformation() {
 export function openPopup(buildingInformation, buildingGeneralInformation, buildingName) {
     buildingID = buildingName;
     buildingData = buildingInformation[buildingName];
-    currOpenedBuildingInformation = buildingInformation[buildingName]
+    buildingData = buildingInformation[buildingName]
     if (isPopupOpen && (prevBuildingName !== buildingName)) {
         closePopup();
         setTimeout(function() { // Wait 200 ms
@@ -171,7 +164,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
         }
 
         // Only show upgrade button and stats for upgradable buildings
-        const upgradeButton = document.getElementById('upgrade-button');
+        const uvpgradeButton = document.getElementById('upgrade-button');
         if (!buildingInfo.hasOwnProperty('upgrade_costs') || building.level < 0) {
             upgradeButton.style.display = "none";
             buildingStats.style.display = "none";
@@ -311,7 +304,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
 
 function cropPopupPreparation() {
     const buttons = document.querySelectorAll(".crop-buttons-grid img");
-    const fieldLevel = currOpenedBuildingInformation.level;
+    const fieldLevel = buildingData.level;
 
     const cropUnlockLevels = {
         "Wheat": 1,
@@ -613,12 +606,12 @@ async function upgrade_checks(buildingInformation, info, buildingName) {
  */
 
 async function upgradeBuilding(){
-    currOpenedBuildingInformation.level +=1;
+    buildingData.level +=1;
     console.log(curr_level_cost);
     for (const cost of curr_level_cost){
         await updateResources(cost[0], -cost[1]);
     }
-    console.log(currOpenedBuildingInformation.level);
+    console.log(buildingData.level);
 }
 
 
@@ -686,7 +679,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Add mousedown event to change the src to the pressed version
         button.addEventListener("mousedown", function() {
-            const fieldLevel = currOpenedBuildingInformation.level;
+            const fieldLevel = buildingData.level;
             if (cropUnlockLevel <= fieldLevel) {
                 console.log("mouse down on allowed crop");
                 button.src = pressedSrc;
@@ -697,14 +690,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Add mouseup event to revert src and handle hard release
         button.addEventListener("mouseup", function() {
-            const fieldLevel = currOpenedBuildingInformation.level;
+            const fieldLevel = buildingData.level;
             if (cropUnlockLevel <= fieldLevel) {
                 if (button.src === pressedSrc) {
                     button.src = originalSrc;
                     const cropType = getCropName(originalSrc);
                     console.log(cropType + " has been pressed");
                     closeCropPopup()
-                    const field = currOpenedBuildingInformation.self_key;
+                    const field = buildingData.self_key;
                     cropMap.plantCrop(cropType, field);
                 }
             }
@@ -712,7 +705,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Add mouseleave event to revert src and handle soft release
         button.addEventListener("mouseleave", function() {
-            const fieldLevel = currOpenedBuildingInformation.level;
+            const fieldLevel = buildingData.level;
             if (cropUnlockLevel <= fieldLevel) {
                 if (button.src === pressedSrc) {
                     button.src = originalSrc;

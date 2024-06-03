@@ -14,7 +14,8 @@ let LVL = 0;
 //_________________________ INITIALIZATION _________________________//
 initialize();
 function initialize(){
-    fetchUserStats().then(() => {
+    fetchUserLevel().then(level => {
+        LVL = level;
         fetchBuildings().then(() => {
             fetchLastUpdated().then(() => {
                 updateOfflineProduction();
@@ -40,11 +41,16 @@ function updateOfflineProduction(){
     if (amount === 0) {
         return;
     }
-    sendAnimalQuantity(generateAnimals(amount));
-    sendResourceQuantity(generateAnimalProduct(amount));
+    const product = generateAnimalProduct(amount);
+    const animals = generateAnimals(amount);
+    sendAnimalQuantity(animals);
+    sendResourceQuantity(product);
 
+    const productMessage = formatItems(product);
+    const animalsMessage = formatItems(animals);
+    const message = `You received ${productMessage} and ${animalsMessage} while away.`;
+    displayPopup(message);
 }
-
 
 
 
@@ -75,8 +81,15 @@ function setupNextHour(){
     chickencoops = 0;
     goatbarns = 0;
     fetchBuildings().then(() => {
-        sendResourceQuantity(generateAnimalProduct(1));
-        sendAnimalQuantity(generateAnimals(1));
+        const product = generateAnimalProduct(1);
+        const animals = generateAnimals(1);
+        sendResourceQuantity(product);
+        sendAnimalQuantity(animals);
+
+        const productMessage = formatItems(product);
+        const animalsMessage = formatItems(animals);
+        const message = `You received ${productMessage} and ${animalsMessage} while away.`;
+        displayPopup(message);
     });
     scheduleNextHourExecution();
 }
@@ -172,11 +185,9 @@ async function fetchBuildingLevel(buildingType) {
         if (data.status === 'success') {
             for (const buildingID in data.building_information) {
                 const building = data.building_information[buildingID];
-                /* TODO add this once the unlock level is implemented
-                if (!building.unlock_level < LVL ) {
+                if (building.unlock_level > LVL ) {
                     continue;
                 }
-                 */
                 // Update the appropriate dictionary based on the building type
                 switch (buildingType) {
                     case 'Pigpen':
@@ -204,15 +215,14 @@ async function fetchBuildingLevel(buildingType) {
         console.error(`Error fetching ${buildingType} information:`, error);
     }
 }
-async function fetchUserStats(){
+async function fetchUserLevel(){
     try {
-        const response = await fetch('/api/get-user-stats')
-            .then(response => response.json())
-            .then(data => {
-                LVL = data.level;
-            });
+        const response = await fetch('/api/get-user-stats');
+        const data = await response.json();
+        return data.level;
     } catch (error) {
         console.error('Error fetching user stats:', error);
+        return 0;
     }
 }
 async function fetchLastUpdated(){
@@ -240,7 +250,8 @@ async function fetchLastUpdated(){
     }
 }
 async function sendResourceQuantity(data){
-    data["idle"] = true;
+    let copy = { ...data };
+    copy["idle"] = true;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-resources";
     try {
@@ -249,7 +260,7 @@ async function sendResourceQuantity(data){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(copy)
         });
 
         if (response.ok) {
@@ -263,7 +274,8 @@ async function sendResourceQuantity(data){
     }
 }
 async function sendAnimalQuantity(data){
-    data["idle"] = true;
+    let copy = { ...data };
+    copy["idle"] = true;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-animals";
     try {
@@ -272,7 +284,7 @@ async function sendAnimalQuantity(data){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(copy)
         });
 
         if (response.ok) {
@@ -284,4 +296,35 @@ async function sendAnimalQuantity(data){
     } catch (error) {
         console.error('Error occurred while updating animals:', error);
     }
+}
+
+
+
+
+//_________________________ Display _________________________//
+function displayPopup(message) {
+    const popup = document.getElementById('idle-popup');
+    popup.innerHTML = message;
+    popup.style.display = 'block';
+    popup.style.opacity = 1;  // Ensure the popup is fully visible before starting the fade out
+
+    // Show the popup
+    popup.classList.remove('fade-out');
+
+    // Set a timeout to fade out the popup after 3 seconds
+    setTimeout(() => {
+        popup.classList.add('fade-out');
+    }, 2000);
+
+    // Set another timeout to hide the popup completely after the fade out animation
+    setTimeout(() => {
+        popup.style.opacity = 0;
+    }, 2250);
+
+    setTimeout(() => {
+        popup.style.display = 'none';
+    }, 2500);
+}
+function formatItems(items) {
+    return Object.entries(items).map(([key, value]) => `${value} ${key}`).join(', ');
 }

@@ -116,7 +116,7 @@ function displayLimit() {
             ${percentage.toFixed(2)}%
         </div>
     </div>
-    <p>${totalCrops} / ${limit}</p>`;
+    <p>Capacity:  ${totalCrops} / ${limit}</p>`;
     // Get limitContainer
     const limitContainer = document.getElementById('limit');
 
@@ -126,9 +126,9 @@ function displayLimit() {
 // Update description based on the initial state or any other changes
 function updateDescription() {
     if (!selectedCrop) {
-        document.getElementById('description').innerText = 'You can press a crop to select it. Scrapping a selected crop gives the user 1 coin per crop.';
+        document.getElementById('description').innerText = 'You can press a crop to select it.';
     } else {
-        document.getElementById('description').innerText = 'You can press a selected crop again to deselect it. Scrapping a selected crop gives the user 1 coin per crop.';
+        document.getElementById('description').innerText = 'You can press a selected crop again to deselect it.';
     }
 }
 

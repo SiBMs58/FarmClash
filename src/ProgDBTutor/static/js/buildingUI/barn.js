@@ -145,7 +145,7 @@ function displayLimit() {
             ${percentage.toFixed(2)}%
         </div>
     </div>
-    <p>${total} / ${limit}</p>`;
+    <p>Capacity: ${total} / ${limit}</p>`;
     // Get limitContainer
     const limitContainer = document.getElementById('limit');
 

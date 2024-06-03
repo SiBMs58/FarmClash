@@ -74,11 +74,8 @@ def user_stats(username):
     if len(townhallList) != 0:
         level = townhallList[0].level
     for building in buildings:
-        ## TODO add this if unlock level is implemented
-        """
         if building.unlock_level > level:
             continue
-        """
         atk += get_stats_value(building.building_type, 'Attack',
                                building.level) + building.augment_level * get_augmentation_value(
             building.building_type,
