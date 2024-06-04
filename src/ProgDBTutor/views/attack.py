@@ -57,7 +57,7 @@ def choose_opponent_logic():
         # Get all users and current user object
         users = user_data_access.get_all_users()
         # Filter out the admin user
-        users = [user for user in users if user.username != 'admin' and user.username != current_user.username]
+        users = [user for user in users if user.username != 'admin']
 
         # Retrieve friends of the current user
         friends = friendship_data_access.get_friends(current_user)
@@ -75,15 +75,15 @@ def choose_opponent_logic():
         eligible_users = []
         current_user_score = scores.get(current_user.username, 0)
         for user in users:
-            user_score = scores.get(user.username, 0)
-            print("User score: ", user_score)
             if user.username not in previously_searched and user.username != current_user.username and user.username not in friends_usernames:
+                user_score = scores.get(user.username, 0)
                 difference_in_score = abs(current_user_score - user_score)
                 if difference_in_score < threshold:
                     eligible_users.append(user)
 
         # Sort eligible users by their scores in descending order
         sorted_eligible_users = sorted(eligible_users, key=lambda user: scores.get(user.username, 0), reverse=True)
+
         # Select the top eligible user if available
         if sorted_eligible_users:
             previously_searched.append(sorted_eligible_users[0].username)
