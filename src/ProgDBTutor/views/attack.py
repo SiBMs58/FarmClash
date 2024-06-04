@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, jsonify
 from flask_login import login_required, current_user
 
 from config import config_data
@@ -34,6 +34,9 @@ def visit_opponent():
 
     if not opponent:
         get_user_data(current_user.username)['previously_searched'].clear()
+        # Print or log user-specific data for debugging
+        user_data = get_user_data(current_user.username)
+        return jsonify(user_data)
         return render_template('attack/no_opponent.html', app_data=config_data)
 
     return render_template('attack/visit_opponents_world.html', opponent=opponent, app_data=config_data)
