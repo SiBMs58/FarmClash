@@ -1,14 +1,18 @@
+/**
+ * This file is used to set the default crop data for the game.
+ * Take a look at the comments throughout the file to understand how to set the data.
+ */
 export const defaultCropData = {
     map_width: 58,
     map_height: 43,
     // 3 phases: empty (1), growth (2), harvest (3)
     crop_information: {
-        field1: { // moet dezelfde naam hebben als 'building_name'
-            building_name: "field1", // to link to the field building
+        field1: { // Needs to have the same name as 'building_name'.
+            building_name: "field1", // This links to the field building. Every field building must have a corresponding entry in this file.
             phase: 1, // growth phase
-            crop: null, // can be null
+            crop: null, // can be null or a crop name like "Wheat"
             assetPhase: null, // asset phases 1-4. Set's the correct growth phase of the asset
-            time_planted: null, // time in seconds since random day (can be null)
+            time_planted: null, // Time in seconds since randomly chosen day as a reference (can be null)
         },
         field2: {
             building_name: "field2", // to link to the field building
@@ -354,9 +358,10 @@ export const defaultCropData = {
             time_planted: null
         },
     },
+    // This is not stored in the database. It is used to set the growth time of the crops.
     crop_general_information: {
         Wheat: {
-            growth_time: 30
+            growth_time: 30 // growth time in seconds
         },
         Carrot: {
             growth_time: 60

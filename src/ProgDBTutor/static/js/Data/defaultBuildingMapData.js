@@ -1,3 +1,8 @@
+/**
+ * This file contains the default data for the building map. This data is used to generate the starting building map.
+ * Read the comments throughout the file to see how this data is structured.
+ */
+
 export const defaultBuildingMapData = {
     map_width: 58,
     map_height: 43,
@@ -1233,7 +1238,7 @@ export const defaultBuildingMapData = {
                 [[3,3], "Field2.BR"],
             ]
         },*/
-        Field3: { // Don't change this name!
+        Field3: { // Don't change this name! It needs to correspond to the asset folder name.
             display_name: "Field",
             explanation: "This is a field.",
             upgrade_costs: [500, 1000, 2000, 3500],

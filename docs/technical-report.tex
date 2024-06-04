@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{amsmath}
 
 \geometry{a4paper}
 
@@ -30,8 +31,7 @@ The primary objectives of this project include:
     \item Implement secure and efficient server-side interactions using Flask, ensuring that the system handles real-time data exchange and multiplayer interactions seamlessly.
     \item Create an intuitive user interface that facilitates easy navigation and management of game tasks, utilizing technologies such as React for dynamic frontend development and CSS frameworks for aesthetic design.
     \item Design the game to support background updates and cooldowns effectively, representing idle game mechanics where actions continue to progress even when players are not actively engaged.
-    \item TODO: Ensure that the application adheres to modern web standards and security measures, including the use of JSON Web Tokens for stateless authentication and secure communication.
-    \item paragraphasize software extensibility and maintainability, preparing the system for future upgrades and scalability.
+    \item Implement software extensibility and maintainability, preparing the system for future upgrades and scalability.
     \item Deploy and maintain the software system on a production environment, leveraging provided Google Cloud Platform resources for hosting.
 \end{itemize}
 This project is designed to meet the educational goals of learning to develop extensive software projects within a team setting, discovering and integrating new technologies, and effectively planning and distributing tasks.
@@ -49,7 +49,6 @@ FarmClash allows players to build and manage their farms, defend against attacks
     \item \textbf{Goatbarn}: Produces wool and allows breeding of goats. Higher levels yield more products and increases the limit of goats.
     \item \textbf{Pigpen}: Produces truffles and allows breeding of pigs. Higher levels yield more products and increases the limit of pigs.
     \item \textbf{Field}: Used for planting crops. Higher levels yield more harvest. (Passive upgrades increase farm time)
-    \item \textbf{Harvesthopper}: Harvests and replants crops in adjacent fields automatically. Higher level increases the harvest limit.
 \end{enumerate}
 
 \subsubsection{Defense Buildings}
@@ -83,49 +82,113 @@ FarmClash allows players to build and manage their farms, defend against attacks
 
 \subsubsection{Exploration Mechanics}
 
-The bunny of the Bay will go explore for a [user selected] time with a [set of user selected] animals with a limit of Building level. After exploring, the user can open the gathered boxes and after that a downtime will be set.
+The bunny of the Bay will embark on an exploration journey for a duration chosen by the user, accompanied by a selection of animals chosen by the user, with the exploration time capped by the building level.
 
-The longer the exploring takes, the higher number of resources per box/the higher the rarity of resources will be. A box can be a coin, a crop, or a resource box as well as be empty. The more animals are sent to explore, the more boxes will be returned. Choosing which animal goes also has perks and downsides:
+During exploration, the user can open the gathered boxes, ensuring there is enough space in storage buildings. The longer the exploration duration, the higher the risk and the average number of resources per box obtained.
+
+A higher building level results in lower risk, higher average resources per box, and higher standard deviation of resources.
+
+Additionally, a higher augment level of the building reduces the risk.
+
+The number of boxes and surviving animals is predetermined at the start of exploration.
+
+Risk chance is calculated as follows:
+A : \text{Augment Level}
+L : \text{Building Level}
+d : \text{Duration}
+
+\[
+R(d) =
+\begin{cases}
+0 & \text{if } d = 1 \\
+5 & \text{if } d = 20 \\
+10 & \text{if } d = 60 \\
+30 & \text{if } d = 180 \\
+50 & \text{if } d = 720 \\
+70 & \text{if } d = 1440 \\
+\end{cases}
+
+\text{Risk}(d, L, A) =
+\begin{cases}
+100 & \text{if } L = 0 \\
+\max\left(0, \frac{R(d)}{L}\right) & \text{if } L \neq 0 \text{ and } A = 0 \\
+\max\left(0, \frac{R(d)}{L} + 1 - \left(\frac{3 \log_6 (A + 1)}{2 (A + 1)}\right)\right) & \text{if } L \neq 0 \text{ and } A \neq 0
+\end{cases}
+\]
+
+The base amount of rewards X is between 0 and 3. If a random integer between 0 and 100 is larger than X \times Risk, then X boxes will be generated.
+
+A box can contain:
 
 \begin{itemize}
-\item \textbf{Chickens}:
-\begin{itemize}
-\item Increased chance of finding eggs.
-\item Increases the yield of crops if found during exploration.
-\item Higher rarity of animal resources.
-\item Higher chance of getting lost.
-\end{itemize}
-\item \textbf{Cows}:
-\begin{itemize}
-    \item Increased chances of milk.
-    \item Brings more resources on average.
-    \item Higher chance to bring coins.
-    \item Higher chance to bring no boxes.
+    \item Coin (Base: 25\%)
+    \item Crop (Base: 25\%)
+    \item Animal product box (Base: 25\%)
+    \item Raw material box (Base: 15\%)
+    \item Empty box (Base: 10\%)
 \end{itemize}
 
-\item \textbf{Pigs}:
+The types of crops are limited to the building level.
+
+The more animals sent to explore, the more boxes will be returned. The chance that an animal survives is 100\%−Risk (with slight variations for chickens).
+
+Every surviving animal brings one box, except for cows, which may bring no boxes, and goats, which may bring up to 3 boxes.
+
+Choosing which animals to send on the exploration has its perks and downsides.
+
+
 \begin{itemize}
-    \item Increased chances of truffles.
-    \item Higher rarity of craft resources.
-    \item Higher amount of craft resources.
-    \item Higher chance of empty boxes.
-\end{itemize}
+    \item \textbf{Chickens}:
+    \begin{itemize}
+        \item Increased yield of eggs if found.
+        (50\% if animal product box is found.)
+        \item Increased amount of crops if found.
+        (First surviving chicken \cdot1.35, Second surviving chicken \cdot1.35^2 ...).
+        \item Increased spread of amount of crops if found.
+        (First surviving chicken \cdot1.15, Second surviving chicken \cdot1.15^2 ...).
+        \item Higher rarity of animal resources.
+        \item Lower chance of getting home safe
+        (First surviving chicken -5\%, Second surviving chicken -10\% ...).
+    \end{itemize}
+    \item \textbf{Cows}:
+    \begin{itemize}
+        \item Increased yield of milk if found.
+        (50\% if animal product box is found.)
+        \item Brings more resources on average.
+        (First cow \cdot1.25, Second cow \cdot1.25^2 ...).
+        \item Higher chance to bring coins.
+        (First surviving cow +5\%, Second surviving cow +10\% ...).
+        \item Lower chance to bring a box.
+        (First surviving cow -10\%, Second surviving cow -20\% ...).
+    \end{itemize}
+
+    \item \textbf{Pigs}:
+    \begin{itemize}
+        \item Increased chances of truffles.
+        (50\% if animal product box is found.)
+        \item Higher rarity of craft resources if found.
+        \item Higher amount of craft resources if found.
+        (First surviving pig \cdot1.35, Second surviving pig \cdot1.35^2 ...).
+        \item Higher chance of empty boxes.
+        (First surviving pig +15 weight, Second surviving pig +30 weight ...).
+    \end{itemize}
 
 \item \textbf{Goats}:
 \begin{itemize}
     \item Increased chances of wool.
+    (50\% if animal product box is found.)
     \item Has a chance to bring 2 boxes.
+    (10\% + (0.5\% for the first surviving goat, 1\% for the second surviving goat ...))
     \item Has a small chance to bring 3 boxes.
+    (5\% + (0.5\% for the first surviving goat, 1\% for the second surviving goat ...))
     \item Brings lower resources on average.
+    (First pig \cdot0.95, Second pig \cdot0.95^2 ...).
 \end{itemize}
 \end{itemize}
 
-Keep in mind exploring carries a risk with it; long explorations will carry a higher risk. Boats can get lost, and so will the animals and boxes on those boats. There is also a risk that no boats will return; in that case, no boxes are returned, and the building will have a longer downtime. The risk decreases the higher the level of the building and the higher the investment in the building is.
 
 \subsection{Animals}
-
-Losing animals is possible in attack and during exploration; this will lower the defense level for a while until the animals are bred again.
-
+- Can be sent on explorations.
 \begin{enumerate}
     \item Chicken
     \item Cow
@@ -135,13 +198,52 @@ Losing animals is possible in attack and during exploration; this will lower the
 
 \subsection{Attacking}
 
-High stamina means more resources gathered. High damage means higher attack points.
-\begin{enumerate}
-    \item \textbf{Chicken}: Low Defense, High stamina, Low Damage.
-    \item \textbf{Cow}: High Defense, Low stamina, Medium Damage.
-    \item \textbf{Pig}: Medium Defense, Low stamina, Medium Damage.
-    \item \textbf{Goat}: Medium Defense, Medium stamina, High Damage.
-\end{enumerate}
+The attack functionality in this Flask application is designed to manage and execute virtual attacks between users. This functionality includes selecting an opponent, displaying attack animations, and determining the result of an attack. It ensures that only authenticated users can participate in these actions, leveraging user session data and custom logic to facilitate fair and engaging interactions.
+
+\subsubsection{Key Components}
+
+\paragraph{Selecting an Opponent}
+When a user decides to attack, the system first identifies a suitable opponent. This is done through a function that:
+\begin{itemize}
+    \item Excludes the current user and their friends.
+    \item Filters out users who have been recently searched.
+    \item Considers only users whose defense score is within a certain range of the current user's attack score.
+    \item Sorts potential opponents by their scores and selects the most suitable one.
+\end{itemize}
+
+\paragraph{Rendering Attack Views}
+The system provides different views for the attack process:
+\begin{itemize}
+    \item \textbf{Visit Opponent's World}: Displays the selected opponent’s virtual world.
+    \item \textbf{Attack Animation}: Shows an animation of the attack sequence.
+    \item \textbf{Attack Result}: Presents the outcome of the attack, detailing whether the user won or lost and the resources gained or lost.
+\end{itemize}
+
+\paragraph{Determining Attack Outcomes}
+The outcome of an attack is determined based on the attack and defense scores of the user and their opponent:
+\begin{itemize}
+    \item If the score difference is significant, the outcome is more predictable (win or lose).
+    \item For close scores, the outcome may be decided randomly to add an element of chance.
+\end{itemize}
+The system calculates the resources to be transferred based on the result:
+\begin{itemize}
+    \item If the user wins, they gain a percentage of the opponent’s resources.
+    \item If the user loses, they lose a similar percentage of their resources to the opponent.
+\end{itemize}
+
+\paragraph{Updating Resources}
+Following the attack, the system updates the resource counts for both the user and their opponent:
+\begin{itemize}
+    \item Resources are incremented or decremented based on the attack result.
+    \item This ensures that the game’s resource economy reflects the outcomes of user interactions accurately.
+\end{itemize}
+
+\paragraph{Summary}
+This attack functionality is a crucial part of the application, providing an engaging way for users to interact and compete. It carefully manages the selection of opponents, rendering of attack sequences, determination of outcomes, and updates to resources, ensuring a balanced and dynamic user experience.
+
+
+
+
 
 \subsection{Resources}
 
@@ -170,28 +272,73 @@ High stamina means more resources gathered. High damage means higher attack poin
         \item Milk (Common)
         \item Chocolate Milk (Uncommon)
         \item Strawberry Milk (Rare)
-        \item Soy Milk (Epic)
-        \item Blueberry Milk (Legendary)
+        \item Blueberry Milk (Epic)
+        \item Soy Milk (Legendary)
         \item Wool (Common)
         \item Alpaca Wool (Uncommon)
         \item Cashmere Wool (Rare)
-        \item Irish Wool (Epic)
-        \item Dolphin Wool (Legendary)
+        \item Dolphin Wool (Epic)
+        \item Irish Wool (Legendary)
         \item Truffle (Common)
-        \item Bronze Truffle (Uncommon)
-        \item Gold Truffle (Rare)
-        \item Forest Truffle (Epic)
-        \item Winter Truffle (Legendary)
+        \item Winter Truffle (Uncommon)
+        \item Bronze Truffle (Rare)
+        \item Gold Truffle (Epic)
+        \item Forest Truffle (Legendary)
     \end{enumerate}
     \item \textbf{Craft} (From exploring and attacking)
     \begin{enumerate}
         \item Stick (Common)
         \item Stone (Uncommon)
-        \item Plank (Uncommon)
-        \item Log (Rare)
-        \item Ingot (Rare)
+        \item Plank (Rare)
+        \item Log (Epic)
+        \item Ingot (Legendary)
     \end{enumerate}
 \end{enumerate}
+
+\subsection{Idle Mechanics}
+When the user logs in and is on the map, the game will fetch all resources and animals and check what the last time the user got hourly resources and animals was.
+Then the amount of hours past is calculated and rounded down (floor).
+for animals this floored value is multiplied by the amount of buildings that is unlocked for that animal (pigpen for pigs, cowbarns for cows etc.) and these animals will be added to the database if the user has enough space that is of course.
+for animal products (Milk, etc.) this floored value is multiplied by the total level of the buildings that are unlocked for that animal (I have 3 unlocked pigpens, 2 are level 5 and 1 level 4, then the total level is 14).
+Then for each produced product (for example. for each Milk that is received),
+we will randomly select an animal product rarity and the product that matches the rarity will be added to the barn if the user has enough space of course.
+
+After this happens a timer for the remaining part of the hour (12:38, then a timer for 22 minutes will be set) after the timer is over the same process will happen again but instead of computing the past hour, we will just give value 1.
+
+\subsection{Silo, Barn, animal shelter capacity}
+When we add resources to the user through the 'api/add-resources' endpoint, we will calculate the limit of the silo / barn.
+Respectively for animals through the 'api/add-animals' endpoint, we will calculate the limit of the animal shelter.
+This value will be given to the data access of resources and respectively animals when adding resources/ animals where we will make sure the user doesn't get more resources / animals than the buildings limit.
+In the silo, crops will be stored and in the barn, all other resources besides money will be stored.
+In pigpens, cowbarns, chickencoops, and goatbarns, pigs, cows, chickens and goats will be stored.
+
+We can see what is in the silo and barn through the ui which can be viewed through their popups.
+\subsection{Upgrading vs augmenting}
+A building's level will increase by one when it is upgraded.
+Upgrading can be done with a combination of coins and resources.
+The building level can only be upgraded to level 10 because its expenses are pre-defined.
+When a building is upgraded, its stats are significantly increased and it also changes how the building appears on the map.
+
+
+Similarly, augmenting a will increase the augment level by 1.
+What's different is augmentation requires only money.
+The building's augment cost logarithmically increases with augment level,thus the augment level can reach infinite values up to 4 bytes (limit of integer).
+A building's look remains unchanged when it is augmented, and it also marginally increases a few (not all) of its stats.
+
+The reason why we have 2 ways of increasing a building's level is to balance the game.
+When two players own buildings at the same level, there could be an issue (i.e. they have the same attack and defense power).
+However, if a player upgrades his building, he will have an advantage over other players due to his increased attack and defense power.
+
+Additionally, since augmenting simply costs money, it may be done more frequently than upgrading.
+Upgrading a building requires the player to work hard for resources, but augmenting can already be done when enough money is available.
+
+Both upgrading and augmenting require conditions which are check. For example the user need enough resources, for upgrading max level can't exceed 10 or the current town hall level. When upgrading or augmenting, the resource cost is decreased from the user using api/add-resources rout to update the database.
+
+\subsection{Farming}
+
+The user is able tho palant crops on fiels. the type of crop the user is able to plant and teh amount gaind when farming is based on the field level.
+
+When the user reaps his crops, the amount is again updated to the database using the add-resources api.
 
 \section{Technologies Used}
 \begin{itemize}
@@ -204,8 +351,13 @@ High stamina means more resources gathered. High damage means higher attack poin
 
 \section{Implementation Details}
 \subsection{Database Schema}
-The database schema is designed to efficiently handle game data and user interactions. It includes tables for users, game states, transactions, and market prices, reflecting the dynamic nature of the game's economy.
-\\ $\ast$ TODO: Add more details here. e.g. image of the final db schama
+The database schema is designed to efficiently handle game data and user interactions. It includes tables for users, game states, transactions, and market prices, reflecting the dynamic nature of the game's economy. This image is at the end of the document.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/db-diagram.png}
+    \caption{Final Database Schema}
+    \label{fig:db_schema}
+\end{figure}
 
 \subsection{Backend Logic}
 The backend handles requests from the client, processes game logic, and interacts with the database. It ensures that all player actions are reflected in real-time and manages the continuous accumulation of resources even when the player is offline.
@@ -248,11 +400,24 @@ The backend supports functionalities related to the management of friendships be
     .../api/friends
     \end{verbatim}
     \item \textbf{Visit Friends World:} The system allows users to visit their friends' farms, fostering engagement and interaction between players. This feature is implemented in the frontend, where users can navigate to their friends' maps and view their progress.
+
     The backend enables the user to see the map and buildings of there friends. This is done by fetching the building information of the user that is being visited.
 \end{itemize}
+
 \paragraph{Messaging Feature:}
-\\ $\ast$ TODO
 These features not only enhance user engagement but also contribute to the game's social dynamics, making the gaming experience more interactive and enjoyable for users.
+\begin{itemize}
+    \item \textbf{Messaging window:} You can retrieve the previous messages from the right friend. this is done by using  A GET request that is made to the API endpoint, where friend-name is the name of the friend whose messages are being fetched.
+    \begin{verbatim}
+    /api/messages/${friend_name}
+    \end{verbatim}
+    \item \textbf{Message Element Creation:} A div element is created for the message, with a class of received if the message is from the friend, or sent if it is from the current user. The message content is added to this div.
+    \item \textbf{Timestamp Divider:}  If there is an hour or more difference between the current message and the last message, a timestamp divider is added to indicate the time.
+\end{itemize}
+
+
+
+
 \subsubsection{Leaderboard Feature}
 The backend manages the leaderboard by fetching and calculating user scores, sorting them, and handling specific leaderboard queries. Here's how it is structured:
 \begin{itemize}
@@ -278,51 +443,6 @@ route : \begin{verbatim}`@api/building-map`\end{verbatim}
     \item \textbf{update\_map Function:} inserts a given building json in the database. If it exists, it updates, else it creates a new entry.
     \item \textbf{fetch\_building\_information Route:} Handles GET requests to the requested building info. if the requested building does not exist, returns an error.
 \end{itemize}
-
-\subsubsection{Attack Feature}
-The attack feature allows users to visit opponents' worlds and simulate an attack, determining the outcome based on scores.
-\begin{itemize}
-    \item \textbf{Endpoint} The route `/visit\_oppenents\_world` (methods=['GET']) handles the attack requests.
-    \item \textbf{Opponent Selection} When a user visits the endpoint, the system selects an opponent who meets certain criteria (not previously searched, score difference less than 1000, and not a friend).
-        \begin{itemize}
-            \item The opponent is chosen using `choose\_opponent\_logic()` which retrieves all users, the current user's friends, and calculates scores for each user based on their resources.
-            \item If no suitable opponent is found, the previously searched list is reset, and the user is notified via the `no\_opponent.html` template.
-        \end{itemize}
-    \item \textbf{Attack Simulation} Once an opponent is selected, the user visits the opponent's world.
-        \begin{itemize}
-            \item The outcome of the attack is determined by comparing the player's score with the opponent's score using `determine\_attack\_outcome(player\_score, opponent\_score)`.
-            \item The attack outcome can be a win, loss, or a random outcome if the scores are close.
-            \item The resources transferred are calculated as a percentage of the opponent's resources, adjusted based on the attack outcome.
-        \end{itemize}
-    \item \textbf{Response} The attack view is rendered using the `visit\_opponents\_world.html` template, displaying the opponent's world and the result of the attack.
-\end{itemize}
-
-\subsubsection{Gifts Feature}
-The gifts feature allows users to receive random gifts based on their last login time and the duration they have been playing the game.
-\begin{itemize}
-\item \textbf{Endpoint} The route /gifts (methods=['GET']) handles the gift requests.
-\item \textbf{Gift Availability} When a user visits the endpoint, the system checks if the user is eligible for a gift based on their last gift time.
-\begin{itemize}
-\item The user is eligible for a gift if their last gift time is more than an hour ago.
-\item If eligible, the system calculates bonuses based on the time the user has been playing the game and the time since their last login.
-\end{itemize}
-\item \textbf{Bonus Calculation} The bonuses are determined as follows:
-\begin{itemize}
-\item \textbf{Time Played Bonus} - One bonus point is awarded for each month the user has been playing the game.
-\item \textbf{Recent Login Bonus} - Up to 60 bonus points are awarded based on how recently the user logged in, with one point subtracted for each minute since the last login.
-\end{itemize}
-\item \textbf{Gift Selection} If the user is eligible, a random gift is chosen from a predefined list of gifts.
-\begin{itemize}
-\item The amount of the gift is calculated by adding the base value of the gift to the time played bonus and the recent login bonus.
-\end{itemize}
-\item \textbf{Database Update} Once a gift is determined:
-\begin{itemize}
-\item The chosen gift and its amount are updated in the database for the current user.
-\item The last gift time for the user is updated to the current time.
-\end{itemize}
-\item \textbf{Response} The gifts view is rendered using the gifts.html template, displaying the randomly selected gift and its amount, or a message indicating no gifts are available if the user is not eligible.
-\end{itemize}
-
 
 
 \subsection{Frontend Interface}
@@ -403,7 +523,7 @@ This is used to display various details about the building of interest and also 
 pop-up contains a "Building Info" title, the name of the type of building, a small text with some information (namely
 the purpose of the building). On top of that there are, depending on the type of building, potentially some stats that
 include the level the building is at and other stats like upgrade cost, defense, eggs/hour, etc. Lastly there is an
-upgrade button and a close button that are both animated when clicked.
+upgrade button, a close button and augment button that are all animated when clicked.
 
 When right-clicking another building while a pop-up is already open, a switch animation is displayed to make clear that
 you are switching to the information of a different building. When right-clicking the same building twice this animation
@@ -441,8 +561,12 @@ The friends and messaging features are central to fostering a community environm
     \item \textbf{HTML and CSS:} The friends/dashboard.html file structures the friends page, displaying the user's friends list. The friends.css file styles the page, ensuring a consistent design with the rest of the application.
     \item \textbf{JavaScript:} The loadFriends() function fetches the user's friends list from the backend API. It populates the friends table in the HTML dynamically, ensuring that users can easily view and interact with their friends. Error handling is included to manage and alert users in case of API failures. The visitFriendsWorld() function allows users to visit their friends' farms, enhancing social interactions within the game.
 \end{itemize}
-\paragraph{Messaging Feature}
-\\ $\ast$ TODO
+
+\paragraph{Mesaging Feature}
+\begin{itemize}
+    \item \textbf{HTML and CSS:} The chat-window.html files structures the message window page, displaying a chat window with messages between you and a friend. The chat-window.html section css file styles the page, ensuring a consistent design with the rest of the application.
+    \item \textbf{JavaScript:}The loadChat() function handles loading the chat messages for a specific friend. Updates the chat window title to the friend's name, also let you as user visit your friends world with the visit world button. The chat messages  are fetched from the server, processes them, and displays them in the chat window.
+\end{itemize}
 
 \subsubsection{Leaderboard Feature}
 \begin{itemize}
@@ -450,64 +574,26 @@ The friends and messaging features are central to fostering a community environm
     \item \textbf{JavaScript:} A JavaScript function loadLeaderboard() (event handling; this function is triggered when document content is fully loaded) is responsible for fetching the leaderboard data from the backend API. Upon successful fetch, it populates the leaderboard table in the HTML dynamically. Error handling is incorporated to manage and alert users in case of failures in data retrieval.
 \end{itemize}
 
-\subsubsection{Attack Feature}
+\subsubsection{Books}
 \begin{itemize}
-    \item \textbf{HTML and CSS:}
-        \begin{itemize}
-            \item \textbf{attack\_animation.html:} This file provides the structure for the attack animation view, including styled emoji swords for visual effect. The animation runs on page load and redirects to the attack result page after a short delay.
-            \item \textbf{attack\_result.html:} This file displays the results of an attack, showing a table of resources taken. It includes basic styling and an optional script for dynamic updates.
-            \item \textbf{no\_opponent.html:} This file informs the user when no opponents are available for an attack. It includes a simple message and basic layout styling.
-            \item \textbf{visit\_opponents\_world.html:} This file is used for rendering the opponent's world view during an attack. It includes several canvas elements for displaying game visuals and links to JavaScript for game logic.
-            \item \textbf{visit\_opponents\_UI.html:} This file contains the user interface for visiting an opponent's world, including buttons for resources and attacks, as well as dynamic elements for displaying resource information.
-        \end{itemize}
-    \item \textbf{JavaScript:}
-        \begin{itemize}
-            \item \textbf{attack\_animation.html:} A script triggers the animation of sword emojis and redirects to the attack result page after a specified time.
-            \item \textbf{visit\_opponents\_UI.html:} Contains multiple JavaScript functions:
-                \begin{itemize}
-                    \item \textbf{clickResources():} Handles the display and hiding of the resource overlay. Fetches the opponent's resources from an API and dynamically updates the resource display.
-                    \item \textbf{updateResources(resources):} Updates the HTML to show the opponent's resources.
-                    \item \textbf{getImage(resourceType):} Returns the appropriate image for a given resource type.
-                \end{itemize}
-            \item \textbf{visit\_opponents\_world.html:} Includes a script to load game data specific to the opponent's world using the `data-opponent` attribute.
-        \end{itemize}
+    \item \textbf{HTML and CSS:} The bookChat.html and bookMarket.html contain the HTML structure of the books, covers and pages (front and back), along with the content for the chat and the market respectively.
+    \item \textbf{JavaScript:} There is a JavaScript function: openBook() to open the cover of the book and a closeBook() to close the cover of the book. In addition, you have the goNextPage() function to go to the next page and the goPrevPage() function to go to the previous page. In addition to these functions, there are querySelectors for the covers, pages and buttons
 \end{itemize}
 
-
-\subsubsection{book and welcomescreen}
+\subsubsection{Settings and Sound Feature}
+The settings and sound features are integral to creating an immersive and personalized gaming experience, enhancing user engagement and enjoyment within the game.
+\paragraph{Settings Feature}
 \begin{itemize}
-    welcome_screen.html and book.html\\
-    here you get the explanation of the game.\\
-    The welcome screen pops up after registering and contains a brief introduction about the main aspects of the game.\\
-    Book can be found at the settings menu and contains a more detailed explanation of the game aspects.
+    \item \textbf{HTML and CSS:} The settings.html contains the HTML structure of the settings. This html file creates the buttons needed in the settins: LOG-OUT, SOUND, ZOOM.  The CSS file settings.css styles settings page, matching the design of other pages.
+    \item \textbf{JavaScript:} There is a JavaScript file, where the setting functions are implemented. There is a function soundUp() that lets you volume up the sound. The variable countSound keeps this value and stores it in a storage. The value is also given as a parameter to the sound function setVolume(). The same with soundDown(). zoomUpPrecent() is a function that controls the variable tilesize in the the file canvas.js for updating the window size. also with zoomDownPrecent().
 \end{itemize}
 
-\subsubsection{Gifts Feature}
+\paragraph{Sound Feature}
 \begin{itemize}
-\item \textbf{HTML and CSS:}
-\begin{itemize}
-\item \textbf{gifts.html:} This file provides the structure for the gifts view. It includes the necessary HTML and inline CSS to display the gift information centered on the page. The content adjusts based on whether a gift is available or not.
+    \item \textbf{HTML and CSS:} The settings.html contains the sound buttons created for this feature.
+    \item \textbf{JavaScript:} There is a javascript file sound.js with a class GameSoundManager that contains functions to control the music in the game controlled by the buttons in settings.js.The function setBackgroundMusic() initializes the music being given and plays it when the background button is on in settings. The function setVolume() is given the variable countSound as parameter from the file settings.js and is used to set the right volume for the background music.
 \end{itemize}
-\item \textbf{HTML Structure:}
-\begin{itemize}
-\item \textbf{Head Section:}
-\begin{itemize}
-\item Includes the head.html template which typically contains metadata and links to stylesheets.
-\item A <style> block defines the .container and .content CSS classes to center the content both vertically and horizontally.
-\end{itemize}
-\item \textbf{Body Section:}
-\begin{itemize}
-\item Includes the header&footer.html template to provide consistent header and footer across the site.
-\item A div with the class container is used to center the content.
-\item Within this container, a div with the class content holds the main content, which includes a heading (<h1>) and conditional content.
-\item \textbf{Conditional Content:}
-\begin{itemize}
-\item If a gift is available, it displays a congratulatory message and details of the gift within a list.
-\item If no gift is available, it displays a message indicating this and encourages the user to check back later.
-\end{itemize}
-\end{itemize}
-\end{itemize}
-\end{itemize}
+
 
 \section{Challenges and Solutions}
 Throughout the development, the team encountered and overcame numerous challenges, such as optimizing database queries and ensuring smooth synchronous player interactions. Specific issues included managing the real-time update of resource levels and implementing secure authentication mechanisms.
@@ -525,7 +611,7 @@ For backend testing, we utilized Pytest, a powerful and flexible testing tool. O
             \item \textbf{Resources Endpoint:} Checked both general and specific resource retrieval endpoints for proper authorization checks and JSON formatting.
             \item \textbf{Terrain Map Endpoint:} Tested user-specific access to terrain maps, ensuring the integrity and format of the terrain data returned.
             \item \textbf{Market Data Access:} We insert and fetch new crop elements , to check if the database requests work.
-            \item \textbf{Building Data Access:} We check if the databse is updated correctly when inserting new elements and fetching them.
+            \item \textbf{Building Data Access:} We check if the database is updated correctly when inserting new elements and fetching them.
             \item \textbf{Friendships Endpoint:} Assured that users could reliably retrieve their list of friends, with responses properly formatted as JSON arrays.
             \item \textbf{Chat Endpoint:} Confirmed functionality for retrieving chat messages between users, focusing on correct data handling and security measures.
         \end{itemize}

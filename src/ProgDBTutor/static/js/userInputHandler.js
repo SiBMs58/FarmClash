@@ -28,21 +28,12 @@ export class UserInputHandler {
 
 
         // ———————————————————
-        // Add event listeners: //
+        // Add event listeners:
 
         document.addEventListener('keydown', (event) => {
             this.handleKeyDown(event);
         });
-        /*
-        document.getElementById("canvasContainer").addEventListener('contextmenu', function(event) {
-            event.preventDefault(); // Prevents the default context menu from showing
-            console.log('Right click on canvas detected.');
 
-            openPopup();
-
-            return false; // Some browsers may require this to prevent the default context menu
-        });
-*/
         // To check whether to register click or drag
         let clickStartPosition = null;
         document.getElementById("canvasContainer").addEventListener('mousedown', (event) => {
@@ -141,14 +132,11 @@ export class UserInputHandler {
             case 'ArrowDown':
                 this.sendScrollMessage('Down');
                 break;
-            case 'Escape':
-                // todo move van gebouw cancelen als je het aan het verplaatsen bent
-                break;
             case 'o':
-                togglePopup();
+                togglePopup(); // For debugging purposes
                 break;
             case 'r':
-                this.cheatResources();
+                this.cheatResources(); // For debugging purposes
                 break;
             default:
                 // Optional: handle any other keys
@@ -197,10 +185,10 @@ export class UserInputHandler {
         }
     }
 
-    /** Checks all layer classes one by one to see if the user clicked on something in the layer.
+    /**
+     * Checks all layer classes one by one to see if the user clicked on something in the layer.
      * Classes have the ability to set themselves as a priorityClickClass such that next click will be sent to them
      * regardless of class order.
-     *
      * @param x on screen
      * @param y on screen
      */
@@ -225,6 +213,11 @@ export class UserInputHandler {
         }
     }
 
+    /**
+     * Goes through all subscribed classes and calls their 'handleRightClick' function.
+     * @param x - x coord on screen
+     * @param y - y coord on screen
+     */
     handleRightClickInput(x, y) {
         for (const currClass of this.classes) {
             if (typeof currClass.handleRightClick === 'function' && currClass.handleRightClick(x,y) === true) {
@@ -246,6 +239,10 @@ export class UserInputHandler {
         }
     }
 
+    /**
+     * This is only for debugging purposes.
+     * @returns {Promise<void>}
+     */
     async cheatResources() {
         const resources = {};
         items.forEach(item => {

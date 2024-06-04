@@ -2,16 +2,21 @@ import { BaseMap } from "./baseMap.js";
 import { utils } from "./utils.js";
 import { EMPTY_TILE} from "./buildingLayer.js";
 
-
+/**
+ * Returns the asset directory of the assetName.
+ * @param assetName
+ * @returns {*}
+ */
 export function getAssetDir(assetName) {
     return assetName.split('.')[0];
 }
 
+// not used
 function startsWith(name, prefix) {
     return name.slice(0, prefix.length) === prefix;
 }
 
-
+// not used
 function getNextAssetName(assetName) {
     return assetName.replace(/([12])$/, match => match === '1' ? '2' : '1');
 }
@@ -54,17 +59,16 @@ export class TerrainMap extends BaseMap {
 
         super(mapData, _tileSize, username);
 
-        this.tiles = mapData.terrain_tiles;
-        this.ctx = _ctx;
+        this.tiles = mapData.terrain_tiles; // 2D array of the terrain asset names
+        this.ctx = _ctx; // context needed for drawing on-screen
 
-        this.terrainAssetList = AssetList.terrain; // Bevat de json van alle asset file names die ingeladen moeten worden
-        this.terrainAssets = {}; // Bevat {"pad_naar_asset": imageObject}
+        this.terrainAssetList = AssetList.terrain; // Contains the json of all assets that need to be loaded.
+        this.terrainAssets = {}; // Contains {"path_to_asset": imageObject}
 
         this.time = 0; // amount of frames passed
         this.cycle = 2; // animation part
 
-        this.buildingMapInstance = null;
-
+        this.buildingMapInstance = null; // The buildingMapInstance that is used to draw the buildings on top of the terrain.
     }
 
     /**
@@ -77,6 +81,10 @@ export class TerrainMap extends BaseMap {
         // Safe to call stuff here
     }
 
+    /**
+     * Adds the buildingMapInstance to the terrainMapInstance. This is used to draw empty grass tiles under the buildings.
+     * @param buildingMapInstance
+     */
     addBuildingMapInstance(buildingMapInstance) {
         this.buildingMapInstance = buildingMapInstance;
     }
@@ -123,12 +131,12 @@ export class TerrainMap extends BaseMap {
             }
 
 
-            // Map proberen initialiseren:
+            // Try to initialise map
             if (terrainMapData.map_width) {
                 this.map_width = terrainMapData.map_width;
                 console.log("map_width wordt ingeladen...");
             } else {
-                console.log("map_width niet gevonden -> default wordt gebruikt"); // todo later engels maken
+                console.log("map_width niet gevonden -> default wordt gebruikt");
             }
             if (terrainMapData.map_height) {
                 this.map_height = terrainMapData.map_height;
@@ -188,6 +196,10 @@ export class TerrainMap extends BaseMap {
         }
     }
 
+    /**
+     * Returns the all building tile locations.
+     * @returns {*[]} - Array of [y, x] coordinates of the building tiles.
+     */
     getBuildingTileLocations() {
         let buildingTileLocations = [];
         const tileArray = this.buildingMapInstance.tiles;
@@ -200,28 +212,11 @@ export class TerrainMap extends BaseMap {
             }
         }
         return buildingTileLocations;
-
-        /*
-        let buildingTileLocations = [];
-        for (let key in buildingInformation) {
-             if (!Object.hasOwnProperty.call(buildingInformation, key)) {
-                 continue;
-             }
-             const currBuilding = buildingInformation[key];
-             const absoluteLocation = currBuilding.building_location
-             const generalInfoKey = currBuilding.general_information;
-             const tile_rel_locations = buildingGeneralInformation[generalInfoKey].tile_rel_locations;
-             for (let index in tile_rel_locations) {
-                 const tileRelLocation = tile_rel_locations[index][0];
-                 const finalLocation = [tileRelLocation[0] + absoluteLocation[0], tileRelLocation[1] + absoluteLocation[1]]
-                 buildingTileLocations.push(finalLocation);
-             }
-        }
-        return buildingTileLocations;
-
-         */
     }
 
+    /**
+     * Not used
+     */
     isEdgeTile(tileName) {
         if (utils.getAssetDir(tileName) === "Grass") {
             let str = String(tileName);
@@ -235,10 +230,6 @@ export class TerrainMap extends BaseMap {
      * Draws the tiles on screen using the 'this.tiles' map.
      */
     drawTiles() {
-        // getAll building locations
-        //const buildingInformation = this.buildingMapInstace.buildingInformation;
-        //const buildingGeneralInformation = this.buildingMapInstace.buildingGeneralInformation;
-
         const buildingTileLocations = this.getBuildingTileLocations();
 
         const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
@@ -262,13 +253,7 @@ export class TerrainMap extends BaseMap {
                 }
 
                 if (isBuildingLocation) {
-                    const currTile = this.tiles[i_map][j_map];
-                    const assetDir = utils.getAssetDir(currTile)
-                    //if (assetDir !== "Water" && !this.isEdgeTile(currTile)) {
-                    //    filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
-                    //}
                     if (j_map < 3){
-                        //TODO bay building relative positions
                         filePath = "/static/img/assets/terrain/Water/Water.1.1.png";
                     } else if (this.buildingMapInstance.isOnGrassRectangle(i_map, j_map)) {
                         filePath = "/static/img/assets/terrain/Grass/Grass.0.png";
@@ -309,35 +294,6 @@ export class TerrainMap extends BaseMap {
         }
     }
 
-    /*
-    waterAnimation2() {
-        if (this.time > 48){
-            this.time -= 48;
-            const windowTileHeight = Math.ceil(window.innerHeight / this.tileSize);
-            const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
-            for (let y_screen = 0, i_map = this.viewY; y_screen < windowTileHeight; y_screen++, i_map++) {
-                for (let x_screen = 0, j_map = this.viewX; x_screen < windowTileWidth; x_screen++, j_map++) {
-                    const currTile = this.tiles[i_map][j_map];
-                    if (getAssetDir(currTile) === "Water"){
-                        let filePath = "/static/img/assets/terrain/Water/" + getNextAssetName(currTile, this.cycle);
-                        const img = this.terrainAssets[filePath];
-                        if (img) {
-                            this.ctx.drawImage(img, x_screen * this.tileSize, y_screen * this.tileSize, this.tileSize, this.tileSize);
-                        } else {
-                            console.error("waterAnimation : TerrainMap.drawTiles(): image does not exist")
-                            console.error(filePath)
-                        }
-                    }
-                }
-            }
-
-            this.cycle = 3 - this.cycle;
-        }
-        else{
-            this.time +=1;
-        }
-    }
-     */
 
     /**
      * Gets called by the Tick class with regular time intervals.
@@ -345,11 +301,10 @@ export class TerrainMap extends BaseMap {
     tick() {
         //console.log("Terrain layer tick");
         this.waterAnimation();
-
     }
 
     /**
-     * Handles click from user.
+     * Handles click from user. Not used for anything. It just needs to return true for the userInputHandler.
      * @param x
      * @param y
      * @returns {boolean} returns true if the click is used by this class.
@@ -361,5 +316,4 @@ export class TerrainMap extends BaseMap {
         console.log(`click op terrain layer, tile x: ${tileX}, y: ${tileY}`);
         return true;
     }
-
 }

@@ -177,8 +177,5 @@ describe("TerrainMap Tests", function() {
         });
     });
 
-    // todo scroll down and right
-
-
 
 });

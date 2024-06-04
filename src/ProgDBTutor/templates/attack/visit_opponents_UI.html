@@ -49,18 +49,37 @@
             });
         }
 
-        function updateResources(resources) {
+       function updateResources(resources) {
             const popupDiv = document.querySelector('.popup');
             let resourceHTML = '';
+            const displayTypes = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant',];
+            let money = 0
+           resources.forEach(resource => {
+               if (displayTypes.includes(resource.resource_type)) {
+                   resourceHTML += `${getAmountDisplay(resource.amount, resource.resource_type)}${getImage(resource.resource_type)}`;
+                  resourceHTML += `<img src="../../static/img/UI/display.extender.png" alt="" draggable="false">`.repeat(5);
+               }else if(resource.resource_type === 'Money'){
+                   money = resource.amount
+               }
+           });
+            resourceHTML += `${getAmountDisplay(money, 'money')}`;
 
-            resources.forEach(resource => {
-                //if(resource.resource_type === 'Money') return; // Skip money
 
-                const symbol = getImage(resource.resource_type);
-                resourceHTML += `<p>${resource.amount}${symbol}</p>`;
-            });
+            popupDiv.innerHTML = `<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">` + resourceHTML
+                + `<img src="../../static/img/UI/display.money.right.png" alt="" draggable="false">`;
+        }
+        function getAmountDisplay(amount, type){
+            let value = amount.toString();
 
-            popupDiv.innerHTML = resourceHTML;
+            let HTML = ''
+            for (let i = 0; i < value.length; i++) {
+                if(i === 4 && type !== 'money'){
+                    HTML += `<img src="../../static/img/UI/display.+.png" alt="." draggable="false">`;
+                    break;
+                }
+                HTML += `<img src="../../static/img/UI/display.${value[i]}.png" alt="${value[i]}" draggable="false">`;
+            }
+            return HTML
         }
 
         function getImage(resourceType) {
@@ -80,7 +99,6 @@
                 default: return ''; // Default case if no symbol is matched
             }
         }
-
     </script>
 
     <footer style="display: flex; justify-content: space-between; align-items: end;">

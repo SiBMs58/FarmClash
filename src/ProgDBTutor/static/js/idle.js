@@ -26,7 +26,7 @@ function initialize(){
         fetchBuildings().then(() => {
             fetchLastUpdated().then(() => {
                 updateOfflineProduction();
-                scheduleNextHourExecution();
+                scheduleNextHour();
             });
         });
     });
@@ -55,14 +55,14 @@ function updateOfflineProduction(){
     }
     const product = generateAnimalProduct(amount);
     const animals = generateAnimals(amount);
-    sendAnimalQuantity(animals);
-    sendResourceQuantity(product);
-
-    const total = Object.keys(animals).length + Object.keys(product).length;
-    const productMessage = formatItems(product);
-    const animalsMessage = formatItems(animals);
-    const message = `You received ${productMessage} and ${animalsMessage} while away. If you have no place to store them, they will be lost.`;
-    displayPopup(message, total);
+    sendAnimalQuantity(animals).then(() => {
+        sendResourceQuantity(product).then(() => {
+            const animalsMessage = formatMessage(animals);
+            const productMessage = formatMessage(product);
+            const message = `You received ${productMessage} and ${animalsMessage} while away.`;
+            displayPopup(message);
+        });
+    });
 }
 
 
@@ -78,14 +78,14 @@ function updateOfflineProduction(){
  * Schedules the next update of the game state.
  * It calculates the milliseconds until the next hour and sets a timeout to setup the next hour.
  */
-function scheduleNextHourExecution() {
+function scheduleNextHour() {
     function millisecondsUntilNextHour() {
         const now = new Date();
         const nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()+1, 0, 0, 0);
         return nextHour - now;
     }
     setTimeout(function() {
-        setupNextHour();
+        nextHourProduction();
     }, millisecondsUntilNextHour());
 }
 /**
@@ -94,7 +94,7 @@ function scheduleNextHourExecution() {
  * sends these quantities, and displays a popup message to the user.
  * Finally, it schedules the next hour execution.
  */
-function setupNextHour(){
+function nextHourProduction(){
     pigpenLevel = 0;
     cowbarnLevel= 0;
     chickencoopLevel = 0;
@@ -106,15 +106,16 @@ function setupNextHour(){
     fetchBuildings().then(() => {
         const product = generateAnimalProduct(1);
         const animals = generateAnimals(1);
-        sendResourceQuantity(product);
-        sendAnimalQuantity(animals);
-
-        const productMessage = formatItems(product);
-        const animalsMessage = formatItems(animals);
-        const message = `You received ${productMessage} and ${animalsMessage} while away.`;
-        displayPopup(message);
+        sendResourceQuantity(product).then(() => {
+            sendAnimalQuantity(animals).then(() => {
+                const animalsMessage = formatMessage(animals);
+                const productMessage = formatMessage(product);
+                const message = `You received ${productMessage} and ${animalsMessage} while away.`;
+                displayPopup(message);
+            });
+        });
+        scheduleNextHour();
     });
-    scheduleNextHourExecution();
 }
 
 
@@ -200,10 +201,6 @@ function generateAnimalProduct(amount){
 
 
 
-
-
-
-
 //_________________________ API REQUESTS _________________________//
 /**
  * Fetches the buildings from the server by fetching the level of each type of building.
@@ -257,6 +254,7 @@ async function fetchBuildingLevel(buildingType) {
         console.error(`Error fetching ${buildingType} information:`, error);
     }
 }
+
 /**
  * Fetches the user's level from the server.
  * @returns {Promise<number>} - A promise that resolves to the user's level
@@ -271,6 +269,7 @@ async function fetchUserLevel(){
         return 0;
     }
 }
+
 /**
  * Fetches the last updated time from the server.
  * @returns {Promise} - A promise that resolves when the last updated time has been fetched
@@ -299,14 +298,15 @@ async function fetchLastUpdated(){
         console.error('Error fetching animal:', error);
     }
 }
+
 /**
  * Sends the quantity of resources to the server.
  * @param {Object} data - The quantity of each type of resource
  * @returns {Promise} - A promise that resolves when the server has acknowledged the data
  */
 async function sendResourceQuantity(data){
-    let copy = { ...data };
-    copy["idle"] = true;
+    let sendData = { ...data };
+    sendData["idle"] = true;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-resources";
     try {
@@ -315,27 +315,25 @@ async function sendResourceQuantity(data){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(copy)
+            body: JSON.stringify(sendData)
         });
 
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            console.log('Resources updated successfully:', jsonResponse);
-        } else {
+        if (!response.ok) {
             console.error('Failed to update resources:', response.status);
         }
     } catch (error) {
         console.error('Error occurred while updating resources:', error);
     }
 }
+
 /**
  * Sends the quantity of animals to the server.
  * @param {Object} data - The quantity of each type of animal
  * @returns {Promise} - A promise that resolves when the server has acknowledged the data
  */
 async function sendAnimalQuantity(data){
-    let copy = { ...data };
-    copy["idle"] = true;
+    let sendData = { ...data };
+    sendData["idle"] = true;
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-animals";
     try {
@@ -344,19 +342,17 @@ async function sendAnimalQuantity(data){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(copy)
+            body: JSON.stringify(sendData)
         });
 
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            console.log('Animals updated successfully:', jsonResponse);
-        } else {
+        if (!response.ok) {
             console.error('Failed to update animals:', response.status);
         }
     } catch (error) {
         console.error('Error occurred while updating animals:', error);
     }
 }
+
 
 
 
@@ -392,11 +388,12 @@ function displayPopup(message, total = 5) {
         popup.style.display = 'none';
     }, displayTime + 600);
 }
+
 /**
  * Formats a list of items for display.
  * @param {Object} items - The items to format
  * @returns {string} - The formatted string
  */
-function formatItems(items) {
+function formatMessage(items) {
     return Object.entries(items).map(([key, value]) => `${value} ${key}`).join(', ');
 }

@@ -1,12 +1,11 @@
 import { TerrainMap } from './terrainLayer.js'
 import { BuildingMap } from "./buildingLayer.js";
 import { CropMap } from "./cropLayer.js";
-//import { UICanvasLayer } from "./uiCanvasLayer.js";
 import { generateRandomTerrainMap } from './developerFunctions.js'
 import { UserInputHandler } from "./userInputHandler.js";
 import { Ticker } from './ticker.js'
 
-// Set on-screen tileSize-
+// Set on-screen tileSize
 // Function to safely get zoom size from local storage
 function getZoomSize() {
     try {
@@ -26,7 +25,9 @@ function getZoomSize() {
 // Set on-screen tileSize, default to 50 if zoom size is not set
 export let tileSize = getZoomSize();
 
-// Create terrain map
+/**
+ * Create terrain map
+ */
 const terrainCanvas = document.getElementById('terrainCanvas');
 const terrainCtx = terrainCanvas.getContext('2d');
 const mapData = generateRandomTerrainMap(50, 50);
@@ -41,26 +42,16 @@ if (window.friend) {
 }
 console.log(terrainMap);
 
-// Create UI canvas
-//const uiCanvas = document.getElementById('uiCanvas');
-//const uiCtx = uiCanvas.getContext('2d');
-//const uiCanvasLayer = new UICanvasLayer(tileSize, uiCtx);
-
-// Create CropMap
+/**
+ * Create crop map
+ */
 const cropCanvas = document.getElementById('cropCanvas');
 const cropCtx = cropCanvas.getContext('2d');
 export const cropMap = new CropMap(undefined, tileSize, cropCtx);
-//export let cropMap;
-//if (window.friend) {
-//    // If friendData is available, use it in the constructor
-//    console.log("Friend data is available", window.friend);
-//    cropMap = new CropMap(undefined, tileSize, cropCtx, terrainMap, uiCanvasLayer, window.friend);
-//} else {
-//    // If friendData is not available, omit it from the constructor
-//    cropMap = new CropMap(undefined, tileSize, cropCtx, terrainMap, uiCanvasLayer);
-//}
 
-// Create building map
+/**
+ * Create building map
+ */
 const buildingCanvas = document.getElementById('buildingCanvas');
 const buildingCtx = buildingCanvas.getContext('2d');
 export let buildingMap;
@@ -96,10 +87,6 @@ function resizeCanvas() {
     buildingCanvas.width = window.innerWidth;
     buildingCanvas.height = window.innerHeight;
     buildingCtx.imageSmoothingEnabled = false;
-
-    //uiCanvas.width = window.innerWidth;
-    //uiCanvas.height = window.innerHeight;
-    //uiCtx.imageSmoothingEnabled = false;
 
     cropCanvas.width = window.innerWidth;
     cropCanvas.height = window.innerHeight;

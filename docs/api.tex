@@ -42,6 +42,25 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \end{verbatim}
 \end{itemize}
 
+\subsection{User statistics}
+\begin{itemize}
+    \item Endpoint: \texttt{/get-user-stats}
+    \item Method: GET
+    \item Description: Get a look at stats of the current user.
+    \item Access: Requires \texttt{logged in} privileges.
+    \item Response: A JSON array of user stats like level, attack, defense, coins, each containing:
+    \begin{verbatim}
+{
+    "level": level_of_user_farm, ...//Townhall level
+    "attack": attack_rating_of_user_farm,
+    "defense": defense_rating_of_user_farm,
+    "coins": coins_amount
+}
+
+
+    \end{verbatim}
+\end{itemize}
+
 
 \section{Maps}
 \begin{itemize}
@@ -82,10 +101,10 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \begin{verbatim}
 [
   {
-    "resource_id": "unique_identifier",
+    "owner": "resource_owner_username",
     "resource_type": "type_of_resource",
     "amount": "quantity_of_resource",
-    "owner": "username_of_owner"
+    "last_updated": "date_of_last_idle_update"
   },
   ... // Additional resource objects
 ]
@@ -97,16 +116,49 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \item Method: GET
     \item Description: Retrieves a list of resources owned by a specific user.
     \item Access: Admin privileges required.
-    \item Response: A JSON array of objects, each representing a resource owned by the specified user. Each object includes the resource type, amount, and a unique resource identifier. Example of a generalized response:
+    \item Response: A JSON array of objects, each representing a resource owned by the specified user. Each object includes the resource type, amount, and an owner username and when it was last updated by idle.js. Example of a generalized response:
     \begin{verbatim}
 [
   {
-    "resource_id": "unique_identifier",
+    "owner": "resource_owner_username",
     "resource_type": "type_of_resource",
-    "amount": "quantity_of_resource"
+    "amount": "quantity_of_resource",
+    "last_updated": "date_of_last_idle_update"
   },
   ... // Additional resource objects
 ]
+    \end{verbatim}
+\end{itemize}
+
+\subsection{General Resource adding Information}
+\begin{itemize}
+    \item Endpoint: \texttt{/add-resources}
+    \item Method: POST
+    \item Description:list of resources for a user. This endpoint is used to add a quantity of animals owned by a user.
+    \item Access: Requires logged-in user privileges.
+    \item Request: A JSON object with general information about the update.
+    The object include as key the Resources and as value the amount of the resource to be added (subtracted in the case of a negative value). The key 'idle' with value true can be added to update the last_updated, for the hourly production of resources. Here is 2 examples.
+    \begin{verbatim}
+{
+    "Zucchini": 20,
+    "Money": 20,
+    "Egg": 20,
+    "Wheat": 20,
+}
+{
+    "idle": true,
+    "Zucchini": 20,
+    "Money": 20,
+    "Egg": 20,
+    "Wheat": 20,
+}
+    \end{verbatim}
+    \item Response: A JSON object indicating the status of the add operation.
+    \begin{verbatim}
+{
+  "status": "success/error",
+  "message": "Description of the outcome of the operation"
+}
     \end{verbatim}
 \end{itemize}
 
@@ -242,70 +294,123 @@ The base URL for all API requests is \texttt{https://team3.ua-ppdb.me/api/}.
     \end{itemize}
 
 
-\section{Animals}
-\subsection{General Animal Information}
+\subsection{Building Information by type}
 \begin{itemize}
-    \item Endpoint: \texttt{/animals}
+    \item Endpoint: \texttt{/fetch-building-information-by-type/<string:building_type>}
     \item Method: GET
-    \item Description: Retrieves a comprehensive list of animals for a user.
-    \item Access: Requires logged in user privileges
-    \item Response: A JSON array of objects, each representing an animal. Each object includes the animal's specie, amount, owner's username, and a when it was last updated by the an 'idle' update. Example of a generalized response:
+    \item {Description:} Handles GET requests to fetch building information for the current user with the given type.
+    \item {Access:} Requires \texttt{logged in} user privileges.
+    \item {Response:} A JSON object containing building information.
+\end{itemize}
+
+\subsection{Exploration Information}
+\begin{itemize}
+    \item Endpoint: \texttt{/exploration}
+    \item Method: GET
+    \item {Description:} Handles GET requests to fetch exploration information for the current user if one is ongoing.
+    \item {Access:} Requires \texttt{logged in} user privileges.
+    \item {Response:} A JSON object containing exploration information. examples:
     \begin{verbatim}
-[
-  {
-    "species": "specie_of_animal",
-    "owner": "username_of_owner",
-    "amount": "quantity_of_animal",
-    "last_updated": "isoformat_of_datetime"
-  },
-  ... // Additional animal objects
-]
+{
+    "ongoing": true,
+    "owner": owner of exploration,
+    "chickens": chickens sent on exploration,
+    "goats": goats sent on exploration,
+    "pigs": pigs sent on exploration,
+    "cows": cows sent on exploration,
+    "exploration_level": level of bay building once exploration was started,
+    "augment_level": augment level of bay building once exploration was started,
+    "started_at": time exploration was started,
+    "duration": duration of exploration in minutes,
+    "surviving_goats": surviving goats on exploration,
+    "rewards_of_goats": amount of rewards the goats brought with them,
+    "surviving_pigs": survining pigs on exploration,
+    "surviving_cows": surviving cows on exploration,
+    "rewards_of_cows": amount of rewards the cows brought with them,
+    "surviving_chickens": surviving chickens on exploration,
+    "base_rewards": base rewards of the exploration,
+}
+{
+    "ongoing": false
+}
     \end{verbatim}
 \end{itemize}
 
+\subsection{Starting an exploration}
+\begin{itemize}
+    \item Endpoint: \texttt{/start-exploration}
+    \item Method: POST
+    \item {Description:} Handles POST requests to start an exploration with given information for the current user.
+    \item {Access:} Requires \texttt{logged in} user privileges.
+    \item {Request:} A JSON object exploration information. example:
+    \begin{verbatim}
+{
+  "chickens": amount of chickens sent on exploration,
+  "goats": amount of goats sent on exploration,
+  "pigs": amount of pigs sent on exploration,
+  "cows": amount of cows sent on exploration,
+  "exploration_level": level of bay building,
+  "augment_level": augment level of bay building,
+  "remaining_time": duration of exploration in minutes
+}
+    \end{verbatim}
+    \item {Response:} status of the exploration:
+    \begin{verbatim}
+{
+    'status': 'success',
+    'message': 'Exploration started successfully.'
+}
+{
+    'status': 'error',
+    'message': 'Failed to start exploration.'
+}
+    \end{verbatim}
+\end{itemize}
+
+\subsection{Stopping an exploration}
+\begin{itemize}
+    \item Endpoint: \texttt{/stop-exploration}
+    \item Method: POST
+    \item {Description:} Handles POST requests to stop an exploration for the current user.
+    \item {Access:} Requires \texttt{logged in} user privileges.
+    \item {Response:} status of stopping the exploration:
+    \begin{verbatim}
+{   'status': 'success',
+    'message': 'Exploration stopped successfully.'
+}
+{
+    'status': 'error',
+    'message': 'Failed to stop exploration.'
+}
+    \end{verbatim}
+\end{itemize}
+
+
+
 \subsection{General Animal Update Information}
 \begin{itemize}
-    \item Endpoint: \texttt{/update-animals}
+    \item Endpoint: \texttt{/add-animals}
     \item Method: POST
     \item Description:updated list of animals for a user. This endpoint is used to update the quantity of animals owned by a user.
     \item Access: Requires logged-in user privileges.
     \item Request: A JSON object with general information about the update.
-    The object includes an update type which describes why the amount was updated (Useful for Idle updates) and a species JSON object which includes an array for each animal. The first element represents wheter or not the amount was updated from the one stored in the database and the second element containing the new value if it was updated (It is done like this remove redundent update DB calls and to not have to call fetches for each animal apart. Here are a few examples.
+    The object includes as key the animal and as value the amount that needs to be added (subtracted in the case of a negative value). The key 'idle' with value true can be added to update the last_updated, for the hourly production of animals. Here are a few examples.
     \begin{verbatim}
 {
-    "update_type": 'idle'
-    "species":
-    {
-	       "Pig": [False]
-	       "Cow": [True, 14]
-	       "Chicken": [True, 12]
-	       "Goat": [True,17]
-    }
+    "Pig": -7,
+	"Cow": 5,
+	"Chicken": 7,
+	"Goat": -5
 }
  ...// 'idle' is used when last_updated needs to be reset aswell this is to make the idle animal increments from their appropriate buildings easier
 {
-    "update_type": 'explore'
-    "species":
-    {
-	       "Pig": [True, 11]
-	       "Cow": [False]
-	       "Chicken": [False]
-	       "Goat": [True,17]
-    }
-
+    "idle": true,
+    "Pig": 2,
+	"Cow": 2,
+	"Chicken": 3,
+	"Goat": 1
 }
 
-{
-    "update_type": 'attack'
-    "species":
-    {
-	       "Pig": [True, 5]
-	       "Cow": [False]
-	       "Chicken": [False]
-	       "Goat": [True,8]
-    }
-
-}
     \end{verbatim}
     \item Response: A JSON object indicating the status of the update operation.
     \begin{verbatim}
