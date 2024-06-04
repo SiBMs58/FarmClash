@@ -265,7 +265,7 @@ we will randomly select an animal product rarity and the product that matches th
 
 After this happens a timer for the remaining part of the hour (12:38, then a timer for 22 minutes will be set) after the timer is over the same process will happen again but instead of computing the past hour, we will just give value 1.
 
-\subsection{Silo, Barn, animal shelter limits}
+\subsection{Silo, Barn, animal shelter capacity}
 When we add resources to the user through the 'api/add-resources' endpoint, we will calculate the limit of the silo / barn.
 Respectively for animals through the 'api/add-animals' endpoint, we will calculate the limit of the animal shelter.
 This value will be given to the data access of resources and respectively animals when adding resources/ animals where we will make sure the user doesn't get more resources / animals than the buildings limit.
