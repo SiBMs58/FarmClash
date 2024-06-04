@@ -111,12 +111,15 @@ function displayLimit() {
     }
     percentage = Math.floor(percentage);
     percentage = parseInt(percentage);
+    if (percentage > 100) {
+        percentage = 100;
+    }
 
     // Create progress bar HTML
    const progressBarHTML = `
     <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: ${percentage}%" aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100">
-            ${percentage}%
+            <span>${percentage}%</span>
         </div>
     </div>
     <p>Capacity:  ${totalCrops} / ${limit}</p>`;

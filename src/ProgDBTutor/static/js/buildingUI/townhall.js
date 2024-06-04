@@ -5,15 +5,17 @@ let LVL = 0;
 let ATK = 0;
 let DEF = 0;
 let COINS = 0;
+import {defaultBuildingMapData} from "./../Data/defaultBuildingMapData.js";
 
 
 initialize();
 
 async function initialize() {
+    createSlides();
+    await fetchStats(); // Wait for fetchStats to complete
     slides.forEach(slide => {
         slide.style.display = slide.dataset.level === LVL.toString() ? 'block' : 'none';
     });
-    await fetchStats(); // Wait for fetchStats to complete
     displayStats();     // Call displayStats after fetchStats has resolved
     slider.value = LVL;
 }
@@ -36,12 +38,7 @@ slider.addEventListener('input', () => {
     slides.forEach(slide => {
         slide.style.display = slide.dataset.level === value.toString() ? 'block' : 'none';
     });
-    updateStats(value);
 });
-
-function updateStats(level) {
-    statsContainer.textContent = `Stats for Level ${level}`;
-}
 
 function displayStats() {
     const statsContainer = document.getElementById("stats");
@@ -77,6 +74,44 @@ function handleVisibilityChange() {
         // If the page is visible, change favicon to the base one
         document.getElementById('favicon').href = './../../static/img/ico/happy.ico';
     }
+}
+function createSlides(){
+    const crops = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant'];
+    const buildings = defaultBuildingMapData.building_information;
+    const info = defaultBuildingMapData.building_general_information;
+    const buildingToSlide = {};
+    const generalIndex = 1;
+    const unlockIndex = 0;
+
+    function getAtCommaIndex(key, index) {
+        const items = key.split(',').map(item => item.trim());
+        return items[index];
+    }
+
+    for (const key in buildings) {
+        const building = buildings[key];
+        if(building.general_information === 'Townhall') continue
+        if(buildingToSlide[[building.unlock_level, building.general_information]]){
+            buildingToSlide[[building.unlock_level, building.general_information]]++;
+        }else{
+            buildingToSlide[[building.unlock_level, building.general_information]] = 1;
+        }
+
+    }
+    for (const key in buildingToSlide) {
+        const slide = document.getElementById('slide-'+getAtCommaIndex(key, unlockIndex));
+        const unlock = document.createElement('div');
+
+        unlock.textContent  = buildingToSlide[key] + " x " + info[getAtCommaIndex(key, generalIndex)].display_name;
+        slide.appendChild(unlock);
+    }
+    for(let i = 0; i < crops.length; i++){
+        const slide = document.getElementById('slide-'+i);
+        const unlock = document.createElement('div');
+        unlock.textContent = crops[i];
+        slide.appendChild(unlock);
+    }
+
 }
 
 // Listen for visibility change events
