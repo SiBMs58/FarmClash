@@ -470,7 +470,7 @@ This is used to display various details about the building of interest and also 
 pop-up contains a "Building Info" title, the name of the type of building, a small text with some information (namely
 the purpose of the building). On top of that there are, depending on the type of building, potentially some stats that
 include the level the building is at and other stats like upgrade cost, defense, eggs/hour, etc. Lastly there is an
-upgrade button and a close button that are both animated when clicked.
+upgrade button, a close button and augment button that are all animated when clicked.
 
 When right-clicking another building while a pop-up is already open, a switch animation is displayed to make clear that
 you are switching to the information of a different building. When right-clicking the same building twice this animation
@@ -558,7 +558,7 @@ For backend testing, we utilized Pytest, a powerful and flexible testing tool. O
             \item \textbf{Resources Endpoint:} Checked both general and specific resource retrieval endpoints for proper authorization checks and JSON formatting.
             \item \textbf{Terrain Map Endpoint:} Tested user-specific access to terrain maps, ensuring the integrity and format of the terrain data returned.
             \item \textbf{Market Data Access:} We insert and fetch new crop elements , to check if the database requests work.
-            \item \textbf{Building Data Access:} We check if the databse is updated correctly when inserting new elements and fetching them.
+            \item \textbf{Building Data Access:} We check if the database is updated correctly when inserting new elements and fetching them.
             \item \textbf{Friendships Endpoint:} Assured that users could reliably retrieve their list of friends, with responses properly formatted as JSON arrays.
             \item \textbf{Chat Endpoint:} Confirmed functionality for retrieving chat messages between users, focusing on correct data handling and security measures.
         \end{itemize}
