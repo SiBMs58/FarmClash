@@ -31,8 +31,7 @@ The primary objectives of this project include:
     \item Implement secure and efficient server-side interactions using Flask, ensuring that the system handles real-time data exchange and multiplayer interactions seamlessly.
     \item Create an intuitive user interface that facilitates easy navigation and management of game tasks, utilizing technologies such as React for dynamic frontend development and CSS frameworks for aesthetic design.
     \item Design the game to support background updates and cooldowns effectively, representing idle game mechanics where actions continue to progress even when players are not actively engaged.
-    \item TODO: Ensure that the application adheres to modern web standards and security measures, including the use of JSON Web Tokens for stateless authentication and secure communication.
-    \item paragraphasize software extensibility and maintainability, preparing the system for future upgrades and scalability.
+    \item Implement software extensibility and maintainability, preparing the system for future upgrades and scalability.
     \item Deploy and maintain the software system on a production environment, leveraging provided Google Cloud Platform resources for hosting.
 \end{itemize}
 This project is designed to meet the educational goals of learning to develop extensive software projects within a team setting, discovering and integrating new technologies, and effectively planning and distributing tasks.
@@ -199,8 +198,49 @@ Choosing which animals to send on the exploration has its perks and downsides.
 
 \subsection{Attacking}
 
+The attack functionality in this Flask application is designed to manage and execute virtual attacks between users. This functionality includes selecting an opponent, displaying attack animations, and determining the result of an attack. It ensures that only authenticated users can participate in these actions, leveraging user session data and custom logic to facilitate fair and engaging interactions.
 
-\myworries{TODO Documentation of attacking}
+\subsubsection{Key Components}
+
+\paragraph{Selecting an Opponent}
+When a user decides to attack, the system first identifies a suitable opponent. This is done through a function that:
+\begin{itemize}
+    \item Excludes the current user and their friends.
+    \item Filters out users who have been recently searched.
+    \item Considers only users whose defense score is within a certain range of the current user's attack score.
+    \item Sorts potential opponents by their scores and selects the most suitable one.
+\end{itemize}
+
+\paragraph{Rendering Attack Views}
+The system provides different views for the attack process:
+\begin{itemize}
+    \item \textbf{Visit Opponent's World}: Displays the selected opponent’s virtual world.
+    \item \textbf{Attack Animation}: Shows an animation of the attack sequence.
+    \item \textbf{Attack Result}: Presents the outcome of the attack, detailing whether the user won or lost and the resources gained or lost.
+\end{itemize}
+
+\paragraph{Determining Attack Outcomes}
+The outcome of an attack is determined based on the attack and defense scores of the user and their opponent:
+\begin{itemize}
+    \item If the score difference is significant, the outcome is more predictable (win or lose).
+    \item For close scores, the outcome may be decided randomly to add an element of chance.
+\end{itemize}
+The system calculates the resources to be transferred based on the result:
+\begin{itemize}
+    \item If the user wins, they gain a percentage of the opponent’s resources.
+    \item If the user loses, they lose a similar percentage of their resources to the opponent.
+\end{itemize}
+
+\paragraph{Updating Resources}
+Following the attack, the system updates the resource counts for both the user and their opponent:
+\begin{itemize}
+    \item Resources are incremented or decremented based on the attack result.
+    \item This ensures that the game’s resource economy reflects the outcomes of user interactions accurately.
+\end{itemize}
+
+\paragraph{Summary}
+This attack functionality is a crucial part of the application, providing an engaging way for users to interact and compete. It carefully manages the selection of opponents, rendering of attack sequences, determination of outcomes, and updates to resources, ensuring a balanced and dynamic user experience.
+
 
 
 
@@ -311,8 +351,13 @@ When the user reaps his crops, the amount is again updated to the database using
 
 \section{Implementation Details}
 \subsection{Database Schema}
-The database schema is designed to efficiently handle game data and user interactions. It includes tables for users, game states, transactions, and market prices, reflecting the dynamic nature of the game's economy.
-\\ $\ast$ TODO: Add more details here. e.g. image of the final db schama
+The database schema is designed to efficiently handle game data and user interactions. It includes tables for users, game states, transactions, and market prices, reflecting the dynamic nature of the game's economy. This image is at the end of the document.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{img/db-diagram.png}
+    \caption{Final Database Schema}
+    \label{fig:db_schema}
+\end{figure}
 
 \subsection{Backend Logic}
 The backend handles requests from the client, processes game logic, and interacts with the database. It ensures that all player actions are reflected in real-time and manages the continuous accumulation of resources even when the player is offline.
