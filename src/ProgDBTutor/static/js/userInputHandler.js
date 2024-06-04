@@ -1,6 +1,13 @@
 import { tileSize } from './canvas.js'
 import {closePopup, openPopup, togglePopup} from './buildingPopup.js'
 
+const items = ["Wheat", "Carrot", "Corn", "Lettuce", "Stone", "Tomato", "Zucchini", "Ingot", "Parsnip", "Soy Milk",
+    "Cashmere Wool", "Irish Wool", "Gold Truffle", "Rustic Egg", "Strawberry Milk", "Alpaca Wool", "Emerald Egg",
+    "Chocolate Milk", "Cauliflower", "Sapphire Egg", "Milk", "Eggplant", "Money", "Forest Truffle", "Log",
+    "Blueberry Milk", "Plank", "Wool", "Crimson Egg", "Egg", "Truffle", "Dolphin Wool", "Stick", "Winter Truffle",
+    "Bronze Truffle", "Turnip"];
+
+
 export class UserInputHandler {
     /**
      * @param _classes all the classes that need to react to some kind of input
@@ -140,6 +147,9 @@ export class UserInputHandler {
             case 'o':
                 togglePopup();
                 break;
+            case 'r':
+                this.cheatResources();
+                break;
             default:
                 // Optional: handle any other keys
                 break;
@@ -236,4 +246,31 @@ export class UserInputHandler {
         }
     }
 
+    async cheatResources() {
+        const resources = {};
+        items.forEach(item => {
+            resources[item] = 100000;});
+
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        const fetchLink = `${BASE_URL}/api/add-resources`;
+
+        try {
+            const response = await fetch(fetchLink, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(resources) // Send the serialized resource data as the request body
+            });
+
+            if (response.ok) {
+                const jsonResponse = await response.json();
+                console.log('Resources DB update successful:', jsonResponse);
+            } else {
+                console.error('Add-resources DB update failed with status:', response.status);
+            }
+        } catch (error) {
+            console.error('Failed to update resources:', error);
+        }
+    }
 }

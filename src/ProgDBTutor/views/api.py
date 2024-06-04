@@ -110,7 +110,14 @@ def user_stats(username):
             "coins": coins
         }
     except Exception as e:
-        return {"error": str(e)}
+        # Return all expected fields with default values to avoid KeyError in calling functions
+        return {
+            "level": level,
+            "attack": atk,
+            "defense": defn,
+            "coins": coins,
+            "error": str(e)
+        }
 
 
 
