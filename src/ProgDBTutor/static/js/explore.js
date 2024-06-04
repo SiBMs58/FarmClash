@@ -1,8 +1,18 @@
 //______________________ GLOBAL VARIABLES ______________________//
+
+/**
+ * Barn object to store the quantities and intervals of each animal.
+ * @type {Object}
+ */
 const Barn = {};
 Barn.quantities = [0, 0, 0, 0];
 Barn.intervals = new Array(4).fill(null);
 Barn.animals = ["Chicken", "Cow", "Pig", "Goat"];
+
+/**
+ * Object to store the perks of each animal.
+ * @type {Object}
+ */
 const animalPerks = {
     Chicken: [
         ["Increased yield of eggs if found.", 10],
@@ -30,6 +40,11 @@ const animalPerks = {
         ["Brings lower resources on average.", -5]
     ]
 };
+
+/**
+ * Exploration object to store the current state of the exploration.
+ * @type {Object}
+ */
 let exploration = {
     remaining_time: -1,
     ongoing: false,
@@ -50,10 +65,25 @@ let exploration = {
     surviving_chickens: 0,
     base_rewards: 0,
 };
-let buildingLevel = 1;
+
+/**
+ * Variables to store the current state of the building.
+ * @type {number}
+ */
+let buildingLevel = 0;
 let buildingAugmentLevel = 0;
+
+/**
+ * Variables to store the current state of the crates.
+ * @type {number}
+ */
 let numCrates = 0;
 let crateImage = []
+
+/**
+ * Object to store the rewards.
+ * @type {Object}
+ */
 let rewards = {};
 
 
@@ -66,6 +96,11 @@ let rewards = {};
 
 
 //______________________ PAGE INITIALIZATION ______________________//
+
+/**
+ * Initializes the page by fetching exploration data and animal quantities from the API.
+ * @function
+ */
 initialize();
 /**
  * Handles the exploration status by fetching exploration data from the API,
@@ -104,6 +139,7 @@ function initialize() {
 
 
 //______________________ Display FUNCTIONS ______________________//
+
 /**
  * Resets the button images and clears any ongoing incrementation intervals.
  * @param {HTMLButtonElement} button - The button element to reset.
@@ -117,6 +153,7 @@ function reset(button) {
         button.querySelector('img').src = "../static/img/UI/plus_btn.png";
     }
 }
+
 /**
  * Updates the display based on the current exploration status.
  *
@@ -154,6 +191,13 @@ function displayStatus(){
         intraExplorationDiv.style.display = "none";
     }
 }
+
+/**
+ * Displays the crates in the rewards div.
+ * The crates are displayed in a grid layout with a maximum of 5 rows.
+ * @param {number} numCrates - The number of crates to display.
+ * @param {Array} crateImage - An array of image names for the crates.
+ */
 function displayCrates(numCrates, crateImage) {
     const rewardsDiv = document.getElementById('rewards');
     const rows = 5; // Change as needed
@@ -182,6 +226,11 @@ function displayCrates(numCrates, crateImage) {
     rewardsDiv.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
     rewardsDiv.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 }
+
+/**
+ * Displays the surviving animals in the animals div.
+ * The animals are displayed in pairs, with the quantity and an image for each animal.
+ */
 function displaySurvivors() {
     const survivorDiv = document.getElementById('animals');
     const animals = [
@@ -208,6 +257,12 @@ function displaySurvivors() {
         survivorDiv.appendChild(animalPairDiv); // Append the animalPairDiv to the survivorDiv
     }
 }
+
+/**
+ * Displays the reward items in the reward-items div.
+ * The reward items are displayed with the quantity and an image for each item.
+ * The image source is determined based on the type of the reward item.
+ */
 function displayRewardItems(){
     const rewardsItemDiv = document.getElementById('reward-items');
     const imgLocation = '../../static/img/resources/';
@@ -236,6 +291,8 @@ function displayRewardItems(){
         rewardsItemDiv.appendChild(div);
     }
 }
+
+
 /**
  * Updates the list of perks based on the current selection of animals and exploration time.
  *
@@ -343,6 +400,18 @@ function fetchAnimalQuantity() {
         console.error('Error fetching animals:', error);
     });
 }
+
+/**
+ * Fetches the building information for the 'Bay' type from the API.
+ *
+ * This function sends a GET request to the '/api/fetch-building-information-by-type/Bay' endpoint.
+ * If the request is successful and the status of the response is 'success', it retrieves the building information from the response data.
+ * It then sets the global 'buildingAugmentLevel' and 'buildingLevel' variables to the augment level and level of the building, respectively.
+ * If the request fails for any reason, it logs an error message to the console.
+ *
+ * @async
+ * @function
+ */
 function fetchBuildingBayStats() {
     fetch('/api/fetch-building-information-by-type/Bay')
     .then(response => response.json())
@@ -359,6 +428,7 @@ function fetchBuildingBayStats() {
         console.error('Error fetching building information:', error);
     });
 }
+
 /**
  * Asynchronously sends the quantity of each animal to the server.
  *
@@ -392,16 +462,14 @@ async function sendAnimalQuantity(numChickens, numGoats, numPigs, numCows) {
             body: JSON.stringify(animal_data)
         });
 
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            console.log('Animals successfully removed from your farm:', jsonResponse);
-        } else {
+        if (!response.ok) {
             console.error('Failed to remove animal from your farm:', response.status);
         }
     } catch (error) {
         console.error('Error occurred while removing animal from your farm:', error);
     }
 }
+
 /**
  * Asynchronously starts an exploration.
  *
@@ -428,16 +496,26 @@ async function sendExploration() {
             body: JSON.stringify(exploration)
         });
 
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            console.log('Exploration started successfully:', jsonResponse);
-        } else {
+        if (!response.ok) {
             console.error('Failed to start exploration:', response.status);
         }
     } catch (error) {
         console.error('Error occurred while starting exploration:', error);
     }
 }
+
+/**
+ * Asynchronously sends a request to stop an ongoing exploration.
+ *
+ * This function constructs the URL for the stop exploration API endpoint and sends a POST request to it.
+ * If the request is successful, it logs a success message to the console along with the received data.
+ * If the request fails, it logs an error message to the console along with the status code of the response.
+ * If an error occurs while sending the request, it logs an error message to the console along with the error object.
+ *
+ * @async
+ * @function
+ * @throws Will throw an error if the response from the API is not ok.
+ */
 async function sendStopExploration() {
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/stop-exploration";
@@ -446,16 +524,27 @@ async function sendStopExploration() {
             method: 'POST'
         });
 
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            console.log('Exploration stopped successfully:', jsonResponse);
-        } else {
-            console.error('Failed to stop exploration:', response.status);
+        if (!response.ok) {
+             console.error('Failed to stop exploration:', response.status);
         }
     } catch (error) {
         console.error('Error occurred while stopping exploration:', error);
     }
 }
+
+/**
+ * Asynchronously sends the quantity of each resource to the server.
+ *
+ * This function constructs the URL for the add resources API endpoint and sends a POST request to it.
+ * The global 'rewards' object is stringified and sent as the body of the request.
+ * If the request is successful, it logs a success message to the console along with the received data.
+ * If the request fails, it logs an error message to the console along with the status code of the response.
+ * If an error occurs while sending the request, it logs an error message to the console along with the error object.
+ *
+ * @async
+ * @function
+ * @throws Will throw an error if the response from the API is not ok.
+ */
 async function sendResourceQuanity(){
     const BASE_URL = `${window.location.protocol}//${window.location.host}`;
     const fetchLink = BASE_URL + "/api/add-resources";
@@ -468,10 +557,7 @@ async function sendResourceQuanity(){
             body: JSON.stringify(rewards)
         });
 
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            console.log('Resources updated successfully:', jsonResponse);
-        } else {
+        if (!response.ok) {
             console.error('Failed to update resources:', response.status);
         }
     } catch (error) {
@@ -486,11 +572,29 @@ async function sendResourceQuanity(){
 
 
 // ____________________ EVENT LISTENERS ____________________//
+/**
+ * Event listener for the 'click' event on the 'continue-btn' element.
+ *
+ * This function is executed whenever the 'continue-btn' button is clicked.
+ * It sets the remaining time of the current exploration to -1 and updates the display status.
+ *
+ * @listens click
+ */
 document.getElementById('continue-btn').addEventListener('click', function() {
     exploration.remaining_time = -1;
     displayStatus();
 });
 
+/**
+ * Event listener for the 'click' event on the 'open-btn' element.
+ *
+ * This function is executed whenever the 'open-btn' button is clicked.
+ * It sends a request to stop the ongoing exploration and then sends the quantity of each surviving animal to the server.
+ * After that, it hides the 'open-btn' button, shows the 'continue-btn' button, generates the rewards, displays the reward items, and displays the crates.
+ * Finally, it sends the quantity of each resource to the server.
+ *
+ * @listens click
+ */
 document.getElementById('open-btn').addEventListener('click', function() {
     sendStopExploration().then(() => {
         sendAnimalQuantity(exploration.surviving_chickens, exploration.surviving_goats, exploration.surviving_pigs, exploration.surviving_cows)
@@ -505,6 +609,7 @@ document.getElementById('open-btn').addEventListener('click', function() {
         sendResourceQuanity();
     });
 });
+
 /**
  * Event listener for the 'click' event on the 'explore-btn' element.
  *
@@ -544,6 +649,7 @@ document.getElementById('explore-btn').addEventListener('click', async function 
     await sendAnimalQuantity(-exploration['chickens'], -exploration['goats'], -exploration['pigs'], -exploration['cows']);
     displayStatus(exploreTime)
 });
+
 /**
  * Adds 'input' event listeners to all input fields of type 'number'.
  *
@@ -589,7 +695,8 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField) {
         }
         updatePerkList();
     });
-})
+});
+
 /**
  * Event listener for the 'change' event on the 'exploration-time' element.
  *
@@ -599,6 +706,7 @@ document.querySelectorAll('input[type="number"]').forEach(function(inputField) {
 document.getElementById('exploration-time').addEventListener('change', function() {
     updatePerkList();
 });
+
 /**
  * Event listener for the DOMContentLoaded event.
  *
@@ -677,6 +785,7 @@ function decrementAnimalInput(animal) {
  * Increment the quantity in the input of the specified animal.
  * @param {string} animal - The type of animal to increase the quantity for.
  */
+
 function incrementAnimalInput(animal) {
     if (!Barn.animals.includes(animal)){
         return;
@@ -714,6 +823,7 @@ function incrementAnimalInput(animal) {
 function getIndex(animal) {
     return Barn.animals.indexOf(animal);
 }
+
 /**
  * Returns the formatted time string in hours, minutes, and days based on the given total minutes.
  * @param {number} minutes - The total number of minutes to format.
@@ -736,6 +846,7 @@ function formatTime(minutes) {
         return seconds + "s";
     }
 }
+
 /**
  * Calculates the risk chance based on the exploration time and building level.
  *
@@ -768,6 +879,7 @@ function getRiskChance(explorationTime) {
 
     return Math.max(0, riskChance);
 }
+
 /**
    * Calculates the logarithm of a number `n` with a given base.
    *
@@ -789,6 +901,13 @@ let Log =  function (n, base) {
 
 
 //______________________ RANDOM FUNCTIONS ______________________//
+/**
+ * Returns a random index from an array of weights.
+ * The probability of selecting each index is proportional to its weight.
+ *
+ * @param {Array<number>} weights - An array of weights.
+ * @returns {number} - The selected index.
+ */
 function getRandomIndex(weights) {
     const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
     let randomNum = Math.random() * totalWeight;
@@ -800,6 +919,14 @@ function getRandomIndex(weights) {
         }
     }
 }
+
+/**
+ * Generates a random number from a Gaussian distribution.
+ *
+ * @param {number} [mean=0] - The mean of the Gaussian distribution. Defaults to 0.
+ * @param {number} [stdev=1] - The standard deviation of the Gaussian distribution. Defaults to 1.
+ * @returns {number} - The generated random number.
+ */
 function gaussianRandom(mean=0, stdev=1) {
     let u, v, z;
     let isValid = false;
@@ -817,6 +944,13 @@ function gaussianRandom(mean=0, stdev=1) {
 
     return Math.min(1,z * stdev + mean);
 }
+
+/**
+ * Generates an array of random probabilities that sum to approximately 1.
+ * The first probability is biased to be higher than the others.
+ *
+ * @returns {Array<number>} - The array of generated probabilities.
+ */
 function generateRandomProbabilities() {
     const total = 1 + Math.random() * 0.1; // Add a slight randomness
     const probabilities = [];
@@ -836,6 +970,13 @@ function generateRandomProbabilities() {
     probabilities.push(remaining); // Ensure total sum is 1
     return probabilities;
 }
+
+/**
+ * Replaces all spaces in a string with underscores.
+ *
+ * @param {string} input - The input string.
+ * @returns {string} - The input string with all spaces replaced by underscores.
+ */
 function spaceTo_(input) {
     return input.replace(/ /g, '_');
 }
@@ -850,6 +991,11 @@ function spaceTo_(input) {
 
 
 //______________________ REWARDS FUNCTIONS ______________________//
+/**
+ * Generates rewards based on the exploration results.
+ * The function calculates rewards for each type of animal and adds them to the global rewards object.
+ * The type and amount of rewards are determined by random factors influenced by the exploration duration and building level.
+ */
 function generateRewards() {
     const rewardBoxes = ['coinCrate', 'cropCrate', 'animalCrate', 'rawCrate', 'emptyCrate'];
     const probabilities = [0.25, 0.25, 0.25, 0.15, 0.10];
@@ -917,6 +1063,14 @@ function generateRewards() {
     }
 }
 
+/**
+ * Adds a reward of a specific type and amount to the global rewards object.
+ * The function also divides the reward into smaller parts if it exceeds a certain limit.
+ *
+ * @param {string} type - The type of the reward.
+ * @param {number} amount - The amount of the reward.
+ * @param {string} animal - The type of the animal that the reward is associated with.
+ */
 function addRewardTypes(type, amount, animal){
     let division = 20;
 
@@ -941,6 +1095,15 @@ function addRewardTypes(type, amount, animal){
             break;
     }
 }
+
+/**
+ * Distributes a reward of raw materials among different types of materials.
+ * The function divides the reward into smaller parts if it exceeds a certain limit.
+ *
+ * @param {number} amount - The total amount of the reward.
+ * @param {string} animal - The type of the animal that the reward is associated with.
+ * @param {number} division - The limit above which the reward should be divided.
+ */
 function distributeInRawMaterials(amount, animal, division){
     const raws = ['Stick', 'Stone', 'Plank', 'Log', 'Ingot'];
     let probabilities = (animal === 'Pig') ? [0.22375, 0.244375, 0.244375, 0.14375, 0.14375] : [0.325, 0.2125, 0.2125, 0.125, 0.125];
@@ -952,6 +1115,14 @@ function distributeInRawMaterials(amount, animal, division){
         addRewards(Math.ceil(amount / division), raws[getRandomIndex(probabilities)]);
     }
 }
+
+/**
+ * Distributes a reward of crops among different types of crops.
+ * The function divides the reward into smaller parts if it exceeds a certain limit.
+ *
+ * @param {number} amount - The total amount of the reward.
+ * @param {number} division - The limit above which the reward should be divided.
+ */
 function distributeInCrops(amount, division){
     const crops = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant'].slice(0, Math.min(9, buildingLevel));
     const probabilities = Array(crops.length).fill(1 / crops.length);
@@ -963,6 +1134,7 @@ function distributeInCrops(amount, division){
         addRewards(Math.ceil(amount / division), crops[getRandomIndex(probabilities)]);
     }
 }
+
 /**
  * Distributes a given amount of animal products among specified divisions.
  * The distribution is based on the rarity of the products and the type of animal.
@@ -1008,6 +1180,7 @@ function distributeInAnimalProducts(amount, animal, division){
             }
         }
 }
+
 /**
  * Adds a specified amount of a reward to the rewards collection.
  * If the reward already exists, the amount is added to the existing value.
@@ -1026,7 +1199,3 @@ function addRewards(amount, reward){
         rewards[reward] = amount;
     }
 }
-
-
-
-
