@@ -76,7 +76,7 @@ def choose_opponent_logic():
                     eligible_users.append(user)
 
         # Sort eligible users by their scores in descending order
-        sorted_eligible_users = sorted(eligible_users, key=lambda user: scores.get(user.username, 0), reverse=True)
+        sorted_eligible_users = sorted(eligible_users, key=lambda user: get_user_data(current_user.username)['scores'][current_user.username].get(user.username, 0), reverse=True)
 
         # Select the top eligible user if available
         if sorted_eligible_users:
