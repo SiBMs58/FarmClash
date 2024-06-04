@@ -31,6 +31,7 @@ def visit_opponent():
     """
     # Example logic to choose an opponent
     opponent = choose_opponent_logic()  # This function needs to be implemented based on your app logic
+    return jsonify(opponent.__dict__ if opponent else None)
 
     if not opponent:
         get_user_data(current_user.username)['previously_searched'].clear()
@@ -86,7 +87,7 @@ def choose_opponent_logic():
             previously_searched.append(sorted_eligible_users[0].username)
             return sorted_eligible_users[0]
         else:
-            return None
+            return eligible_users
     except Exception as e:
         import traceback
         print("An error occurred: ", str(e), "\n", traceback.format_exc())
