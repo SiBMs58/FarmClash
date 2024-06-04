@@ -38,6 +38,13 @@ let isUpgradableBool = true;
 let currBuildingName;
 let currBuildingInfo;
 
+/**
+ * Checks whether a building is upgradable.
+ * @param buildingInformation - The building information js object.
+ * @param buildingGeneralInformation - The building general information js object.
+ * @param buildingName - The name of the building to check.
+ * @returns {Promise<boolean>} - True if the building is upgradable, false otherwise.
+ */
 async function isUpgradable(buildingInformation, buildingGeneralInformation, buildingName) {
     // Check if the building is already at max level
     if (buildingInformation[buildingName].level === maxLevel) {
@@ -60,7 +67,10 @@ async function isUpgradable(buildingInformation, buildingGeneralInformation, bui
     }
 }
 
-
+/**
+ * Fetches the building popup information from the server.
+ * @returns {Promise<any>} - The building popup information.
+ */
 async function fetchBuildingPopupInformation() {
     try {
         const response = await fetch('/static/img/assets/building.json');
@@ -92,7 +102,6 @@ export function openPopup(buildingInformation, buildingGeneralInformation, build
         actualOpenPopup(buildingInformation, buildingGeneralInformation, buildingName);
     }
     prevBuildingName = buildingName;
-    //currOpenedBuildingGeneralInformation = buildingGeneralInformation[buil]
 }
 
 /**
@@ -195,11 +204,9 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
                 let space = document.createTextNode('  ');
                 costDiv.appendChild(space);
             }
-        }else{
+        } else {
             costDiv.innerHTML = 'Max Level';
         }
-
-
 
         // Set the building stats
         let statString = "";
@@ -221,14 +228,13 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
                 if (building.level !== maxLevel){
                     statString+= ` (+${stat[values][building.level+1] - stat[values][building.level]})`;
                 }
-
-            }else{
+            } else {
                 statString = `${stat[name]}: ${baseStatValue}`;
                 augmentString = '';
                 if (baseStatValue === 'inf'){
                     statString = `${stat[name]}: Ꝏ`;
                     augmentString = `${stat[name]}: Ꝏ`;
-                }else if(augments.hasOwnProperty(stat[name])){
+                } else if (augments.hasOwnProperty(stat[name])){
                     augmentString = `${stat[name]}: ${baseStatValue}`;
                     augmentValue = augments[stat[name]];
                     let nextAugmentValue = augmentValue;
@@ -249,7 +255,6 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
                 }
             }
 
-
             const list1 = document.createElement('li');
             list1.textContent = statString;
             buildingStats.appendChild(list1);
@@ -257,8 +262,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
             list2.textContent = augmentString;
             augmentStats.appendChild(list2);
         }
-        debugger;
-        // Check if field and in phase 1
+        // Check if field and in phase 1 --> show crop popup
         if (buildingInformation[buildingName].general_information === FIELD_GENERAL_INFO_NAME) {
             const fieldName = buildingInformation[buildingName].self_key;
             if (cropMap.isFieldEmpty(fieldName)) {
@@ -272,6 +276,9 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
     });
 }
 
+/**
+ * Prepares the crop popup by disabling the crop buttons that are not yet unlocked.
+ */
 function cropPopupPreparation() {
     const buttons = document.querySelectorAll(".crop-buttons-grid img");
     const fieldLevel = currOpenedBuildingInformation.level;
@@ -324,6 +331,9 @@ export function closePopup() {
     isPopupOpen = false;
 }
 
+/**
+ * Closes the crop popup
+ */
 function closeCropPopup() {
     const cropPopup = document.querySelector('.cropSelector');
     cropPopup.classList.remove('show');
@@ -431,9 +441,9 @@ document.getElementById('augment-btn').addEventListener('mouseleave', leaveAugme
 // UPGRADE BUTTON
 
 // This code is responsible for correctly applying the functionality of the upgrade button of the pop-up
+
 const upgradeButton = document.getElementById('upgrade-button');
 const upgradeButtonPressed = document.getElementById('upgrade-button-pressed');
-
 
 function pressUpgradeButton() {
     upgradeButton.style.display = 'none';
@@ -507,12 +517,12 @@ async function updateResources(resource, count) {
 let curr_level_cost;
 
 /**
- *  checks the if the building can be upgraded, checks include:
- *  max level, has enaugh resources and townhall level
- * @param buildingInformation
+ * checks if the building can be upgraded, checks include:
+ * max level, has enough resources and town hall level
+ * @param buildingInformation - The building information js object.
  * @param info
- * @param buildingName
- * @returns {Promise<boolean>}
+ * @param buildingName - The name of the building to check.
+ * @returns {Promise<boolean>} - True if the building is upgradable, false otherwise.
  */
 
 async function upgrade_checks(buildingInformation, info, buildingName) {
@@ -612,18 +622,22 @@ window.onload = adjustPopupPosition;
 window.onresize = adjustPopupPosition;
 
 
-//const buttons = document.querySelectorAll(".crop-buttons-grid img");
-
 // ——————————————————
 // CROP POPUP LOGIC
 
+/**
+ * Return the name of the crop from the element url
+ * @param url - The url of the element
+ * @returns {string} - The name of the crop like: "Wheat", "Carrot", etc.
+ */
 function getCropName(url) {
     const filename = url.substring(url.lastIndexOf('/') + 1);
     return filename.split('Button')[0];
 }
 
-
-
+/**
+ * Add event listeners to the crop buttons to handle the planting of crops.
+ */
 document.addEventListener("DOMContentLoaded", function() {
     const buttons = document.querySelectorAll(".crop-buttons-grid img");
 
@@ -687,10 +701,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-
-
-
-/// — Helpers
+// ———————
+// Helpers
 
 function augmentCost(level) {
     return 50 * Math.pow(2, level) + 50;

@@ -363,6 +363,12 @@ export class BuildingMap extends BaseMap {
         return baseAssetName;
     }
 
+    /**
+     * Adjusts the field asset based on the cropMapInstance. When a crop is finished a green border appears.
+     * @param originalAssetName - The original asset name of the field
+     * @param fieldName - The name of the field
+     * @returns {*|string} - The adjusted asset name of the field
+     */
     adjustFieldAsset(originalAssetName, fieldName) {
         if (this.cropMapInstance.isHarvestable(fieldName)) {
             if (!originalAssetName.includes(".Done")) {
@@ -376,14 +382,23 @@ export class BuildingMap extends BaseMap {
         return originalAssetName;
     }
 
-
+    /**
+     * Returns the percentage of the silo that is filled. Right now not implemented. Always returns 0%.
+     * @param building_obj - The building object of the silo
+     * @returns {string} - The percentage of the silo that is filled
+     */
     getSiloPercentage(building_obj) {
         const key = building_obj.self_key;
         // todo Percent implementeren als ge wilt
         return "0%";
     }
 
-
+    /**
+     * Returns the relative locations of a building based on the building object.
+     * @param building_obj - The building object
+     * @param frame - The frame the code is at to animate Bay. Right now not implemented
+     * @returns {*}
+     */
     getRelativeLocations(building_obj, frame=null) {
         const generalInfoKey = building_obj.general_information;
         const level = building_obj.level;
@@ -400,7 +415,7 @@ export class BuildingMap extends BaseMap {
     }
 
     /**
-     * Draws a building.
+     * Draws a building on screen.
      * @param building a building object of 'this.buildingInformation'
      */
     drawBuilding(building) {
@@ -408,9 +423,6 @@ export class BuildingMap extends BaseMap {
         const windowTileWidth = Math.ceil(window.innerWidth / this.tileSize);
         const screen_buildLocationY = building.building_location[0] - this.viewY;
         const screen_buildLocationX = building.building_location[1] - this.viewX;
-
-        //const generalInfoKey = building.general_information;
-        //const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
 
         const tile_rel_locations = this.getRelativeLocations(building);
 
@@ -422,9 +434,6 @@ export class BuildingMap extends BaseMap {
                 continue;
             }
 
-            //let tileToDrawWithoutLevelReplaced = tile[1];
-            //const buildingLevel = building.level
-            //let tileToDrawName = tileToDrawWithoutLevelReplaced.replace(/@/g, buildingLevel);
             let tileToDrawName = tile[1];
             if (utils.getAssetDir(tileToDrawName) === "Fence") {
                 const currTileLocY = building.building_location[0] + tile[0][0];
@@ -444,7 +453,7 @@ export class BuildingMap extends BaseMap {
     }
 
     /**
-     * Draws the buildings. 'this.buildingInformation'
+     * Draws all the buildings based of 'this.buildingInformation'
      * @param topBuilding optional: Can be set if a building needs to be drawn on top of all other buildings.
      */
     drawTiles(topBuilding = null) {
@@ -472,6 +481,11 @@ export class BuildingMap extends BaseMap {
         //console.log("building layer tick");
     }
 
+    /**
+     * Returns whether a given tile is an edge tile.
+     * @param tileName - The name of the tile
+     * @returns {boolean} - True if the tile is an edge tile, false if not
+     */
     isEdgeTile(tileName) {
         if (utils.getAssetDir(tileName) === "Grass") {
             let str = String(tileName);
@@ -481,14 +495,20 @@ export class BuildingMap extends BaseMap {
         return false;
     }
 
+    /**
+     * Returns whether a coordinate is on the building placeable rectangle of the map.
+     * @param yCoord - The map y coordinate
+     * @param xCoord - The map x coordinate
+     * @returns {boolean} - True if the coordinate is on the building placeable rectangle, false if not
+     */
     isOnGrassRectangle(yCoord, xCoord) {
         return yCoord > 3 && yCoord < this.map_height - 4  &&  xCoord > 3 && xCoord < this.map_width - 4;
     }
 
     /**
-     *
-     * @param rel_y
-     * @param rel_x
+     * Checks whether a future move is valid
+     * @param rel_y - The relative y movement compared to the previous location
+     * @param rel_x - The relative x movement compared to the previous location
      * @param buildingToMove object from 'this.buildingInformation'
      * @returns {boolean} returns true if the move is to a valid location, false if the move isn't valid
      */
@@ -502,7 +522,6 @@ export class BuildingMap extends BaseMap {
             const generalInfoKey = building.general_information;
             const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
             for (const currTile of tile_rel_locations) {
-            //for (const currTile of building.tile_rel_locations) {
                 const currYValue = building.building_location[0] + currTile[0][0];
                 const currXValue = building.building_location[1] + currTile[0][1];
                 forbiddenTiles.push([currYValue, currXValue]);
@@ -514,7 +533,6 @@ export class BuildingMap extends BaseMap {
         const generalInfoKey = buildingToMove.general_information;
         const tile_rel_locations = this.buildingGeneralInformation[generalInfoKey].tile_rel_locations;
         for (const currTile of tile_rel_locations) {
-        //for (const currTile of buildingToMove.tile_rel_locations) {
             const currNewYValue = buildingToMove.building_location[0] + rel_y + currTile[0][0];
             const currNewXValue = buildingToMove.building_location[1] + rel_x + currTile[0][1];
             newLocations.push([currNewYValue, currNewXValue]);
@@ -532,11 +550,6 @@ export class BuildingMap extends BaseMap {
 
         // Check for forbidden terrain overlap
         for (const currTile of newLocations) {
-            const correspondingTerrainTile = this.terrainMapInstance.tiles[currTile[0]][currTile[1]];
-            const terrainType = utils.getAssetDir(correspondingTerrainTile);
-            //if (terrainType === "Water" || this.isEdgeTile(correspondingTerrainTile)) {
-            //    return false;
-            //}
             if (!this.isOnGrassRectangle(currTile[0], currTile[1])) {
                 return false;
             }
@@ -547,8 +560,8 @@ export class BuildingMap extends BaseMap {
 
     /**
      * Check whether a building to move is attempted to be moved in-bound or out of bounds
-     * @param rel_y
-     * @param rel_x
+     * @param rel_y - The relative y movement compared to the previous location
+     * @param rel_x - The relative x movement compared to the previous location
      * @param buildingToMove object from 'this.buildingInformation'
      * @returns {boolean} returns true if the move is correctly in bounds
      */
@@ -574,8 +587,8 @@ export class BuildingMap extends BaseMap {
 
     /**
      * Moves a building relative to its original location.
-     * @param rel_y
-     * @param rel_x
+     * @param rel_y - The relative y movement compared to the previous location
+     * @param rel_x - The relative x movement compared to the previous location
      * @param buildingToMove object from 'this.buildingInformation'
      * @param setToTop if marked true, sets the building being moved to the top of the screen.
      */
@@ -605,6 +618,12 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    /**
+     * Checks whether the mouse is hovering over a building.
+     * @param tileX - The x tile coordinate
+     * @param tileY - The y tile coordinate
+     * @returns {boolean}
+     */
     hoveringOverBuilding(tileX, tileY) {
         if (this.tiles[tileY][tileX] !== EMPTY_TILE) {
             return true;
@@ -637,15 +656,12 @@ export class BuildingMap extends BaseMap {
             return;
         }
 
-
         if (this.prevMouseMoveBuildingLoc === null) {
             this.prevMouseMoveBuildingLoc = [tileY, tileX];
         }
 
         const relDistanceY = tileY - this.prevMouseMoveBuildingLoc[0];
         const relDistanceX = tileX - this.prevMouseMoveBuildingLoc[1];
-
-        //console.log(`relDistanceY ${relDistanceY}, relDistanceX ${relDistanceX}`);
 
         if (relDistanceX !== 0 || relDistanceY !== 0) {
             const buildingToMove = this.buildingInformation[this.buildingClickedName];
@@ -655,17 +671,27 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    /**
+     * Return the level of the town hall which corresponds to the player level.
+     * @returns {number} - The level of the town hall
+     */
     getTownHallLVL() {
         const townHallBuilding = this.buildingInformation["townhall"];
         return townHallBuilding.level;
     }
 
+    /**
+     * Return whether a building is unlocked based on the town hall level.
+     * @param buildingName - The name of the building
+     * @returns {boolean} - True if the building is unlocked, false if not.
+     */
     isBuildingUnlocked(buildingName) {
         return this.buildingInformation[buildingName].unlock_level <= this.getTownHallLVL();
     }
 
     /**
-     * Gets called when user clicks.
+     * Gets called when user clicks. Many possible events need to happen here. Moving a building needs a lot of checks.
+     * A field possibly needs to be harvested.
      * @param client_x x click on screen
      * @param client_y y click on screen
      * @returns {boolean} Returns true when click is used by this class.
@@ -705,8 +731,7 @@ export class BuildingMap extends BaseMap {
                 }
             }
 
-            // Ge moet hier true returnen omdat er op een gebouw is geklikt. De twee lijnen hier onder mogen gewoon niet gebeuren (zie hierboven als voorbeeld)
-             // If the username is set it means you are visitiing someone else's farm meaning you can't move buildings
+            // If the username is set it means you are visiting someone else's farm meaning you can't move buildings
             if (!this.username) {
                 this.movingBuilding = true;
                 this.ownNextClick = true;
@@ -727,15 +752,10 @@ export class BuildingMap extends BaseMap {
                 console.log("Op een juiste plek geplaatst");
                 this.updateBuildingMapDB().then(/* If something needs to happen after the update */);
             } else {
-                //const revertRelY = this.currBuildingOrgLocation[0] - buildingToMove.building_location[0];
-                //const revertRelX = this.currBuildingOrgLocation[1] - buildingToMove.building_location[1];
-                //this.moveBuilding(revertRelY, revertRelX, buildingToMove);
                 console.error("invalid locatie om gebouw te plaatsen");
                 this.showLocationWarning();
 
             }
-            // check of move valid is met rel_x, rel_y = 0
-            // Terug naar originele locatie
         }
         return true;
     }
@@ -743,6 +763,7 @@ export class BuildingMap extends BaseMap {
 
     /**
      * Handles the right-click input of the user. When right-clicking a building a pop-up needs to be opened.
+     * When visiting a friend or attacking, nothing should happen.
      * @param client_x the x screen pixel
      * @param client_y the y screen pixel
      * @returns {boolean} returns true if the click is used, false if not
@@ -765,6 +786,9 @@ export class BuildingMap extends BaseMap {
 
     }
 
+    /**
+     * Shows a warning when a building is placed on an invalid location.
+     */
     showLocationWarning() {
         const warningElement = document.getElementById('building-placement-warning');
         // Show the element instantly
@@ -778,11 +802,18 @@ export class BuildingMap extends BaseMap {
         }, 1500);
     }
 
+    /**
+     * Hides the location warning. (Not used)
+     */
     hideLocationWarning() {
         const warningElement = document.getElementById('building-placement-warning');
         warningElement.classList.remove('show');
     }
 
+    /**
+     * Shows a warning when trying to click or right-click a building that you haven't unlocked.
+     * @param building - The building object.
+     */
     showUnlockWarning(building) {
         this.hideSoftUnlockWarning();
         const warningElement = document.getElementById('building-unlock-warning');
@@ -800,25 +831,26 @@ export class BuildingMap extends BaseMap {
         }, 1500);
     }
 
+    /**
+     * Checks whether a warning popup is currently being shown.
+     * @returns {boolean} - True if a warning popup is being shown, false if not.
+     */
     isShowingUnlockWarning() {
-    const warningPopups = document.getElementsByClassName('warning-popup');
-    // Iterate through the warning popups
-    for (let i = 0; i < warningPopups.length; i++) {
-        const computedStyle = window.getComputedStyle(warningPopups[i]);
-        const opacity = computedStyle.getPropertyValue('opacity');
-
-        // Check if the opacity is not 0
-        if (opacity !== '0') {
-            return true;
+        const warningPopups = document.getElementsByClassName('warning-popup');
+        for (let i = 0; i < warningPopups.length; i++) {
+            const computedStyle = window.getComputedStyle(warningPopups[i]);
+            const opacity = computedStyle.getPropertyValue('opacity');
+            if (opacity !== '0') {
+                return true;
+            }
         }
+        return false;
     }
 
-    // If no element has non-zero opacity, return false
-    return false;
-}
 
-
-
+    /**
+     * Shows a softer unlock warning. Used when user hovers over a building that is not unlocked.
+     */
     showSoftUnlockWarning() {
         if (!this.isShowingUnlockWarning()) {
             const warningElement = document.getElementById('soft-building-unlock-warning');
@@ -826,6 +858,9 @@ export class BuildingMap extends BaseMap {
         }
     }
 
+    /**
+     * Hides the soft unlock warning.
+     */
     hideSoftUnlockWarning() {
         const warningElement = document.getElementById('soft-building-unlock-warning');
         warningElement.classList.remove('show');
@@ -847,7 +882,7 @@ export class BuildingMap extends BaseMap {
 
     /**
      * Sends the building map to the database to be updated.
-     * @returns {Promise<void>}
+     * @returns {Promise<void>} - A promise that resolves when the update is successful.
      */
     async updateBuildingMapDB() {
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;

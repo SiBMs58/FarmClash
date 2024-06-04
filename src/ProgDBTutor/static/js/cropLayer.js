@@ -1,15 +1,7 @@
-// todo documentatie updaten
-
 import {BaseMap} from "./baseMap.js";
-//import { openPopup, closePopup, isPopupOpen } from "./buildingPopup.js";
 import { utils } from "./utils.js";
-import { buildingMap } from "./canvas.js";
 import { defaultCropData } from "./Data/defaultCropData.js";
 
-/**
- * Sets the string value of
- */
-//const EMPTY_TILE = "None";
 
 /** Tile coördinaten: (y,x)
  0 1 2 3 | x
@@ -20,8 +12,10 @@ import { defaultCropData } from "./Data/defaultCropData.js";
  y
  */
 
-
-
+/**
+ * This class is responsible for the crop layer of the game. It fetches the crop data from the server, and stores it.
+ * It is also responsible for drawing the crops on the screen.
+ */
 export class CropMap extends BaseMap {
     /**
      * @param cropData This is set to a default version of the map, if database fetch succeeds this will be overridden.
@@ -259,8 +253,6 @@ export class CropMap extends BaseMap {
 
         // Draw crops
         for (let cropCoord of cropCoords) {
-            // todo checken de image binnen het canvas is
-
             const img = this.buildingAssets["/static/img/assets/crops/" + utils.getAssetDir(assetName) + "/" + assetName + ".png"];
             if (img) {
                 if (field.crop === "Wheat") {
