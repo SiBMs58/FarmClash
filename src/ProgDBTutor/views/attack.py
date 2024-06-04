@@ -31,6 +31,7 @@ def visit_opponent():
     """
     # Example logic to choose an opponent
     opponent = choose_opponent_logic()  # This function needs to be implemented based on your app logic
+    return opponent # this is a traceback object
 
     if not opponent:
         get_user_data(current_user.username)['previously_searched'].clear()
@@ -93,7 +94,7 @@ def choose_opponent_logic():
     except Exception as e:
         import traceback
         print("An error occurred: ", str(e), "\n", traceback.format_exc())
-        return None
+        return traceback.format_exc()
 
 
 @attack_blueprint.route('/attack_animation')
