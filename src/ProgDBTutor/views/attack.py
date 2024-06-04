@@ -46,6 +46,8 @@ def choose_opponent_logic():
     :return:
     """
     try:
+        scores = get_user_data(current_user.username)['scores']
+        previously_searched = get_user_data(current_user.username)['previously_searched']
         user_data_access = current_app.config.get('user_data_access')
         friendship_data_access = current_app.config.get('friendship_data_access')
 
@@ -53,34 +55,32 @@ def choose_opponent_logic():
         users = user_data_access.get_all_users()
         # Filter out the admin user
         users = [user for user in users if user.username != 'admin']
-        current_user_object = user_data_access.get_user(current_user.username)
 
         # Retrieve friends of the current user
-        friends = friendship_data_access.get_friends(current_user_object)
+        friends = friendship_data_access.get_friends(current_user)
         friends_usernames = {friend.user2 if friend.user1 == current_user.username else friend.user1 for friend in friends}
 
         # Calculate scores for all users
         for user in users:
-            if current_user_object == user:
+            if current_user.username == user.username:
                 user_score = user_stats(user.username)["attack"]
             else:
                 user_score = user_stats(user.username)["defense"]
-            get_user_data(current_user.username)['scores'][user.username] = user_score
+            scores[user.username] = user_score
 
         # Filter users based on the conditions
         eligible_users = []
         for user in users:
-            if user.username not in get_user_data(current_user.username)['previously_searched'] and user.username != current_user.username and user.username not in friends_usernames:
-                difference_in_score = abs(get_user_data(current_user.username)['scores'][current_user.username] - get_user_data(current_user.username)['scores'][user.username])
+            if user.username not in previously_searched and user.username != current_user.username and user.username not in friends_usernames:
+                difference_in_score = abs(scores[current_user.username] - scores[user.username])
                 if difference_in_score < threshold:
                     eligible_users.append(user)
 
         # Sort eligible users by their scores in descending order
-        sorted_eligible_users = sorted(eligible_users, key=lambda user: get_user_data(current_user.username)['scores'][current_user.username].get(user.username, 0), reverse=True)
-
+        sorted_eligible_users = sorted(eligible_users, key=lambda user: scores[user.username],reverse=True)
         # Select the top eligible user if available
         if sorted_eligible_users:
-            get_user_data(current_user.username)['previously_searched'].append(sorted_eligible_users[0].username)
+            previously_searched.append(sorted_eligible_users[0].username)
             return sorted_eligible_users[0]
         else:
             return None
