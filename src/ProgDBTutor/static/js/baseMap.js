@@ -4,9 +4,9 @@
 export class BaseMap {
     /**
      * This is the base class used by 'BuildingMap' and 'TerrainMap' to extract duplicate code.
-     * @param mapData
-     * @param _tileSize
-     * @param username
+     * @param mapData - The mapData object that is stored in the database.
+     * @param _tileSize - The size of the tiles in pixels.
+     * @param username - The username of the user that is currently logged in.
      */
     constructor(mapData, _tileSize, username) {
         this.tileSize = _tileSize;

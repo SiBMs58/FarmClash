@@ -4,7 +4,7 @@ import {utils} from "./utils.js";
 import {defaultBuildingMapData} from "./Data/defaultBuildingMapData.js";
 
 /**
- * Sets the string value of
+ * These variables are used to not have magic strings in the code.
  */
 export const EMPTY_TILE = "None";
 export const FIELD_GENERAL_INFO_NAME = "Field3";
@@ -36,14 +36,19 @@ const defaultMapData = {
     ]
 }*/
 
-/** Tile coördinaten: (y,x)
- 0 1 2 3 | x
+/**
+
+ -- Tile coordinates: (y,x) --
+
+ 0  1  2  3 | x
  1
  2
  3
  —
  y
+
  */
+
 export class BuildingMap extends BaseMap {
     /**
      * @param mapData This is set to a default version of the map, if database fetch succeeds this will be overridden.
@@ -57,36 +62,34 @@ export class BuildingMap extends BaseMap {
 
         super(mapData, _tileSize, username);
 
-        this.buildingInformation = mapData.building_information;
-        this.buildingGeneralInformation = mapData.building_general_information
-        //this.tiles = this.generateBuildingTileMap();
-        this.tiles = null;
-        this.ctx = _ctx;
+        this.buildingInformation = mapData.building_information; // Contains all the building information
+        this.buildingGeneralInformation = mapData.building_general_information // Contains all the general information of the buildings
+        this.tiles = null; // Contains the tile map of the buildings
+        this.ctx = _ctx; // The context needed for drawing on-screen
 
-        this.buildingAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
-        this.relativeLocations = {} // Contains the relative locations of all the buildings
+        this.buildingAssetList = {}; // Contains json of all assets that need to be fetched.
+        this.relativeLocations = {} // Contains the relative locations of all the buildings.
         this.buildingAssets = {}; // Bevat {"pad_naar_asset": imageObject}
 
-        this.terrainMapInstance = terrainMapInstance;
-        this.cropMapInstance = cropMapInstance;
+        this.terrainMapInstance = terrainMapInstance; // Instance of the terrain map
+        this.cropMapInstance = cropMapInstance; // Instance of the crop map
 
         // Variables to remember the click state
-        this.movingBuilding = false;
-        this.buildingClickedName = "";
+        this.movingBuilding = false; // Boolean to check if a building is being moved
+        this.buildingClickedName = ""; // The name of the building that is clicked
 
         // To remember building following mouse movement
-        this.prevMouseMoveBuildingLoc = null; // [y, x]
+        this.prevMouseMoveBuildingLoc = null; // Coordinates are always of the form: [y, x]
 
-        // @Faisal json with all levels and what buildings unlock at this level --> [Count, general_information]
-        // Example:
-        this.buildingUnlockLevels = {
-            1: [[2, "Field"], [1, "Goatbarn"]],
+        this.buildingUnlockLevels = { // json with all levels and what buildings unlock at this level --> [Count, general_information]
+            1: [[2, "Field"], [1, "Goatbarn"]], // This is an example of 1 level
         };
 
     }
 
     /**
      * Initialises the building layer. Fetches everything that needs to be fetched from the server, and stores it.
+     * It also generates the tile map of the buildings and hides the loading screen.
      */
     async initialize() {
         await this.fetchBuildingAssetList();
@@ -95,13 +98,14 @@ export class BuildingMap extends BaseMap {
         this.tiles = this.generateBuildingTileMap();
         await new Promise((resolve) => this.preloadBuildingAssets(resolve));
         // Safe to call stuff here
-        //console.log("fetchBuildingLayerList() success"); // Don't remove this
-        //localStorage.setItem('gameData', 'true');
         this.generateBuildingUnlockLevelJson();
         hideLoadingScreen();
 
     }
 
+    /**
+     * Generates a javascript object with all the unlock levels and the buildings that unlock at this level.
+     */
     generateBuildingUnlockLevelJson() {
         // Initialize the buildingUnlockLevels object with keys 1 to 10
         const buildingUnlockLevels = {};
@@ -227,12 +231,7 @@ export class BuildingMap extends BaseMap {
             // Check if mapData contains building_information
 
             if ("building_information" in mapData) {
-                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
-                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
                 this.buildingInformation = mapData.building_information;
-                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingInformation);
-                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.buildingGeneralInformation);
-                //console.log("fetchBuildingMapData() success, BuildingMapData: ", this.tiles);
             } else {
             // No buildings found
                 await this.updateBuildingMapDB();
@@ -299,11 +298,23 @@ export class BuildingMap extends BaseMap {
         this.ctx.clearRect(x_tile_screen, y_tile_screen, this.tileSize, this.tileSize);
     }
 
+    /**
+     * Returns the level of a fence based on the asset string.
+     * @param assetString - The asset string of the fence
+     * @returns {number} - The level of the fence
+     */
     getFenceLevel(assetString) {
         const levelString = assetString.split('.')[1].slice(1);
         return Number(levelString);
     }
 
+    /**
+     * Adjust the fence asset based on surrounding fences.
+     * @param originalAssetName - The original asset name of the fence
+     * @param yLocation - The y location of the fence
+     * @param xLocation - The x location of the fence
+     * @returns {string} - The adjusted asset name of the fence
+     */
     adjustFenceAsset(originalAssetName, yLocation, xLocation) {
         const splitAssetName = originalAssetName.split('.')
         let baseAssetName = splitAssetName[0] + '.' + splitAssetName[1] + '.';
@@ -694,7 +705,6 @@ export class BuildingMap extends BaseMap {
                 }
             }
 
-            // TODO: (Siebe) check of friend aan het bezoeken
             // Ge moet hier true returnen omdat er op een gebouw is geklikt. De twee lijnen hier onder mogen gewoon niet gebeuren (zie hierboven als voorbeeld)
              // If the username is set it means you are visitiing someone else's farm meaning you can't move buildings
             if (!this.username) {
@@ -741,7 +751,7 @@ export class BuildingMap extends BaseMap {
         let tileX = Math.floor(client_x/this.tileSize) + this.viewX;
         let tileY = Math.floor(client_y/this.tileSize) + this.viewY;
 
-        if (this.tiles[tileY][tileX] !== EMPTY_TILE) {
+        if (this.tiles[tileY][tileX] !== EMPTY_TILE && !this.username) {
             console.log(`Right click op building layer, tile x: ${tileX}, y: ${tileY} --> ${this.tiles[tileY][tileX][1]}`);
             const buildingName = this.tiles[tileY][tileX][1];
             if (this.buildingInformation[buildingName].unlock_level > this.getTownHallLVL()) {
