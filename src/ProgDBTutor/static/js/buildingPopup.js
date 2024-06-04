@@ -1,6 +1,7 @@
 import { buildingMap } from "./canvas.js";
 import { cropMap } from "./canvas.js";
 import { FIELD_GENERAL_INFO_NAME } from "./buildingLayer.js";
+import { updateUI } from "./gameUI.js";
 
 // These are to make the code more readable and to avoid magic numbers
 const values = 1;
@@ -27,16 +28,9 @@ export function togglePopup() {
 export let isPopupOpen = false;
 let prevBuildingName = "";
 
-let buildingName;
-let building
-
 
 // CHECKS FOR UPGRADE BUTTON
-let currOpenedBuildingInformation;
-//let currOpenedBuildingGeneralInformation;
 let isUpgradableBool = true;
-let currBuildingName;
-let currBuildingInfo;
 
 /**
  * Checks whether a building is upgradable.
@@ -91,7 +85,7 @@ async function fetchBuildingPopupInformation() {
 export function openPopup(buildingInformation, buildingGeneralInformation, buildingName) {
     buildingID = buildingName;
     buildingData = buildingInformation[buildingName];
-    currOpenedBuildingInformation = buildingInformation[buildingName]
+    buildingData = buildingInformation[buildingName]
     if (isPopupOpen && (prevBuildingName !== buildingName)) {
         closePopup();
         setTimeout(function() { // Wait 200 ms
@@ -281,7 +275,7 @@ export function actualOpenPopup(buildingInformation, buildingGeneralInformation,
  */
 function cropPopupPreparation() {
     const buttons = document.querySelectorAll(".crop-buttons-grid img");
-    const fieldLevel = currOpenedBuildingInformation.level;
+    const fieldLevel = buildingData.level;
 
     const cropUnlockLevels = {
         "Wheat": 1,
@@ -399,6 +393,8 @@ function pressAugment() {
     sendAugmentLevel(buildingData.augment_level).then(data => {
         if(data['status'] !== 'success'){
             buildingData.augment_level--;
+        }else{
+            updateUI();
         }
     });
 }
@@ -457,7 +453,7 @@ async function releaseUpgradeButton() {
         upgradeButtonPressed.style.display = 'none';
         buildingMap.drawTiles();
         await buildingMap.updateBuildingMapDB();
-
+        updateUI();
     }
     if (mouseIsDown) {
          closePopup();
@@ -586,12 +582,12 @@ async function upgrade_checks(buildingInformation, info, buildingName) {
  */
 
 async function upgradeBuilding(){
-    currOpenedBuildingInformation.level +=1;
+    buildingData.level +=1;
     console.log(curr_level_cost);
     for (const cost of curr_level_cost){
         await updateResources(cost[0], -cost[1]);
     }
-    console.log(currOpenedBuildingInformation.level);
+    console.log(buildingData.level);
 }
 
 
@@ -663,7 +659,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Add mousedown event to change the src to the pressed version
         button.addEventListener("mousedown", function() {
-            const fieldLevel = currOpenedBuildingInformation.level;
+            const fieldLevel = buildingData.level;
             if (cropUnlockLevel <= fieldLevel) {
                 console.log("mouse down on allowed crop");
                 button.src = pressedSrc;
@@ -674,14 +670,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Add mouseup event to revert src and handle hard release
         button.addEventListener("mouseup", function() {
-            const fieldLevel = currOpenedBuildingInformation.level;
+            const fieldLevel = buildingData.level;
             if (cropUnlockLevel <= fieldLevel) {
                 if (button.src === pressedSrc) {
                     button.src = originalSrc;
                     const cropType = getCropName(originalSrc);
                     console.log(cropType + " has been pressed");
                     closeCropPopup()
-                    const field = currOpenedBuildingInformation.self_key;
+                    const field = buildingData.self_key;
                     cropMap.plantCrop(cropType, field);
                 }
             }
@@ -689,7 +685,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Add mouseleave event to revert src and handle soft release
         button.addEventListener("mouseleave", function() {
-            const fieldLevel = currOpenedBuildingInformation.level;
+            const fieldLevel = buildingData.level;
             if (cropUnlockLevel <= fieldLevel) {
                 if (button.src === pressedSrc) {
                     button.src = originalSrc;
@@ -703,11 +699,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // ———————
 // Helpers
-
+/**
+ * Calculates the cost of augmenting a building to a certain level.
+ * The cost is calculated as 50 * 2^level + 50.
+ * @param {number} level - The level to which the building is being augmented.
+ * @returns {number} - The cost of augmenting the building to the specified level.
+ */
 function augmentCost(level) {
     return 50 * Math.pow(2, level) + 50;
 }
 
+/**
+ * Returns an image element for a given resource.
+ * The image source is determined based on the resource type.
+ * @param {string} resource - The type of the resource.
+ * @returns {HTMLImageElement} - An image element with the source set to the image of the resource.
+ */
 function getResourceImg(resource) {
     const typeDir = {
         '': ['Money'],
@@ -733,6 +740,12 @@ function getResourceImg(resource) {
         return img;
     }
 }
+
+/**
+ * Replaces all spaces in a string with underscores.
+ * @param {string} input - The string to replace spaces in.
+ * @returns {string} - The input string with all spaces replaced by underscores.
+ */
 function spaceTo_(input) {
     return input.replace(/ /g, '_');
 }
