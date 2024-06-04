@@ -75,8 +75,10 @@ def choose_opponent_logic():
         # Filter users based on the conditions
         eligible_users = []
         for user in users:
+            user_score = scores.get(user.username, 0)
+            current_user_score = scores.get(current_user.username, 0)
             if user.username not in previously_searched and user.username != current_user.username and user.username not in friends_usernames:
-                difference_in_score = abs(scores[current_user.username] - scores[user.username])
+                difference_in_score = abs(current_user_score - user_score)
                 if difference_in_score < threshold:
                     eligible_users.append(user)
 
