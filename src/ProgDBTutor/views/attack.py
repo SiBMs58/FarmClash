@@ -62,7 +62,7 @@ def choose_opponent_logic():
 
         # Retrieve friends of the current user
         friends = friendship_data_access.get_friends(current_user)
-        friends_usernames = {friend.user2 if friend.user1 == current_user.username else friend.user1 for friend in friends}
+        friends_usernames = [friend.user2 if friend.user1 == current_user.username else friend.user1 for friend in friends]
 
         # Calculate scores for all users
         for user in users:
