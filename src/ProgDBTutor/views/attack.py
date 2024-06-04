@@ -69,12 +69,12 @@ def choose_opponent_logic():
             user_stats_response = user_stats(user.username)
             if 'error' in user_stats_response:
                 users.remove(user)
-                continue
-            if current_user.username == user.username:
-                user_score = user_stats(user.username)["attack"]
             else:
-                user_score = user_stats(user.username)["defense"]
-            scores[user.username] = user_score
+                if current_user.username == user.username:
+                    user_score = user_stats(user.username)["attack"]
+                else:
+                    user_score = user_stats(user.username)["defense"]
+                scores[user.username] = user_score
 
         # Filter users based on the conditions
         eligible_users = []
