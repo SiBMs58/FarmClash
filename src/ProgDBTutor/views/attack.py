@@ -94,7 +94,7 @@ def choose_opponent_logic():
             previously_searched.append(sorted_eligible_users[0].username)
             return sorted_eligible_users[0]
         else:
-            return eligible_users
+            return None
     except Exception as e:
         import traceback
         print("An error occurred: ", str(e), "\n", traceback.format_exc())
