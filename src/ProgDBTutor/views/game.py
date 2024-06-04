@@ -140,6 +140,7 @@ def building_user_exists(buildings, id):
     return None
 
 @game_blueprint.route('/update-building-map', methods=['POST'])
+@login_required
 def update_map():
     """
     Handles POST requests to insert JSON data into the database.
