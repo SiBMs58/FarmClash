@@ -348,8 +348,8 @@ fill the entire screen. The player can click and drag the screen to look around 
 and use the appropriate UI to navigate different parts of the game.
 
 After logging in, the player gets redirected to \texttt{https://"baseLink"/game/} which fetches \texttt{game.html}. This
-file is the most important HTML, as it connects and fetches every other file. It includes the UI HTML, the pop-up HTML,
-sets and positions the canvases, and links \texttt{canvas.js}. All the canvases have their own set of tiles which are
+file is the most important HTML, as it connects and fetches every other file. It includes the UI HTML, the pop-up HTML, and a bunch more.
+It sets and positions the canvases, and links \texttt{canvas.js}. All the canvases have their own set of tiles which are
 pre-fetched and stored during the initialization period. This is needed for instantaneous loading; otherwise, a fetch
 delay is noticeable during runtime.
 
@@ -366,10 +366,10 @@ asset's. Then the resize event gets linked and the ticker class gets started.
 \paragraph{Terrain Layer}
 The terrain layer provides functionality for correctly displaying the terrain tiles and is the lowest layered canvas,
 providing as a sort of background layer.
-The map is procedurally generated with a map size with width 58 and height 43
+The map is procedurally generated with a map size of width 58 and height 43
 with the usable part of the map being the middle 50x35 as 4 tiles are used as border/padding around the map. This padding
-consists of 3 water tiles and a grass water border. As for the map itself it is generated using a generate\_water\_positions()
-function which takes parameters the actual width (50) and height (35), number of lakes (default = 8), minimum lake size
+consists of 3 water tiles and a grass water border. As for the map itself it is generated using a
+function which takes as its parameters the actual width (50) and height (35), number of lakes (default = 8), minimum lake size
 (default = 3 tiles) and the maximum lake size (default = 10 tiles) and returns the positions where water should be generated.
 The actual variation of the tile is then randomly chosen out of a set of assets. There are default assets and special assets
 which contain special things (stone, logs, bushes etc.).
@@ -381,29 +381,29 @@ the screen the appropriate move functions of the map get called which change the
 
 After starting the game you may notice some tiles are being animated. This is accomplished by utilizing the tick()
 function and going through the terrain map array, changing specific tiles to the consequent tile in the animation and
-redrawing them.
+redrawing them. The terrain layer also has a reference to the buildingMap in order to draw plane grass tiles underneath buildings.
 
 \paragraph{Building Layer} The building layer works similarly to the terrain layer in terms of rendering the tiles but
 there are some distinctions and  additional features. The way the building map is saved differs from the the terrain
-layer. The buildings and building information are saved in a json structure. (opslag methode moet ge\"update worden dus
-hier is nog geen documentatie voor).
+layer. The buildings and building information are saved in a json structure. In the buildingInformation json only the absolute position of the top left corner of a building is saved (along with other variables like its level, a link to the general information of the building and its unlock level). Where the tiles of each building need to be drawn relatively to its absolute position is stored in a seperate json as the relative locations. We chose this implementation over a 2D array because (1) buildings sometimes need to be drawn on top of each other, which a 2D map  can't do. And (2) because adjusting a buildings position only takes changing two numbers, the x and y of the absolute position.
 
 The building layer provides support for interacting with buildings. To move a building you can click (without dragging),
 after which the building is locked to the mouse. Move the mouse, then click again to place the building. When attempting
-to place a building on an invalid location the building simply doesn't get placed and stays attached to the mouse.
-Invalid locations include other buildings and water tiles. When trying to drag a building outside the window or outside
+to place a building on an invalid location the building simply doesn't get placed. Instead it stays attached to the mouse and an error message is shown.
+Invalid locations include other buildings and the water tiles on the map border. When trying to drag a building outside the window or outside
 the map bounds the building doesn't move any further in a way such that it is never in an impossible location. You can
-drag the screen while moving a building to easily move around the map without needing to let go of the building.
-
-When moving a building it gets rendered on top of all other buildings to avoid it from going underneath other structures
+drag the screen while moving a building to easily move around the map without needing to let go of the building. When moving a building it gets rendered on top of all other buildings to avoid it from going underneath other structures
 around the map. This would lead to a somewhat strange visual otherwise.
+
+As you upgrade your town hall, more buildings will be unlocked. When hovering your mouse over a not yet unlocked building a message appears to tell you the building is not yet unlocked. When attempting to click or right-click a building that's not unlocked, a stronger error message appears telling you need to upgrade your town hall to a certain level in order to unlock the building.
+
+Notice that when moving fences the fence and its neighbor fences update their assets to correctly link together.
 
 \paragraph{Building Pop-up} When right-clicking on a building, a HTML pop-up shows up on the right side of the screen.
 This is used to display various details about the building of interest and also allows you to upgrade the building. The
 pop-up contains a "Building Info" title, the name of the type of building, a small text with some information (namely
 the purpose of the building). On top of that there are, depending on the type of building, potentially some stats that
-include the level the building is at and other stats like upgrade cost, defense, eggs/hour, etc. Lastly there is an
-upgrade button and a close button that are both animated when clicked.
+include the level the building is at and other stats like upgrade cost, defense, eggs/hour, etc. Lastly there are the buttons these are animated when clicked. There is an upgrade button, a close button and an augment button. The augment button gives you smaller upgrades within each level of the building. Sometimes there is also a menu button. This brings you to a building specific menu. For example the silo displays all its contents in this menu.
 
 When right-clicking another building while a pop-up is already open, a switch animation is displayed to make clear that
 you are switching to the information of a different building. When right-clicking the same building twice this animation
@@ -432,6 +432,17 @@ In order to check on what canvas the user intended to click, a trickle-down meth
 checks the first class in the list and calls the 'handleClickInput(x,y)' function on this class. This function will then
 return a boolean whether the click was applicable to the class or not. If not, the handleClick function is called on the
 next layer's class and so on.
+
+\paragraph{Crop Layer} The main way to earn resources in this game is by farming. When right-clicking an empty field a secondary pop up shows up.
+Depending on the level of the field, one or more crop buttons are available to click. When selecting a crop it gets planted and now it's waiting time.
+Each crop has 4 asset phases that they cycle between over time. So you can see the crops being updated live.
+Each subsequent crop takes twice as long to grow as the previous crop. When the crop has fully grown,
+a green border appears around the field and you can just click the crop to harvest it. The resources will be updated and the field is emptied.
+To check the growth phase of a crop only the time planted is stored in the database. All the growing logic happens on-device.
+
+This crop layer also used a completely separate canvas. It has it's own draw function and the crops are drawn relative to their respective fields.
+This crop class keeps a js object that stores all the information about each crop and links to the field name of the underlying field.
+So this layer has a reference to the building layer to check the locations when drawing.
 
 
 \subsubsection{Friends and Messaging Feature}
