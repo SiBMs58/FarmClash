@@ -1,4 +1,4 @@
-# Web-based Idle Game: FarmClash
+# Web-based Idle Game: [FarmClash](https://team3.ua-ppdb.me)
 
 ## Overview
 This project is developed as part of the Programming Project Databases course at the University of Antwerp. It's a web-based idle game where players manage cities, gather resources, and interact in a multiplayer environment.
@@ -14,7 +14,6 @@ This project is developed as part of the Programming Project Databases course at
 - Flask for the webserver.
 - PostgreSQL for the database.
 - Raw JavaScipt for the front-end.
-- JSON Web Tokens for stateless authentication. (TODO: verify)
 
 ## Getting Started
 ### Prerequisites
