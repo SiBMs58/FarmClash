@@ -1,5 +1,6 @@
 import json
 import os
+import traceback
 
 from flask import Blueprint, current_app, jsonify, abort, request
 from flask_login import login_required, current_user
@@ -397,7 +398,7 @@ def get_leaderboard():
                         for i, user in enumerate(unique_users)]
         return jsonify(ranked_users)
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": str(e), "traceback": traceback.format_exc()}), 500
 
 
 @api_blueprint.route('/fetch-building-information', methods=['GET'])
