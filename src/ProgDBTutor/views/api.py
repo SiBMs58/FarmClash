@@ -376,6 +376,7 @@ def get_leaderboard():
                 scores[user.username] = user_score
             except Exception as e:
                 print(f"Error calculating score for user {user.username}: {str(e)}")
+                continue
         # Sort users based on their scores stored in the scores dictionary
         sorted_users = sorted(users, key=lambda user: scores[user.username], reverse=True)
         # Get the top 3 users
@@ -387,13 +388,11 @@ def get_leaderboard():
         # Ensure current user is included
         friend_objects = [user_data_access.get_user(friend) for friend in friends]
         leaderboard_users = top_three + friend_objects
-        for leaderboard_user in leaderboard_users:
-            if leaderboard_user.username == current_user.username:
-                break
-        else:
+        if current_user not in [user.username for user in leaderboard_users]:
             leaderboard_users.append(current_user)
+
         # Remove duplicates and create ranked list
-        unique_users = list({user.username: user for user in leaderboard_users}.values())
+        unique_users = {user.username: user for user in leaderboard_users}.values()
         ranked_users = [{'place': i + 1, 'username': user.username, 'score': scores[user.username]}
                         for i, user in enumerate(unique_users)]
         return jsonify(ranked_users)
