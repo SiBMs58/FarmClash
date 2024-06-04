@@ -67,7 +67,6 @@ def user_stats(username):
     atk = 0
     defn = 0
     level = 0
-    coins = 0
     try:
         # Safely retrieve Money resource
         money_resource = current_app.config.get('resource_data_access').get_resource_by_type(username, 'Money')
@@ -87,9 +86,8 @@ def user_stats(username):
             atk_augment = get_augmentation_value(building.building_type, 'Attack') or 0
             defn_value = get_stats_value(building.building_type, 'Defense', building.level) or 0
             defn_augment = get_augmentation_value(building.building_type, 'Defense') or 0
-            # Ensure that augment levels and values are not None before multiplication
-            atk += atk_value + (building.augment_level or 0) * (atk_augment or 0)
-            defn += defn_value + (building.augment_level or 0) * (defn_augment or 0)
+            atk += atk_value + building.augment_level * atk_augment
+            defn += defn_value + building.augment_level * defn_augment
 
         for animal in animals:
             if animal.amount is None:
