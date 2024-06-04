@@ -100,7 +100,7 @@ def user_stats(username):
                 "Pig": 'Pigpen',
                 "Goat": 'Goatbarn'
             }
-            species_building = species_augments.get(animal.species, '')
+            species_building = species_augments.get(animal.species)
             if species_building:
                 defn += animal.amount * (get_augmentation_value(species_building, 'Defense') or 0)
                 atk += animal.amount * (get_augmentation_value(species_building, 'Attack') or 0)
