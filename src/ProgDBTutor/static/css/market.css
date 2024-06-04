@@ -1,7 +1,7 @@
 body {
     font-family: "Press Start 2P", Arial, sans-serif;
     font-size: 20px;
-    background-image: url('../img/wood.background.png');
+    background-image: url('../img/background/wood.panel.png');
     image-rendering: pixelated;
     user-select: none;
     cursor: url('../img/UI/pointer.png'), auto;
@@ -24,11 +24,15 @@ body {
 button:active,
 body:active {
     cursor: url('../img/UI/pointer_click.png'), auto;
+    outline: none;
 }
 button:hover {
     cursor: url('../img/UI/pointer_hover.png'), auto;
 }
-
+.sell-btn:focus,
+.quantity-button:focus {
+    outline: none;
+}
 
 .marketplace {
     position: absolute;
@@ -51,20 +55,16 @@ button:hover {
     margin: 1%;
     text-align: center;
 }
-
-
+.product p{
+    margin: 20px;
+}
 img.crate-image {
-    width: 100px;
     height: 100px;
     image-rendering: pixelated;
 }
 
 
-.coin-image {
-    transform: scale(0.85);
-    width: 20px;
-    image-rendering: pixelated;
-}
+
 
 
 
@@ -90,7 +90,8 @@ img.crate-image {
     text-align: center; /* Center text horizontally */
     z-index: 1; /* Ensure it's above other elements */
     position: relative;
-    top: -15px;
+    top: 7%;
+    transform: translateY(-50%);
     margin-right: -5px;
     margin-left: -5px;
 }
@@ -109,5 +110,19 @@ img.crate-image {
     image-rendering: pixelated;
 }
 
+.crops {
+    width: 100vw;
+    position: absolute;
+    bottom: 5%;
+    display: flex;
+    justify-content: center; /* Centers child elements horizontally */
+    align-items: center;     /* Centers child elements vertically */
+    z-index: 999;
+}
+
+.crops img {
+    image-rendering: pixelated;
+    height: 50px;
+}
 
 

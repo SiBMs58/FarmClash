@@ -1,0 +1,303 @@
+
+
+body, html {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    color: #bc8a56;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Press Start 2P', Arial, sans-serif;
+    cursor: url('../img/UI/cursor.png'), auto;
+    user-select: none; /* Disable text selection for images */
+    -webkit-user-drag: none; /* Disable dragging for images on webkit browsers */
+    position: relative; /* Ensure proper positioning of pseudo-element */
+    z-index: 1; /* Ensure the container is above the pseudo-element */
+}
+
+html::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/background/explore.gif");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(3px);
+    z-index: 0; /* Ensure the pseudo-element is behind the container */
+}
+
+.quantity-button:hover,
+.explore-btn:hover,
+.open-btn:hover,
+.continue-btn:hover{
+    cursor: url("../img/UI/brown_cursor.png"), auto;
+}
+
+.logo-tab {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    z-index: 999;
+}
+
+.exploration {
+    position: absolute;
+    top: 35%;
+    width: 800px; /* Adjust the max-width as needed */
+
+    border: 8px solid #aa7959;
+    border-radius: 10px;
+    background: #e8cfa6;
+    padding: 20px 0 30px 0;
+    text-align: center;
+}
+
+/* Style for the animal list container */
+.animal-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Style for each animal container */
+.animal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.animal-img{
+    height: 100px;
+    image-rendering: pixelated;
+}
+
+
+.input-container {
+    font-family: Arial, sans-serif;
+    width: 50px;
+    height: 43px; /* Adjust height as needed */
+    background: #e8cfa6;
+    border: 3px solid #aa7959;
+    border-radius: 3px;
+    -moz-appearance: textfield;
+    text-align: center; /* Center text horizontally */
+    z-index: 1; /* Ensure it's above other elements */
+    position: relative;
+    top: -17px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.input-container::-webkit-inner-spin-button,
+.input-container::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+.quantity-button,
+.explore-btn {
+    padding: 0;
+    background: none;
+    border: none;
+}
+.explore-btn img,
+.quantity-button img {
+    image-rendering: pixelated;
+}
+
+
+/* Style for the perk list container */
+.perk-list {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Style for the explore container */
+.explore {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+
+
+
+.exploration-time {
+    text-align: center;
+    padding: 5px;
+    margin-right: 10px;
+    background: #e8cfa6;
+    border: 3px solid #aa7959;
+    color: #aa7959;
+    font-weight: bold;
+}
+.exploration-time option:checked {
+    background: #c49a6c;
+    color: #7c5840;;
+}
+
+
+#before-exploration{
+    display: none;
+}
+#during-exploration{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 254px;
+    font-size: 50px;
+    font-weight: bold;
+}
+#after-exploration{
+    padding: 10px;
+    top: 50%;
+    transform: translateY(-45%);
+    display: none;
+    width: 1280px;
+    height: 720px;
+}
+.rewards {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    height: 87%;
+    width: 78%;
+
+    padding: 1% 0.6%; /* Use 1% of the container's width as padding */
+    box-sizing: border-box; /* Include padding in the total width and height */
+    border-radius: 4px;
+    background: #f0e0bc;
+
+    display: flex;
+}
+.rewards img {
+    /* Scale button to the height of the div*/
+    height: 90%;
+    width: auto;
+
+    image-rendering: pixelated;
+}
+
+.reward-items {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    height: 79%;
+    width: 20%;
+
+    border-radius: 4px;
+    background: #f0e0bc;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.reward-items img {
+    height: 20px;
+    width: auto;
+
+    image-rendering: pixelated;
+}
+
+.buttons {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-80%);
+
+    height: 10%;
+    width: 25%;
+
+}
+
+
+.open-btn{
+    /* center the button horizontally in the div*/
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Makes button only the img*/
+    padding: 0;
+    background: none;
+    border: none;
+
+    /* Scale button to the height of the div*/
+    height: 100%;
+    width: auto;
+
+    display: block;
+}
+.continue-btn {
+    /* center the button horizontally in the div*/
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Makes button only the img*/
+    padding: 0;
+    background: none;
+    border: none;
+
+    /* Scale button to the height of the div*/
+    height: 100%;
+    width: auto;
+
+    display: none;
+}
+.open-btn img,
+.continue-btn img {
+    /* Scale button to the height of the div*/
+    height: 100%;
+    width: auto;
+
+    image-rendering: pixelated;
+}
+
+
+.animals {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+
+    height: 17%;
+    width: 20%;
+
+    border-radius: 4px;
+    background: #f0e0bc;
+
+    display: flex;
+    flex-direction: column;
+
+    font-size: 40px;
+    padding: 1% 0.6%; /* Use 1% of the container's width as padding */
+    box-sizing: border-box; /* Include padding in the total width and height */
+}
+
+
+
+.animals img {
+    height: 40px;
+    width: auto;
+
+
+    image-rendering: pixelated;
+}

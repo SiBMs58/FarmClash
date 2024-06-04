@@ -34,14 +34,64 @@
             <!--border: solid black;-->
         }
 
+        /* Loading screen styles */
+        #loadingScreen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: backgroundPulse 3s infinite;
+        }
+
+        #loadingScreen h1 {
+            color: white;
+            animation: typing 4s steps(40, end) forwards, blink 0.75s step-end infinite;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid transparent;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 40ch; }
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: white; }
+        }
+
+        @keyframes backgroundPulse {
+            0% { background-color: rgba(0, 0, 0, 0.8); }
+            50% { background-color: rgba(0, 0, 0, 0.6); }
+            100% { background-color: rgba(0, 0, 0, 0.8); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 
 </head>
 <body>
 
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <h1>Loading {{ friend['username'] }}'s world. Please wait...</h1>
+    </div>
+
     {% include 'game/visit_friend_UI.html' %} <!-- This would be a new include for the UI when visiting -->
 
+    {% include 'game/pop-up.html' %}
+
     <div id="canvasContainer">
+        <canvas id="uiCanvas"></canvas>
+        <canvas id="cropCanvas"></canvas>
         <canvas id="buildingCanvas"></canvas>
         <canvas id="terrainCanvas"></canvas>
     </div>
@@ -52,6 +102,12 @@
     // Attach friend to the window object to make it globally accessible
     window.friend = document.getElementById('dataScript').getAttribute('data-friend');
     console.log(window.friend);
+</script>
+
+<script>
+    function hideLoadingScreen() {
+        document.getElementById('loadingScreen').classList.add('hidden');
+    }
 </script>
 
 

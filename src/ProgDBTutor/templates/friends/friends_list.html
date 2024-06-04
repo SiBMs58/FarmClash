@@ -4,10 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+     <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
     <!-- Bootstrap CSS -->
-     <link rel="stylesheet" href="cc.css">
 
     <style>
+
+
+
+    body{
+         cursor: url('../../static/img/UI/cursor.png'), auto;
+    }
 
         #friends-column {
             margin-bottom: 10px;
@@ -16,13 +23,14 @@
         }
         .custom-header{
 
-            background-image: url('../../static/img/backround-wood.png');
+            background-image: url('../../static/img/background/wood.png');
             background-size: cover;
             color: wheat /* Optionally, set the text color to contrast with the background */
 
         }
         .btn-custom-search{
-            background-image: url('../../static/img/button-image.png');
+            background-image: url('../../static/img/background/button-image.png');
+
             color:wheat;
         }
         .card-body{
@@ -48,11 +56,11 @@
             <form action="{{ url_for('friends.search_friends') }}" method="get" class="mb-3">
                 <div class="input-group">
                     <input type="text" class="form-control" name="query" placeholder="Search...">
-                    <button class="btn btn-custom-search" type="submit" id="button-addon2">Search</button>
+                    <button class="btn btn-custom-search" type="submit" id="button-addon2" style="cursor: url('../../static/img/UI/pointer_click.png'), auto;">Search</button>
                 </div>
             </form>
             <!-- Friends List -->
-            <ul id="friends-list" class="list-group">
+            <ul id="friends-list" class="list-group" >
                 <!-- Friends will be loaded here by the JavaScript function -->
             </ul>
         </div>
@@ -60,6 +68,8 @@
 </div>
 
 <script>
+    localStorage.getItem('muteButtonState')
+    localStorage.getItem('backsoundButtonState')
     // Function to load friends from the API
     function loadFriends() {
         fetch('/api/friends')

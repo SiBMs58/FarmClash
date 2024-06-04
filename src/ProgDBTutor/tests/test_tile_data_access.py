@@ -31,18 +31,6 @@ def test_get_tile_returns_none_if_not_found(tile_data_access, mock_db_connection
     tile = tile_data_access.get_tile(999)  # Assuming 999 is a non-existent tile ID
     assert tile is None
 
-def test_get_tiles_by_map_id_returns_tiles_list(tile_data_access, mock_db_connection):
-    mock_db_connection.get_cursor().fetchall.return_value = [
-        {'tile_id': 1, 'map_id': 2, 'x': 10, 'y': 20, 'terrain_type': 'grass', 'occupant_id': None, 'created_at': datetime.now()},
-        {'tile_id': 2, 'map_id': 2, 'x': 15, 'y': 25, 'terrain_type': 'water', 'occupant_id': None, 'created_at': datetime.now()}
-    ]
-
-    tiles = tile_data_access.get_tiles_by_map_id(2)
-    assert len(tiles) == 2
-    assert all(isinstance(tile, Tile) for tile in tiles)
-    assert tiles[0].terrain_type == 'grass'
-    assert tiles[1].x == 15
-
 def test_add_tile_adds_successfully(tile_data_access, mock_db_connection):
     new_tile = Tile(None, 2, 30, 40, 'forest', None, datetime.now())
     success = tile_data_access.add_tile(new_tile)

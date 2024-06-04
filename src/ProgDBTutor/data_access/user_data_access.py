@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from models.user import User
 from werkzeug.security import generate_password_hash
 
@@ -33,9 +35,19 @@ class UserDataAccess:
         cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
         result = cursor.fetchone()
         if result:
-           return User(result['username'], result['password'], result['email'], result['created_at'])
+           return User(result['username'], result['password'], result['email'], result['created_at'], result['last_gift'])
         else:
            return None
+
+    def update_last_gift(self, username):
+        """
+        Updates the last_gift field of the user with the given username.
+        :param username: The username of the user to update.
+        """
+        cursor = self.db_connection.get_cursor()
+        cursor.execute("UPDATE users SET last_gift = %s WHERE username = %s", (datetime.now(), username))
+        self.db_connection.conn.commit()
+
 
     def get_all_users(self):
         """
@@ -45,7 +57,7 @@ class UserDataAccess:
         cursor = self.db_connection.get_cursor()
         cursor.execute("SELECT * FROM users")
         results = cursor.fetchall()
-        return [User(result['username'], result['password'], result['email'], result['created_at']) for result in results]
+        return [User(result['username'], result['password'], result['email'], result['created_at'], result['last_gift']) for result in results]
 
     def search_users(self, query):
         """
@@ -57,5 +69,5 @@ class UserDataAccess:
         like_query = f"%{query}%"
         cursor.execute("SELECT * FROM users WHERE username LIKE %s", (like_query,))
         results = cursor.fetchall()
-        return [User(result['username'], result['password'], result['email'], result['created_at']) for result in
+        return [User(result['username'], result['password'], result['email'], result['created_at'], result['last_gift']) for result in
                 results]

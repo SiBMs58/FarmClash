@@ -1,6 +1,6 @@
 body {
     font-family: "Press Start 2P", Arial, sans-serif;
-    background-image: url("../img/terrain.png");
+    background-image: url("../img/background/terrain.png");
     image-rendering: pixelated;
     user-select: none;
     cursor: url('../img/UI/pointer.png'), auto;
@@ -13,7 +13,7 @@ body {
 
 .leaderboard {
     position: absolute;
-    background-image: url("../img/wood.background.png");
+    background-image: url("../img/background/wood.panel.png");
     top: 50%;
     left: 50%;
     width: 50%;

@@ -6,16 +6,9 @@
     <link rel="stylesheet" type="text/css" href="../static/css/UI.css">
 </head>
 <body>
-    <button id="back-btn" class="back-btn">
-        <a href="{{ url_for('friends.dashboard') }}">
-            <img src="../static/img/buttons/back_btn.png" alt="{{ app_data['app_name'] }}">
-        </a>
-    </button>
-    <div class="welcome-user">
-        <a class="nav-item nav-link" href="{{ request.path }}">Welcome, {{ current_user.username }}!</a>
-    </div>
+    {% include 'header&footer.html' %}
 
-    <div class="container mt-5">
+    <div class="container" style="position: absolute; text-align: center; top: 50%; left: 50%; width: 50%; transform: translate(-50%, -50%);">
         <h2>Search Results</h2>
         {% if users %}
             <ul class="list-group">
@@ -25,7 +18,7 @@
                         {{ user.username }}
                         <!-- Form aligned to the right -->
                         <form action="{{ url_for('friends.add_friend', friend_name=user.username) }}" method="post">
-                            <button type="submit" class="btn btn-primary">Add as Friend</button>
+                            <button type="submit" class="btn btn-primary" style="cursor: url('../../static/img/UI/pointer_click.png'), auto;">Add as Friend</button>
                         </form>
                     </li>
                 {% endfor %}
@@ -34,10 +27,9 @@
             <p>No matching users found.</p>
         {% endif %}
         <div class="my-3">
-            <a href="{{ url_for('friends.dashboard') }}">Return to Dashboard</a>
+            <a href="{{ url_for('friends.dashboard') }}" >Return to Dashboard</a>
         </div>
     </div>
 
-    {% include 'footer.html' %}
 </body>
 </html>

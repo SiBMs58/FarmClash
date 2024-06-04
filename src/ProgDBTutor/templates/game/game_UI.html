@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" type="text/css" href="../../static/css/UI.css">
+    <script type="module" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/sound.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/idle.js') }}"></script>
     <title>game UI</title>
 </head>
 <body>
@@ -12,7 +15,7 @@
             </a>
         </button>
 
-        <button id="resource-btn" class="resource-btn" onclick="clickResources()">
+        <button id="resource-btn" class="resource-btn">
             <img src="../../static/img/UI/resource_btn.png" alt="🌱">
         </button>
         <div class="overlay" id="resource-overlay">
@@ -40,17 +43,38 @@
         </button>
     </header>
     <footer>
+        <div id="idle-popup" class="idle-popup">
+
+        </div>
+        <button id="animal-btn" class="animal-btn">
+            <img src="../../static/img/UI/paw_btn.png" alt="🐄">
+        </button>
+        <div class="animal-overlay" id="animal-overlay">
+            <div class="animal-popup">
+                <!-- The resource amounts of the user will be inserted here dynamically -->
+            </div>
+        </div>
         <button id="market-btn" class="market-btn">
             <a href="{{ url_for('market.market') }}">
                 <img src="../../static/img/UI/market_btn.png" alt="🛒">
             </a>
         </button>
+        <p id="building-placement-warning" class="warning-popup">
+            Invalid position to place building
+        </p>
+        <p id="building-unlock-warning" class="warning-popup">
+            You haven't unlocked this building.<br>Upgrade your town hall to level <span id="building-unlock-warning-lvl-text">'undefined'</span>
+        </p>
+        <p id="soft-building-unlock-warning">
+            You haven't unlocked this building.
+        </p>
         <button id="attack-btn" class="attack-btn">
-            <a href="{{ url_for('attack') }}">
+            <a href="{{ url_for('attack.visit_opponent') }}">
                 <img src="../../static/img/UI/attack_btn.png" alt="⚔️">
             </a>
         </button>
     </footer>
     <script src="../../static/js/gameUI.js"></script>
+
 </body>
 </html>

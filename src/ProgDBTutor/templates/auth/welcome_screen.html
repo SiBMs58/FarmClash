@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>welcome screen</title>
+    <link rel="stylesheet" href="../../static/css/welcome_screen.css">
+    {% include 'head.html' %}
+</head>
+<body>
+    <button class="start-btn">
+        <a href="{{ url_for('auth.login') }}">
+            <img src="../../static/img/UI/cancel_btn.png" alt="Logout" usemap="#logoutMap" id="image-button">
+        </a>
+    </button>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Welcome to Farmclash!</h1>
+            <br>
+            <p>Here's a quick overview to get you started. No need to read everything. You can always find an even more detailed overview in the settings menu.</p>
+            <br>
+            <h5>Farm</h5>
+            <ul>
+                <li>Left-click a building if you want to move it. Right-click a building to see more information and to check out its stats, or upgrade it.</li>
+                <li>Tip: Start by upgrading your town hall.</li>
+                <li>Move around the world by using your arrow keys or clicking and dragging.</li>
+            </ul>
+            <br>
+            <h5>Market</h5>
+            <ul>
+                <li>It's open 24/7! Check it out through the bottom-left button '🛒'.</li>
+                <!--
+                <li><strong>Picture:</strong> The figures indicate the type of crop</li>
+                <li><strong>Price:</strong> Under the figure you can see the price of 1 piece of the corresponding crop type</li>
+                <li><strong>Amount:</strong> You can adjust it with the plus button and minus button, or directly enter the amount yourself by entering it in the number between the plus and minus button</li>
+                <li><strong>Sell:</strong> Click the sell button to sell all selected crops</li>-->
+            </ul>
+            <br>
+            <h5>Chat</h5>
+            <ul>
+                <li>Find friends, chat with them and send gifts to go from friends to BEST friends</li>
+                <!--
+                <li><strong>Chat:</strong> You can select a friend to chat with in the chat box</li>
+                <li><strong>Search:</strong> You can search another player and add them as your friend</li>
+                <li><strong>Visit:</strong> You can also select a friend and visit them via the "visit world" button</li>-->
+            </ul>
+            <br>
+            <h5>Attack</h5>
+            <ul>
+                <li>Did you really think it's all fun and games? Attack players and steal their resources to get ahead. Access the attack screen through the '💀' button.</li>
+                <!--
+                <li><strong>Steal:</strong> Steal as many crops from your opponent as possible</li>
+                <li><strong>Opponent:</strong> Better players bring in more, but are harder to beat</li>-->
+            </ul>
+            <br>
+            <h5>Exploration</h5>
+            <ul>
+                <li>Go explore with or without animals. You can go for long explorations, but beware this has more risks. Exploring will be unlocked as soon as the bay building is fixed</li>
+            </ul>
+
+
+        </div>
+    </div>
+</div>
+<script>
+    function startGame() {
+        window.location.href = "{{ url_for('auth.logout') }}"; // Correct the function to use the proper URL
+    }
+</script>
+</body>
+</html>

@@ -1,4 +1,12 @@
 import { tileSize } from './canvas.js'
+import {closePopup, openPopup, togglePopup} from './buildingPopup.js'
+
+const items = ["Wheat", "Carrot", "Corn", "Lettuce", "Stone", "Tomato", "Zucchini", "Ingot", "Parsnip", "Soy Milk",
+    "Cashmere Wool", "Irish Wool", "Gold Truffle", "Rustic Egg", "Strawberry Milk", "Alpaca Wool", "Emerald Egg",
+    "Chocolate Milk", "Cauliflower", "Sapphire Egg", "Milk", "Eggplant", "Money", "Forest Truffle", "Log",
+    "Blueberry Milk", "Plank", "Wool", "Crimson Egg", "Egg", "Truffle", "Dolphin Wool", "Stick", "Winter Truffle",
+    "Bronze Truffle", "Turnip"];
+
 
 export class UserInputHandler {
     /**
@@ -25,30 +33,48 @@ export class UserInputHandler {
         document.addEventListener('keydown', (event) => {
             this.handleKeyDown(event);
         });
+
         // To check whether to register click or drag
         let clickStartPosition = null;
-        document.addEventListener('mousedown', (event) => {
-            clickStartPosition = { x: event.clientX - rect.left, y: event.clientY - rect.top};
-            this.handleScrollInput(event);
-        });
-        document.addEventListener('mouseup', (event) => {
-            this.handleScrollInput(event);
-
-            if (clickStartPosition !== null) {
-                const dx = Math.abs((event.clientX - rect.left) - clickStartPosition.x);
-                const dy = Math.abs((event.clientY - rect.top) - clickStartPosition.y);
-
-                const threshold = 5; // Adjust as needed
-
-                if (dx > threshold || dy > threshold) {
-                    clickStartPosition = null;
-                    return;
-                }
-
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-                this.handleClickInput(x, y);
+        document.getElementById("canvasContainer").addEventListener('mousedown', (event) => {
+            console.log("mousedown");
+            switch(event.button) {
+                case 0:
+                    clickStartPosition = { x: event.clientX - rect.left, y: event.clientY - rect.top};
+                    this.handleScrollInput(event);
+                    closePopup();
+                    break;
+                case 2:
+                    break;
             }
+
+        });
+        document.getElementById("canvasContainer").addEventListener('mouseup', (event) => {
+            console.log("mouseup");
+            switch (event.button) {
+                case 0:
+                    this.handleScrollInput(event);
+
+                    if (clickStartPosition !== null) {
+                        const dx = Math.abs((event.clientX - rect.left) - clickStartPosition.x);
+                        const dy = Math.abs((event.clientY - rect.top) - clickStartPosition.y);
+
+                        const threshold = 5; // Adjust as needed
+
+                        if (dx > threshold || dy > threshold) {
+                            clickStartPosition = null;
+                            return;
+                        }
+
+                        const x = event.clientX - rect.left;
+                        const y = event.clientY - rect.top;
+                        this.handleClickInput(x, y);
+                    }
+                    break;
+                case 2:
+                    this.handleRightClickInput(event.clientX, event.clientY);
+            }
+
         });
         document.addEventListener('mousemove', (event) => {
             this.handleScrollInput(event);
@@ -106,8 +132,11 @@ export class UserInputHandler {
             case 'ArrowDown':
                 this.sendScrollMessage('Down');
                 break;
-            case 'Escape':
-                // todo move van gebouw cancelen als je het aan het verplaatsen bent
+            case 'o':
+                togglePopup(); // For debugging purposes
+                break;
+            case 'r':
+                this.cheatResources(); // For debugging purposes
                 break;
             default:
                 // Optional: handle any other keys
@@ -156,10 +185,10 @@ export class UserInputHandler {
         }
     }
 
-    /** Checks all layer classes one by one to see if the user clicked on something in the layer.
+    /**
+     * Checks all layer classes one by one to see if the user clicked on something in the layer.
      * Classes have the ability to set themselves as a priorityClickClass such that next click will be sent to them
      * regardless of class order.
-     *
      * @param x on screen
      * @param y on screen
      */
@@ -175,10 +204,23 @@ export class UserInputHandler {
 
         // normal click order execution
         for (const currClass of this.classes) {
-            if (currClass.handleClick(x,y) === true) {
+            if (typeof currClass.handleClick === 'function' && currClass.handleClick(x,y) === true) {
                 if (currClass.ownNextClick) {
                     this.priorityClickClass = currClass;
                 }
+                break;
+            }
+        }
+    }
+
+    /**
+     * Goes through all subscribed classes and calls their 'handleRightClick' function.
+     * @param x - x coord on screen
+     * @param y - y coord on screen
+     */
+    handleRightClickInput(x, y) {
+        for (const currClass of this.classes) {
+            if (typeof currClass.handleRightClick === 'function' && currClass.handleRightClick(x,y) === true) {
                 break;
             }
         }
@@ -197,4 +239,35 @@ export class UserInputHandler {
         }
     }
 
+    /**
+     * This is only for debugging purposes.
+     * @returns {Promise<void>}
+     */
+    async cheatResources() {
+        const resources = {};
+        items.forEach(item => {
+            resources[item] = 100000;});
+
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        const fetchLink = `${BASE_URL}/api/add-resources`;
+
+        try {
+            const response = await fetch(fetchLink, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(resources) // Send the serialized resource data as the request body
+            });
+
+            if (response.ok) {
+                const jsonResponse = await response.json();
+                console.log('Resources DB update successful:', jsonResponse);
+            } else {
+                console.error('Add-resources DB update failed with status:', response.status);
+            }
+        } catch (error) {
+            console.error('Failed to update resources:', error);
+        }
+    }
 }

@@ -1,14 +1,17 @@
+from datetime import datetime
+
+
 class Resource(object):
-    def __init__(self, resource_id, username_owner, resource_type, amount):
-        self.resource_id = resource_id
+    def __init__(self, username_owner, resource_type, amount, last_updated=None):
         self.username_owner = username_owner
         self.resource_type = resource_type
         self.amount = amount
+        self.last_updated = last_updated if last_updated is not None else datetime.now()
 
     def to_dict(self):
         return {
-            'resource_id': self.resource_id,
             'owner': self.username_owner,
             'resource_type': self.resource_type,
-            'amount': self.amount
+            'amount': self.amount,
+            'last_updated': self.last_updated.isoformat()
         }

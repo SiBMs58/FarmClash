@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="../../static/css/UI.css">
+    <title>game UI</title>
+</head>
+<body>
+    <header>
+        <button id="resource-btn" class="resource-btn" onclick="clickResources()" style="left: 10px">
+            <img src="../../static/img/UI/resource_btn.png" alt="🌱">
+        </button>
+        <div class="overlay" id="resource-overlay">
+            <div class="popup">
+                <!-- The resource amounts of the user will be inserted here dynamically -->
+            </div>
+        </div>
+        <button id="attack-btn" class="attack-btn" style="bottom: auto; top: 10px;">
+            <a href="{{ url_for('attack.attack_animation') }}">
+                <img src="../../static/img/UI/attack_btn.png" alt="⚔️">
+            </a>
+        </button>
+
+    </header>
+    <script>
+        let clickedResourceButton = false;
+
+        function clickResources() {
+            const resourceButton = document.getElementById('resource-btn');
+            const overlay = document.getElementById('resource-overlay');
+
+            overlay.style.display = clickedResourceButton ? 'none' : 'flex';
+            resourceButton.querySelector('img').src = clickedResourceButton ? "../../static/img/UI/resource_btn.png" : "../../static/img/UI/resource_pbtn.png";
+            clickedResourceButton = !clickedResourceButton;
+
+            // Access the script tag
+            const scriptTag = document.getElementById('dataScript');
+            // Get the opponent's username stored in the data-opponent attribute
+            const opponentUsername = scriptTag.getAttribute('data-opponent');
+            console.log(opponentUsername);
+            fetch(`/api/resources/${opponentUsername}`)
+            .then(response => response.json())
+            .then(data => {
+                updateResources(data);
+                //updateMoney(data); // Call a separate function to update money
+            })
+            .catch(error => {
+                console.error('Error fetching resources:', error);
+                document.querySelector('.popup').innerHTML = `<p>Error fetching resources. Please try again later.</p>`;
+            });
+        }
+
+       function updateResources(resources) {
+            const popupDiv = document.querySelector('.popup');
+            let resourceHTML = '';
+            const displayTypes = ['Wheat', 'Carrot', 'Corn', 'Lettuce', 'Tomato', 'Turnip', 'Zucchini', 'Parsnip', 'Cauliflower', 'Eggplant',];
+            let money = 0
+           resources.forEach(resource => {
+               if (displayTypes.includes(resource.resource_type)) {
+                   resourceHTML += `${getAmountDisplay(resource.amount, resource.resource_type)}${getImage(resource.resource_type)}`;
+                  resourceHTML += `<img src="../../static/img/UI/display.extender.png" alt="" draggable="false">`.repeat(5);
+               }else if(resource.resource_type === 'Money'){
+                   money = resource.amount
+               }
+           });
+            resourceHTML += `${getAmountDisplay(money, 'money')}`;
+
+
+            popupDiv.innerHTML = `<img src="../../static/img/UI/display.left.short.png" alt="" draggable="false">` + resourceHTML
+                + `<img src="../../static/img/UI/display.money.right.png" alt="" draggable="false">`;
+        }
+        function getAmountDisplay(amount, type){
+            let value = amount.toString();
+
+            let HTML = ''
+            for (let i = 0; i < value.length; i++) {
+                if(i === 4 && type !== 'money'){
+                    HTML += `<img src="../../static/img/UI/display.+.png" alt="." draggable="false">`;
+                    break;
+                }
+                HTML += `<img src="../../static/img/UI/display.${value[i]}.png" alt="${value[i]}" draggable="false">`;
+            }
+            return HTML
+        }
+
+        function getImage(resourceType) {
+            switch(resourceType) {
+                case 'Corn': return '<img src="../../static/img/UI/display.corn.png" alt="🌽">';
+                case 'Carrot': return '<img src="../../static/img/UI/display.carrot.png" alt="🥕">';
+                case 'Cauliflower': return '<img src="../../static/img/UI/display.cauliflower.png" alt="⚪🥦">';
+                case 'Tomato': return '<img src="../../static/img/UI/display.tomato.png" alt="🍅">';
+                case 'Eggplant': return '<img src="../../static/img/UI/display.eggplant.png" alt="🍆">';
+                case 'Lettuce': return '<img src="../../static/img/UI/display.lettuce.png" alt="🥬">';
+                case 'Wheat': return '<img src="../../static/img/UI/display.wheat.png" alt="🌾">';
+                case 'Turnip': return '<img src="../../static/img/UI/display.turnip.png" alt="🟣🌱">';
+                case 'Parsnip': return '<img src="../../static/img/UI/display.parsnip.png" alt="⚪🌱">';
+                case 'Zucchini': return '<img src="../../static/img/UI/display.zucchini.png" alt="🥒">';
+                case 'Money': return '<img src="../../static/img/UI/display.money.png" alt="🪙">';
+                // Add more as needed
+                default: return ''; // Default case if no symbol is matched
+            }
+        }
+    </script>
+
+    <footer style="display: flex; justify-content: space-between; align-items: end;">
+        <a href="{{ url_for('game.game') }}" style="margin: 10px">
+                <img src="../../static/img/UI/back_btn.png" alt="🏡">
+        </a>
+        <div class="copyright" style="left: auto; right: 10px; transform: none; margin: 10px;">
+            &copy; Team3 – Universiteit Antwerpen - PPDB
+        </div>
+        <a href="{{ url_for('attack.visit_opponent') }}" style="margin: 10px">
+                <img src="../../static/img/UI/right_btn.png" alt="⚔️">
+        </a>
+    </footer>
+
+</body>
+</html>

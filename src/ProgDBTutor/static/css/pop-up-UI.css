@@ -1,0 +1,204 @@
+:root {
+    --background-img-width: 480px;
+}
+
+/*
+.test-popup {
+    width: 500px;
+    height: 650px;
+    position: absolute;
+    right: -510px;
+    opacity: 0;
+    transition: right 200ms, opacity  200ms;
+    top: 70px;
+    z-index: 10;
+}
+
+.test-popup.show {
+    right: 50px;
+    opacity: 1;
+}
+ */
+
+.information-popup {
+  width: 500px;
+  height: 650px;
+  position: absolute;
+  right: -510px;
+  opacity: 0;
+  transition: right 200ms, opacity 200ms;
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust centering based on the popup's height */
+  z-index: 10;
+}
+
+.information-popup.show {
+  right: 50px;
+  opacity: 1;
+}
+
+
+#background-img {
+    position: absolute;
+    top: 10px;
+    width: calc(var(--background-img-width));
+    height: auto;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.view-btn{
+    position: absolute;
+    border: none;
+    background: none;
+    left: 77px;
+    bottom: 17px;
+    transform: translateX(-50%);
+    height: auto; /* Set height to auto */
+    width: auto; /* Set width to auto */
+    outline: none; /* Remove the default focus outline */
+    box-shadow: none; /* Remove any default box-shadow */
+}
+.view-btn img {
+    height: 50px;
+    image-rendering: pixelated;
+}
+.augment-button {
+    position: absolute;
+    border: none;
+    background: none;
+    right: 15px;
+    bottom: 17px;
+    transform: translateX(-50%);
+    height: auto; /* Set height to auto */
+    width: auto; /* Set width to auto */
+    outline: none; /* Remove the default focus outline */
+    box-shadow: none; /* Remove any default box-shadow */
+}
+.view-btn:active,
+.view-btn:focus,
+.augment-button:active,
+.augment-button:focus {
+    outline: none; /* Remove the outline when the button is focused or active */
+    box-shadow: none; /* Remove any box-shadow when the button is focused or active */
+}
+
+.augment-button img {
+    width: 50px;
+    image-rendering: pixelated;
+}
+
+
+.close-button {
+    position: absolute;
+    width: calc(0.0957 * var(--background-img-width)); /* To make sure pixel size matches */
+    right: 0;
+}
+
+#close-button-pressed {
+    display: none;
+}
+
+.upgrade-button {
+    position: absolute;
+    width: calc(0.4787 * var(--background-img-width)); /* To make sure pixel size matches */
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    display: none;
+}
+
+#upgrade-button-pressed {
+    display: none;
+}
+
+#building-info-title {
+    width: 300px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 40px;
+    border: 0 solid black;
+    font-size: 1.3em;
+    text-align: center;
+    color: #8a5f5c;
+}
+
+#display-name {
+    width: 300px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 80px;
+    border: 0 solid black;
+    text-align: center;
+    color: #8a5f5c;
+}
+
+#explanation {
+    width: 450px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    padding: 0 30px;
+    transform: translateX(-50%);
+    top: 150px;
+    border: 0 solid black;
+    font-size: 12px;
+    text-align: left;
+    color: #8a5f5c;
+}
+
+.stats {
+    width: 450px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    padding-left: 30px;
+    transform: translateX(-50%);
+    bottom: 100px;
+    border: 0 solid black;
+    text-align: left;
+    color: #8a5f5c;
+    display: block;
+    font-size: 15px;
+    list-style-type: none;
+}
+#augment-stats{
+    display: none;
+}
+#stats{
+    display: block;
+}
+.stats li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+
+
+.cost{
+    flex-wrap: wrap;
+    align-items: center;
+}
+.cost p {
+    margin-bottom: 0;
+}
+#upgrade-cost{
+    display: flex;
+}
+#upgrade-cost > *{
+    margin-right: 10px;
+}
+#cost img {
+    height: 20px;
+    top: 0;
+    margin-bottom: 0;
+    margin-right: 7px;
+    image-rendering: pixelated;
+}
+#augment-cost{
+    display: none;
+}
