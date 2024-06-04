@@ -4,11 +4,14 @@ from flask_login import login_required, current_user
 from config import config_data
 
 from models.user import User
+from .api import user_stats
 
 attack_blueprint = Blueprint('attack', __name__, template_folder='templates')
 
-previously_searched = ['admin']
+previously_searched = []
+threshold = 2000
 scores = {}
+
 
 @attack_blueprint.route('/visit_oppenents_world')
 @login_required
@@ -21,7 +24,6 @@ def visit_opponent():
 
     if not opponent:
         previously_searched.clear()
-        previously_searched.append('admin')
         return render_template('attack/no_opponent.html', app_data=config_data)
 
     return render_template('attack/visit_opponents_world.html', opponent=opponent, app_data=config_data)
@@ -39,6 +41,8 @@ def choose_opponent_logic():
 
     # Get all users and current user object
     users = user_data_access.get_all_users()
+    # Filter out the admin user
+    users = [user for user in users if user.username != 'admin']
     current_user_object = user_data_access.get_user(current_user.username)
 
     # Retrieve friends of the current user
@@ -46,10 +50,11 @@ def choose_opponent_logic():
     friends_usernames = {friend.user2 if friend.user1 == current_user.username else friend.user1 for friend in friends}
 
     # Calculate scores for all users
-    # TODO/ Not on the resources but on user stats
     for user in users:
-        resources = resource_data_access.get_resources(user.username)
-        user_score = sum([resource.amount for resource in resources])
+        if current_user_object == user:
+            user_score = user_stats(user.username)["attack"]
+        else:
+            user_score = user_stats(user.username)["defense"]
         scores[user.username] = user_score
 
     # Filter users based on the conditions
@@ -57,7 +62,7 @@ def choose_opponent_logic():
     for user in users:
         if user.username not in previously_searched and user.username != current_user.username and user.username not in friends_usernames:
             difference_in_score = abs(scores[current_user.username] - scores[user.username])
-            if difference_in_score < 1000:
+            if difference_in_score < threshold:
                 eligible_users.append(user)
 
     # Sort eligible users by their scores in descending order
@@ -91,11 +96,10 @@ def attack_result():
 
     # Update the resources in the database
     resource_data_access = current_app.config.get('resource_data_access')
-    for resource, amount in resources.items(): # For the current user
+    for resource, amount in resources.items():  # For the current user
         resource_data_access.update_resource(current_user.username, resource, amount)
-    for resource, amount in resources.items(): # For the opponent
+    for resource, amount in resources.items():  # For the opponent
         resource_data_access.update_resource(opponent, resource, -amount)
-
 
     # Pass the result and resources to the template
     return render_template('attack/attack_result.html', result=result, resources=resources, app_data=config_data)
@@ -112,7 +116,7 @@ def choose_result_logic(player_score, opponent_score):
     :return: tuple (str, dict) - ('Win'/'Lose', {Resource: Amount})
     """
     # Define a major difference threshold
-    major_difference_threshold = 500  # Adjust this value as needed
+    major_difference_threshold = 1000  # Adjust this value as needed
 
     # Calculate the difference
     score_difference = opponent_score - player_score
@@ -126,11 +130,10 @@ def choose_result_logic(player_score, opponent_score):
         # Let the fate decide if the scores are close
         outcome = 'Win' if random.choice([0, 1]) == 1 else 'Lose'
 
-
     # Get the opponent's resources
-    # TODO/ Not on the resources but on user stats
     resource_data_access = current_app.config.get('resource_data_access')
-    opponent_resources = {resource.resource_type: resource.amount for resource in resource_data_access.get_resources(previously_searched[-1])}
+    opponent_resources = {resource.resource_type: resource.amount for resource in
+                          resource_data_access.get_resources(previously_searched[-1])}
     for resource in list(opponent_resources.keys()):
         if opponent_resources[resource] <= 0:
             opponent_resources.pop(resource)
@@ -144,7 +147,7 @@ def choose_result_logic(player_score, opponent_score):
     resources = {}
     if outcome == 'Win':
         for resource, quantity in opponent_resources.items():
-            resources[resource] = int(quantity * percentage)
+            resources[resource] = int(quantity * percentage * 1.25)
     elif outcome == 'Lose':
         for resource, quantity in opponent_resources.items():
             resources[resource] = -int(quantity * percentage)
