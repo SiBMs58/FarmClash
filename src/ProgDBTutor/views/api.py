@@ -383,12 +383,9 @@ def get_leaderboard():
         # Get the top 3 users
         top_three = sorted_users[:3]
         # Get two friends (implementation depends on your data model)
-        friendship_data_access = current_app.config.get('friendship_data_access')
-        friends_response = friendship_data_access.get_friends(current_user)
-        friend_usernames = [friend.friend_username for friend in friends_response]
-        friend_objects = [user_data_access.get_user(username) for username in friend_usernames]
+        friends = get_friends().json
         # Get the top 2 friends
-        friend_objects = sorted(friend_objects, key=lambda user: scores.get(user.username, 0), reverse=True)[:2]
+        friend_objects = [user_data_access.get_user(friend) for friend in friends][:2]
         leaderboard_users = top_three + friend_objects
         if current_user not in [user.username for user in leaderboard_users]:
             leaderboard_users.append(current_user)
