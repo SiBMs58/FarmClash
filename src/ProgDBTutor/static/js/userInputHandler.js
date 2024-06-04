@@ -249,7 +249,7 @@ export class UserInputHandler {
     async cheatResources() {
         const resources = {};
         items.forEach(item => {
-            resources[item] = 1000;});
+            resources[item] = 100000;});
 
         const BASE_URL = `${window.location.protocol}//${window.location.host}`;
         const fetchLink = `${BASE_URL}/api/add-resources`;

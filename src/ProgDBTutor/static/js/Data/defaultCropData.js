@@ -359,31 +359,31 @@ export const defaultCropData = {
             growth_time: 30
         },
         Carrot: {
-            growth_time: 30
+            growth_time: 60
         },
         Corn: {
-            growth_time: 30
+            growth_time: 120
         },
         Lettuce: {
-            growth_time: 30
+            growth_time: 240
         },
         Tomato: {
-            growth_time: 30
+            growth_time: 480
         },
         Turnip: {
-            growth_time: 30
+            growth_time: 960
         },
         Zucchini: {
-            growth_time: 30
+            growth_time: 3840
         },
         Parsnip: {
-            growth_time: 30
+            growth_time: 7680
         },
         Cauliflower: {
-            growth_time: 30
+            growth_time: 15360
         },
         Eggplant: {
-            growth_time: 30
+            growth_time: 30720
         },
 
     }
