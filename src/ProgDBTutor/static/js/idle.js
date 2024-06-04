@@ -368,8 +368,8 @@ async function sendAnimalQuantity(data){
  * @param total
  */
 function displayPopup(message, total = 5) {
-    const msPerItem = 350;
-    const displayTime = msPerItem * total + 1000;
+    const msPerItem = 500;
+    const displayTime = msPerItem * total + 1500;
     const popup = document.getElementById('idle-popup');
     popup.innerHTML = message;
     popup.style.display = 'block';
