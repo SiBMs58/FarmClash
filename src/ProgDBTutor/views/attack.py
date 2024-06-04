@@ -68,7 +68,7 @@ def choose_opponent_logic():
         for user in users:
             user_stats_response = user_stats(user.username)
             if 'error' in user_stats_response:
-                return user_stats_response
+                users.remove(user)
                 continue
             if current_user.username == user.username:
                 user_score = user_stats(user.username)["attack"]
