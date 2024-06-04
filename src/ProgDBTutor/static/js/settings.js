@@ -135,7 +135,7 @@ mutebutton.addEventListener("click", function() {
 });
 
 /**
- * chnages the button with a click
+ * changes the button with a click
  */
 
 backsoundButton.addEventListener("click", function() {

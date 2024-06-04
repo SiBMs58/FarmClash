@@ -16,7 +16,6 @@ class GameSoundManager {
     }
 
     /**
-     *
      * @param buttonElement is the button itself
      * @param soundSrc the sound that is given
      * @param volume gives the volume of the clicksound
