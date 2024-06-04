@@ -25,16 +25,16 @@ export class CropMap extends BaseMap {
     constructor(cropData = defaultCropData, _tileSize, _ctx) {
         super(cropData, _tileSize);
 
-        this.cropInformation = cropData.crop_information;
-        this.cropGeneralInformation = cropData.crop_general_information;
-        this.ctx = _ctx;
+        this.cropInformation = cropData.crop_information; // Contains all the crop information.
+        this.cropGeneralInformation = cropData.crop_general_information; // Contains all the crop general information.
+        this.ctx = _ctx; // The context needed for drawing on-screen.
 
-        this.cropAssetList = {}; // Bevat de json van alle asset file names die ingeladen moeten worden
-        this.cropAssets = {}; // Bevat {"pad_naar_asset": imageObject}
+        this.cropAssetList = {}; // Contains json for all assets that need to be loaded.
+        this.cropAssets = {}; // contains {"path_to_asset": imageObject}
 
-        this.buildingMapInstace = null;
+        this.buildingMapInstace = null; // Reference to the buildingMapInstance
 
-        this.tickCount = 0;
+        this.tickCount = 0; // Used to keep track of the number of ticks.
     }
 
     /**
@@ -48,6 +48,10 @@ export class CropMap extends BaseMap {
         console.log("debug");
     }
 
+    /**
+     * Adds the buildingMapInstance to the cropMapInstance. Used in initializing of the game.
+     * @param buildingMapInstance - The buildingMapInstance to be added.
+     */
     addBuildingMapInstance(buildingMapInstance) {
         this.buildingMapInstace = buildingMapInstance;
     }
@@ -82,8 +86,7 @@ export class CropMap extends BaseMap {
             if (Object.keys(mapData.crop_information).length !== 0) {
                 this.cropInformation = mapData.crop_information;
                 console.log("fields found.");
-            } else {
-            // No crops found
+            } else { // No crops found
                 await this.updateCropMapDB();
                 this.cropInformation = defaultCropData.crop_information;
                 console.log("no fields found.");
@@ -101,7 +104,7 @@ export class CropMap extends BaseMap {
     }
 
     /**
-     * Preloads the assets from the server and stores it in 'this.buildingAssets'.
+     * Preloads the assets from the server and stores it in 'this.cropAssets'.
      * 'callback' function is called when the function is done fetching.
      */
     preloadCropAssets(callback) {
@@ -120,7 +123,7 @@ export class CropMap extends BaseMap {
                     assetMap[currPath] = img;
                     loadedCount++;
                     if (loadedCount === totalCount) {
-                        this.buildingAssets = assetMap;
+                        this.cropAssets = assetMap;
                         callback(); // If all images are loaded -> callback
                     }
                 };
@@ -128,7 +131,7 @@ export class CropMap extends BaseMap {
                     console.error(`Failed to load image at path: ${currPath}`);
                     loadedCount++; // Increment the counter to ensure the callback is called even if some images fail to load.
                     if (loadedCount === totalCount) {
-                        this.buildingAssets = assetMap;
+                        this.cropAssets = assetMap;
                         callback(); // Still call the callback, but note that some images may not have loaded.
                     }
                 };
@@ -136,6 +139,10 @@ export class CropMap extends BaseMap {
         }
     }
 
+    /**
+     * This gives an amount of seconds since a randomly chosen day 0 that is used as a reference point.
+     * @returns {number} - The amount of seconds since day 0.
+     */
     getSecondsSinceDay0() {
         let startDate = new Date(2023, 0, 1); // months are 0-indexed
         let currentDate = new Date();
@@ -143,16 +150,31 @@ export class CropMap extends BaseMap {
         return Math.floor(differenceInMilliseconds / 1000);
     }
 
+    /**
+     * Checks if a field is empty. (has no crops on it)
+     * @param fieldName - The name of the field to be checked.
+     * @returns {boolean} - True if the field is empty, false otherwise.
+     */
     isFieldEmpty(fieldName) {
         const phase = this.cropInformation[fieldName].phase;
         return phase === 1;
     }
 
+    /**
+     * Checks if a field is harvestable. (has crops that are ready to be harvested)
+     * @param fieldName - The name of the field to be checked.
+     * @returns {boolean} - True if the field is harvestable, false otherwise.
+     */
     isHarvestable(fieldName) {
         const phase = this.cropInformation[fieldName].phase;
         return phase === 3;
     }
 
+    /**
+     * Harvests a field. This means that the crops are removed from the field and the player receives the crops.
+     * @param fieldName - The name of the field to be harvested.
+     * @param fieldLevel - The level of the field. --> Decides how man crops the player receives.
+     */
     harvestField(fieldName, fieldLevel) {
         const field = this.cropInformation[fieldName];
         let cropName = field.crop;
@@ -169,7 +191,11 @@ export class CropMap extends BaseMap {
     }
 
 
-
+    /**
+     * Plants a crop on a field. This means that the field is no longer empty and the crop is planted.
+     * @param cropType - The type of crop to be planted. (e.g. "Wheat")
+     * @param fieldName - The name of the field to be planted on.
+     */
     plantCrop(cropType, fieldName) {
         const field = this.cropInformation[fieldName];
         field.phase = 2;
@@ -180,6 +206,9 @@ export class CropMap extends BaseMap {
         this.drawTiles();
     }
 
+    /**
+     * Checks if the crop tiles need to be updated. This is called continuously by the tick function.
+     */
     checkCropGrowth() {
         for (let key in this.cropInformation) {
             const currField = this.cropInformation[key];
@@ -220,7 +249,10 @@ export class CropMap extends BaseMap {
         this.ctx.clearRect(x_tile_screen, y_tile_screen, this.tileSize, this.tileSize);
     }
 
-
+    /**
+     * Draws a single crop for a field on the screen.
+     * @param field - The field to draw the crop for.
+     */
     drawOneCrop(field) {
         if (field.phase === 1) {
             return;
@@ -253,7 +285,7 @@ export class CropMap extends BaseMap {
 
         // Draw crops
         for (let cropCoord of cropCoords) {
-            const img = this.buildingAssets["/static/img/assets/crops/" + utils.getAssetDir(assetName) + "/" + assetName + ".png"];
+            const img = this.cropAssets["/static/img/assets/crops/" + utils.getAssetDir(assetName) + "/" + assetName + ".png"];
             if (img) {
                 if (field.crop === "Wheat") {
                     this.ctx.drawImage(img, cropCoord[1] * this.tileSize, (cropCoord[0] - 1 - 2/16) * this.tileSize, this.tileSize, this.tileSize * 2);
@@ -267,7 +299,7 @@ export class CropMap extends BaseMap {
     }
 
     /**
-     * Draws the crops on top of the fields.
+     * Draws all the crops on top of the fields.
      */
     drawTiles() {
         this.ctx.clearRect(0,0, window.innerWidth, window.innerHeight);
@@ -306,7 +338,7 @@ export class CropMap extends BaseMap {
     }
 
     /**
-     * Sends the building map to the database to be updated.
+     * Sends the crop map to the database to be updated.
      * @returns {Promise<void>}
      */
     async updateCropMapDB() {
@@ -336,35 +368,35 @@ export class CropMap extends BaseMap {
 }
 
 
-/**
- * updates the resource to the db, is used when farming crops
- * @param resource, name as string
- * @param count, increase or decreas amount
- * @returns {Promise<void>}
- */
-async function updateResources(resource, count) {
-    const resources = {
-        [resource]: count // Use the resource as the key and the count as the value
-    };
-    const BASE_URL = `${window.location.protocol}//${window.location.host}`;
-    const fetchLink = `${BASE_URL}/api/add-resources`;
+    /**
+     * updates the resource to the db, is used when farming crops
+     * @returns {Promise<void>} - The promise that is resolved when the fetch is done.
+     * @param resource - The resource to be updated.
+     * @param count - The amount to update the resource by.
+     */
+    async function updateResources(resource, count) {
+        const resources = {
+            [resource]: count // Use the resource as the key and the count as the value
+        };
+        const BASE_URL = `${window.location.protocol}//${window.location.host}`;
+        const fetchLink = `${BASE_URL}/api/add-resources`;
 
-    try {
-        const response = await fetch(fetchLink, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(resources) // Send the serialized resource data as the request body
-        });
+        try {
+            const response = await fetch(fetchLink, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(resources) // Send the serialized resource data as the request body
+            });
 
-        if (response.ok) {
-            const jsonResponse = await response.json();
-            console.log('Resources DB update successful:', jsonResponse);
-        } else {
-            console.error('Add-resources DB update failed with status:', response.status);
+            if (response.ok) {
+                const jsonResponse = await response.json();
+                console.log('Resources DB update successful:', jsonResponse);
+            } else {
+                console.error('Add-resources DB update failed with status:', response.status);
+            }
+        } catch (error) {
+            console.error('Failed to update resources:', error);
         }
-    } catch (error) {
-        console.error('Failed to update resources:', error);
     }
-}
