@@ -829,7 +829,7 @@ function getIndex(animal) {
  * @param {number} minutes - The total number of minutes to format.
  * @return {string} - The formatted time string in the format "Xd Xh Xm" or "Xs", where X represents the number of days, hours, and minutes or seconds, respectively.
  */
-function formatTime(minutes) {
+export function formatTime(minutes) {
     let days = Math.floor(minutes / (60 * 24));
     let hours = Math.floor((minutes % (60 * 24)) / 60);
     let seconds = Math.floor(minutes % 1 * 60); // Calculate total seconds
@@ -858,7 +858,7 @@ function formatTime(minutes) {
  * @param {number} explorationTime - The exploration time in minutes.
  * @return {number} - The calculated risk chance.
  */
-function getRiskChance(explorationTime) {
+export function getRiskChance(explorationTime) {
     const riskChances = {
         1: 0,
         20: 5,
@@ -927,7 +927,7 @@ function getRandomIndex(weights) {
  * @param {number} [stdev=1] - The standard deviation of the Gaussian distribution. Defaults to 1.
  * @returns {number} - The generated random number.
  */
-function gaussianRandom(mean=0, stdev=1) {
+export function gaussianRandom(mean=0, stdev=1) {
     let u, v, z;
     let isValid = false;
 
@@ -951,7 +951,7 @@ function gaussianRandom(mean=0, stdev=1) {
  *
  * @returns {Array<number>} - The array of generated probabilities.
  */
-function generateRandomProbabilities() {
+export function generateRandomProbabilities() {
     const total = 1 + Math.random() * 0.1; // Add a slight randomness
     const probabilities = [];
     let remaining = total;
@@ -977,7 +977,7 @@ function generateRandomProbabilities() {
  * @param {string} input - The input string.
  * @returns {string} - The input string with all spaces replaced by underscores.
  */
-function spaceTo_(input) {
+export function spaceTo_(input) {
     return input.replace(/ /g, '_');
 }
 
