@@ -1,6 +1,7 @@
 import {BaseMap} from "./baseMap.js";
 import { utils } from "./utils.js";
 import { defaultCropData } from "./Data/defaultCropData.js";
+import {updateUI} from "./gameUI.js";
 
 
 /** Tile coördinaten: (y,x)
@@ -186,8 +187,9 @@ export class CropMap extends BaseMap {
         this.updateCropMapDB();
         this.drawTiles();
         this.buildingMapInstace.drawTiles();
-
-        updateResources(cropName, amount);
+        updateResources(cropName, amount).then(() => {
+            updateUI();
+        });
     }
 
 
