@@ -31,7 +31,6 @@ def visit_opponent():
     """
     # Example logic to choose an opponent
     opponent = choose_opponent_logic()  # This function needs to be implemented based on your app logic
-    return jsonify(opponent.__dict__)
 
     if not opponent:
         get_user_data(current_user.username)['previously_searched'].clear()
@@ -58,7 +57,7 @@ def choose_opponent_logic():
         # Get all users and current user object
         users = user_data_access.get_all_users()
         # Filter out the admin user
-        users = [user for user in users if user.username != 'admin']
+        users = [user for user in users if user.username != 'admin' and user.username != current_user.username]
 
         # Retrieve friends of the current user
         friends = friendship_data_access.get_friends(current_user)
@@ -74,9 +73,10 @@ def choose_opponent_logic():
 
         # Filter users based on the conditions
         eligible_users = []
+        current_user_score = scores.get(current_user.username, 0)
         for user in users:
             user_score = scores.get(user.username, 0)
-            current_user_score = scores.get(current_user.username, 0)
+            print("User score: ", user_score)
             if user.username not in previously_searched and user.username != current_user.username and user.username not in friends_usernames:
                 difference_in_score = abs(current_user_score - user_score)
                 if difference_in_score < threshold:
