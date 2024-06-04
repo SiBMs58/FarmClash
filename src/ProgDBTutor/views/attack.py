@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, jsonify
 from flask_login import login_required, current_user
 
 from config import config_data
@@ -31,9 +31,13 @@ def visit_opponent():
     """
     # Example logic to choose an opponent
     opponent = choose_opponent_logic()  # This function needs to be implemented based on your app logic
+    return jsonify(opponent.__dict__ if opponent else None)
 
     if not opponent:
         get_user_data(current_user.username)['previously_searched'].clear()
+        # Print or log user-specific data for debugging
+        user_data = get_user_data(current_user.username)
+        return jsonify(user_data)
         return render_template('attack/no_opponent.html', app_data=config_data)
 
     return render_template('attack/visit_opponents_world.html', opponent=opponent, app_data=config_data)
@@ -71,19 +75,23 @@ def choose_opponent_logic():
         # Filter users based on the conditions
         eligible_users = []
         for user in users:
+            user_score = scores.get(user.username, 0)
+            current_user_score = scores.get(current_user.username, 0)
+            eligible_users.append(user_score)
+            eligible_users.append(current_user_score)
             if user.username not in previously_searched and user.username != current_user.username and user.username not in friends_usernames:
-                difference_in_score = abs(scores[current_user.username] - scores[user.username])
+                difference_in_score = abs(current_user_score - user_score)
                 if difference_in_score < threshold:
                     eligible_users.append(user)
 
         # Sort eligible users by their scores in descending order
-        sorted_eligible_users = sorted(eligible_users, key=lambda user: scores[user.username],reverse=True)
+        sorted_eligible_users = sorted(eligible_users, key=lambda user: scores.get(user.username, 0), reverse=True)
         # Select the top eligible user if available
         if sorted_eligible_users:
             previously_searched.append(sorted_eligible_users[0].username)
             return sorted_eligible_users[0]
         else:
-            return None
+            return eligible_users
     except Exception as e:
         import traceback
         print("An error occurred: ", str(e), "\n", traceback.format_exc())
