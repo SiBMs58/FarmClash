@@ -189,43 +189,47 @@
     }
 
     // AJAX call to send a message
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('send-message-btn').addEventListener('click', function() {
-            const receiver = document.getElementById('receiver').value;
-            const message = document.getElementById('message-input').value;
+    function sendMessage() {
+        const receiver = document.getElementById('receiver').value;
+        const message = document.getElementById('message-input').value;
 
-            fetch('{{ url_for("friends.add_message") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'X-CSRFToken': ' csrf_token() '  // If using Flask-WTF CSRF protection
-                },
-                body: JSON.stringify({
-                    receiver: receiver,
-                    message: message
-                }),
-                // credentials: 'same-origin'  // Necessary for including cookies, e.g., CSRF token
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();  // Assuming your Flask route returns JSON
-            })
-            .then(data => {
-                console.log('Message sent:', data);
-                document.getElementById('message-input').value = '';  // Clear the input field
-                // TODO: Add message to the chat window
-                const chatMessages = document.getElementById('chat-messages');
-                const messageDiv = document.createElement('div');
-                debugger;
-                messageDiv.className = 'sent'; // TODO: Change this to 'received' if the message is received
-                messageDiv.textContent = message;
-                chatMessages.appendChild(messageDiv);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        fetch('{{ url_for("friends.add_message") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                receiver: receiver,
+                message: message
+            }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Message sent:', data);
+            document.getElementById('message-input').value = '';
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'sent';
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('send-message-btn').addEventListener('click', sendMessage);
+        document.getElementById('message-input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
+            }
         });
     });
 
