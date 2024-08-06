@@ -1,0 +1,11 @@
+MIT License
+-----------
+Chess
+
+Copyright (c) 2023 Siebe Mees
+
+Permission is hereby granted, free of charge, to any student, faculty, or staff of University of Antwerp to use and modify the code and associated documentation of this project for educational purposes only. However, I, Siebe Mees, do not take any responsibility for the future use of this code by other students or individuals. It is the responsibility of the users to ensure their compliance with the applicable academic policies, honor codes, or any other regulations of Universty of Antwerp.
+
+Please note that this project may contain external libraries or resources that have their own licenses and usage restrictions. It is the responsibility of the users to comply with those licenses and restrictions.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
